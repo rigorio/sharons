@@ -60,10 +60,10 @@ public class ActivityListenerService implements ActivityListener {
   public void listen() {
     try {
       if (event == null)
-        throw new NoProcessFoundException("Executable `event` not yet defined");
+        throw new NoEventFoundException("Executable `event` not yet defined");
       listener.listen();
       scheduledFuture = executorService.scheduleWithFixedDelay(runnable, INITIAL_DELAY, interval, TimeUnit.MILLISECONDS);
-    } catch (NativeHookException | NoProcessFoundException e) {
+    } catch (NativeHookException | NoEventFoundException e) {
       // log
     }
   }

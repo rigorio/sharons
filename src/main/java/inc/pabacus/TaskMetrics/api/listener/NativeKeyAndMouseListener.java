@@ -14,8 +14,17 @@ import java.util.logging.Logger;
 
 public class NativeKeyAndMouseListener implements NativeKeyListener, NativeMouseInputListener {
 
-
   private long time = 0;
+
+  public NativeKeyAndMouseListener() {
+    // disable System.out and turn off logging
+    PrintStream origOut = System.out;
+    System.setOut(null);
+    LogManager.getLogManager().reset();
+    Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+    logger.setLevel(Level.OFF);
+    System.setOut(origOut);
+  }
 
   public void listen() throws NativeHookException {
     GlobalScreen.registerNativeHook();
@@ -82,4 +91,5 @@ public class NativeKeyAndMouseListener implements NativeKeyListener, NativeMouse
 
   private void updateTime() {
     time = System.currentTimeMillis();
-  }}
+  }
+}

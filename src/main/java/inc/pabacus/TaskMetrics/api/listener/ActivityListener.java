@@ -7,9 +7,9 @@ package inc.pabacus.TaskMetrics.api.listener;
 public interface ActivityListener {
 
   /**
-   * @param milliseconds interval to check user activity
+   * @param interval interval to check user activity
    */
-  void setInterval(int milliseconds);
+  void setInterval(int interval);
 
   Runnable getEvent();
 

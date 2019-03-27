@@ -7,6 +7,11 @@ import org.jnativehook.keyboard.NativeKeyListener;
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
 
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 public class NativeKeyAndMouseListener implements NativeKeyListener, NativeMouseInputListener {
 
 
@@ -20,10 +25,15 @@ public class NativeKeyAndMouseListener implements NativeKeyListener, NativeMouse
 
   }
 
-  public void unListen() {
+  public void unListen() throws NativeHookException {
     GlobalScreen.removeNativeKeyListener(this);
     GlobalScreen.removeNativeMouseListener(this);
     GlobalScreen.removeNativeMouseMotionListener(this);
+    GlobalScreen.unregisterNativeHook();
+  }
+
+  public boolean isRegistered() {
+    return GlobalScreen.isNativeHookRegistered();
   }
 
   public long getTime() {
@@ -32,45 +42,44 @@ public class NativeKeyAndMouseListener implements NativeKeyListener, NativeMouse
 
   @Override
   public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
-    updateStatus();
+    updateTime();
   }
 
   @Override
   public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
-    updateStatus();
+    updateTime();
   }
 
   @Override
   public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
-    updateStatus();
+    updateTime();
   }
 
   @Override
   public void nativeMouseClicked(NativeMouseEvent nativeMouseEvent) {
-    updateStatus();
+    updateTime();
   }
 
   @Override
   public void nativeMousePressed(NativeMouseEvent nativeMouseEvent) {
-    updateStatus();
+    updateTime();
   }
 
   @Override
   public void nativeMouseReleased(NativeMouseEvent nativeMouseEvent) {
-    updateStatus();
+    updateTime();
   }
 
   @Override
   public void nativeMouseMoved(NativeMouseEvent nativeMouseEvent) {
-    updateStatus();
+    updateTime();
   }
 
   @Override
   public void nativeMouseDragged(NativeMouseEvent nativeMouseEvent) {
-    updateStatus();
+    updateTime();
   }
 
-  private void updateStatus() {
+  private void updateTime() {
     time = System.currentTimeMillis();
-  }
-}
+  }}

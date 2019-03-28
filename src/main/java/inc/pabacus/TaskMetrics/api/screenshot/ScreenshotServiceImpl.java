@@ -1,19 +1,22 @@
 package inc.pabacus.TaskMetrics.api.screenshot;
 
+import inc.pabacus.TaskMetrics.utils.FileUtils;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class ScreenshotServiceImpl implements ScreenshotService {
@@ -67,32 +70,27 @@ public class ScreenshotServiceImpl implements ScreenshotService {
     // TODO
   }
 
+  /**
+   * TODO
+   * can be made public?
+   */
+  private List<Path> getScreenshots() throws IOException {
+    return Files.walk(Paths.get(FileUtils.tmpFile(dir).getAbsolutePath()))
+        .collect(Collectors.toList());
+  }
+
   private String screenshot(String name) {
 
     String fileName = name + ".png";
     String path = dir + File.separator + fileName;
 
-    File file = new File(System.getProperty("user.home") + File.separator + path);
+    File file = FileUtils.tmpFile(path);
     file.mkdirs();
     try {
       file.createNewFile();
-      Long e = System.nanoTime();
-
-      int radius = 11;
-      int size = radius * 2 + 1;
-      float weight = 1.0f / (size * size);
-      float[] data = new float[size * size];
-      for (int i = 0; i < data.length; i++) {
-        data[i] = weight;
-      }
-
-      Kernel kernel = new Kernel(size, size, data);
-      ConvolveOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-      BufferedImage bufferedImage = op.filter(new Robot()
-                                                  .createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize())), null);
-      System.out.println("bench " + (System.nanoTime() - e));
-      BufferedImage image = bufferedImage;
-      ImageIO.write(image, "png", file);
+      ScreenshotTool tool = new ScreenshotTool();
+      BufferedImage image = tool.blurredScreenshot();
+      tool.saveImage(image, "png", file);
       // retrieve image, send to assets
     } catch (AWTException | IOException e) {
       // log

@@ -22,7 +22,7 @@ public class Job {
   private Long id;
   private String title;
   private String description;
-  private String status;
+  private Status status;
   private String progress;
   private String dateCreated;
   private String author;

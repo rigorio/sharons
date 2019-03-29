@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.jobs;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +37,14 @@ public class JobCollector {
   public List<Job> searchJobs(Progress progress) {
     return jobRepository.findAll().stream()
         .filter(job -> job.getProgress().getProgress().equals(progress.getProgress()))
+        .collect(Collectors.toList());
+  }
+
+  public List<Job> filterJobs(Option option, List<Job> jobs) {
+    return jobs.stream()
+        .filter(job -> option instanceof Status
+            ? job.getStatus().getStatus().equals(((Status) option).getStatus())
+            : !(option instanceof Progress) || job.getProgress().getProgress().equals(((Progress) option).getProgress()))
         .collect(Collectors.toList());
   }
 

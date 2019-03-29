@@ -1,6 +1,6 @@
 package inc.pabacus.TaskMetrics.api.jobs;
 
-public enum Progress {
+public enum Progress implements Option{
 
   ZERO(0),
   TWENTY_FIVE(25),

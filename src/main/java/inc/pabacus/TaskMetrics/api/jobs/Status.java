@@ -1,6 +1,6 @@
 package inc.pabacus.TaskMetrics.api.jobs;
 
-public enum Status {
+public enum Status implements Option{
 
   BACKLOG("Backlog"),
   IN_PROGRESS("In Progress"),

@@ -33,4 +33,10 @@ public class JobCollector {
         .collect(Collectors.toList());
   }
 
+  public List<Job> searchJobs(Progress progress) {
+    return jobRepository.findAll().stream()
+        .filter(job -> job.getProgress().getProgress().equals(progress.getProgress()))
+        .collect(Collectors.toList());
+  }
+
 }

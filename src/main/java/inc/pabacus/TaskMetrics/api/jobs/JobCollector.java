@@ -27,6 +27,10 @@ public class JobCollector {
         .collect(Collectors.toList());
   }
 
-
+  public List<Job> searchJobs(Status status) {
+    return jobRepository.findAll().stream()
+        .filter(job -> job.getStatus().getStatus().equals(status.getStatus()))
+        .collect(Collectors.toList());
+  }
 
 }

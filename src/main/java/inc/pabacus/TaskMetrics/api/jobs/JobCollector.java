@@ -1,11 +1,10 @@
 package inc.pabacus.TaskMetrics.api.jobs;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class JobCollector {
+public class JobCollector implements JobService {
 
   private JobRepository jobRepository;
 
@@ -13,14 +12,17 @@ public class JobCollector {
     this.jobRepository = jobRepository;
   }
 
+  @Override
   public Optional<Job> getJob(Long id) {
     return jobRepository.findById(id);
   }
 
+  @Override
   public List<Job> getAllJobs() {
     return jobRepository.findAll();
   }
 
+  @Override
   public List<Job> searchJobs(String keyword) {
     return jobRepository.findAll().stream()
         .filter(job -> job.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
@@ -28,18 +30,21 @@ public class JobCollector {
         .collect(Collectors.toList());
   }
 
+  @Override
   public List<Job> searchJobs(Status status) {
     return jobRepository.findAll().stream()
         .filter(job -> job.getStatus().getStatus().equals(status.getStatus()))
         .collect(Collectors.toList());
   }
 
+  @Override
   public List<Job> searchJobs(Progress progress) {
     return jobRepository.findAll().stream()
         .filter(job -> job.getProgress().getProgress().equals(progress.getProgress()))
         .collect(Collectors.toList());
   }
 
+  @Override
   public List<Job> filterJobs(Option option, List<Job> jobs) {
     return jobs.stream()
         .filter(job -> option instanceof Status

@@ -22,9 +22,9 @@ public class Job {
   private Long id;
   private String title;
   private String description;
-  private String dateCreated;
+  private String status;
   private String progress;
-  private String assignee;
+  private String dateCreated;
   private String author;
 
 }

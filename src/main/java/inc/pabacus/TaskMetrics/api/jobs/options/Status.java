@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.api.jobs;
+package inc.pabacus.TaskMetrics.api.jobs.options;
 
 public enum Status implements Option{
 

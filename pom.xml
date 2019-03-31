@@ -45,6 +45,14 @@
       <version>1.18.4</version>
     </dependency>
 
+    <!-- Native Operating System and Hardware Information (OSHI) dependencies-->
+    <dependency>
+      <groupId>com.github.oshi</groupId>
+      <artifactId>oshi-core</artifactId>
+      <version>3.13.0</version>
+    </dependency>
+    <!--INCLUDING Jna dependencies-->
+
     <!-- Hashing and other tools -->
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -63,6 +71,12 @@
       <artifactId>jna</artifactId>
       <version>5.2.0</version>
     </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna-platform</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+
 
     <!-- DEFAULTS -->
     <dependency>

@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class JobHandlerTest extends MockJobDataProvider {
 

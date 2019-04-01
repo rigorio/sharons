@@ -30,7 +30,8 @@ public class JobHandler implements JobService {
   public List<Job> searchJobs(String keyword) {
     return jobRepository.findAll().stream()
         .filter(job -> job.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
-            job.getDescription().toLowerCase().contains(keyword.toLowerCase()))
+            job.getDescription().toLowerCase().contains(keyword.toLowerCase()) ||
+            job.getAuthor().toLowerCase().contains(keyword.toLowerCase()))
         .collect(Collectors.toList());
   }
 

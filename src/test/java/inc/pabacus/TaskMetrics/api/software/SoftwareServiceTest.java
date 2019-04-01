@@ -13,7 +13,6 @@ public class SoftwareServiceTest {
   @Test
   public void testSoftware() {
     List<SoftwareData> softwareServiceSoftware = softwareService.getSoftware();
-    softwareServiceSoftware.forEach(System.out::println);
     assertFalse(softwareServiceSoftware.size() <= 0);
   }
 }

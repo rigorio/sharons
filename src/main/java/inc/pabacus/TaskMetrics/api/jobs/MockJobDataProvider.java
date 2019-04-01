@@ -11,16 +11,16 @@ public class MockJobDataProvider {
   public List<Job> getJobs() {
     List<Job> list = new ArrayList<>();
     list.add(new Job(1L, "KeyWordss", "Description",
-                     Status.BACKLOG, Progress.SEVENTY_FIVE,
+                     Status.BACKLOG, Progress.ZERO,
                      "10/20/19", "Rigo Sarmiento"));
     list.add(new Job(1L, "Job 1", "aaa keywoRD",
-                     Status.BACKLOG, Progress.SEVENTY_FIVE,
+                     Status.IN_PROGRESS, Progress.ONE_HUNDRED,
                      "10/20/19", "Rigo Sarmiento"));
     list.add(new Job(1L, "Job 1", "Description",
-                     Status.BACKLOG, Progress.SEVENTY_FIVE,
+                     Status.DONE, Progress.SEVENTY_FIVE,
                      "10/20/19", "ASDF asdfKEYWORD asdf"));
     list.add(new Job(0L, "Job 1", "Description",
-                     Status.BACKLOG, Progress.SEVENTY_FIVE,
+                     Status.FOR_REVIEW, Progress.FIFTY,
                      "10/20/19", "Rigo Sarmiento"));
     return list;
   }

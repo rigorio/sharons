@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.jobs;
 
+import inc.pabacus.TaskMetrics.api.jobs.options.Progress;
 import inc.pabacus.TaskMetrics.api.jobs.options.Status;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,5 +45,14 @@ public class JobHandlerTest extends MockJobDataProvider {
         .filter(job -> job.getStatus().equals(Status.BACKLOG))
         .collect(Collectors.toList());
     assertEquals(backLogJobs, jobs);
+  }
+
+  @Test
+  public void testFilterByProgress() {
+    List<Job> jobs = jobService.searchJobs(Progress.FIFTY);
+    List<Job> fiftyJobs = getJobs().stream()
+        .filter(job -> job.getProgress().equals(Progress.FIFTY))
+        .collect(Collectors.toList());
+    assertEquals(fiftyJobs, jobs);
   }
 }

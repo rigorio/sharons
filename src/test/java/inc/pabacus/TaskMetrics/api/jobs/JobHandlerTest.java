@@ -12,7 +12,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JobCollectorTest {
+public class JobHandlerTest {
 
   private JobService jobService;
   private JobRepository jobRepository;
@@ -20,7 +20,7 @@ public class JobCollectorTest {
   @Before
   public void init() {
     jobRepository = mock(JobRepository.class);
-    jobService = new JobCollector(jobRepository);
+    jobService = new JobHandler(jobRepository);
   }
 
   @Test

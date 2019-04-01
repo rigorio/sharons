@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class JobCollector implements JobService {
+public class JobHandler implements JobService {
 
   private JobRepository jobRepository;
 
-  public JobCollector(JobRepository jobRepository) {
+  public JobHandler(JobRepository jobRepository) {
     this.jobRepository = jobRepository;
   }
 

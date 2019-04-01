@@ -53,4 +53,13 @@ public class JobHandler implements JobService {
         .collect(Collectors.toList());
   }
 
+  @Override
+  public void deleteJob(Job job) {
+    jobRepository.delete(job);
+  }
+
+  @Override
+  public void deleteJob(Long id) {
+    jobRepository.deleteById(id);
+  }
 }

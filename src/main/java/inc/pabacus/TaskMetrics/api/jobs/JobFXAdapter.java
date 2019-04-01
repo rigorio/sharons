@@ -15,7 +15,8 @@ public class JobFXAdapter {
   private StringProperty author;
 
   public JobFXAdapter(Job job) {
-    id = new SimpleLongProperty(job.getId());
+    Long jobId = job.getId();
+    id = jobId != null ? new SimpleLongProperty(jobId) : null;
     title = new SimpleStringProperty(job.getTitle());
     description = new SimpleStringProperty(job.getDescription());
     status = new SimpleStringProperty(job.getStatus().getStatus());

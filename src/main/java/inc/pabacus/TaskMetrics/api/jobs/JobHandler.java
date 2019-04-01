@@ -1,6 +1,5 @@
 package inc.pabacus.TaskMetrics.api.jobs;
 
-import inc.pabacus.TaskMetrics.api.jobs.options.Option;
 import inc.pabacus.TaskMetrics.api.jobs.options.Progress;
 import inc.pabacus.TaskMetrics.api.jobs.options.Status;
 
@@ -14,6 +13,11 @@ public class JobHandler implements JobService {
 
   public JobHandler(JobRepository jobRepository) {
     this.jobRepository = jobRepository;
+  }
+
+  @Override
+  public Job saveJob(Job job) {
+    return jobRepository.save(job);
   }
 
   @Override
@@ -46,15 +50,6 @@ public class JobHandler implements JobService {
   public List<Job> searchJobs(Progress progress) {
     return jobRepository.findAll().stream()
         .filter(job -> job.getProgress().equals(Progress.FIFTY))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public List<Job> filterJobs(Option option, List<Job> jobs) {
-    return jobs.stream()
-        .filter(job -> option instanceof Status
-            ? job.getStatus().getStatus().equals(((Status) option).getStatus())
-            : !(option instanceof Progress) || job.getProgress().getProgress().equals(((Progress) option).getProgress()))
         .collect(Collectors.toList());
   }
 

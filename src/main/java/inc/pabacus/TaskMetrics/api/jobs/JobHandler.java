@@ -38,14 +38,14 @@ public class JobHandler implements JobService {
   @Override
   public List<Job> searchJobs(Status status) {
     return jobRepository.findAll().stream()
-        .filter(job -> job.getStatus().getStatus().equals(status.getStatus()))
+        .filter(job -> job.getStatus().equals(Status.BACKLOG))
         .collect(Collectors.toList());
   }
 
   @Override
   public List<Job> searchJobs(Progress progress) {
     return jobRepository.findAll().stream()
-        .filter(job -> job.getProgress().getProgress().equals(progress.getProgress()))
+        .filter(job -> job.getProgress().equals(Progress.FIFTY))
         .collect(Collectors.toList());
   }
 

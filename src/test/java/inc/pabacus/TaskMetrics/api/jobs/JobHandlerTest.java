@@ -36,4 +36,28 @@ public class JobHandlerTest {
 
     assertEquals(list, allJobs);
   }
+
+  @Test
+  public void testSearchWithKeyword() {
+    List<Job> list = new ArrayList<>();
+    list.add(new Job(1L, "KeyWordss", "Description",
+                     Status.BACKLOG, Progress.SEVENTY_FIVE,
+                     "10/20/19", "Rigo Sarmiento"));
+    list.add(new Job(1L, "Job 1", "aaa keywoRD",
+                     Status.BACKLOG, Progress.SEVENTY_FIVE,
+                     "10/20/19", "Rigo Sarmiento"));
+    list.add(new Job(1L, "Job 1", "Description",
+                     Status.BACKLOG, Progress.SEVENTY_FIVE,
+                     "10/20/19", "ASDF asdfKEYWORD asdf"));
+    list.add(new Job(0L, "Job 1", "Description",
+                     Status.BACKLOG, Progress.SEVENTY_FIVE,
+                     "10/20/19", "Rigo Sarmiento"));
+
+    when(jobRepository.findAll()).thenReturn(list);
+
+    List<Job> jobs = jobService.searchJobs("keyword");
+    list.removeIf(job -> job.getId().equals(0L));
+
+    assertEquals(list, jobs);
+  }
 }

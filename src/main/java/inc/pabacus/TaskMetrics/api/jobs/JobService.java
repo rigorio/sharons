@@ -20,4 +20,7 @@ public interface JobService {
 
   List<Job> searchJobs(Progress progress);
 
+  void deleteJob(Job job);
+
+  void deleteJob(Long id);
 }

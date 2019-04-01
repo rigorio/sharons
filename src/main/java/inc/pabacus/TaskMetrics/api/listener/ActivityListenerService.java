@@ -64,7 +64,7 @@ public class ActivityListenerService implements ActivityListener {
       listener.listen();
       scheduledFuture = executorService.scheduleWithFixedDelay(runnable, INITIAL_DELAY, interval, TimeUnit.MILLISECONDS);
     } catch (NativeHookException | NoEventFoundException e) {
-      // log
+      e.printStackTrace();
     }
   }
 
@@ -76,7 +76,7 @@ public class ActivityListenerService implements ActivityListener {
       scheduledFuture.cancel(true);
       listener.unListen();
     } catch (NativeHookException e) {
-      // log
+      e.printStackTrace();
     }
   }
 

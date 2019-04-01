@@ -12,7 +12,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JobHandlerTest {
+public class JobHandlerTest extends MockJobDataProvider {
 
   private JobService jobService;
   private JobRepository jobRepository;
@@ -39,19 +39,7 @@ public class JobHandlerTest {
 
   @Test
   public void testSearchWithKeyword() {
-    List<Job> list = new ArrayList<>();
-    list.add(new Job(1L, "KeyWordss", "Description",
-                     Status.BACKLOG, Progress.SEVENTY_FIVE,
-                     "10/20/19", "Rigo Sarmiento"));
-    list.add(new Job(1L, "Job 1", "aaa keywoRD",
-                     Status.BACKLOG, Progress.SEVENTY_FIVE,
-                     "10/20/19", "Rigo Sarmiento"));
-    list.add(new Job(1L, "Job 1", "Description",
-                     Status.BACKLOG, Progress.SEVENTY_FIVE,
-                     "10/20/19", "ASDF asdfKEYWORD asdf"));
-    list.add(new Job(0L, "Job 1", "Description",
-                     Status.BACKLOG, Progress.SEVENTY_FIVE,
-                     "10/20/19", "Rigo Sarmiento"));
+    List<Job> list = getJobs();
 
     when(jobRepository.findAll()).thenReturn(list);
 
@@ -59,5 +47,10 @@ public class JobHandlerTest {
     list.removeIf(job -> job.getId().equals(0L));
 
     assertEquals(list, jobs);
+  }
+
+  @Test
+  public void testFilterByStatus() {
+
   }
 }

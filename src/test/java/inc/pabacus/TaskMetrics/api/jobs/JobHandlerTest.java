@@ -55,4 +55,12 @@ public class JobHandlerTest extends MockJobDataProvider {
         .collect(Collectors.toList());
     assertEquals(fiftyJobs, jobs);
   }
+
+  @Test
+  public void testSaveJob() {
+    Job j = new Job();
+    when(jobRepository.save(j)).thenReturn(j);
+    assertEquals(j, jobService.saveJob(j));
+  }
+
 }

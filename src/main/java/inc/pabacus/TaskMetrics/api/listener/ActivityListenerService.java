@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.api.listener;
 
 import org.jnativehook.NativeHookException;
+import org.jnativehook.mouse.NativeMouseEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Executors;
@@ -85,4 +86,8 @@ public class ActivityListenerService implements ActivityListener {
     return listener.getTime();
   }
 
+  @Override
+  public void invokeEvent() {
+    listener.nativeMouseMoved(new NativeMouseEvent(0, 0L, 0, 0, 0, 0));
+  }
 }

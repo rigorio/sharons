@@ -32,6 +32,8 @@ public interface ActivityListener {
    */
   long getLastTime();
 
+  void invokeEvent();
+
   /**
    * @return the interval
    */

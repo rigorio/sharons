@@ -19,6 +19,13 @@
   </properties>
 
   <dependencies>
+    <!-- H2 embedded database dependencies -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- https://mvnrepository.com/artifact/com.airhacks/afterburner.fx -->
     <dependency>
       <groupId>com.airhacks</groupId>

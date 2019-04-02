@@ -1,5 +1,6 @@
-package inc.pabacus.TaskMetrics.api.jobs;
+package inc.pabacus.TaskMetrics.api;
 
+import inc.pabacus.TaskMetrics.api.jobs.Job;
 import inc.pabacus.TaskMetrics.api.jobs.options.Progress;
 import inc.pabacus.TaskMetrics.api.jobs.options.Status;
 

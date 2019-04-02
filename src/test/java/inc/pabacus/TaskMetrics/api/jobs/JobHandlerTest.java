@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.jobs;
 
+import inc.pabacus.TaskMetrics.api.MockJobDataProvider;
 import inc.pabacus.TaskMetrics.api.jobs.options.Progress;
 import inc.pabacus.TaskMetrics.api.jobs.options.Status;
 import org.junit.Before;

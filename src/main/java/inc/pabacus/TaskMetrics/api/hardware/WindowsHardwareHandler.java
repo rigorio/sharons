@@ -49,15 +49,13 @@ public class WindowsHardwareHandler implements HardwareService {
     HWDiskStore[] diskStores = hal.getDiskStores();
     return Arrays.stream(diskStores)
         .map(hwDiskStore -> {
-          List<Property> properties = new ArrayList<>();
           String size = FormatUtil.formatBytes(hwDiskStore.getSize());
-          properties.add(new Property("size", "" + size));
-          properties.add(new Property("partitions", "" + hwDiskStore.getPartitions().length));
-          return new HardwareData(hwDiskStore.getName(),
-                                  "Storage Device",
-                                  hwDiskStore.getSerial(),
-                                  "n/a",
-                                  properties);
+          return new DiskData(hwDiskStore.getName(),
+                              "Storage Device",
+                              hwDiskStore.getSerial(),
+                              "n/a",
+                              "size",
+                              size);
         })
         .collect(Collectors.toList());
   }

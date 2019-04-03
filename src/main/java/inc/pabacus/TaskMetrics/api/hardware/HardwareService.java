@@ -5,6 +5,9 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 import java.util.List;
 
+/**
+ * @see WindowsHardwareHandler
+ */
 public interface HardwareService {
 
   default HardwareAbstractionLayer getHal() {
@@ -12,6 +15,8 @@ public interface HardwareService {
   }
 
   List<HardwareData> getDisks();
+
+  HardwareAbstractionLayer getAllInfo();
 
   List<String> getHardwareData(Device device);
 

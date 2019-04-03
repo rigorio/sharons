@@ -2,8 +2,10 @@ package inc.pabacus.TaskMetrics.api.hardware;
 
 import oshi.SystemInfo;
 import oshi.hardware.Display;
+import oshi.hardware.HWDiskStore;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.UsbDevice;
+import oshi.util.FormatUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +36,24 @@ public class WindowsHardwareHandler implements HardwareService {
     return Arrays.stream(usbDevices)
         .filter(usbDevice -> usbDevice.toString().toLowerCase().contains(name))
         .map(Object::toString)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<HardwareData> getDisks() {
+    HWDiskStore[] diskStores = hal.getDiskStores();
+    return Arrays.stream(diskStores)
+        .map(hwDiskStore -> {
+          List<Property> properties = new ArrayList<>();
+          String size = FormatUtil.formatBytes(hwDiskStore.getSize());
+          properties.add(new Property("size", "" + size));
+          properties.add(new Property("partitions", "" + hwDiskStore.getPartitions().length));
+          return new HardwareData(hwDiskStore.getName(),
+                                  "Storage Device",
+                                  hwDiskStore.getSerial(),
+                                  "n/a",
+                                  properties);
+        })
         .collect(Collectors.toList());
   }
 

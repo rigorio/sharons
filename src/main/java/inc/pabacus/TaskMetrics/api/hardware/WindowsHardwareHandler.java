@@ -18,6 +18,11 @@ public class WindowsHardwareHandler implements HardwareService {
   }
 
   @Override
+  public HardwareAbstractionLayer getAllInfo() {
+    return new SystemInfo().getHardware();
+  }
+
+  @Override
   public List<String> getHardwareData(Device device) {
 
     hal = getHal();

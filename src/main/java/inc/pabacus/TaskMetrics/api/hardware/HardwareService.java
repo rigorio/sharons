@@ -11,6 +11,8 @@ public interface HardwareService {
     return new SystemInfo().getHardware();
   }
 
+  List<HardwareData> getDisks();
+
   List<String> getHardwareData(Device device);
 
   public List<String> getHardwareData(String name);

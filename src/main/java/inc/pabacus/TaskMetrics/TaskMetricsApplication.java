@@ -19,6 +19,7 @@ public class TaskMetricsApplication extends Application {
 
   @Override
   public void start(Stage stage) {
+    stage.setResizable(false);
     MANAGER.setPrimaryStage(stage);
     MANAGER.showView(new LoginView());
   }

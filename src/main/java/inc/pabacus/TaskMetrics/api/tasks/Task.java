@@ -1,7 +1,7 @@
-package inc.pabacus.TaskMetrics.api.jobs;
+package inc.pabacus.TaskMetrics.api.tasks;
 
-import inc.pabacus.TaskMetrics.api.jobs.options.Progress;
-import inc.pabacus.TaskMetrics.api.jobs.options.Status;
+import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
+import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,7 @@ import javax.persistence.Id;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Job {
+public class Task {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

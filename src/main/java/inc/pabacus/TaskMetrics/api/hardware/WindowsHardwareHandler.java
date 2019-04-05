@@ -15,6 +15,7 @@ public class WindowsHardwareHandler implements HardwareService {
   private HardwareAbstractionLayer hal;
 
   public WindowsHardwareHandler() {
+    hal = new SystemInfo().getHardware();
   }
 
   @Override
@@ -45,15 +46,14 @@ public class WindowsHardwareHandler implements HardwareService {
   }
 
   @Override
-  public List<HardwareData> getDisks() {
+  public List<DiskData> getDisks() {
     HWDiskStore[] diskStores = hal.getDiskStores();
     return Arrays.stream(diskStores)
         .map(hwDiskStore -> {
           String size = FormatUtil.formatBytes(hwDiskStore.getSize());
-          return new DiskData(hwDiskStore.getName(),
+          return new DiskData(hwDiskStore.getModel(),
                               "Storage Device",
                               hwDiskStore.getSerial(),
-                              "n/a",
                               "size",
                               size);
         })

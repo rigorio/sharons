@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.api.jobs.options;
+package inc.pabacus.TaskMetrics.api.tasks.options;
 
 public enum Progress implements Option{
 

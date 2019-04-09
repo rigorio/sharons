@@ -6,15 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.jdbc.Work;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.List;
 
-/**
- * add priority number
- */
 @Data
 @Entity
 @Builder
@@ -27,8 +26,11 @@ public class Task {
   private Long id;
   private String title;
   private String description;
+  private String totalTimeSpent;
+  private List<WorkLog> workLogs;
   private Status status;
   private Progress progress;
+  private Priority priority;
   private String dateCreated;
   private String author;
 

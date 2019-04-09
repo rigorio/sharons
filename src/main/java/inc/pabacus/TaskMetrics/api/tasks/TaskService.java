@@ -6,6 +6,9 @@ import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @see TaskHandler
+ */
 public interface TaskService {
   Task saveTask(Task task);
 

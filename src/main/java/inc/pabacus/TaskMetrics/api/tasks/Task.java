@@ -12,9 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**
- * add priority number
- */
 @Data
 @Entity
 @Builder
@@ -29,6 +26,7 @@ public class Task {
   private String description;
   private Status status;
   private Progress progress;
+  private Priority priority;
   private String dateCreated;
   private String author;
 

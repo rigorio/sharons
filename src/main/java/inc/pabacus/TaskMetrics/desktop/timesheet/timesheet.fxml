@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetPresenter"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="550.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetPresenter">
+   <children>
+      <JFXTreeTableView fx:id="timeSheet" layoutX="14.0" layoutY="272.0" prefHeight="270.0" prefWidth="753.0" />
+      <JFXTreeTableView fx:id="taskSheet" layoutX="14.0" layoutY="14.0" prefHeight="250.0" prefWidth="753.0" />
+   </children>
 </AnchorPane>

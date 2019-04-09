@@ -16,6 +16,8 @@ public interface TaskService {
 
   List<Task> getAllTasks();
 
+  List<TaskFXAdapter> convertTasks(List<Task> tasks);
+
   List<Task> searchTasks(String keyword);
 
   List<Task> searchTasks(Status status);

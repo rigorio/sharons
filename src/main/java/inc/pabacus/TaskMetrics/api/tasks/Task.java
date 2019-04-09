@@ -32,4 +32,8 @@ public class Task {
   private String dateCreated;
   private String author;
 
+  public Task(String title, String description) {
+    this.title = title;
+    this.description = description;
+  }
 }

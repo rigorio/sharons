@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.api.screenshot;
 
 import inc.pabacus.TaskMetrics.utils.FileUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -21,5 +22,10 @@ public class ScreenshotServiceTest {
     file.delete();
   }
 
-
+  @Test
+  @Ignore
+  public void testScreenshotService() throws InterruptedException {
+    screenshotService.enableScreenShot(3);
+    Thread.sleep(100000L);
+  }
 }

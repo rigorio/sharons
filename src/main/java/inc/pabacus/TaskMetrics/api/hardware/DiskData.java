@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DiskData {
+public class DiskData implements HardwareData {
 
   private String name;
   private String type;
@@ -13,4 +13,8 @@ public class DiskData {
   private String title;
   private String spec;
 
+  @Override
+  public String getDescription() {
+    return spec;
+  }
 }

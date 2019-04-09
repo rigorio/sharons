@@ -46,7 +46,7 @@ public class WindowsHardwareHandler implements HardwareService {
   }
 
   @Override
-  public List<DiskData> getDisks() {
+  public List<HardwareData> getDisks() {
     HWDiskStore[] diskStores = hal.getDiskStores();
     return Arrays.stream(diskStores)
         .map(hwDiskStore -> {
@@ -88,12 +88,12 @@ public class WindowsHardwareHandler implements HardwareService {
           String name = monitor.get("Manuf.ID") + " " + monitor.get("ProductID");
           Object manufacturer = monitor.get("Manuf.ID");
           Object serial = monitor.get("Serial");
-          HardwareData hardwareData = new HardwareData();
-          hardwareData.setName(name);
-          hardwareData.setManufacturer(manufacturer.toString());
-          hardwareData.setType(item);
-          hardwareData.setSerialNumber(serial.toString());
-          monitors.add(hardwareData);
+          GenHardwareData genHardwareData = new GenHardwareData();
+          genHardwareData.setName(name);
+          genHardwareData.setManufacturer(manufacturer.toString());
+          genHardwareData.setType(item);
+          genHardwareData.setSerialNumber(serial.toString());
+          monitors.add(genHardwareData);
         });
     return monitors;
   }

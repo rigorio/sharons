@@ -14,7 +14,7 @@ public interface HardwareService {
     return new SystemInfo().getHardware();
   }
 
-  List<DiskData> getDisks();
+  List<HardwareData> getDisks();
 
   HardwareAbstractionLayer getAllInfo();
 

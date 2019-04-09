@@ -7,13 +7,13 @@ import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class TaskMetricsApplication extends Application {
 
   private static final GuiManager MANAGER = GuiManager.getInstance();
 
   public static void main(String[] args) {
-    SpringApplication.run(TaskMetricsApplication.class, args);
+//    SpringApplication.run(TaskMetricsApplication.class, args);
     launch(args);
   }
 

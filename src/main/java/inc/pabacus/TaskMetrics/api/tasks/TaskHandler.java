@@ -31,6 +31,13 @@ public class TaskHandler implements TaskService {
   }
 
   @Override
+  public List<TaskFXAdapter> convertTasks(List<Task> tasks) {
+    return tasks.stream().parallel()
+        .map(TaskFXAdapter::new)
+        .collect(Collectors.toList());
+  }
+
+  @Override
   public List<Task> searchTasks(String keyword) {
     return taskRepository.findAll().stream()
         .filter(task -> task.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||

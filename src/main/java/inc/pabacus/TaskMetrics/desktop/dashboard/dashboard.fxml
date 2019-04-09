@@ -33,9 +33,9 @@
             <Insets left="50.0"/>
           </padding>
         </JFXButton>
-        <JFXButton fx:id="softwareButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0"
-                   mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="Software Info"
-                   onAction="#viewSoftware">
+        <JFXButton fx:id="timesheetButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0"
+                   mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="View Timesheet"
+                   onAction="#viewTimesheet">
           <font>
             <Font size="20.0"/>
           </font>

@@ -4,11 +4,10 @@ import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
-import javafx.event.ActionEvent;
+import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -23,7 +22,7 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXButton tasksButton;
   @FXML
-  private JFXButton softwareButton;
+  private JFXButton timesheetButton;
   @FXML
   private JFXButton hardwareButton;
   @FXML
@@ -39,7 +38,7 @@ public class DashboardPresenter implements Initializable {
 
     ImageView softwareImage = new ImageView(new Image(getClass().getResourceAsStream("/img/software.png")));
     setSize(softwareImage);
-    softwareButton.setGraphic(softwareImage);
+    timesheetButton.setGraphic(softwareImage);
 
     ImageView hardwareImage = new ImageView(new Image(getClass().getResourceAsStream("/img/hardware.png")));
     setSize(hardwareImage);
@@ -57,6 +56,11 @@ public class DashboardPresenter implements Initializable {
   }
 
   @FXML
+  public void viewTimesheet() {
+    updateDynamicPaneContent(new TimesheetView().getView());
+  }
+
+  @FXML
   public void viewSoftware() {
     Parent parent = new SoftwareView().getView();
     updateDynamicPaneContent(parent);
@@ -70,7 +74,6 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void logout() {
   }
-
 
 
   private void setSize(ImageView taskImage) {

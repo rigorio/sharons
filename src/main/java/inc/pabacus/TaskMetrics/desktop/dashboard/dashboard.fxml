@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" stylesheets="dashboard.css"
+            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.dashboard.DashboardPresenter">
+  <AnchorPane prefHeight="720.0" prefWidth="1080.0">
+    <children>
+      <VBox prefHeight="720.0" prefWidth="301.0" style="-fx-background-color: #80cbc4;" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
+        <ImageView fitHeight="171.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+          <Image url="@../../../../../../resources/img/laptop-work.jpg"/>
+        </ImageView>
+        <JFXButton fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false"
+                   prefHeight="58.0" prefWidth="300.0" text="Jobs"
+                   onAction="#viewTasks">
+          <font>
+            <Font size="20.0"/>
+          </font>
+          <graphic>
+            <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+              <!--          <Image url="@../../../../../../resources/img/tasks.png"/>-->
+            </ImageView>
+          </graphic>
+          <padding>
+            <Insets left="50.0"/>
+          </padding>
+        </JFXButton>
+        <JFXButton fx:id="softwareButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0"
+                   mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="Software Info"
+                   onAction="#viewSoftware">
+          <font>
+            <Font size="20.0"/>
+          </font>
+          <graphic>
+            <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+              <Image url="@../../../../../../resources/img/software.png"/>
+            </ImageView>
+          </graphic>
+          <padding>
+            <Insets left="50.0"/>
+          </padding>
+        </JFXButton>
+        <JFXButton fx:id="hardwareButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0"
+                   mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="Hardware Info"
+                   onAction="#viewHardware">
+          <font>
+            <Font size="20.0"/>
+          </font>
+          <graphic>
+            <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+              <Image url="@../../../../../../resources/img/hardware.png"/>
+            </ImageView>
+          </graphic>
+          <padding>
+            <Insets left="50.0"/>
+          </padding>
+        </JFXButton>
+        <JFXButton fx:id="logoutBtn" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0"
+                   mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="Logout">
+          <font>
+            <Font size="20.0"/>
+          </font>
+          <graphic>
+            <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+              <Image url="@../../../../../../resources/img/logout.png"/>
+            </ImageView>
+          </graphic>
+          <padding>
+            <Insets left="50.0"/>
+          </padding>
+        </JFXButton>
+      </VBox>
+      <AnchorPane layoutX="301.0" prefHeight="170.0" prefWidth="780.0"/>
+      <AnchorPane fx:id="dynamicContentPane" layoutX="301.0" layoutY="168.0" prefHeight="550.0" prefWidth="780.0"/>
+    </children>
+  </AnchorPane>
+</AnchorPane>

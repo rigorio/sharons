@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.api.timesheet;
+package inc.pabacus.TaskMetrics.api.timesheet.logs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

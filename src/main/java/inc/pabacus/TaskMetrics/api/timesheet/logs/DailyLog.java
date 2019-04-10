@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 public class DailyLog {
 
   private String date;
-  private TimeLog in;
-  private TimeLog otl;
-  private TimeLog bfl;
-  private TimeLog out;
+  private String in;
+  private String otl;
+  private String bfl;
+  private String out;
 
 }

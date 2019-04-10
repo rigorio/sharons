@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.api.timesheet;
+package inc.pabacus.TaskMetrics.api.timesheet.logs;
 
 public enum LogStatus {
   IN("in"),

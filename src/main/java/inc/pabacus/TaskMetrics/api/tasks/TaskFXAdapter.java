@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.tasks;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.beans.property.*;
 import lombok.Data;
 
@@ -7,7 +8,7 @@ import lombok.Data;
  * TODO add the other fields to the constructor adapter?
  */
 @Data
-public class TaskFXAdapter {
+public class TaskFXAdapter extends RecursiveTreeObject<TaskFXAdapter> {
 
   private LongProperty id;
   private StringProperty title;

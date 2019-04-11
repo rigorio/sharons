@@ -46,6 +46,14 @@ public class WindowsHardwareHandler implements HardwareService {
   }
 
   @Override
+  public List<HardwareData> getUsbDevices() {
+    UsbDevice[] usbDevices = hal.getUsbDevices(false);
+    return Arrays.stream(usbDevices)
+        .map(usbDevice -> new UsbDeviceData(usbDevice.getName(), usbDevice.getVendor()))
+        .collect(Collectors.toList());
+  }
+
+  @Override
   public List<HardwareData> getDisks() {
     HWDiskStore[] diskStores = hal.getDiskStores();
     return Arrays.stream(diskStores)

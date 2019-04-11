@@ -43,15 +43,15 @@ public class HardwarePresenter implements Initializable {
 
     List<HardwareData> disks = hardwareService.getDisks();
     List<HardwareData> displays = hardwareService.getDisplays();
-    disks.forEach(disk->hardwares.add(new HardwareDataFXAdapter(disk)));
-    displays.forEach(display->hardwares.add(new HardwareDataFXAdapter(display)));
+    List<HardwareData> usbDevices = hardwareService.getUsbDevices();
+    disks.forEach(disk -> hardwares.add(new HardwareDataFXAdapter(disk)));
+    displays.forEach(display -> hardwares.add(new HardwareDataFXAdapter(display)));
+    usbDevices.forEach(usbDevice -> hardwares.add(new HardwareDataFXAdapter(usbDevice)));
 
     final TreeItem<HardwareDataFXAdapter> root = new RecursiveTreeItem<>(hardwares, RecursiveTreeObject::getChildren);
     tableView.getColumns().addAll(name, description);
     tableView.setRoot(root);
     tableView.setShowRoot(false);
-
-
-
+    
   }
 }

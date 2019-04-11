@@ -25,10 +25,21 @@ public class WindowsSoftwareFetcher implements SoftwareFetcher<List<SoftwareData
       list.removeIf(softwareData -> softwareData.getDateInstalled() == null &&
           softwareData.getName() == null &&
           softwareData.getVersion() == null);
+
+      for (SoftwareData softwareData : list) {
+        softwareData.setDateInstalled(getDateInstalled(softwareData));
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
     return list;
+  }
+
+  private String getDateInstalled(SoftwareData softwareData) {
+    String di = softwareData.getDateInstalled();
+    return di != null
+        ? new StringBuilder().append(di, 0, 4).append("-").append(di, 4, 6).append("-").append(di, 6, 8).toString()
+        : null;
   }
 
   private String runCommand(String commandString) throws IOException {

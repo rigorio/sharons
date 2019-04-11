@@ -200,6 +200,8 @@
           <include>**/*.gif</include>
           <include>**/*.otf</include>
           <include>**/*.ttf</include>
+          <include>**/*.PNG</include>
+          <include>**/*.ico</include>
         </includes>
       </resource>
     </resources>

@@ -48,6 +48,7 @@ public class DashboardPresenter implements Initializable {
     setSize(logoutImage);
     logoutBtn.setGraphic(logoutImage);
 
+    viewTasks();
   }
 
   @FXML

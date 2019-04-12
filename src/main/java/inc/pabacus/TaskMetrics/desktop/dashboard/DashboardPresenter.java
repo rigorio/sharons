@@ -69,7 +69,6 @@ public class DashboardPresenter implements Initializable {
   public void logout() {
   }
 
-
   private void setSize(ImageView taskImage) {
     taskImage.setFitHeight(30);
     taskImage.setFitWidth(30);

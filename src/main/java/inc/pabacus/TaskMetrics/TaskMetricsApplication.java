@@ -25,5 +25,4 @@ public class TaskMetricsApplication extends Application {
     MANAGER.setPrimaryStage(stage);
     MANAGER.showView(new LoginView());
   }
-
 }

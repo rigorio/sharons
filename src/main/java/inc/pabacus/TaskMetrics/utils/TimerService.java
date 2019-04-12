@@ -25,6 +25,15 @@ public class TimerService {
     return second;
   }
 
+  public void setTime(long second) {
+    this.second = second;
+  }
+
+  /**
+   * What does this even do?
+   * What is thou purpose?
+   */
+  @Deprecated
   public void addSecond() {
     second++;
   }
@@ -33,15 +42,29 @@ public class TimerService {
     second = 0;
   }
 
-  public String formatSeconds(long duration) {
+  public String formatSeconds(long seconds) {
     return String.format("%02d:%02d:%02d",
-                         TimeUnit.SECONDS.toHours(duration),
-                         TimeUnit.SECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(duration)),
-                         duration - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(duration))
-    );
+                         TimeUnit.SECONDS.toHours(seconds),
+                         TimeUnit.SECONDS.toMinutes(seconds) - TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(seconds)),
+                         seconds - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(seconds))
+                        );
   }
 
-  public void setProcess(Runnable process) {
+  public long formatDuration(String duration) {
+    String[] split = duration.split(":");
+    String h = split[0];
+    String m = split[1];
+    String s = split[2];
+    return Long.parseLong(h) * 3600 + Long.parseLong(m) * 60 + Long.parseLong(s);
+  }
+
+  /**
+   * javafx.application.Platform#runLater(java.lang.Runnable) is specifically
+   * used for invoking javafx related functions // i think
+   *
+   * @param process to be executed by TimerTask
+   */
+  public void setFxProcess(Runnable process) {
     timerTask = new TimerTask() {
       @Override
       public void run() {
@@ -49,6 +72,21 @@ public class TimerService {
           second++;
           process.run();
         });
+      }
+    };
+  }
+
+  /**
+   * For normal processes
+   *
+   * @param process to be executed by TimerTask
+   */
+  public void setProcess(Runnable process) {
+    timerTask = new TimerTask() {
+      @Override
+      public void run() {
+        second++;
+        process.run();
       }
     };
   }

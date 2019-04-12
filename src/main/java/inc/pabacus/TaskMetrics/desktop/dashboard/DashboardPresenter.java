@@ -28,7 +28,6 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private ImageView navigationImage;
 
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 

@@ -89,7 +89,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
     try {
       file.createNewFile();
       ScreenshotTool tool = new ScreenshotTool();
-      BufferedImage image = tool.screenshot();
+      BufferedImage image = tool.blurredScreenshot();
       tool.saveImage(image, "png", file);
       // retrieve image, send to assets
     } catch (AWTException | IOException e) {

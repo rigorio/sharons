@@ -23,8 +23,6 @@ public class DashboardPresenter implements Initializable {
   private JFXButton tasksButton;
   @FXML
   private JFXButton timesheetButton;
-//  @FXML
-//  private JFXButton hardwareButton;
   @FXML
   private JFXButton logoutBtn;
   @FXML
@@ -44,10 +42,6 @@ public class DashboardPresenter implements Initializable {
     ImageView softwareImage = new ImageView(new Image(getClass().getResourceAsStream("/img/software.png")));
     setSize(softwareImage);
     timesheetButton.setGraphic(softwareImage);
-
-//    ImageView hardwareImage = new ImageView(new Image(getClass().getResourceAsStream("/img/hardware.png")));
-//    setSize(hardwareImage);
-//    hardwareButton.setGraphic(hardwareImage);
 
     ImageView logoutImage = new ImageView(new Image(getClass().getResourceAsStream("/img/logout.png")));
     setSize(logoutImage);
@@ -71,11 +65,6 @@ public class DashboardPresenter implements Initializable {
     Parent parent = new SoftwareView().getView();
     updateDynamicPaneContent(parent);
   }
-
-//  @FXML
-//  public void viewHardware() {
-//    updateDynamicPaneContent(new HardwareView().getView());
-//  }
 
   @FXML
   public void logout() {

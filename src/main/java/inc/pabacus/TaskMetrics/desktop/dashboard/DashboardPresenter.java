@@ -27,10 +27,15 @@ public class DashboardPresenter implements Initializable {
   private JFXButton hardwareButton;
   @FXML
   private JFXButton logoutBtn;
+  @FXML
+  private ImageView navigationImage;
 
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    Image navImage = new Image("/img/laptop-work.jpg");
+    navigationImage.setImage(navImage);
 
     ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
     setSize(taskImage);

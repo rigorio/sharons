@@ -1,13 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.tasks;
 
 import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import inc.pabacus.TaskMetrics.api.tasks.Task;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,46 +16,74 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-import javax.xml.transform.Result;
-import java.lang.reflect.Array;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class TasksPresenter implements Initializable {
 
   @FXML
-  public TableView<ToDo> tableViewToDo;
+  private TableView<ToDo> backLogsTable;
   @FXML
-  public TableColumn<ToDo, String> colToDo;
+  private TableColumn<ToDo, String> colToDo;
+  @FXML
+  private TableColumn<ToDo, String> backlogTime;
+
+
   @FXML
   private TableView<InProgress> tableViewInProgress;
   @FXML
+  private TableColumn<ToDo, String> progressTime;
+  @FXML
   private TableColumn<ToDo, String> colInProgress;
+
   @FXML
-  public TableView<Done> tableViewDone;
+  private TableView<Done> tableViewDone;
   @FXML
-  public TableColumn<ToDo, String> colDone;
+  private TableColumn<ToDo, String> colDone;
+  @FXML
+  private TableColumn<ToDo, String> totalTime;
+
   @FXML
   private JFXTextArea hiddenLabelTask;
   @FXML
-  Label timerLabel;
+  private Label timerLabel;
   @FXML
-  Label timerLabelFx;
+  private Label timerLabelFx;
   @FXML
-  public Label currentStatusLabel;
+  private Label currentStatusLabel;
+  private TimerService service = new TimerService();
+
+  private ObservableList<ToDo> backlogs = FXCollections.observableArrayList(
+      new ToDo("Design the App", "Designing of the app", "Backlog", "00:00:00"),
+      new ToDo("Run the App", "Designing of the app", "Backlog", "00:00:00"),
+      new ToDo("Make a timer", "Designing of the app", "Backlog", "00:00:00"),
+      new ToDo("Make a Java Class", "Designing of the app", "Backlog", "00:00:00")
+  );
+
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    colToDo.setCellValueFactory(new PropertyValueFactory<>("ToDo"));
+    colToDo.setCellValueFactory(new PropertyValueFactory<>("title"));
+    backlogTime.setCellValueFactory(new PropertyValueFactory<>("timeSpent"));
+    backlogTime.setResizable(false);
+    colToDo.setResizable(false);
+
     colInProgress.setCellValueFactory(new PropertyValueFactory<>("InProgress"));
+    progressTime.setCellValueFactory(new PropertyValueFactory<>("timeSpent"));
+
     colDone.setCellValueFactory(new PropertyValueFactory<>("Done"));
-    tableViewToDo.setItems(observableListToDo);
+    totalTime.setCellValueFactory(new PropertyValueFactory<>("timeSpent"));
+
+    backLogsTable.setItems(backlogs);
     tableViewInProgress.setItems(observableListInProgress);
     tableViewDone.setItems(observableListDone);
     timerLabel.setText("00:00:00");
     hiddenLabelTask.setVisible(false);
   }
-  private TimerService service = new TimerService();
+
 
   public void timerFxStart() {
     Runnable process = () -> {
@@ -69,17 +91,10 @@ public class TasksPresenter implements Initializable {
       String time = service.formatSeconds(duration);
       timerLabel.setText(time);
     };
-    service.setProcess(process);
+    service.setFxProcess(process);
     service.start();
   }
-
   // dummy data
-  ObservableList<ToDo> observableListToDo = FXCollections.observableArrayList(
-          new ToDo("Design the App"),
-          new ToDo("Run the App"),
-          new ToDo("Make a timer"),
-          new ToDo("Make a Java Class")
-  );
 
   ObservableList<InProgress> observableListInProgress = FXCollections.observableArrayList(
   );
@@ -90,16 +105,15 @@ public class TasksPresenter implements Initializable {
 
   public void moveToDo(ActionEvent event) {
     timerFxStart();
-    try{
-    ToDo toDos = tableViewToDo.getSelectionModel().getSelectedItem();
-      hiddenLabelTask.setText(toDos.getToDo());
+    try {
+      ToDo toDos = backLogsTable.getSelectionModel().getSelectedItem();
+      hiddenLabelTask.setText(toDos.getTitle());
 
-    tableViewToDo.getItems().removeAll(tableViewToDo.getSelectionModel().getSelectedItem());
+      backLogsTable.getItems().removeAll(backLogsTable.getSelectionModel().getSelectedItem());
 
-    InProgress inProgress = new InProgress(hiddenLabelTask.getText());
-    tableViewInProgress.getItems().add(inProgress);
-    }
-    catch (Exception e){
+      InProgress inProgress = new InProgress(hiddenLabelTask.getText());
+      tableViewInProgress.getItems().add(inProgress);
+    } catch (Exception e) {
       System.out.println(e);
     }
 
@@ -107,7 +121,7 @@ public class TasksPresenter implements Initializable {
 
   public void moveInProgress(ActionEvent event) {
     service.pause();
-    try{
+    try {
       InProgress inProgress = tableViewInProgress.getSelectionModel().getSelectedItem();
       hiddenLabelTask.setText(inProgress.getInProgress() + " - Time: " + timerLabel.getText());
 
@@ -115,8 +129,7 @@ public class TasksPresenter implements Initializable {
 
       Done done = new Done(hiddenLabelTask.getText());
       tableViewDone.getItems().add(done);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       System.out.println(e);
     }
 
@@ -124,7 +137,7 @@ public class TasksPresenter implements Initializable {
 
   public void backInProgress(ActionEvent event) {
     timerFxStart();
-    try{
+    try {
       Done done = tableViewDone.getSelectionModel().getSelectedItem();
       hiddenLabelTask.setText(done.getDone());
       String doneLabel = hiddenLabelTask.getText();
@@ -137,8 +150,7 @@ public class TasksPresenter implements Initializable {
 
       InProgress inProgress = new InProgress(hiddenLabelTask.getText());
       tableViewInProgress.getItems().add(inProgress);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       System.out.println(e);
     }
 
@@ -148,24 +160,23 @@ public class TasksPresenter implements Initializable {
     service.pause();
     service.reset();
     timerLabel.setText("00:00:00");
-    try{
+    try {
       InProgress inProgress = tableViewInProgress.getSelectionModel().getSelectedItem();
       hiddenLabelTask.setText(inProgress.getInProgress());
 
       tableViewInProgress.getItems().removeAll(tableViewInProgress.getSelectionModel().getSelectedItem());
 
 
-      ToDo todo = new ToDo(hiddenLabelTask.getText());
-      tableViewToDo.getItems().add(todo);
-    }
-    catch (Exception e){
+//      ToDo todo = new ToDo(hiddenLabelTask.getText());
+//      backLogsTable.getItems().add(todo);
+    } catch (Exception e) {
       System.out.println(e);
     }
 
   }
 
   @FXML
-  void onHandleChangeStatus(ActionEvent event){
+  void onHandleChangeStatus(ActionEvent event) {
     List<String> choices = new ArrayList<>();
     choices.add("Log In");
     choices.add("Morning Break");
@@ -178,7 +189,7 @@ public class TasksPresenter implements Initializable {
 
 
     ChoiceDialog<String> dialog = new ChoiceDialog<>(currentStatusLabel.getText(), choices);
-    Image imageImage1 = new Image("/img/status.png", 50,50,false,false);
+    Image imageImage1 = new Image("/img/status.png", 50, 50, false, false);
     ImageView imageView = new ImageView(imageImage1);
     dialog.setGraphic(imageView);
     dialog.setTitle("Status");
@@ -186,17 +197,16 @@ public class TasksPresenter implements Initializable {
     dialog.setContentText("Choose your status:");
 
     Optional<String> result = dialog.showAndWait();
-    if (result.isPresent()){
-        currentStatusLabel.setText(result.get());
+    if (result.isPresent()) {
+      currentStatusLabel.setText(result.get());
     }
-
 
 
   }
 
   public void newTask(ActionEvent event) {
     TextInputDialog dialog = new TextInputDialog("");
-    Image imageImage1 = new Image("/img/task.png", 50,50,false,false);
+    Image imageImage1 = new Image("/img/task.png", 50, 50, false, false);
     ImageView imageView = new ImageView(imageImage1);
     dialog.setGraphic(imageView);
 //    dialog.initOwner(stage);
@@ -209,9 +219,9 @@ public class TasksPresenter implements Initializable {
     dialog.setHeaderText("Add a new Task");
     dialog.setContentText("Enter a new Task:");
     Optional<String> result = dialog.showAndWait();
-    if (result.isPresent()){
-      ToDo todo = new ToDo(result.get());
-      tableViewToDo.getItems().add(todo);
+    if (result.isPresent()) {
+//      ToDo todo = new ToDo(result.get());
+//      backLogsTable.getItems().add(todo);
     }
   }
 
@@ -225,7 +235,7 @@ public class TasksPresenter implements Initializable {
       stage.setScene(new Scene(root1));
       stage.show();
 
-    } catch (Exception e){
+    } catch (Exception e) {
       System.out.println(e);
     }
   }

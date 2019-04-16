@@ -84,6 +84,16 @@ public class TasksPresenter implements Initializable {
     hiddenLabelTask.setVisible(false);
   }
 
+  @FXML
+  public void changeStatus() {
+
+  }
+
+  @FXML
+  public void refreshTasks() {
+    
+  }
+
 
   public void timerFxStart() {
     Runnable process = () -> {

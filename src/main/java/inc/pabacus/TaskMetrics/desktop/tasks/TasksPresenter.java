@@ -17,12 +17,11 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class TasksPresenter implements Initializable {
+
+  private static final List<String> STATUS = new ArrayList<>(Arrays.asList("Backlog", "In Progress", "For Review", "Closed"));
 
   @FXML
   private TableView<ToDo> backLogsTable;
@@ -86,12 +85,31 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void changeStatus() {
-
+    ToDo selectedItem = backLogsTable.getSelectionModel().getSelectedItem();
+    String currentStatus = selectedItem.getStatus().get();
+    String newStatus = changeStatus(currentStatus);
+    selectedItem.setStatus(newStatus);
+    // save selectedItem
+    refreshTasks();
   }
 
   @FXML
   public void refreshTasks() {
-    
+    backLogsTable.getItems().clear(); // does this clear the data??
+  }
+
+  private String changeStatus(String status) {
+    return "mock me";
+  }
+
+  private String moveLeft(String status) {
+    int i = STATUS.indexOf(status);
+    return STATUS.get(i - 1);
+  }
+
+  private String moveRight(String status) {
+    int i = STATUS.indexOf(status);
+    return STATUS.get(i + 1);
   }
 
 

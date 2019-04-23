@@ -16,6 +16,8 @@ public class TaskFXAdapter {
   private IntegerProperty progress;
   private IntegerProperty priority;
   private StringProperty dateCreated;
+  private StringProperty dateCompleted;
+
   private StringProperty author;
 
   public TaskFXAdapter(Task task) {
@@ -39,6 +41,9 @@ public class TaskFXAdapter {
 
     Progress progress = task.getProgress();
     this.progress = progress != null ? new SimpleIntegerProperty(progress.getProgress()) : null;
+
+    String dateCompleted = task.getDateCompleted();
+    this.dateCompleted = dateCreated != null ? new SimpleStringProperty(dateCompleted) : null;
 
     String dateCreated = task.getDateCreated();
     this.dateCreated = dateCreated != null ? new SimpleStringProperty(dateCreated) : null;

@@ -1,7 +1,10 @@
 package inc.pabacus.TaskMetrics.desktop.tasks;
 
-import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXButton;
+import inc.pabacus.TaskMetrics.api.tasks.*;
+import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.utils.TimerService;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,42 +14,34 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TasksPresenter implements Initializable {
 
   private static final List<String> STATUS = new ArrayList<>(Arrays.asList("Backlog", "In Progress", "For Review", "Closed"));
+  @FXML
+  private TableView taskTimesheet;
 
   @FXML
-  private TableView<ToDo> backLogsTable;
+  private TableView<TaskFXAdapter> doneTasksTable;
   @FXML
-  private TableColumn<ToDo, String> colToDo;
+  private JFXButton completeButton;
   @FXML
-  private TableColumn<ToDo, String> backlogTime;
-
-
-  @FXML
-  private TableView<InProgress> tableViewInProgress;
-  @FXML
-  private TableColumn<ToDo, String> progressTime;
-  @FXML
-  private TableColumn<ToDo, String> colInProgress;
+  private JFXButton startButton;
 
   @FXML
-  private TableView<Done> tableViewDone;
+  private Label taskName;
   @FXML
-  private TableColumn<ToDo, String> colDone;
-  @FXML
-  private TableColumn<ToDo, String> totalTime;
+  private TableView<TaskFXAdapter> tasksTable;
 
-  @FXML
-  private JFXTextArea hiddenLabelTask;
+
   @FXML
   private Label timerLabel;
   @FXML
@@ -55,61 +50,88 @@ public class TasksPresenter implements Initializable {
   private Label currentStatusLabel;
   private TimerService service = new TimerService();
 
-  private ObservableList<ToDo> backlogs = FXCollections.observableArrayList(
-      new ToDo("Design the App", "Designing of the app", "Backlog", "00:00:00"),
-      new ToDo("Run the App", "Designing of the app", "Backlog", "00:00:00"),
-      new ToDo("Make a timer", "Designing of the app", "Backlog", "00:00:00"),
-      new ToDo("Make a Java Class", "Designing of the app", "Backlog", "00:00:00")
-  );
+  private ObservableList<TaskFXAdapter> backlogs = FXCollections.observableArrayList();
+  private ObservableList<TaskFXAdapter> done = FXCollections.observableArrayList();
 
+  private TaskHandler taskHandler;
+  private TimerService timerService;
+
+  public TasksPresenter() {
+    taskHandler = new TaskHandler(new TaskWebRepository());
+  }
+
+  private TableColumn<TaskFXAdapter, String> backLogsColumn = new TableColumn<>("Name");
+  private TableColumn<TaskFXAdapter, String> doneColumn = new TableColumn<>("Name");
+
+  private Runnable process = () -> {
+    long duration = timerService.getTime();
+    String time = service.formatSeconds(duration);
+    timerLabel.setText(time);
+  };
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    colToDo.setCellValueFactory(new PropertyValueFactory<>("title"));
-    backlogTime.setCellValueFactory(new PropertyValueFactory<>("timeSpent"));
-    backlogTime.setResizable(false);
-    colToDo.setResizable(false);
-
-    colInProgress.setCellValueFactory(new PropertyValueFactory<>("InProgress"));
-    progressTime.setCellValueFactory(new PropertyValueFactory<>("timeSpent"));
-
-    colDone.setCellValueFactory(new PropertyValueFactory<>("Done"));
-    totalTime.setCellValueFactory(new PropertyValueFactory<>("timeSpent"));
-
-    backLogsTable.setItems(backlogs);
-    tableViewInProgress.setItems(observableListInProgress);
-    tableViewDone.setItems(observableListDone);
+    initList();
+    hideTable();
     timerLabel.setText("00:00:00");
-    hiddenLabelTask.setVisible(false);
+    backLogsColumn.setCellValueFactory(param -> param.getValue().getTitle());
+    doneColumn.setCellValueFactory(param -> param.getValue().getTitle());
+    tasksTable.getColumns().add(backLogsColumn);
+    doneTasksTable.getColumns().add(doneColumn);
+
+    backlogs.addAll(mockTasks);
+    done.addAll(mockTasks);
+    initTasksTable();
+    initCompletedTaskTable();
+
+    completeButton.setDisable(true);
+  }
+
+  private void initTasksTable() {
+    tasksTable.setItems(getTasks(backlogs, "backlog"));
+  }
+
+  private void initCompletedTaskTable() {
+    doneTasksTable.setItems(getTasks(done, "done"));
+  }
+
+
+  @FXML
+  public void startTask() {
+    timerLabel.setText("00:00:00");
+    timerService = new TimerService();
+    timerService.setFxProcess(process);
+    String title = tasksTable.getSelectionModel().getSelectedItem().getTitle().get();
+    taskName.setText(title);
+    timerService.start();
+    startButton.setDisable(true);
+    completeButton.setDisable(false);
   }
 
   @FXML
-  public void changeStatus() {
-    ToDo selectedItem = backLogsTable.getSelectionModel().getSelectedItem();
-    String currentStatus = selectedItem.getStatus().get();
-    String newStatus = changeStatus(currentStatus);
-    selectedItem.setStatus(newStatus);
-    // save selectedItem
+  public void completeTask() {
+    timerLabel.setText("00:00:00");
+    long time = timerService.getTime();
+    timerService.pause();
+    System.out.println(time);
+    String totalTime = timerService.formatSeconds(time);
+    System.out.println(totalTime);
+    timerService.reset();
+    TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
+    selectedItem.setTotalTimeSpent(new SimpleStringProperty(totalTime));
+    selectedItem.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
+    Task task = taskHandler.saveTask(new Task(selectedItem));
+    System.out.println(task);
+    taskName.setText(null);
+    startButton.setDisable(false);
+    completeButton.setDisable(true);
     refreshTasks();
   }
 
   @FXML
   public void refreshTasks() {
-    backLogsTable.getItems().clear(); // does this clear the data??
-  }
-
-  private String changeStatus(String status) {
-    return "mock me";
-  }
-
-  private String moveLeft(String status) {
-    int i = STATUS.indexOf(status);
-    return STATUS.get(i - 1);
-  }
-
-  private String moveRight(String status) {
-    int i = STATUS.indexOf(status);
-    return STATUS.get(i + 1);
+    initTasksTable();
+    initCompletedTaskTable();
   }
 
 
@@ -122,86 +144,7 @@ public class TasksPresenter implements Initializable {
     service.setFxProcess(process);
     service.start();
   }
-  // dummy data
 
-  ObservableList<InProgress> observableListInProgress = FXCollections.observableArrayList(
-  );
-
-  ObservableList<Done> observableListDone = FXCollections.observableArrayList(
-  );
-
-
-  public void moveToDo(ActionEvent event) {
-    timerFxStart();
-    try {
-      ToDo toDos = backLogsTable.getSelectionModel().getSelectedItem();
-      hiddenLabelTask.setText(toDos.getTitle());
-
-      backLogsTable.getItems().removeAll(backLogsTable.getSelectionModel().getSelectedItem());
-
-      InProgress inProgress = new InProgress(hiddenLabelTask.getText());
-      tableViewInProgress.getItems().add(inProgress);
-    } catch (Exception e) {
-      System.out.println(e);
-    }
-
-  }
-
-  public void moveInProgress(ActionEvent event) {
-    service.pause();
-    try {
-      InProgress inProgress = tableViewInProgress.getSelectionModel().getSelectedItem();
-      hiddenLabelTask.setText(inProgress.getInProgress() + " - Time: " + timerLabel.getText());
-
-      tableViewInProgress.getItems().removeAll(tableViewInProgress.getSelectionModel().getSelectedItem());
-
-      Done done = new Done(hiddenLabelTask.getText());
-      tableViewDone.getItems().add(done);
-    } catch (Exception e) {
-      System.out.println(e);
-    }
-
-  }
-
-  public void backInProgress(ActionEvent event) {
-    timerFxStart();
-    try {
-      Done done = tableViewDone.getSelectionModel().getSelectedItem();
-      hiddenLabelTask.setText(done.getDone());
-      String doneLabel = hiddenLabelTask.getText();
-      String[] parts = doneLabel.split("-");
-      String getPart = parts[0];
-      hiddenLabelTask.setText(getPart);
-
-      tableViewDone.getItems().removeAll(tableViewDone.getSelectionModel().getSelectedItem());
-
-
-      InProgress inProgress = new InProgress(hiddenLabelTask.getText());
-      tableViewInProgress.getItems().add(inProgress);
-    } catch (Exception e) {
-      System.out.println(e);
-    }
-
-  }
-
-  public void backToDo(ActionEvent event) {
-    service.pause();
-    service.reset();
-    timerLabel.setText("00:00:00");
-    try {
-      InProgress inProgress = tableViewInProgress.getSelectionModel().getSelectedItem();
-      hiddenLabelTask.setText(inProgress.getInProgress());
-
-      tableViewInProgress.getItems().removeAll(tableViewInProgress.getSelectionModel().getSelectedItem());
-
-
-//      ToDo todo = new ToDo(hiddenLabelTask.getText());
-//      backLogsTable.getItems().add(todo);
-    } catch (Exception e) {
-      System.out.println(e);
-    }
-
-  }
 
   @FXML
   void onHandleChangeStatus(ActionEvent event) {
@@ -248,6 +191,12 @@ public class TasksPresenter implements Initializable {
     dialog.setContentText("Enter a new Task:");
     Optional<String> result = dialog.showAndWait();
     if (result.isPresent()) {
+      String taskName = result.get();
+      Task task = new Task();
+      task.setTitle(taskName);
+      task.setStatus(Status.BACKLOG);
+      taskHandler.saveTask(task);
+      refreshTasks();
 //      ToDo todo = new ToDo(result.get());
 //      backLogsTable.getItems().add(todo);
     }
@@ -266,5 +215,49 @@ public class TasksPresenter implements Initializable {
     } catch (Exception e) {
       System.out.println(e);
     }
+  }
+
+
+  /**
+   * mock tasks
+   */
+  private List<TaskFXAdapter> mockTasks = new ArrayList<>();
+
+  private void initList() {
+    List<Task> tasks = new ArrayList<>();
+    tasks.add(new Task("task 1", "description 1", Status.BACKLOG));
+    tasks.add(new Task("task 2", "description 2", Status.BACKLOG));
+    tasks.add(new Task("task 3", "description 3", Status.BACKLOG));
+    tasks.add(new Task("task 4", "description 4", Status.DONE));
+    tasks.add(new Task("task 5", "description 5", Status.DONE));
+
+    mockTasks = taskHandler.getAllTasks().stream()
+        .map(TaskFXAdapter::new)
+        .collect(Collectors.toList());
+  }
+
+
+  private ObservableList<TaskFXAdapter> getTasks(ObservableList<TaskFXAdapter> backlogs, String backlog2) {
+    return FXCollections
+        .observableArrayList(backlogs.stream()
+                                 .filter(backlog -> backlog.getStatus().get().equalsIgnoreCase(backlog2))
+                                 .collect(Collectors.toList()));
+  }
+
+  private void hideTable() {
+    salikutMuKu(tasksTable);
+    salikutMuKu(doneTasksTable);
+  }
+
+  private void salikutMuKu(TableView<TaskFXAdapter> doneTasksTable) {
+    doneTasksTable.widthProperty().addListener((observable, oldValue, newValue) -> {
+      Pane header = (Pane) doneTasksTable.lookup("TableHeaderRow");
+      if (header.isVisible()) {
+        header.setMaxHeight(0);
+        header.setMinHeight(0);
+        header.setPrefHeight(0);
+        header.setVisible(false);
+      }
+    });
   }
 }

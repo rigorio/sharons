@@ -31,7 +31,7 @@ public enum Progress implements Option {
       case 100:
         return ONE_HUNDRED;
       default:
-        return ZERO;
+        return null;
     }
   }
 }

@@ -145,9 +145,18 @@ public class TasksPresenter implements Initializable {
     service.start();
   }
 
+  private List<TaskFXAdapter> getTasksToday() {
+    List<Task> allTasks = taskHandler.getAllTasks();
+    String dateToday = "";
+    List<TaskFXAdapter> tasks = allTasks.stream()
+        .filter(task -> task.getDateCompleted().equalsIgnoreCase(dateToday))
+        .map(TaskFXAdapter::new)
+        .collect(Collectors.toList());
+    return tasks;
+  }
 
   @FXML
-  void onHandleChangeStatus(ActionEvent event) {
+  private void onHandleChangeStatus(ActionEvent event) {
     List<String> choices = new ArrayList<>();
     choices.add("Log In");
     choices.add("Morning Break");

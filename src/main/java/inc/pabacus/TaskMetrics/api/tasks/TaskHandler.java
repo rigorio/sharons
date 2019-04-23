@@ -2,16 +2,18 @@ package inc.pabacus.TaskMetrics.api.tasks;
 
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 public class TaskHandler implements TaskService {
 
-  private TaskRepository taskRepository;
+  private TaskWebRepository taskRepository;
 
-  public TaskHandler(TaskRepository taskRepository) {
+  public TaskHandler(TaskWebRepository taskRepository) {
     this.taskRepository = taskRepository;
   }
 

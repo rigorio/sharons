@@ -39,6 +39,7 @@ public class TimerService {
   }
 
   public void reset() {
+    timer.cancel();
     second = 0;
   }
 

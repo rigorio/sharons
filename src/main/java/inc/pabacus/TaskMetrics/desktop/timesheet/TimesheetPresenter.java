@@ -72,6 +72,7 @@ public class TimesheetPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     mockUser = new MockUser("Rigo", "Logged Out");
     statusText.setText(mockUser.getStatus());
+    userName.setText(mockUser.getName());
     initOshiInfo();
     initTimeSheet();
     populateCombobox();

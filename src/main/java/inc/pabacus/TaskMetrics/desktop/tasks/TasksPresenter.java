@@ -28,7 +28,7 @@ public class TasksPresenter implements Initializable {
 
   private static final List<String> STATUS = new ArrayList<>(Arrays.asList("Backlog", "In Progress", "For Review", "Closed"));
   @FXML
-  private TableView taskTimesheet;
+  private TableView<TaskFXAdapter> taskTimesheet;
 
   @FXML
   private TableView<TaskFXAdapter> doneTasksTable;
@@ -86,6 +86,22 @@ public class TasksPresenter implements Initializable {
     initCompletedTaskTable();
 
     completeButton.setDisable(true);
+    initTaskSheet();
+  }
+
+  private void initTaskSheet() {
+    TableColumn<TaskFXAdapter, String> title = new TableColumn<>("Title");
+    title.setCellValueFactory(param -> param.getValue().getTitle());
+
+    TableColumn<TaskFXAdapter, String> timeSpent = new TableColumn<>("Time Spent");
+    timeSpent.setCellValueFactory(param -> param.getValue().getTotalTimeSpent());
+
+    TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Description");
+    description.setCellValueFactory(param -> param.getValue().getDescription());
+
+    taskTimesheet.getColumns().addAll(title, timeSpent, description);
+    taskTimesheet.setItems(getTasksToday());
+
   }
 
   private void initTasksTable() {
@@ -143,14 +159,14 @@ public class TasksPresenter implements Initializable {
     service.start();
   }
 
-  private List<TaskFXAdapter> getTasksToday() {
+  private ObservableList<TaskFXAdapter> getTasksToday() {
     List<Task> allTasks = taskHandler.getAllTasks();
     String dateToday = LocalDate.now().toString();
     List<TaskFXAdapter> tasks = allTasks.stream()
         .filter(task -> task.getDateCompleted().equalsIgnoreCase(dateToday))
         .map(TaskFXAdapter::new)
         .collect(Collectors.toList());
-    return tasks;
+    return FXCollections.observableArrayList(tasks);
   }
 
   @FXML

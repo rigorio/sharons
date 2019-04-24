@@ -7,33 +7,35 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720" prefWidth="780.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetPresenter">
+<AnchorPane prefHeight="720" prefWidth="780.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetPresenter">
   <children>
-    <JFXTreeTableView id="timesheet" fx:id="timeSheet" layoutX="14.0" layoutY="303.0" prefHeight="403.0"
-                      prefWidth="752.0"/>
-    <Line endX="100.0" layoutX="192.0" layoutY="139.0" startX="-100.0"/>
-    <ImageView fx:id="hardwareImg" fitHeight="70.0" fitWidth="70.0" layoutX="29.0" layoutY="177.0" pickOnBounds="true"
-               preserveRatio="true"/>
-    <ImageView fx:id="softwareImg" fitHeight="70.0" fitWidth="70.0" layoutX="29.0" layoutY="47.0" pickOnBounds="true"
-               preserveRatio="true"/>
-    <Label layoutX="115.0" layoutY="169.0" text="Hardware Info"/>
-    <Label layoutX="118.0" layoutY="38.0" text="Software Info"/>
-    <Label fx:id="os" layoutX="118.0" layoutY="63.0" text="Label"/>
-    <Label fx:id="hardware" layoutX="115.0" layoutY="193.0" text="Label"/>
-    <JFXButton layoutX="115.0" layoutY="226.0" mnemonicParsing="false" onAction="#viewHardware" prefHeight="29.0"
-               prefWidth="150.0" ripplerFill="#64d8cb" style="-fx-background-color: #00766c;" text="View Info"
-               textFill="WHITE"/>
-    <JFXButton layoutX="117.0" layoutY="92.0" mnemonicParsing="false" onAction="#viewSoftware" prefHeight="29.0"
-               prefWidth="150.0" style="-fx-background-color: #00766c;" text="View Info" textFill="WHITE"/>
-    <JFXComboBox fx:id="comboBox" layoutX="470.0" layoutY="188.0" prefWidth="150.0"/>
-    <JFXButton fx:id="updateButton" layoutX="652.0" layoutY="188.0" mnemonicParsing="false" text="Update"/>
-    <JFXButton fx:id="statusButton" layoutX="536.0" layoutY="140.0" mnemonicParsing="false" text="Change Status"/>
-    <Label layoutX="510.0" layoutY="113.0" text="You are currently:"/>
-    <Label fx:id="statusText" layoutX="635.0" layoutY="113.0" text="Label"/>
-    <Label layoutX="510.0" layoutY="63.0" text="Hi, "/>
-    <Label fx:id="userName" layoutX="559.0" layoutY="63.0" text="Label"/>
+    <JFXTreeTableView id="timesheet" fx:id="timeSheet" layoutX="14.0" layoutY="303.0" prefHeight="403.0" prefWidth="752.0" />
+    <Line endX="100.0" layoutX="192.0" layoutY="139.0" startX="-100.0" />
+    <ImageView fx:id="hardwareImg" fitHeight="70.0" fitWidth="70.0" layoutX="29.0" layoutY="177.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="softwareImg" fitHeight="70.0" fitWidth="70.0" layoutX="29.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" />
+    <Label layoutX="115.0" layoutY="169.0" text="Hardware Info" />
+    <Label layoutX="118.0" layoutY="38.0" text="Software Info" />
+    <Label fx:id="os" layoutX="118.0" layoutY="63.0" text="Label" />
+    <Label fx:id="hardware" layoutX="115.0" layoutY="193.0" text="Label" />
+    <JFXButton layoutX="115.0" layoutY="226.0" mnemonicParsing="false" onAction="#viewHardware" prefHeight="29.0" prefWidth="150.0" ripplerFill="#64d8cb" style="-fx-background-color: #00766c;" text="View Info" textFill="WHITE" />
+    <JFXButton layoutX="117.0" layoutY="92.0" mnemonicParsing="false" onAction="#viewSoftware" prefHeight="29.0" prefWidth="150.0" style="-fx-background-color: #00766c;" text="View Info" textFill="WHITE" />
+    <JFXComboBox fx:id="comboBox" layoutX="470.0" layoutY="188.0" prefHeight="31.0" prefWidth="179.0" />
+    <JFXButton fx:id="updateButton" layoutX="660.0" layoutY="188.0" mnemonicParsing="false" ripplerFill="#64d8cb" style="-fx-background-color: #00766c;" text="Update" textFill="WHITE" />
+    <JFXButton fx:id="statusButton" layoutX="536.0" layoutY="140.0" mnemonicParsing="false" onAction="#changeStatus" ripplerFill="#64d8cb" style="-fx-background-color: #00766c;" text="Change Status" textFill="WHITE" />
+    <Label layoutX="510.0" layoutY="113.0" text="You are currently:" />
+    <Label fx:id="statusText" layoutX="635.0" layoutY="113.0" text="Label" textFill="#00766c">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+    <Label layoutX="510.0" layoutY="63.0" text="Hi, ">
+         <font>
+            <Font size="30.0" />
+         </font></Label>
+    <Label fx:id="userName" layoutX="554.0" layoutY="63.0" text="Rigo">
+         <font>
+            <Font size="30.0" />
+         </font></Label>
   </children>
 </AnchorPane>

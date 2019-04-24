@@ -9,19 +9,15 @@ import inc.pabacus.TaskMetrics.api.tasks.WorkLog;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
-import inc.pabacus.TaskMetrics.desktop.hardware.HardwarePresenter;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,7 +36,7 @@ import java.util.stream.Collectors;
 public class TimesheetPresenter implements Initializable {
 
   @FXML
-  private JFXComboBox comboBox;
+  private JFXComboBox<String> comboBox;
   @FXML
   private JFXButton updateButton;
   @FXML
@@ -69,12 +65,27 @@ public class TimesheetPresenter implements Initializable {
 
   private DailyLogService service = new DailyLogHandler(); // temporary
   private static final int DEF_SIZE = 900;
+  private MockUser mockUser;
 
   @Override
+  @SuppressWarnings("all")
   public void initialize(URL location, ResourceBundle resources) {
+    mockUser = new MockUser("Rigo", "Logged Out");
+    statusText.setText(mockUser.getStatus());
     initOshiInfo();
-
     initTimeSheet();
+    populateCombobox();
+
+  }
+
+  private void populateCombobox() {
+    ObservableList<String> choices = FXCollections.observableArrayList();
+    choices.add("Morning Break");
+    choices.add("Afternoon Break");
+    choices.add("Meeting");
+    choices.add("Training"); // TODO turn off activity listening service when on a break
+    comboBox.getItems().addAll(choices);
+//    comboBox = new JFXComboBox<>(choices);
   }
 
   @FXML
@@ -85,6 +96,28 @@ public class TimesheetPresenter implements Initializable {
   @FXML
   public void viewSoftware() {
     GuiManager.getInstance().displayView(new SoftwareView());
+  }
+
+  @FXML
+  public String changeStatus() {
+    String currentStatus = mockUser.getStatus();
+    switch (currentStatus) {
+      case "Logged Out":
+        currentStatus = "Logged In";
+        break;
+      case "Logged In":
+        currentStatus = "Out To Lunch";
+        break;
+      case "Out To Lunch":
+        currentStatus = "Back From Lunch";
+        break;
+      case "Back From Lunch":
+        currentStatus = "Logged Out";
+        break;
+    }
+    mockUser.setStatus(currentStatus);
+    statusText.setText(currentStatus);
+    return currentStatus;
   }
 
   private void initTimeSheet() {
@@ -139,7 +172,7 @@ public class TimesheetPresenter implements Initializable {
     past5Days.add(LocalDate.now().minus(4, ChronoUnit.DAYS).toString());
     return past5Days;
   }
-  
+
   private void initOshiInfo() {
     softwareImg.setImage(new Image("/img/software.png", DEF_SIZE, DEF_SIZE, false, true));
     hardwareImg.setImage(new Image("/img/hardware.png", DEF_SIZE, DEF_SIZE, false, true));

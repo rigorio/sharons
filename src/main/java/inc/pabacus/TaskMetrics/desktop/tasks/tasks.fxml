@@ -2,10 +2,8 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="720" prefWidth="591.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
@@ -22,12 +20,6 @@
         <Font name="System Bold" size="85.0"/>
       </font>
     </Label>
-    <HBox layoutX="538.0" layoutY="9.0" prefHeight="107.0" prefWidth="206.0" style="-fx-border-color: #D2D2D2;"/>
-    <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="590.0" layoutY="74.0" onAction="#onHandleChangeStatus"
-               prefHeight="31.0" prefWidth="96.0" style="-fx-background-color: #80cbc4;" text="Change Status"/>
-    <Label layoutX="574.0" layoutY="28.0" prefHeight="31.0" prefWidth="37.0" text="Status:"/>
-    <Label fx:id="currentStatusLabel" alignment="BASELINE_LEFT" layoutX="624.0" layoutY="28.0" prefHeight="31.0"
-           prefWidth="108.0" text="Log In"/>
     <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="12.0" layoutY="11.0" onAction="#newTask"
                prefHeight="31.0" prefWidth="108.0" style="-fx-padding: 0,0,10,0; -fx-background-color: #80cbc4;"
                text="+ New Task"/>

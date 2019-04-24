@@ -20,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -113,15 +114,12 @@ public class TasksPresenter implements Initializable {
     timerLabel.setText("00:00:00");
     long time = timerService.getTime();
     timerService.pause();
-    System.out.println(time);
     String totalTime = timerService.formatSeconds(time);
-    System.out.println(totalTime);
     timerService.reset();
     TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
     selectedItem.setTotalTimeSpent(new SimpleStringProperty(totalTime));
     selectedItem.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
     Task task = taskHandler.saveTask(new Task(selectedItem));
-    System.out.println(task);
     taskName.setText(null);
     startButton.setDisable(false);
     completeButton.setDisable(true);
@@ -147,7 +145,7 @@ public class TasksPresenter implements Initializable {
 
   private List<TaskFXAdapter> getTasksToday() {
     List<Task> allTasks = taskHandler.getAllTasks();
-    String dateToday = "";
+    String dateToday = LocalDate.now().toString();
     List<TaskFXAdapter> tasks = allTasks.stream()
         .filter(task -> task.getDateCompleted().equalsIgnoreCase(dateToday))
         .map(TaskFXAdapter::new)

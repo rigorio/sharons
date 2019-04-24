@@ -1,8 +1,6 @@
 package inc.pabacus.TaskMetrics.desktop.timesheet;
 
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
@@ -42,6 +40,17 @@ import java.util.stream.Collectors;
 public class TimesheetPresenter implements Initializable {
 
   @FXML
+  private JFXComboBox comboBox;
+  @FXML
+  private JFXButton updateButton;
+  @FXML
+  private JFXButton statusButton;
+  @FXML
+  private Label statusText;
+  @FXML
+  private Label userName;
+
+  @FXML
   private ImageView softwareImg;
   @FXML
   private ImageView hardwareImg;
@@ -63,11 +72,7 @@ public class TimesheetPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    softwareImg.setImage(new Image("/img/software.png", DEF_SIZE, DEF_SIZE, false, true));
-    hardwareImg.setImage(new Image("/img/hardware.png", DEF_SIZE, DEF_SIZE, false, true));
-
-    os.setText(new SoftwareHandler().getOs());
-    hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
+    initOshiInfo();
 
     initTimeSheet();
   }
@@ -134,5 +139,12 @@ public class TimesheetPresenter implements Initializable {
     past5Days.add(LocalDate.now().minus(4, ChronoUnit.DAYS).toString());
     return past5Days;
   }
+  
+  private void initOshiInfo() {
+    softwareImg.setImage(new Image("/img/software.png", DEF_SIZE, DEF_SIZE, false, true));
+    hardwareImg.setImage(new Image("/img/hardware.png", DEF_SIZE, DEF_SIZE, false, true));
 
+    os.setText(new SoftwareHandler().getOs());
+    hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
+  }
 }

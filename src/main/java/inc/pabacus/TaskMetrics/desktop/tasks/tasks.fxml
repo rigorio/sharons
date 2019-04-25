@@ -6,41 +6,33 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720" prefWidth="591.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.tasks.TasksPresenter">
+<AnchorPane prefHeight="720" prefWidth="591.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.tasks.TasksPresenter">
   <children>
-    <Label fx:id="timerLabelFx" layoutX="29.0" layoutY="90.0" prefHeight="31.0" prefWidth="47.0" text="Timer:"/>
-    <Label fx:id="timerLabel" layoutX="76.0" layoutY="90.0" prefHeight="31.0" prefWidth="86.0"/>
-    <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="144.0" layoutY="11.0" onAction="#viewScreenShot"
-               prefHeight="35.0" prefWidth="108.0" style="-fx-background-color: #80cbc4;" text="View Screen Shot"/>
-    <Label ellipsisString="" layoutY="-105.0" prefHeight="131.0" prefWidth="844.0"
-           text="_________________________________________________________________" textFill="#80cbc4"
-           textOverrun="CLIP">
+    <Label fx:id="timerLabelFx" layoutX="29.0" layoutY="90.0" prefHeight="31.0" prefWidth="47.0" text="Timer:" />
+    <Label fx:id="timerLabel" layoutX="76.0" layoutY="90.0" prefHeight="31.0" prefWidth="86.0" />
+    <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="144.0" layoutY="11.0" onAction="#viewScreenShot" prefHeight="35.0" prefWidth="108.0" style="-fx-background-color: #008080;" text="View Screen Shot" textFill="WHITE" />
+    <Label ellipsisString="" layoutY="-105.0" prefHeight="131.0" prefWidth="844.0" text="_________________________________________________________________" textFill="#008080" textOverrun="CLIP">
       <font>
-        <Font name="System Bold" size="85.0"/>
+        <Font name="System Bold" size="85.0" />
       </font>
     </Label>
-    <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="12.0" layoutY="11.0" onAction="#newTask"
-               prefHeight="31.0" prefWidth="108.0" style="-fx-padding: 0,0,10,0; -fx-background-color: #80cbc4;"
-               text="+ New Task"/>
+    <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="12.0" layoutY="11.0" onAction="#newTask" prefHeight="31.0" prefWidth="108.0" style="-fx-padding: 0,0,10,0; -fx-background-color: #008080;" text="+ New Task" textFill="WHITE" />
     <TableView fx:id="tasksTable" layoutX="29.0" layoutY="134.0" prefHeight="172.0" prefWidth="787.0">
       <columnResizePolicy>
-        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
     </TableView>
-    <Label fx:id="taskName" layoutX="29.0" layoutY="64.0"/>
-    <JFXButton fx:id="startButton" layoutX="274.0" layoutY="90.0" mnemonicParsing="false" onAction="#startTask"
-               text="Start"/>
-    <JFXButton fx:id="completeButton" layoutX="367.0" layoutY="90.0" mnemonicParsing="false" onAction="#completeTask"
-               text="Complete"/>
+    <Label fx:id="taskName" layoutX="29.0" layoutY="64.0" />
+    <JFXButton fx:id="startButton" layoutX="274.0" layoutY="90.0" mnemonicParsing="false" onAction="#startTask" text="Start" />
+    <JFXButton fx:id="completeButton" layoutX="367.0" layoutY="90.0" mnemonicParsing="false" onAction="#completeTask" text="Complete" />
     <TableView fx:id="doneTasksTable" layoutX="29.0" layoutY="325.0" prefHeight="172.0" prefWidth="787.0">
       <columnResizePolicy>
-        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
     </TableView>
     <TableView fx:id="taskTimesheet" layoutX="29.0" layoutY="513.0" prefHeight="172.0" prefWidth="787.0">
       <columnResizePolicy>
-        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
       </columnResizePolicy>
     </TableView>
   </children>

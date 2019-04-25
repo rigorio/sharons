@@ -9,55 +9,66 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1080.0" stylesheets="dashboard.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.dashboard.DashboardPresenter">
+<AnchorPane prefHeight="720.0" prefWidth="1080.0" stylesheets="dashboard.css"
+            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.dashboard.DashboardPresenter">
   <AnchorPane prefHeight="720.0" prefWidth="1080.0">
     <children>
-      <VBox prefHeight="720.0" prefWidth="301.0" style="-fx-background-color: #80cbc4;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox prefHeight="720.0" prefWidth="301.0" style="-fx-background-color: #008080;" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.topAnchor="0.0">
         <ImageView fx:id="navigationImage" fitHeight="171.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
-          <Image url="@../../../../../../resources/img/laptop-work.jpg" />
+          <Image url="@../../../../../../resources/img/laptop-work.jpg"/>
         </ImageView>
-            <Pane prefHeight="77.0" prefWidth="301.0" />
-        <JFXButton fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false" onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Jobs">
+        <Pane prefHeight="77.0" prefWidth="301.0"/>
+        <JFXButton fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false"
+                   onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Jobs">
           <font>
-            <Font size="20.0" />
+            <Font size="20.0"/>
           </font>
           <graphic>
             <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-              <!--          <Image url="@../../../../../../resources/img/tasks.png"/>-->
+              <image>
+                <Image url="@../../../../../../resources/img/jobs.png"/>
+              </image>
             </ImageView>
           </graphic>
           <padding>
-            <Insets left="50.0" />
+            <Insets left="50.0"/>
           </padding>
         </JFXButton>
-        <JFXButton fx:id="timesheetButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0" mnemonicParsing="false" onAction="#viewTimesheet" prefHeight="58.0" prefWidth="300.0" text="View Timesheet">
+        <JFXButton fx:id="timesheetButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0"
+                   layoutY="179.0" mnemonicParsing="false" onAction="#viewTimesheet" prefHeight="58.0" prefWidth="300.0"
+                   text="View Timesheet">
           <font>
-            <Font size="20.0" />
+            <Font size="20.0"/>
           </font>
           <graphic>
             <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-              <Image url="@../../../../../../resources/img/software.png" />
+              <image>
+                <Image url="@../../../../../../resources/img/timesheet.png"/>
+              </image>
             </ImageView>
           </graphic>
           <padding>
-            <Insets left="50.0" />
+            <Insets left="50.0"/>
           </padding>
         </JFXButton>
-        <JFXButton fx:id="logoutBtn" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="Logout">
+        <JFXButton fx:id="logoutBtn" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0"
+                   mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="Logout">
           <font>
-            <Font size="20.0" />
+            <Font size="20.0"/>
           </font>
           <graphic>
             <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-              <Image url="@../../../../../../resources/img/logout.png" />
+              <Image url="@../../../../../../resources/img/logout.png"/>
             </ImageView>
           </graphic>
           <padding>
-            <Insets left="50.0" />
+            <Insets left="50.0"/>
           </padding>
         </JFXButton>
       </VBox>
-      <AnchorPane fx:id="dynamicContentPane" layoutX="301.0" layoutY="-2.0" prefHeight="720.0" prefWidth="780.0" />
+      <AnchorPane fx:id="dynamicContentPane" layoutX="301.0" layoutY="-2.0" prefHeight="720.0" prefWidth="780.0"/>
     </children>
   </AnchorPane>
 </AnchorPane>

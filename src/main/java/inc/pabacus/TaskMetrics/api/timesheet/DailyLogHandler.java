@@ -10,13 +10,17 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 public class DailyLogHandler implements DailyLogService {
 
   private DailyLogRepository repository;
+  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+  private List<DailyLog> dailyLogs = new ArrayList<>();
 
   public DailyLogHandler() {
+    populate();
   }
 
   public DailyLogHandler(DailyLogRepository repository) {
@@ -25,13 +29,31 @@ public class DailyLogHandler implements DailyLogService {
 
   @Override
   public List<DailyLog> getAllLogs() {
-    return populate();
+    return dailyLogs;
+  }
+
+  public String changeLog() {
+    Optional<DailyLog> anyLog = getAllLogs().stream()
+        .filter(dailyLog -> dailyLog.getDate().equals(LocalDate.now().toString()))
+        .findAny();
+    if (!anyLog.isPresent()) {
+      dailyLogs.add(new DailyLog(LocalDate.now().toString(), formatter.format(LocalTime.now()), "", "", ""));
+      return "IN";
+    } else {
+      DailyLog dailyLog = anyLog.get();
+      if (dailyLog.getIn().length() > 1) {
+        return "OTL";
+      } else if (dailyLog.getOtl().length() < 1) {
+        return "BFL";
+      } else if (dailyLog.getBfl().length() < 1) {
+        return "OUT";
+      }
+    }
+    return "OUT";
   }
 
   @SuppressWarnings("all")
   private List<DailyLog> populate() {
-    List<DailyLog> dailyLogs = new ArrayList<>();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     LocalTime now = LocalTime.now();
     formatter.format(now);
     dailyLogs.add(new DailyLog(LocalDate.now().minus(5, ChronoUnit.DAYS).toString(),

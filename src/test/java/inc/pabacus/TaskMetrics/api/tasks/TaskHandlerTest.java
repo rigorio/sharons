@@ -18,13 +18,6 @@ public class TaskHandlerTest extends MockTaskDataProvider {
   private TaskRepository taskRepository;
   private List<Task> list = getJobs();
 
-  @Before
-  public void init() {
-    taskRepository = mock(TaskRepository.class);
-    taskService = new TaskHandler(taskRepository);
-    when(taskRepository.findAll()).thenReturn(list);
-  }
-
   @Test
   public void testFindAll() {
     List<Task> allTasks = taskService.getAllTasks();

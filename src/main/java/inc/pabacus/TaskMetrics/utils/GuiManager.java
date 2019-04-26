@@ -21,7 +21,7 @@ public class GuiManager {
     this.primaryStage = primaryStage;
   }
 
-  public void showView(FXMLView view) {
+  public void changeView(FXMLView view) {
     primaryStage.setScene(new Scene(view.getView()));
     primaryStage.show();
   }

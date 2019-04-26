@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class StanduplyPresenter implements Initializable {
+public class StandupPresenter implements Initializable {
 
   @FXML
   private TextArea yesterdayTextArea;
@@ -36,7 +36,8 @@ public class StanduplyPresenter implements Initializable {
     String obstacles = obstaclesTextArea.getText();
     StandupService service = new StandupService();
     StandupAnswer answer = service.sendAnswer(new StandupAnswer(yesterday, today, obstacles));
-    System.out.println(answer);
+    System.out.println(answer); // heh
+    cancel();
 
   }
 

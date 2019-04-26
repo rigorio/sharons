@@ -23,5 +23,6 @@ public class TaskMetricsApplication extends Application {
     stage.getIcons().add(new Image("/img/PabacusLogo.png"));
     MANAGER.setPrimaryStage(stage);
     MANAGER.changeView(new LoginView());
+    new StandupService().runStandup();
   }
 }

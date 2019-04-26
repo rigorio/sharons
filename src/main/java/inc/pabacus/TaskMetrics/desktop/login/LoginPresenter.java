@@ -16,6 +16,6 @@ public class LoginPresenter implements Initializable {
 
   @FXML
   public void login() {
-    GuiManager.getInstance().showView(new DashboardView());
+    GuiManager.getInstance().changeView(new DashboardView());
   }
 }

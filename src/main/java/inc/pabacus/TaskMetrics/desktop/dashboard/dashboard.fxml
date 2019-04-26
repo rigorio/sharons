@@ -21,7 +21,7 @@
         </ImageView>
         <Pane prefHeight="77.0" prefWidth="301.0"/>
         <JFXButton fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" mnemonicParsing="false"
-                   onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Jobs">
+                   onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Jobs" textFill="WHITE">
           <font>
             <Font size="20.0"/>
           </font>
@@ -38,7 +38,7 @@
         </JFXButton>
         <JFXButton fx:id="timesheetButton" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0"
                    layoutY="179.0" mnemonicParsing="false" onAction="#viewTimesheet" prefHeight="58.0" prefWidth="300.0"
-                   text="View Timesheet">
+                   text="Timesheet" textFill="WHITE">
           <font>
             <Font size="20.0"/>
           </font>
@@ -54,7 +54,7 @@
           </padding>
         </JFXButton>
         <JFXButton fx:id="logoutBtn" alignment="BASELINE_LEFT" graphicTextGap="20.0" layoutX="10.0" layoutY="179.0"
-                   mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="Logout">
+                   mnemonicParsing="false" prefHeight="58.0" prefWidth="300.0" text="Logout" textFill="WHITE">
           <font>
             <Font size="20.0"/>
           </font>
@@ -68,7 +68,7 @@
           </padding>
         </JFXButton>
       </VBox>
-      <AnchorPane fx:id="dynamicContentPane" layoutX="301.0" layoutY="-2.0" prefHeight="720.0" prefWidth="780.0"/>
+      <AnchorPane fx:id="dynamicContentPane" layoutX="301.0" layoutY="-2.0" prefHeight="720.0" prefWidth="913.0"/>
     </children>
   </AnchorPane>
 </AnchorPane>

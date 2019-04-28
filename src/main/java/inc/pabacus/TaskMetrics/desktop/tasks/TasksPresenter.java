@@ -1,7 +1,11 @@
 package inc.pabacus.TaskMetrics.desktop.tasks;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.tasks.*;
+import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,11 +31,25 @@ import java.util.stream.Collectors;
 public class TasksPresenter implements Initializable {
 
   private static final List<String> STATUS = new ArrayList<>(Arrays.asList("Backlog", "In Progress", "For Review", "Closed"));
+
+  @FXML
+  private JFXTextField titleText;
+  @FXML
+  private JFXComboBox<String> progressText;
+  @FXML
+  private JFXComboBox<String> statusText;
+  @FXML
+  private JFXComboBox<String> priorityText;
+  @FXML
+  private JFXTextArea descriptionText;
+  @FXML
+  private JFXButton deleteTask;
+  @FXML
+  private JFXButton saveTask;
+
   @FXML
   private TableView<TaskFXAdapter> taskTimesheet;
 
-  @FXML
-  private TableView<TaskFXAdapter> doneTasksTable;
   @FXML
   private JFXButton completeButton;
   @FXML
@@ -41,7 +59,7 @@ public class TasksPresenter implements Initializable {
   private Label taskName;
   @FXML
   private TableView<TaskFXAdapter> tasksTable;
-  
+
   @FXML
   private Label timerLabel;
 
@@ -58,7 +76,6 @@ public class TasksPresenter implements Initializable {
   }
 
   private TableColumn<TaskFXAdapter, String> backLogsColumn = new TableColumn<>("Name");
-  private TableColumn<TaskFXAdapter, String> doneColumn = new TableColumn<>("Name");
 
   private Runnable process = () -> {
     long duration = timerService.getTime();
@@ -72,17 +89,66 @@ public class TasksPresenter implements Initializable {
     hideTable();
     timerLabel.setText("00:00:00");
     backLogsColumn.setCellValueFactory(param -> param.getValue().getTitle());
-    doneColumn.setCellValueFactory(param -> param.getValue().getTitle());
     tasksTable.getColumns().add(backLogsColumn);
-    doneTasksTable.getColumns().add(doneColumn);
 
     backlogs.addAll(mockTasks);
     done.addAll(mockTasks);
     initTasksTable();
-    initCompletedTaskTable();
 
     completeButton.setDisable(true);
     initTaskSheet();
+    initEditables();
+  }
+
+  private void initEditables() {
+
+    progressText.getItems().addAll(new ArrayList<String>() {{
+      add("0");
+      add("25");
+      add("50");
+      add("75");
+      add("100");
+    }});
+
+    statusText.getItems().addAll(new ArrayList<String>() {{
+      add("Backlog");
+      add("In Progress");
+      add("Done");
+    }});
+
+    priorityText.getItems().addAll(new ArrayList<String>() {{
+      add("1");
+      add("2");
+      add("3");
+      add("4");
+      add("5");
+    }});
+
+    tasksTable.getSelectionModel().selectedItemProperty().addListener(item -> {
+      Task task = new Task(tasksTable.getSelectionModel().getSelectedItem());
+      titleText.setText(task.getTitle());
+      descriptionText.setText(task.getDescription());
+      progressText.setValue(task.getProgress().getProgress().toString());
+      statusText.setValue(task.getStatus().getStatus());
+      priorityText.setValue(task.getPriority().getPriority().toString());
+    });
+
+  }
+
+  @FXML
+  public void deleteThis() {
+  }
+
+  @FXML
+  public void saveThis() {
+    Task task = new Task(tasksTable.getSelectionModel().getSelectedItem());
+    task.setTitle(titleText.getText());
+    task.setDescription(descriptionText.getText());
+    task.setProgress(Progress.convert(Integer.valueOf(progressText.getValue())));
+    task.setStatus(Status.convert(statusText.getValue()));
+    task.setPriority(Priority.convert(Integer.valueOf(priorityText.getValue())));
+    Task task1 = taskHandler.saveTask(task);
+    refreshTasks();
   }
 
   private void initTaskSheet() {
@@ -105,11 +171,7 @@ public class TasksPresenter implements Initializable {
   }
 
   private void initTasksTable() {
-    tasksTable.setItems(getTasks(backlogs, "backlog"));
-  }
-
-  private void initCompletedTaskTable() {
-    doneTasksTable.setItems(getTasks(done, "done"));
+    tasksTable.setItems(getTasks(yihiiee(), "backlog"));
   }
 
 
@@ -147,7 +209,6 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void refreshTasks() {
     initTasksTable();
-    initCompletedTaskTable();
     initTaskTimeSheet();
   }
 
@@ -218,9 +279,14 @@ public class TasksPresenter implements Initializable {
     tasks.add(new Task("task 4", "description 4", Status.DONE));
     tasks.add(new Task("task 5", "description 5", Status.DONE));
 
-    mockTasks = taskHandler.getAllTasks().stream()
-        .map(TaskFXAdapter::new)
-        .collect(Collectors.toList());
+    mockTasks = yihiiee();
+  }
+
+  private ObservableList<TaskFXAdapter> yihiiee() {
+    return FXCollections
+        .observableArrayList(taskHandler.getAllTasks().stream()
+                                 .map(TaskFXAdapter::new)
+                                 .collect(Collectors.toList()));
   }
 
 
@@ -233,7 +299,6 @@ public class TasksPresenter implements Initializable {
 
   private void hideTable() {
     salikutMuKu(tasksTable);
-    salikutMuKu(doneTasksTable);
   }
 
   private void salikutMuKu(TableView<TaskFXAdapter> doneTasksTable) {
@@ -247,4 +312,5 @@ public class TasksPresenter implements Initializable {
       }
     });
   }
+
 }

@@ -128,18 +128,21 @@ public class TasksPresenter implements Initializable {
     }});
 
     tasksTable.getSelectionModel().selectedItemProperty().addListener(item -> {
-      Task task = new Task(tasksTable.getSelectionModel().getSelectedItem());
-      titleText.setText(task.getTitle());
-      descriptionText.setText(task.getDescription());
+      TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
+      if (selectedItem != null) {
+        Task task = new Task(selectedItem);
+        titleText.setText(task.getTitle());
+        descriptionText.setText(task.getDescription());
 
-      Progress progress = task.getProgress();
-      progressText.setValue(progress != null ? progress.getProgress().toString() : "");
+        Progress progress = task.getProgress();
+        progressText.setValue(progress != null ? progress.getProgress().toString() : "");
 
-      Status status = task.getStatus();
-      statusText.setValue(status != null ? status.getStatus() : "");
+        Status status = task.getStatus();
+        statusText.setValue(status != null ? status.getStatus() : "");
 
-      Priority priority = task.getPriority();
-      priorityText.setValue(priority != null ? priority.getPriority().toString() : "");
+        Priority priority = task.getPriority();
+        priorityText.setValue(priority != null ? priority.getPriority().toString() : "");
+      }
     });
 
   }
@@ -149,15 +152,31 @@ public class TasksPresenter implements Initializable {
   }
 
   @FXML
-  public void saveThis() {
+  public void saveTask() {
     Task task = new Task(tasksTable.getSelectionModel().getSelectedItem());
-    task.setTitle(titleText.getText());
-    task.setDescription(descriptionText.getText());
-    task.setProgress(Progress.convert(Integer.valueOf(progressText.getValue())));
-    task.setStatus(Status.convert(statusText.getValue()));
-    task.setPriority(Priority.convert(Integer.valueOf(priorityText.getValue())));
-    Task task1 = taskHandler.saveTask(task);
+    saveTask(task);
     refreshTasks();
+  }
+
+  private void saveTask(Task task) {
+    // if title empty, prompt and do not execute
+    task.setTitle(titleText.getText());
+    checkOtherValues(task);
+    taskHandler.saveTask(task);
+  }
+
+  private void checkOtherValues(Task task) {
+    if (!descriptionText.getText().equals(""))
+      task.setDescription(descriptionText.getText());
+
+    if (!progressText.getValue().equals(""))
+      task.setProgress(Progress.convert(Integer.valueOf(progressText.getValue())));
+
+    if (!statusText.getValue().equals(""))
+      task.setStatus(Status.convert(statusText.getValue()));
+
+    if (!priorityText.getValue().equals(""))
+      task.setPriority(Priority.convert(Integer.valueOf(priorityText.getValue())));
   }
 
   private void initTaskSheet() {

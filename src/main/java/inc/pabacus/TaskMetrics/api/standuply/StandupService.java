@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.desktop.standuply.StanduplyView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
 import okhttp3.*;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -25,9 +26,13 @@ public class StandupService {
     // amm what. harder than i thought.. i will hack. **hacking noise**
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable command = () -> Platform.runLater(() -> {
-      if (isStandupTime()) {
-        GuiManager.getInstance().displayView(new StanduplyView());
-        scheduledFuture.cancel(true);
+      try {
+        if (isStandupTime()) {
+          GuiManager.getInstance().displayView(new StanduplyView());
+          scheduledFuture.cancel(true);
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
       }
     });
 
@@ -58,9 +63,36 @@ public class StandupService {
     }
   }
 
-  private boolean isStandupTime() {
+  private boolean isStandupTime() throws IOException {
+    OkHttpClient client = new OkHttpClient();
+    // code request code here
+    Request request = new Request.Builder()
+            .url("http://localhost:8080/api/admin")
+            .addHeader("Accept", "application/json")
+            .method("GET", null)
+            .build();
+
+    Response response = client.newCall(request).execute();
+    String getTimes = response.body().string();
+
+    String getTimeJson = getTimes.replaceAll("\\[|\\]", "");
+    JSONObject json = new JSONObject(getTimeJson);
+    String syncresponse = json.getString("time");
+
+    String hour;
+    String minute;
+    if(syncresponse.contains(":")){
+      String[] parts = syncresponse.split(":");
+      hour = parts[0];
+      minute = parts[1];
+    }
+    else{
+      hour = syncresponse;
+      minute = "00";
+    }
+
     LocalTime now = LocalTime.now();
-    LocalTime schedule = LocalTime.of(10, 25);
+    LocalTime schedule = LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
     return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
   }
 }

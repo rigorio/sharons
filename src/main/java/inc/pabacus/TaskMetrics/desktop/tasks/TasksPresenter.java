@@ -147,31 +147,18 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void deleteTask() {
     TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-    if (selectedItem != null)
-      deleteTask(selectedItem);
-  }
+    if (selectedItem != null) {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Confirmation");
+      alert.setHeaderText("Delete task?");
+      alert.setContentText("Task #" + selectedItem.getId().get());
 
-  private void deleteTask(TaskFXAdapter selectedItem) {
-    long taskId = selectedItem.getId().get();
-    Optional<ButtonType> result = retrieveResult(taskId);
-    if (result.isPresent() && result.get() == ButtonType.OK) {
-      taskHandler.deleteTask(selectedItem.getId().getValue());
-      refreshTasks();
+      Optional<ButtonType> result = alert.showAndWait();
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+        taskHandler.deleteTask(selectedItem.getId().getValue());
+        refreshTasks();
+      }
     }
-  }
-
-  private Optional<ButtonType> retrieveResult(long taskId) {
-    Alert alert = showAlert(taskId);
-
-    return alert.showAndWait();
-  }
-
-  private Alert showAlert(long taskId) {
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Confirmation");
-    alert.setHeaderText("Delete task?");
-    alert.setContentText("Task #" + taskId);
-    return alert;
   }
 
   @FXML

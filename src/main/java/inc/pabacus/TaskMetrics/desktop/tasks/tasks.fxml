@@ -42,9 +42,9 @@
     <JFXComboBox fx:id="statusText" layoutX="29.0" layoutY="567.0" prefHeight="31.0" prefWidth="169.0"/>
     <JFXComboBox fx:id="priorityText" layoutX="29.0" layoutY="668.0" prefHeight="31.0" prefWidth="169.0"/>
     <JFXTextArea fx:id="descriptionText" layoutX="252.0" layoutY="512.0" prefHeight="109.0" prefWidth="563.0"/>
-    <JFXButton fx:id="deleteTask" onAction="#deleteThis" layoutX="674.0" layoutY="653.0" mnemonicParsing="false"
+    <JFXButton fx:id="deleteTask" onAction="#deleteTask" layoutX="674.0" layoutY="653.0" mnemonicParsing="false"
                style="-fx-background-color: #ef5350;" text="Delete" textFill="WHITE"/>
-    <JFXButton fx:id="saveTask" onAction="#saveThis" layoutX="750.0" layoutY="653.0" mnemonicParsing="false"
+    <JFXButton fx:id="saveTask" onAction="#saveTask" layoutX="750.0" layoutY="653.0" mnemonicParsing="false"
                style="-fx-background-color: #008080;" text="Save" textFill="WHITE"/>
   </children>
 

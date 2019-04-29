@@ -31,7 +31,7 @@ public class TaskFXAdapter {
     this.description = description != null ? new SimpleStringProperty(description) : null;
 
     Priority priority = task.getPriority();
-    this.priority = progress != null ? new SimpleIntegerProperty(priority.getPriority()) : null;
+    this.priority = priority != null ? new SimpleIntegerProperty(priority.getPriority()) : null;
 
     String totalTimeSpent = task.getTotalTimeSpent();
     this.totalTimeSpent = totalTimeSpent != null ? new SimpleStringProperty(totalTimeSpent) : null;

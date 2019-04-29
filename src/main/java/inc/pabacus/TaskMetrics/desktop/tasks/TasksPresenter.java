@@ -85,6 +85,8 @@ public class TasksPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    saveTask.setDisable(true);
+    deleteTask.setDisable(true);
     initList();
     hideTable();
     timerLabel.setText("00:00:00");
@@ -139,6 +141,14 @@ public class TasksPresenter implements Initializable {
 
         Priority priority = task.getPriority();
         priorityText.setValue(priority != null ? priority.getPriority().toString() : "");
+
+
+        // TODO extract this from listener for more readability
+        saveTask.setDisable(false);
+        deleteTask.setDisable(false);
+      } else {
+        saveTask.setDisable(true);
+        deleteTask.setDisable(true);
       }
     });
 

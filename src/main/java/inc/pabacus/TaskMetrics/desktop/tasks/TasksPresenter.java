@@ -17,10 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -88,6 +85,8 @@ public class TasksPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    saveTask.setDisable(true);
+    deleteTask.setDisable(true);
     initList();
     hideTable();
     timerLabel.setText("00:00:00");
@@ -142,13 +141,34 @@ public class TasksPresenter implements Initializable {
 
         Priority priority = task.getPriority();
         priorityText.setValue(priority != null ? priority.getPriority().toString() : "");
+
+
+        // TODO extract this from listener for more readability
+        saveTask.setDisable(false);
+        deleteTask.setDisable(false);
+      } else {
+        saveTask.setDisable(true);
+        deleteTask.setDisable(true);
       }
     });
 
   }
 
   @FXML
-  public void deleteThis() {
+  public void deleteTask() {
+    TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
+    if (selectedItem != null) {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Confirmation");
+      alert.setHeaderText("Delete task?");
+      alert.setContentText("Task #" + selectedItem.getId().get());
+
+      Optional<ButtonType> result = alert.showAndWait();
+      if (result.isPresent() && result.get() == ButtonType.OK) {
+        taskHandler.deleteTask(selectedItem.getId().getValue());
+        refreshTasks();
+      }
+    }
   }
 
   @FXML

@@ -131,9 +131,15 @@ public class TasksPresenter implements Initializable {
       Task task = new Task(tasksTable.getSelectionModel().getSelectedItem());
       titleText.setText(task.getTitle());
       descriptionText.setText(task.getDescription());
-      progressText.setValue(task.getProgress().getProgress().toString());
-      statusText.setValue(task.getStatus().getStatus());
-      priorityText.setValue(task.getPriority().getPriority().toString());
+
+      Progress progress = task.getProgress();
+      progressText.setValue(progress != null ? progress.getProgress().toString() : "");
+
+      Status status = task.getStatus();
+      statusText.setValue(status != null ? status.getStatus() : "");
+
+      Priority priority = task.getPriority();
+      priorityText.setValue(priority != null ? priority.getPriority().toString() : "");
     });
 
   }

@@ -67,8 +67,16 @@ public class TaskWebRepository implements TaskRepository {
   }
 
   @Override
-  public void deleteById(Long aLong) {
-
+  public void deleteById(Long id) {
+    try {
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/task/" + id)
+                                     .delete()
+                                     .build());
+      call.execute().body();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override

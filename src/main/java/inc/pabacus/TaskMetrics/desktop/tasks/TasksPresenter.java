@@ -17,10 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -148,7 +145,33 @@ public class TasksPresenter implements Initializable {
   }
 
   @FXML
-  public void deleteThis() {
+  public void deleteTask() {
+    TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
+    if (selectedItem != null)
+      deleteTask(selectedItem);
+  }
+
+  private void deleteTask(TaskFXAdapter selectedItem) {
+    long taskId = selectedItem.getId().get();
+    Optional<ButtonType> result = retrieveResult(taskId);
+    if (result.isPresent() && result.get() == ButtonType.OK) {
+      taskHandler.deleteTask(selectedItem.getId().getValue());
+      refreshTasks();
+    }
+  }
+
+  private Optional<ButtonType> retrieveResult(long taskId) {
+    Alert alert = showAlert(taskId);
+
+    return alert.showAndWait();
+  }
+
+  private Alert showAlert(long taskId) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Confirmation");
+    alert.setHeaderText("Delete task?");
+    alert.setContentText("Task #" + taskId);
+    return alert;
   }
 
   @FXML

@@ -26,9 +26,7 @@ public class StandupService {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable command = () -> Platform.runLater(() -> {
       if (isStandupTime()) {
-        System.out.println("doke");
         GuiManager.getInstance().displayView(new StanduplyView());
-        System.out.println("HMMMFPSDHF");
         scheduledFuture.cancel(true);
       }
     });

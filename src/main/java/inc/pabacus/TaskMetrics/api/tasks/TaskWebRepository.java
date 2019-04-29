@@ -73,7 +73,7 @@ public class TaskWebRepository implements TaskRepository {
                                      .url(HOST + "/api/task/" + id)
                                      .delete()
                                      .build());
-      call.execute().body();
+      call.execute();
     } catch (IOException e) {
       e.printStackTrace();
     }

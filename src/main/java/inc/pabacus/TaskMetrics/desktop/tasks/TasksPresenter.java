@@ -7,6 +7,9 @@ import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.tasks.*;
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
+import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
+import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -63,6 +66,12 @@ public class TasksPresenter implements Initializable {
   @FXML
   private Label timerLabel;
 
+  private TaskFXAdapter selectedTask;
+
+  public TaskFXAdapter getSelectedTask() {
+    return selectedTask;
+  }
+
   private TimerService service = new TimerService();
 
   private ObservableList<TaskFXAdapter> backlogs = FXCollections.observableArrayList();
@@ -85,6 +94,7 @@ public class TasksPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    startButton.setDisable(true);
     saveTask.setDisable(true);
     deleteTask.setDisable(true);
     initList();
@@ -146,9 +156,11 @@ public class TasksPresenter implements Initializable {
         // TODO extract this from listener for more readability
         saveTask.setDisable(false);
         deleteTask.setDisable(false);
+        startButton.setDisable(false);
       } else {
         saveTask.setDisable(true);
         deleteTask.setDisable(true);
+        startButton.setDisable(true);
       }
     });
 
@@ -225,14 +237,17 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void startTask() {
+    TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
     timerLabel.setText("00:00:00");
     timerService = new TimerService();
     timerService.setFxProcess(process);
-    String title = tasksTable.getSelectionModel().getSelectedItem().getTitle().get();
+    String title = selectedItem.getTitle().get();
     taskName.setText(title);
     timerService.start();
     startButton.setDisable(true);
     completeButton.setDisable(false);
+    TrackHandler.setSelectedTask(selectedItem);
+    GuiManager.getInstance().displayView(new TrackerView());
   }
 
   @FXML

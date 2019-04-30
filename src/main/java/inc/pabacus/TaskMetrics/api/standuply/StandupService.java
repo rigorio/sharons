@@ -70,25 +70,18 @@ public class StandupService {
             .build();
 
     Response response = null;
-    try {
-      response = client.newCall(request).execute();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
+    try {
+
+    response = client.newCall(request).execute();
     String getTimes = null;
-    try {
-      getTimes = response.body().string();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
+    getTimes = response.body().string();
     String getTimeJson = getTimes.replaceAll("\\[|\\]", "");
     JSONObject json = new JSONObject(getTimeJson);
     String syncresponse = json.getString("time");
-
     String hour;
     String minute;
+
     if(syncresponse.contains(":")){
       String[] parts = syncresponse.split(":");
       hour = parts[0];
@@ -102,5 +95,10 @@ public class StandupService {
     LocalTime now = LocalTime.now();
     LocalTime schedule = LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
     return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
+
+    } catch (IOException e) {
+      return Boolean.parseBoolean(null);
+    }
+
   }
 }

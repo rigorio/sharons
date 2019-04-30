@@ -27,17 +27,17 @@ public class StandupService {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable command = () -> Platform.runLater(() -> {
 
-        if (isStandupTime()) {
-          GuiManager.getInstance().displayView(new StanduplyView());
-          scheduledFuture.cancel(true);
-        }
+      if (isStandupTime()) {
+        GuiManager.getInstance().displayView(new StanduplyView());
+        scheduledFuture.cancel(true);
+      }
     });
 
-    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1L, TimeUnit.SECONDS);
+    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 10000L, TimeUnit.SECONDS);
 
   }
 
-  public void close(){
+  public void close() {
     scheduledFuture.cancel(true);
   }
 
@@ -68,37 +68,36 @@ public class StandupService {
     OkHttpClient client = new OkHttpClient();
     // code request code here
     Request request = new Request.Builder()
-            .url(HOST + "/api/admin")
-            .addHeader("Accept", "application/json")
-            .method("GET", null)
-            .build();
+        .url(HOST + "/api/admin")
+        .addHeader("Accept", "application/json")
+        .method("GET", null)
+        .build();
 
     Response response = null;
 
     try {
 
-    response = client.newCall(request).execute();
-    String getTimes = null;
-    getTimes = response.body().string();
-    String getTimeJson = getTimes.replaceAll("\\[|\\]", "");
-    JSONObject json = new JSONObject(getTimeJson);
-    String syncresponse = json.getString("time");
-    String hour;
-    String minute;
+      response = client.newCall(request).execute();
+      String getTimes = null;
+      getTimes = response.body().string();
+      String getTimeJson = getTimes.replaceAll("\\[|\\]", "");
+      JSONObject json = new JSONObject(getTimeJson);
+      String syncresponse = json.getString("time");
+      String hour;
+      String minute;
 
-    if(syncresponse.contains(":")){
-      String[] parts = syncresponse.split(":");
-      hour = parts[0];
-      minute = parts[1];
-    }
-    else{
-      hour = syncresponse;
-      minute = "00";
-    }
+      if (syncresponse.contains(":")) {
+        String[] parts = syncresponse.split(":");
+        hour = parts[0];
+        minute = parts[1];
+      } else {
+        hour = syncresponse;
+        minute = "00";
+      }
 
-    LocalTime now = LocalTime.now();
-    LocalTime schedule = LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
-    return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
+      LocalTime now = LocalTime.now();
+      LocalTime schedule = LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
+      return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
 
     } catch (IOException e) {
       return Boolean.parseBoolean(null);

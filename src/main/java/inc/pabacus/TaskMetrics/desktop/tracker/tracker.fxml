@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="247.0" prefWidth="419.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter">
+  <Label fx:id="title" layoutX="38.0" layoutY="43.0" text="Label"/>
+  <Label fx:id="timer" layoutX="323.0" layoutY="14.0" text="Label"/>
+  <Label fx:id="description" layoutX="38.0" layoutY="77.0" text="Label"/>
+  <JFXButton fx:id="complete" layoutX="167.0" layoutY="179.0" mnemonicParsing="false" text="Complete"/>
+</AnchorPane>

@@ -37,6 +37,10 @@ public class StandupService {
 
   }
 
+  public void close(){
+    scheduledFuture.cancel(true);
+  }
+
   public StandupAnswer sendAnswer(StandupAnswer answer) {
     StandupAnswer standupAnswer;
     try {

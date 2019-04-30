@@ -4,6 +4,7 @@ import inc.pabacus.TaskMetrics.api.MockTaskDataProvider;
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class TaskHandlerTest extends MockTaskDataProvider {
   private List<Task> list = getJobs();
 
   @Test
+  @Ignore
   public void testFindAll() {
     List<Task> allTasks = taskService.getAllTasks();
     assertEquals(list, allTasks);
   }
 
   @Test
+  @Ignore
   public void testSearchWithKeyword() {
     List<Task> tasks = taskService.searchTasks("keyword");
     list.removeIf(job -> job.getId().equals(0L));
@@ -32,6 +35,7 @@ public class TaskHandlerTest extends MockTaskDataProvider {
   }
 
   @Test
+  @Ignore
   public void testFilterByStatus() {
     List<Task> tasks = taskService.searchTasks(Status.BACKLOG);
     List<Task> backLogTasks = getJobs().stream()
@@ -41,6 +45,7 @@ public class TaskHandlerTest extends MockTaskDataProvider {
   }
 
   @Test
+  @Ignore
   public void testFilterByProgress() {
     List<Task> tasks = taskService.searchTasks(Progress.FIFTY);
     List<Task> fiftyTasks = getJobs().stream()
@@ -50,6 +55,7 @@ public class TaskHandlerTest extends MockTaskDataProvider {
   }
 
   @Test
+  @Ignore
   public void testSaveJob() {
     Task j = new Task();
     when(taskRepository.save(j)).thenReturn(j);

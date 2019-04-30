@@ -247,7 +247,7 @@ public class TasksPresenter implements Initializable {
     startButton.setDisable(true);
     completeButton.setDisable(false);
     TrackHandler.setSelectedTask(selectedItem);
-    GuiManager.getInstance().displayView(new TrackerView());
+    GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
   }
 
   @FXML

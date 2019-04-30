@@ -26,14 +26,11 @@ public class StandupService {
     // amm what. harder than i thought.. i will hack. **hacking noise**
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable command = () -> Platform.runLater(() -> {
-      try {
+
         if (isStandupTime()) {
           GuiManager.getInstance().displayView(new StanduplyView());
           scheduledFuture.cancel(true);
         }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
     });
 
     scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1L, TimeUnit.SECONDS);
@@ -63,17 +60,28 @@ public class StandupService {
     }
   }
 
-  private boolean isStandupTime() throws IOException {
+  private boolean isStandupTime() {
     OkHttpClient client = new OkHttpClient();
     // code request code here
     Request request = new Request.Builder()
-            .url("http://localhost:8080/api/admin")
+            .url(HOST + "/api/admin")
             .addHeader("Accept", "application/json")
             .method("GET", null)
             .build();
 
-    Response response = client.newCall(request).execute();
-    String getTimes = response.body().string();
+    Response response = null;
+    try {
+      response = client.newCall(request).execute();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    String getTimes = null;
+    try {
+      getTimes = response.body().string();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     String getTimeJson = getTimes.replaceAll("\\[|\\]", "");
     JSONObject json = new JSONObject(getTimeJson);

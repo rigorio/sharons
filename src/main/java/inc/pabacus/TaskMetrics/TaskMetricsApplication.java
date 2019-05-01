@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics;
 
+import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -24,5 +25,6 @@ public class TaskMetricsApplication extends Application {
     MANAGER.setPrimaryStage(stage);
     MANAGER.changeView(new LoginView());
     new StandupService().runStandup();
+    new SoftwareServiceAPI().sendSoftwareData();
   }
 }

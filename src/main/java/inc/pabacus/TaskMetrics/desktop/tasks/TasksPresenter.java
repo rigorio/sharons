@@ -11,7 +11,6 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -56,23 +55,13 @@ public class TasksPresenter implements Initializable {
   private TableView<TaskFXAdapter> taskTimesheet;
 
   @FXML
-  private JFXButton completeButton;
+  private JFXButton refreshButton;
   @FXML
   private JFXButton startButton;
 
   @FXML
-  private Label taskName;
-  @FXML
   private TableView<TaskFXAdapter> tasksTable;
 
-  @FXML
-  private Label timerLabel;
-
-  private TaskFXAdapter selectedTask;
-
-  public TaskFXAdapter getSelectedTask() {
-    return selectedTask;
-  }
 
   private TimerService service = new TimerService();
 
@@ -80,19 +69,12 @@ public class TasksPresenter implements Initializable {
   private ObservableList<TaskFXAdapter> done = FXCollections.observableArrayList();
 
   private TaskHandler taskHandler;
-  private TimerService timerService;
 
   public TasksPresenter() {
     taskHandler = new TaskHandler(new TaskWebRepository());
   }
 
   private TableColumn<TaskFXAdapter, String> backLogsColumn = new TableColumn<>("Name");
-
-  private Runnable process = () -> {
-    long duration = timerService.getTime();
-    String time = service.formatSeconds(duration);
-    timerLabel.setText(time);
-  };
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -101,7 +83,6 @@ public class TasksPresenter implements Initializable {
     deleteTask.setDisable(true);
     initList();
     hideTable();
-    timerLabel.setText("00:00:00");
     backLogsColumn.setCellValueFactory(param -> param.getValue().getTitle());
     tasksTable.getColumns().add(backLogsColumn);
 
@@ -109,7 +90,6 @@ public class TasksPresenter implements Initializable {
     done.addAll(mockTasks);
     initTasksTable();
 
-    completeButton.setDisable(true);
     initTaskSheet();
     initEditables();
     refreshingService();
@@ -241,34 +221,14 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void startTask() {
     TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-    timerLabel.setText("00:00:00");
-    timerService = new TimerService();
-    timerService.setFxProcess(process);
     String title = selectedItem.getTitle().get();
-    taskName.setText(title);
-    timerService.start();
     startButton.setDisable(true);
-    completeButton.setDisable(false);
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
   }
 
   @FXML
-  public void completeTask() {
-    timerLabel.setText("00:00:00");
-    long time = timerService.getTime();
-    timerService.pause();
-    String totalTime = timerService.formatSeconds(time);
-    timerService.reset();
-    TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-    selectedItem.setTotalTimeSpent(new SimpleStringProperty(totalTime));
-    selectedItem.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
-    selectedItem.setDateCompleted(new SimpleStringProperty(LocalDate.now().toString()));
-
-    Task task = taskHandler.saveTask(new Task(selectedItem));
-    taskName.setText(null);
-    startButton.setDisable(false);
-    completeButton.setDisable(true);
+  public void refreshTask() {
     refreshTasks();
   }
 

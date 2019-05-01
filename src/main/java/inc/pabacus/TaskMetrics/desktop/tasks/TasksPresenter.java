@@ -29,11 +29,13 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class TasksPresenter implements Initializable {
-
-  private static final List<String> STATUS = new ArrayList<>(Arrays.asList("Backlog", "In Progress", "For Review", "Closed"));
 
   @FXML
   private JFXTextField titleText;
@@ -110,6 +112,7 @@ public class TasksPresenter implements Initializable {
     completeButton.setDisable(true);
     initTaskSheet();
     initEditables();
+    refreshingService();
   }
 
   private void initEditables() {
@@ -269,10 +272,32 @@ public class TasksPresenter implements Initializable {
     refreshTasks();
   }
 
+  /**
+   * This is also a quick hack... will explain possibly in the future when i
+   * do not forget
+   */
   @FXML
   public void refreshTasks() {
+    int i = tasksTable.getSelectionModel().getSelectedIndex();
+    String d = descriptionText.getText();
+    String tt = titleText.getText();
+    String pro = progressText.getValue();
+    String sta = statusText.getValue();
+    String prio = priorityText.getValue();
     initTasksTable();
     initTaskTimeSheet();
+    tasksTable.getSelectionModel().select(i);
+    descriptionText.setText(d);
+    titleText.setText(tt);
+    progressText.setValue(pro);
+    statusText.setValue(sta);
+    priorityText.setValue(prio);
+    descriptionText.positionCaret(descriptionText.getLength());
+  }
+
+  private void refreshingService() {
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(this::refreshTasks, 5L, 5L, TimeUnit.SECONDS);
   }
 
   private ObservableList<TaskFXAdapter> getTasksToday() {

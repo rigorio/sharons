@@ -8,7 +8,6 @@ import inc.pabacus.TaskMetrics.api.tasks.TaskWebRepository;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -48,9 +47,7 @@ public class TrackerPresenter implements Initializable {
     selectedTask = TrackHandler.getSelectedTask();
     timerService.setFxProcess(process);
     timerService.start();
-    title.setText("Task #" + selectedTask.getId().get() + ": " + selectedTask.getTitle().get());
-//    description.setText(selectedTask.getDescription().get());
-    System.out.println(selectedTask);
+    title.setText(selectedTask.getTitle().get());
   }
 
   @FXML

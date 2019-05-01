@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics;
 
+import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -11,6 +12,7 @@ import javafx.stage.Stage;
 public class TaskMetricsApplication extends Application {
 
   private static final GuiManager MANAGER = GuiManager.getInstance();
+  private StandupService standupService = new StandupService();
 
   public static void main(String[] args) {
 //    SpringApplication.run(TaskMetricsApplication.class, args);

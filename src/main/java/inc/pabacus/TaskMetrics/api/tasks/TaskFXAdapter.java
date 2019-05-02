@@ -45,7 +45,7 @@ public class TaskFXAdapter {
     this.description = description != null ? new SimpleStringProperty(description) : null;
 
     String startTime = task.getStartTime();
-    this.startTime = status != null ? new SimpleStringProperty(startTime) : null;
+    this.startTime = startTime != null ? new SimpleStringProperty(startTime) : null;
 
     String endTime = task.getEndTime();
     this.endTime = endTime != null ? new SimpleStringProperty(endTime) : null;

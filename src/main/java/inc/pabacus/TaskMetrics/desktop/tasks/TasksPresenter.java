@@ -43,6 +43,17 @@ import java.util.stream.Collectors;
 public class TasksPresenter implements Initializable {
 
   @FXML
+  private Label totalbillable;
+  @FXML
+  private Label totalNonBillable;
+  @FXML
+  private Label totalHours;
+  @FXML
+  private Label totalPercentBillable;
+  @FXML
+  private Label totalInvoice;
+
+  @FXML
   private JFXTextField titleText;
   @FXML
   private JFXComboBox<String> progressText;
@@ -226,6 +237,12 @@ public class TasksPresenter implements Initializable {
     taskTimesheet.getColumns().addAll(projectName, billableHours, nonBillableHours,
                                       totalHours, billable, billedRate, invoiceAmount);
     initTaskTimeSheet();
+
+    totalbillable.setText("7.49");
+    totalNonBillable.setText("1.92");
+    this.totalHours.setText("9.41");
+    totalPercentBillable.setText("80%");
+    totalInvoice.setText("$491.00");
 
   }
 

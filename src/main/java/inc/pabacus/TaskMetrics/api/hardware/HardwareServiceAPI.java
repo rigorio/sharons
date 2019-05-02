@@ -7,6 +7,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class HardwareServiceAPI {
 
@@ -14,6 +17,9 @@ public class HardwareServiceAPI {
     private HardwareService hardwareService;
 
     public void sendHardwareData(){
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        Runnable task = () -> {
 
         try{
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -45,5 +51,9 @@ public class HardwareServiceAPI {
 
         }catch (Exception x){
             x.printStackTrace();}
+
+    };
+        //execute every 5 minutes
+        executor.scheduleWithFixedDelay(task, 0, 5, TimeUnit.MINUTES);
     }
 }

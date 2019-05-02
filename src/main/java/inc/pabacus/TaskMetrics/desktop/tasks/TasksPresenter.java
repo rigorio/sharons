@@ -10,6 +10,7 @@ import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -73,17 +74,24 @@ public class TasksPresenter implements Initializable {
     deleteTask.setDisable(true);
 
     TableColumn<TaskFXAdapter, String> title = new TableColumn<>("Title");
-    title.setCellValueFactory(param -> param.getValue().getTitle());
-
     TableColumn<TaskFXAdapter, String> timeSpent = new TableColumn<>("Time Spent");
-    timeSpent.setCellValueFactory(param -> param.getValue().getTotalTimeSpent());
-
     TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Description");
-    description.setCellValueFactory(param -> param.getValue().getDescription());
-
     TableColumn<TaskFXAdapter, String> dateCompleted = new TableColumn<>("Date Completed");
+    TableColumn<TaskFXAdapter, String> status = new TableColumn<>("Status");
+    TableColumn<TaskFXAdapter, String> progress = new TableColumn<>("Progress");
+    TableColumn<TaskFXAdapter, String> priority = new TableColumn<>("Priority");
+
+    title.setCellValueFactory(param -> param.getValue().getTitle());
+    timeSpent.setCellValueFactory(param -> param.getValue().getTotalTimeSpent());
+    description.setCellValueFactory(param -> param.getValue().getDescription());
     dateCompleted.setCellValueFactory(param -> param.getValue().getDateCompleted());
-    tasksTable.getColumns().addAll(title, timeSpent, description, dateCompleted);
+    status.setCellValueFactory(param -> param.getValue().getStatus());
+    progress.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getProgress().get() + "%"));
+    priority.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPriority().get()));
+
+
+    tasksTable.getColumns().addAll(title, timeSpent, description, dateCompleted,
+                                   status, progress, priority);
 
     initTasksTable();
 
@@ -186,7 +194,7 @@ public class TasksPresenter implements Initializable {
 
     TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Description");
     description.setCellValueFactory(param -> param.getValue().getDescription());
-    
+
     taskTimesheet.getColumns().addAll(title, timeSpent, description);
     initTaskTimeSheet();
 

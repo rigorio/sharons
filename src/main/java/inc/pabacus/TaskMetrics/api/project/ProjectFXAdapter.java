@@ -48,7 +48,7 @@ public class ProjectFXAdapter {
     Double invoiceAmount = project.getInvoiceAmount();
     this.invoiceAmount = invoiceAmount != null ? new SimpleDoubleProperty(invoiceAmount) : null;
 
-    this.projectTasks = project.getProjectTasks();
+    this.projectTasks = project.getTasks();
 
   }
 }

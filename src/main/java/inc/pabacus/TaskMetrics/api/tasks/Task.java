@@ -2,9 +2,7 @@ package inc.pabacus.TaskMetrics.api.tasks;
 
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +15,17 @@ import lombok.NoArgsConstructor;
 public class Task {
 
   private Long id;
+  private Long projectId;
+  private String projectName;
   private String title;
   private String description;
+  private String startTime;
+  private String endTime;
   private String totalTimeSpent;
+  private Boolean billable;
+  private Double billableHours;
+  private Double nonBillableHours;
+
   private Status status;
   private Progress progress;
   private Priority priority;
@@ -48,14 +54,35 @@ public class Task {
     LongProperty id = task.getId();
     this.id = id != null ? id.get() : null;
 
+    LongProperty projectId = task.getProjectId();
+    this.projectId = projectId != null ? projectId.get() : null;
+
+    StringProperty projectName = task.getProjectName();
+    this.projectName = projectName != null ? projectName.get() : null;
+
     StringProperty title = task.getTitle();
     this.title = title != null ? title.get() : null;
 
     StringProperty description = task.getDescription();
     this.description = description != null ? description.get() : null;
 
+    StringProperty startTime = task.getStartTime();
+    this.startTime = startTime != null ? startTime.get() : null;
+
+    StringProperty endTime = task.getEndTime();
+    this.endTime = endTime != null ? endTime.get() : null;
+
     StringProperty totalTimeSpent = task.getTotalTimeSpent();
     this.totalTimeSpent = totalTimeSpent != null ? totalTimeSpent.get() : null;
+
+    BooleanProperty billable = task.getBillable();
+    this.billable = billable != null ? billable.get() : null;
+
+    DoubleProperty billableHours = task.getBillableHours();
+    this.billableHours = billableHours != null ? billableHours.get() : null;
+
+    DoubleProperty nonBillableHours = task.getNonBillableHours();
+    this.nonBillableHours = nonBillableHours != null ? nonBillableHours.get() : null;
 
     StringProperty status = task.getStatus();
     this.status = status != null ? Status.convert(status.get()) : null;

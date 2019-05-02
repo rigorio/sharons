@@ -22,7 +22,7 @@ public class Project {
   private Double percentBillable;
   private Double billRate;
   private Double invoiceAmount;
-  private List<ProjectTask> projectTasks;
+  private List<ProjectTask> tasks;
 
   public Project(ProjectFXAdapter project) {
 
@@ -50,7 +50,7 @@ public class Project {
     DoubleProperty invoiceAmount = project.getInvoiceAmount();
     this.invoiceAmount = invoiceAmount != null ? invoiceAmount.get() : null;
 
-    this.projectTasks = project.getProjectTasks();
+    this.tasks = project.getProjectTasks();
 
   }
 }

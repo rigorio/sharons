@@ -4,6 +4,9 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import inc.pabacus.TaskMetrics.api.project.ProjectFXAdapter;
+import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
+import inc.pabacus.TaskMetrics.api.project.ProjectService;
 import inc.pabacus.TaskMetrics.api.tasks.*;
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
@@ -11,6 +14,7 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -26,7 +30,10 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -51,7 +58,7 @@ public class TasksPresenter implements Initializable {
   private JFXButton saveTask;
 
   @FXML
-  private TableView<TaskFXAdapter> taskTimesheet;
+  private TableView<ProjectFXAdapter> taskTimesheet;
 
   @FXML
   private JFXButton refreshButton;
@@ -63,8 +70,11 @@ public class TasksPresenter implements Initializable {
 
   private TaskHandler taskHandler;
 
+  private ProjectService projectService;
+
   public TasksPresenter() {
     taskHandler = new TaskHandler(new TaskWebRepository());
+    projectService = new ProjectHandler();
   }
 
   @Override
@@ -73,25 +83,30 @@ public class TasksPresenter implements Initializable {
     saveTask.setDisable(true);
     deleteTask.setDisable(true);
 
-    TableColumn<TaskFXAdapter, String> title = new TableColumn<>("Title");
-    TableColumn<TaskFXAdapter, String> timeSpent = new TableColumn<>("Time Spent");
+    TableColumn<TaskFXAdapter, String> projectName = new TableColumn<>("Project");
+    projectName.setCellValueFactory(param -> param.getValue().getProjectName());
+
+    TableColumn<TaskFXAdapter, String> startTime = new TableColumn<>("Start Time");
+    startTime.setCellValueFactory(param -> param.getValue().getStartTime());
+
+    TableColumn<TaskFXAdapter, String> endTime = new TableColumn<>("End Time");
+    endTime.setCellValueFactory(param -> param.getValue().getEndTime());
+
+    TableColumn<TaskFXAdapter, String> billable = new TableColumn<>("Billable?");
+    billable.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBillable().get() ? "Y" : "N"));
+
+    TableColumn<TaskFXAdapter, String> billableHours = new TableColumn<>("Billable Hours");
+    billableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getBillableHours().get()));
+
+    TableColumn<TaskFXAdapter, String> nonBillableHours = new TableColumn<>("Non-Billable Hours");
+    nonBillableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getNonBillableHours().get()));
+
     TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Description");
-    TableColumn<TaskFXAdapter, String> dateCompleted = new TableColumn<>("Date Completed");
-    TableColumn<TaskFXAdapter, String> status = new TableColumn<>("Status");
-    TableColumn<TaskFXAdapter, String> progress = new TableColumn<>("Progress");
-    TableColumn<TaskFXAdapter, String> priority = new TableColumn<>("Priority");
-
-    title.setCellValueFactory(param -> param.getValue().getTitle());
-    timeSpent.setCellValueFactory(param -> param.getValue().getTotalTimeSpent());
-    description.setCellValueFactory(param -> param.getValue().getDescription());
-    dateCompleted.setCellValueFactory(param -> param.getValue().getDateCompleted());
-    status.setCellValueFactory(param -> param.getValue().getStatus());
-    progress.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getProgress().get() + "%"));
-    priority.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPriority().get()));
+    description.setCellValueFactory(param -> param.getValue().getTitle());
 
 
-    tasksTable.getColumns().addAll(title, timeSpent, description, dateCompleted,
-                                   status, progress, priority);
+    tasksTable.getColumns().addAll(projectName, startTime, endTime, billable,
+                                   billableHours, nonBillableHours, description);
 
     initTasksTable();
 
@@ -186,16 +201,30 @@ public class TasksPresenter implements Initializable {
   }
 
   private void initTaskSheet() {
-    TableColumn<TaskFXAdapter, String> title = new TableColumn<>("Title");
-    title.setCellValueFactory(param -> param.getValue().getTitle());
+    TableColumn<ProjectFXAdapter, String> projectName = new TableColumn<>("Project");
+    projectName.setCellValueFactory(param -> param.getValue().getProjectName());
 
-    TableColumn<TaskFXAdapter, String> timeSpent = new TableColumn<>("Time Spent");
-    timeSpent.setCellValueFactory(param -> param.getValue().getTotalTimeSpent());
+    TableColumn<ProjectFXAdapter, String> billableHours = new TableColumn<>("Billable Hours");
+    billableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getBillable().get()));
 
-    TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Description");
-    description.setCellValueFactory(param -> param.getValue().getDescription());
+    TableColumn<ProjectFXAdapter, String> nonBillableHours = new TableColumn<>("Non-Billable Hours");
+    nonBillableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getNonBillable().get()));
 
-    taskTimesheet.getColumns().addAll(title, timeSpent, description);
+    TableColumn<ProjectFXAdapter, String> totalHours = new TableColumn<>("Total Hours");
+    totalHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getTotalHours().get()));
+
+    TableColumn<ProjectFXAdapter, String> billable = new TableColumn<>("Billable");
+    billable.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getBillable().get() + "%"));
+
+    TableColumn<ProjectFXAdapter, String> billedRate = new TableColumn<>("Billed Rate");
+    billedRate.setCellValueFactory(param -> new SimpleStringProperty("$" + param.getValue().getBillRate().get()));
+
+    TableColumn<ProjectFXAdapter, String> invoiceAmount = new TableColumn<>("Invoice Amount");
+    invoiceAmount.setCellValueFactory(param -> new SimpleStringProperty("$" + param.getValue().getInvoiceAmount().get()));
+
+
+    taskTimesheet.getColumns().addAll(projectName, billableHours, nonBillableHours,
+                                      totalHours, billable, billedRate, invoiceAmount);
     initTaskTimeSheet();
 
   }
@@ -276,7 +305,12 @@ public class TasksPresenter implements Initializable {
   }
 
   private void initTaskTimeSheet() {
-    taskTimesheet.setItems(getTasksByStatus("done"));
+    taskTimesheet.setItems(getProjects());
+  }
+
+  private ObservableList<ProjectFXAdapter> getProjects() {
+    List<ProjectFXAdapter> projects = projectService.getAllFXProjects();
+    return FXCollections.observableArrayList(projects);
   }
 
   private void initTasksTable() {
@@ -285,7 +319,13 @@ public class TasksPresenter implements Initializable {
 
   private ObservableList<TaskFXAdapter> getTasksByStatus(String status) {
     List<TaskFXAdapter> backLogs = getAllTasks().stream()
-        .filter(backlog -> backlog.getStatus().get().equalsIgnoreCase(status))
+        .filter(backlog -> {
+          StringProperty stat = backlog.getStatus();
+          if (stat == null)
+            backlog.setStatus(new SimpleStringProperty("Backlog"));
+          System.out.println(backlog);
+          return backlog.getStatus().get().equalsIgnoreCase(status);
+        })
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(backLogs);
   }

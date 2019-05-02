@@ -225,7 +225,7 @@ public class TasksPresenter implements Initializable {
     totalHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getTotalHours().get()));
 
     TableColumn<ProjectFXAdapter, String> billable = new TableColumn<>("Billable");
-    billable.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getBillable().get() + "%"));
+    billable.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPercentBillable().get() + "%"));
 
     TableColumn<ProjectFXAdapter, String> billedRate = new TableColumn<>("Billed Rate");
     billedRate.setCellValueFactory(param -> new SimpleStringProperty("$" + param.getValue().getBillRate().get()));

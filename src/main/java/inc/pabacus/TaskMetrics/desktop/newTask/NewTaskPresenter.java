@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.desktop.tasks;
+package inc.pabacus.TaskMetrics.desktop.newTask;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class InsertTaskPresenter implements Initializable {
+public class NewTaskPresenter implements Initializable {
 
     @FXML
     private JFXTextField descriptionField;
@@ -86,7 +86,7 @@ public class InsertTaskPresenter implements Initializable {
             String description = descriptionField.getText();
             Boolean billable = Boolean.valueOf(billableComboBox.getValue());
             String status = "BACKLOG";
-            InsertTaskPresenter insertTask = new InsertTaskPresenter();
+            NewTaskPresenter insertTask = new NewTaskPresenter();
             InsertTask task = insertTask.saveTask(new InsertTask(title,description,billable,status));
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(null);

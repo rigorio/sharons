@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.desktop.tasks;
+package inc.pabacus.TaskMetrics.desktop.newTask;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

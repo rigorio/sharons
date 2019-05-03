@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.desktop.tasks;
+package inc.pabacus.TaskMetrics.desktop.screenshot;
 
 import inc.pabacus.TaskMetrics.utils.FileUtils;
 import javafx.event.EventHandler;
@@ -11,15 +11,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 
-import java.awt.*;
 import javafx.scene.input.MouseEvent;
-import org.hibernate.cfg.Environment;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class ScreenShotPresenter implements Initializable {

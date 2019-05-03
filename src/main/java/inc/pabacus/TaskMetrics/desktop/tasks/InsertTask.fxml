@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+        <?import com.jfoenix.controls.JFXButton?>
+        <?import com.jfoenix.controls.JFXTextField?>
+        <?import javafx.scene.control.ComboBox?>
+        <?import javafx.scene.control.Label?>
+        <?import javafx.scene.layout.AnchorPane?>
+        <?import javafx.scene.layout.HBox?>
+        <?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="340.0" prefWidth="468.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.tasks.InsertTaskPresenter">
+<children>
+   <Label layoutX="13.0" layoutY="2.0" prefHeight="40.0" prefWidth="172.0" text="Insert a new Task">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Label>
+   <HBox layoutX="-1.0" layoutY="37.0" prefHeight="11.0" prefWidth="506.0" style="-fx-background-color: #008080;" />
+   <Label layoutX="87.0" layoutY="78.0" prefHeight="25.0" prefWidth="98.0" text="Project:" />
+   <Label layoutX="88.0" layoutY="174.0" prefHeight="25.0" prefWidth="98.0" text="Description:" />
+   <Label layoutX="88.0" layoutY="126.0" prefHeight="25.0" prefWidth="98.0" text="Billable:" />
+   <JFXTextField fx:id="descriptionField" layoutX="195.0" layoutY="174.0" prefHeight="25.0" prefWidth="199.0" />
+   <ComboBox fx:id="billableComboBox" layoutX="195.0" layoutY="125.0" prefHeight="25.0" prefWidth="199.0" promptText="Choose Billable" />
+   <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="220.0" layoutY="260.0" onAction="#save" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #008080;" text="Save" textFill="WHITE" />
+   <JFXButton fx:id="closeButton" layoutX="312.0" layoutY="260.0" onAction="#close" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #D2D2D2;" text="Close" textFill="WHITE" />
+   <ComboBox fx:id="projectComboBox" layoutX="195.0" layoutY="78.0" prefHeight="25.0" prefWidth="199.0" promptText="Choose Project" />
+</children>
+</AnchorPane>

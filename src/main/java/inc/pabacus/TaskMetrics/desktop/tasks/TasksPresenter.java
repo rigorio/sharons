@@ -10,6 +10,7 @@ import inc.pabacus.TaskMetrics.api.project.ProjectService;
 import inc.pabacus.TaskMetrics.api.tasks.*;
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -24,7 +25,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -167,32 +167,34 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void newTask() {
-    TextInputDialog dialog = new TextInputDialog("");
-    Image imageImage1 = new Image("/img/task.png", 50, 50, false, false);
-    ImageView imageView = new ImageView(imageImage1);
-    dialog.setGraphic(imageView);
-//    dialog.initOwner(stage);
+    GuiManager.getInstance().displayView(new NewTaskView());
 
-
-//    Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-//    stage.getIcons().add(new Image(this.getClass().getResource("/img/PabacusLogo.png").toString()));
-
-    dialog.setTitle("New Task:");
-    dialog.setHeaderText("Add a new Task");
-    dialog.setContentText("Enter a new Task:");
-    Optional<String> result = dialog.showAndWait();
-    if (result.isPresent()) {
-      String taskName = result.get();
-      Task task = new Task();
-      task.setTitle(taskName);
-      task.setStatus(Status.BACKLOG);
-      task.setTotalTimeSpent("00:00:00");
-      task.setDescription("");
-      taskHandler.saveTask(task);
-      refreshTasks();
-//      ToDo todo = new ToDo(result.get());
-//      backLogsTable.getItems().add(todo);
-    }
+//    TextInputDialog dialog = new TextInputDialog("");
+//    Image imageImage1 = new Image("/img/task.png", 50, 50, false, false);
+//    ImageView imageView = new ImageView(imageImage1);
+//    dialog.setGraphic(imageView);
+////    dialog.initOwner(stage);
+//
+//
+////    Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+////    stage.getIcons().add(new Image(this.getClass().getResource("/img/PabacusLogo.png").toString()));
+//
+//    dialog.setTitle("New Task:");
+//    dialog.setHeaderText("Add a new Task");
+//    dialog.setContentText("Enter a new Task:");
+//    Optional<String> result = dialog.showAndWait();
+//    if (result.isPresent()) {
+//      String taskName = result.get();
+//      Task task = new Task();
+//      task.setTitle(taskName);
+//      task.setStatus(Status.BACKLOG);
+//      task.setTotalTimeSpent("00:00:00");
+//      task.setDescription("");
+//      taskHandler.saveTask(task);
+//      refreshTasks();
+////      ToDo todo = new ToDo(result.get());
+////      backLogsTable.getItems().add(todo);
+//    }
   }
 
   @FXML

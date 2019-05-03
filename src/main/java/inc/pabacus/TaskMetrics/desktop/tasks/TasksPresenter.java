@@ -198,7 +198,7 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void viewScreenShot() {
     try {
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ScreenShot.fxml"));
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../screenshot/ScreenShot.fxml"));
       Parent root1 = (Parent) fxmlLoader.load();
       Stage stage = new Stage();
       stage.getIcons().add(new Image("/img/PabacusLogo.png"));

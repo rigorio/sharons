@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.desktop.tasks;
+package inc.pabacus.TaskMetrics.desktop.screenshot;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;

@@ -2,15 +2,18 @@ package inc.pabacus.TaskMetrics.desktop.dashboard;
 
 import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
+import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
+import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -62,6 +65,10 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void logout() {
+    Stage stages = (Stage) logoutBtn.getScene().getWindow();
+    stages.close();
+
+    GuiManager.getInstance().changeView(new LoginView());
   }
 
   private void setSize(ImageView taskImage) {

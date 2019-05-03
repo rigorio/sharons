@@ -3,8 +3,8 @@ package inc.pabacus.TaskMetrics.desktop.tasks;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import inc.pabacus.TaskMetrics.api.standuply.StandupAnswer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +14,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import okhttp3.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,7 +27,7 @@ public class InsertTaskPresenter implements Initializable {
     private JFXTextField descriptionField;
 
     @FXML
-    private ComboBox<String> billableComboBox;
+    private JFXComboBox<String> billableComboBox;
 
     @FXML
     private JFXButton saveButton;
@@ -34,7 +36,10 @@ public class InsertTaskPresenter implements Initializable {
     private JFXButton closeButton;
 
     @FXML
-    private ComboBox<String> projectComboBox;
+    private JFXComboBox<String> projectComboBox;
+
+    @FXML
+    private JFXComboBox<String> businessComboBox;
 
     ObservableList<String> projectList = FXCollections.observableArrayList("ABC","XYZ","ASD");
     ObservableList<String> billableList = FXCollections.observableArrayList("True","False");
@@ -45,9 +50,13 @@ public class InsertTaskPresenter implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //unfocus textfield
-        Platform.runLater( () -> closeButton.requestFocus() );
+    //unfocus textfield
+    Platform.runLater( () -> closeButton.requestFocus() );
 
+    getItems();
+    billableComboBox.setPromptText("Choose Billable");
+    projectComboBox.setPromptText("Choose Project");
+    businessComboBox.setPromptText("Choose Business Value");
     projectComboBox.setItems(projectList);
     billableComboBox.setItems(billableList);
     }
@@ -62,8 +71,10 @@ public class InsertTaskPresenter implements Initializable {
     public void save(){
         boolean isMprojectComboBoxEmpty = projectComboBox.getSelectionModel().isEmpty();
         boolean isbillableComboBoxEmpty = billableComboBox.getSelectionModel().isEmpty();
+        boolean isbusinessComboBoxEmpty = businessComboBox.getSelectionModel().isEmpty();
         boolean isDescriptionEmpty = descriptionField.getText().isEmpty();
-        if(isMprojectComboBoxEmpty || isbillableComboBoxEmpty || isDescriptionEmpty){
+
+        if(isMprojectComboBoxEmpty || isbillableComboBoxEmpty || isDescriptionEmpty || isbusinessComboBoxEmpty){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Error");
             alert.setContentText("Please fill out all the fields");
@@ -81,11 +92,13 @@ public class InsertTaskPresenter implements Initializable {
             alert.setContentText("Task saved!");
             projectComboBox.setValue(null);
             billableComboBox.setValue(null);
+            businessComboBox.setValue(null);
             descriptionField.setText("");
 
             alert.showAndWait();
             billableComboBox.setPromptText("Choose Billable");
             projectComboBox.setPromptText("Choose Project");
+            businessComboBox.setPromptText("Choose Business Value");
         }
     }
 
@@ -108,6 +121,37 @@ public class InsertTaskPresenter implements Initializable {
             return insertTask;
         } catch (IOException e) {
             return task;
+        }
+    }
+
+    public void getItems(){
+        try {
+            OkHttpClient client = new OkHttpClient();
+            // code request code here
+            Request request = new Request.Builder()
+                    .url("http://localhost:8080/api/businessValue")
+                    .addHeader("Accept", "application/json")
+                    .method("GET", null)
+                    .build();
+
+            Response response = null;
+
+            response = client.newCall(request).execute();
+
+            String getTimes = response.body().string();
+
+            JSONArray jsonArray = new JSONArray(getTimes);
+
+            for(int i=0;i<jsonArray.length();i++)
+            {
+                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                String value1 = jsonObject1.getString("business");
+
+                businessComboBox.getItems().addAll(value1);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

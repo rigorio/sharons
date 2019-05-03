@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics;
 
+import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
@@ -34,5 +35,6 @@ public class TaskMetricsApplication extends Application {
     System.exit(0); // this is a hackly hack
     new StandupService().runStandup();
     new SoftwareServiceAPI().sendSoftwareData();
+    new HardwareServiceAPI().sendHardwareData();
   }
 }

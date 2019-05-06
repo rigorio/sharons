@@ -18,6 +18,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,10 +31,9 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -42,6 +42,8 @@ import java.util.stream.Collectors;
 
 public class TasksPresenter implements Initializable {
 
+  @FXML
+  private JFXComboBox<String> statusBox;
   @FXML
   private Label totalbillable;
   @FXML
@@ -90,6 +92,7 @@ public class TasksPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    statusBox.setValue("All");
     startButton.setDisable(true);
     saveTask.setDisable(true);
     deleteTask.setDisable(true);
@@ -107,10 +110,18 @@ public class TasksPresenter implements Initializable {
     billable.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBillable().get() ? "Y" : "N"));
 
     TableColumn<TaskFXAdapter, String> billableHours = new TableColumn<>("Billable Hours");
-    billableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getBillableHours().get()));
+    billableHours.setCellValueFactory(param -> {
+      TaskFXAdapter adapter = param.getValue();
+      String b = adapter.getBillable().get() ? "" + adapter.getTimeSpent().get() : "0";
+      return new SimpleStringProperty(b);
+    });
 
     TableColumn<TaskFXAdapter, String> nonBillableHours = new TableColumn<>("Non-Billable Hours");
-    nonBillableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getNonBillableHours().get()));
+    nonBillableHours.setCellValueFactory(param -> {
+      TaskFXAdapter adapter = param.getValue();
+      String b = !adapter.getBillable().get() ? "" + adapter.getTimeSpent().get() : "0";
+      return new SimpleStringProperty(b);
+    });
 
     TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Description");
     description.setCellValueFactory(param -> param.getValue().getTitle());
@@ -125,6 +136,18 @@ public class TasksPresenter implements Initializable {
     initEditables();
     refreshingService();
 //    hideHeaders();
+  }
+
+  @FXML
+  public void wowStatusBoxChange() {
+    String value = statusBox.getValue();
+    ObservableList<TaskFXAdapter> tasksByStatus;
+    if (value.equals("All")) {
+      tasksByStatus = FXCollections.observableArrayList(getAllTasks());
+    } else {
+      tasksByStatus = getTasksByStatus(value);
+    }
+    tasksTable.setItems(tasksByStatus);
   }
 
   @FXML
@@ -153,8 +176,10 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void startTask() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
     String title = selectedItem.getTitle().get();
+    selectedItem.setStartTime(new SimpleStringProperty(formatter.format(LocalTime.now())));
     startButton.setDisable(true);
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
@@ -168,33 +193,6 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void newTask() {
     GuiManager.getInstance().displayView(new NewTaskView());
-
-//    TextInputDialog dialog = new TextInputDialog("");
-//    Image imageImage1 = new Image("/img/task.png", 50, 50, false, false);
-//    ImageView imageView = new ImageView(imageImage1);
-//    dialog.setGraphic(imageView);
-////    dialog.initOwner(stage);
-//
-//
-////    Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-////    stage.getIcons().add(new Image(this.getClass().getResource("/img/PabacusLogo.png").toString()));
-//
-//    dialog.setTitle("New Task:");
-//    dialog.setHeaderText("Add a new Task");
-//    dialog.setContentText("Enter a new Task:");
-//    Optional<String> result = dialog.showAndWait();
-//    if (result.isPresent()) {
-//      String taskName = result.get();
-//      Task task = new Task();
-//      task.setTitle(taskName);
-//      task.setStatus(Status.BACKLOG);
-//      task.setTotalTimeSpent("00:00:00");
-//      task.setDescription("");
-//      taskHandler.saveTask(task);
-//      refreshTasks();
-////      ToDo todo = new ToDo(result.get());
-////      backLogsTable.getItems().add(todo);
-//    }
   }
 
   @FXML
@@ -229,15 +227,12 @@ public class TasksPresenter implements Initializable {
     TableColumn<ProjectFXAdapter, String> billable = new TableColumn<>("Billable");
     billable.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPercentBillable().get() + "%"));
 
-    TableColumn<ProjectFXAdapter, String> billedRate = new TableColumn<>("Billed Rate");
-    billedRate.setCellValueFactory(param -> new SimpleStringProperty("$" + param.getValue().getBillRate().get()));
-
     TableColumn<ProjectFXAdapter, String> invoiceAmount = new TableColumn<>("Invoice Amount");
     invoiceAmount.setCellValueFactory(param -> new SimpleStringProperty("$" + param.getValue().getInvoiceAmount().get()));
 
 
     taskTimesheet.getColumns().addAll(projectName, billableHours, nonBillableHours,
-                                      totalHours, billable, billedRate, invoiceAmount);
+                                      totalHours, billable, invoiceAmount);
     initTaskTimeSheet();
 
     totalbillable.setText("7.49");
@@ -258,11 +253,15 @@ public class TasksPresenter implements Initializable {
       add("100");
     }});
 
-    statusText.getItems().addAll(new ArrayList<String>() {{
-      add("Backlog");
+    ArrayList<String> statuses = new ArrayList<String>() {{
+      add("Pending");
       add("In Progress");
       add("Done");
-    }});
+    }};
+    statusText.getItems().addAll(statuses);
+    statuses.add("All");
+    statusBox.getItems().addAll(statuses);
+
 
     priorityText.getItems().addAll(new ArrayList<String>() {{
       add("1");
@@ -300,13 +299,14 @@ public class TasksPresenter implements Initializable {
       }
     });
 
+
   }
 
   private void saveTask(Task task) {
     // if title empty, prompt and do not execute
     task.setTitle(titleText.getText());
     checkOtherValues(task);
-    taskHandler.saveTask(task);
+    taskHandler.createTask(task);
   }
 
   private void checkOtherValues(Task task) {
@@ -333,18 +333,12 @@ public class TasksPresenter implements Initializable {
   }
 
   private void initTasksTable() {
-    tasksTable.setItems(getTasksByStatus("backlog"));
+    tasksTable.setItems(FXCollections.observableArrayList(getAllTasks()));
   }
 
   private ObservableList<TaskFXAdapter> getTasksByStatus(String status) {
     List<TaskFXAdapter> backLogs = getAllTasks().stream()
-        .filter(backlog -> {
-          StringProperty stat = backlog.getStatus();
-          if (stat == null)
-            backlog.setStatus(new SimpleStringProperty("Backlog"));
-          System.out.println(backlog);
-          return backlog.getStatus().get().equalsIgnoreCase(status);
-        })
+        .filter(backlog -> backlog.getStatus().get().equalsIgnoreCase(status))
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(backLogs);
   }
@@ -372,7 +366,11 @@ public class TasksPresenter implements Initializable {
   }
 
   private void refreshTables() {
-    initTasksTable();
+    if (statusBox.getValue().equals("All"))
+      initTasksTable();
+    else
+      tasksTable.setItems(getTasksByStatus(statusBox.getValue()));
+
     initTaskTimeSheet();
   }
 
@@ -412,5 +410,4 @@ public class TasksPresenter implements Initializable {
       }
     });
   }
-
 }

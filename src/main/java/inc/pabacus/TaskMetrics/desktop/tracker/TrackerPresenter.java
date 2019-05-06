@@ -7,6 +7,7 @@ import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.TaskWebRepository;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.utils.TimerService;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +16,9 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class TrackerPresenter implements Initializable {
@@ -56,9 +60,16 @@ public class TrackerPresenter implements Initializable {
     timerService.pause();
     String timeSpent = timerService.formatSeconds(time);
     selectedTask.setTotalTimeSpent(new SimpleStringProperty(timeSpent));
+    double totalTimeSpent = (double) (time / 3600);
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+//    totalTimeSpent = 3;
+    selectedTask.setTimeSpent(new SimpleDoubleProperty(totalTimeSpent));
     selectedTask.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
     selectedTask.setDateCompleted(new SimpleStringProperty(LocalDate.now().toString()));
-    taskHandler.saveTask(new Task(selectedTask));
+    Task task = new Task(selectedTask);
+    task.setEndTime(formatter.format(LocalTime.now()));
+    taskHandler.saveTask(task);
     ((Stage) complete.getScene().getWindow()).close();
   }
 }

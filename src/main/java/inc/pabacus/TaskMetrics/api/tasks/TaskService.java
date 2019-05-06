@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.tasks;
 
+import inc.pabacus.TaskMetrics.api.project.Project;
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 
@@ -10,7 +11,9 @@ import java.util.Optional;
  * @see TaskHandler
  */
 public interface TaskService {
-  Task saveTask(Task task);
+  Task createTask(Task task);
+
+  Project saveTask(Task task);
 
   Optional<Task> getTask(Long id);
 

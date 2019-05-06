@@ -310,10 +310,10 @@ public class TasksPresenter implements Initializable {
   }
 
   private void checkOtherValues(Task task) {
-    if (!descriptionText.getText().equals(""))
+    if (descriptionText.getText() != null && !descriptionText.getText().equals(""))
       task.setDescription(descriptionText.getText());
 
-    if (!progressText.getValue().equals(""))
+    if (progressText.getValue() != null && !progressText.getValue().equals(""))
       task.setProgress(Progress.convert(Integer.valueOf(progressText.getValue())));
 
     if (!statusText.getValue().equals(""))

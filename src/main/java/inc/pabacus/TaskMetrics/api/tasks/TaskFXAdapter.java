@@ -10,6 +10,7 @@ public class TaskFXAdapter {
 
   private LongProperty id;
   private LongProperty projectId;
+  private LongProperty businessValueId;
   private StringProperty projectName;
   private StringProperty title;
   private StringProperty description;
@@ -17,8 +18,7 @@ public class TaskFXAdapter {
   private StringProperty endTime;
   private StringProperty totalTimeSpent;
   private BooleanProperty billable;
-  private DoubleProperty billableHours;
-  private DoubleProperty nonBillableHours;
+  private DoubleProperty timeSpent;
 
   private StringProperty status;
   private IntegerProperty progress;
@@ -34,6 +34,9 @@ public class TaskFXAdapter {
 
     Long projectId = task.getProjectId();
     this.projectId = projectId != null ? new SimpleLongProperty(projectId) : null;
+
+    Long businessValueId = task.getBusinessValueId();
+    this.businessValueId = businessValueId != null ? new SimpleLongProperty(businessValueId) : null;
 
     String projectName = task.getProjectName();
     this.projectName = projectName != null ? new SimpleStringProperty(projectName) : null;
@@ -56,11 +59,8 @@ public class TaskFXAdapter {
     Boolean billable = task.getBillable();
     this.billable = billable != null ? new SimpleBooleanProperty(billable) : null;
 
-    Double billableHours = task.getBillableHours();
-    this.billableHours = billableHours != null ? new SimpleDoubleProperty(billableHours) : null;
-
-    Double nonBillableHours = task.getNonBillableHours();
-    this.nonBillableHours = nonBillableHours != null ? new SimpleDoubleProperty(nonBillableHours) : null;
+    Double timeSpent = task.getTimeSpent();
+    this.timeSpent = timeSpent != null ? new SimpleDoubleProperty(timeSpent) : null;
 
     Status status = task.getStatus();
     this.status = status != null ? new SimpleStringProperty(status.getStatus()) : null;

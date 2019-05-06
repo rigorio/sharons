@@ -16,6 +16,7 @@ public class Task {
 
   private Long id;
   private Long projectId;
+  private Long businessValueId;
   private String projectName;
   private String title;
   private String description;
@@ -23,8 +24,7 @@ public class Task {
   private String endTime;
   private String totalTimeSpent;
   private Boolean billable;
-  private Double billableHours;
-  private Double nonBillableHours;
+  private Double timeSpent;
 
   private Status status;
   private Progress progress;
@@ -57,6 +57,9 @@ public class Task {
     LongProperty projectId = task.getProjectId();
     this.projectId = projectId != null ? projectId.get() : null;
 
+    LongProperty businessValueId = task.getBusinessValueId();
+    this.businessValueId = businessValueId != null ? businessValueId.get() : null;
+
     StringProperty projectName = task.getProjectName();
     this.projectName = projectName != null ? projectName.get() : null;
 
@@ -78,11 +81,8 @@ public class Task {
     BooleanProperty billable = task.getBillable();
     this.billable = billable != null ? billable.get() : null;
 
-    DoubleProperty billableHours = task.getBillableHours();
-    this.billableHours = billableHours != null ? billableHours.get() : null;
-
-    DoubleProperty nonBillableHours = task.getNonBillableHours();
-    this.nonBillableHours = nonBillableHours != null ? nonBillableHours.get() : null;
+    DoubleProperty timeSpent = task.getTimeSpent();
+    this.timeSpent = timeSpent != null ? timeSpent.get() : null;
 
     StringProperty status = task.getStatus();
     this.status = status != null ? Status.convert(status.get()) : null;

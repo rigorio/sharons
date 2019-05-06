@@ -1,9 +1,14 @@
 package inc.pabacus.TaskMetrics.api.tasks;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.project.Project;
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import okhttp3.*;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,15 +16,46 @@ import java.util.stream.Collectors;
 @Service
 public class TaskHandler implements TaskService {
 
+  private OkHttpClient client = new OkHttpClient();
+  private ObjectMapper mapper = new ObjectMapper();
+  private static final String HOST = "http://localhost:8080";
+  private static final MediaType JSON
+      = MediaType.parse("application/json; charset=utf-8");
+
   private TaskWebRepository taskRepository;
+
+  public TaskHandler() {
+    taskRepository = new TaskWebRepository();
+  }
 
   public TaskHandler(TaskWebRepository taskRepository) {
     this.taskRepository = taskRepository;
   }
 
   @Override
-  public Task saveTask(Task task) {
+  public Task createTask(Task task) {
     return taskRepository.save(task);
+  }
+
+  @Override
+  public Project saveTask(Task task) {
+    Project t = null;
+    try {
+      String jsonString = mapper.writeValueAsString(task);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/project/task")
+                                     .post(body)
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      t = mapper.readValue(responseBody.string(), new TypeReference<Project>() {});
+      task.setId(t.getId());
+    } catch (IOException e) {
+      e.printStackTrace();
+      return t;
+    }
+    return t;
+
   }
 
   @Override

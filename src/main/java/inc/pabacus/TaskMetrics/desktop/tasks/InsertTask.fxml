@@ -16,15 +16,15 @@
       </font>
    </Label>
    <HBox layoutX="-1.0" layoutY="37.0" prefHeight="11.0" prefWidth="506.0" style="-fx-background-color: #008080;" />
-   <Label layoutX="87.0" layoutY="120.0" prefHeight="25.0" prefWidth="98.0" text="Project:" />
-   <Label layoutX="88.0" layoutY="208.0" prefHeight="25.0" prefWidth="98.0" text="Description:" />
-   <Label layoutX="88.0" layoutY="168.0" prefHeight="25.0" prefWidth="98.0" text="Billable:" />
-   <JFXTextField fx:id="descriptionField" layoutX="191.0" layoutY="208.0" prefHeight="25.0" prefWidth="202.0" />
+   <Label layoutX="87.0" layoutY="165.0" prefHeight="25.0" prefWidth="98.0" text="Project:" />
+   <Label layoutX="87.0" layoutY="69.0" prefHeight="25.0" prefWidth="98.0" text="Description:" />
+   <Label layoutX="88.0" layoutY="213.0" prefHeight="25.0" prefWidth="98.0" text="Billable:" />
+   <JFXTextField fx:id="descriptionField" layoutX="190.0" layoutY="69.0" prefHeight="25.0" prefWidth="202.0" />
    <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="220.0" layoutY="260.0" onAction="#save" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #008080;" text="Save" textFill="WHITE" />
    <JFXButton fx:id="closeButton" layoutX="312.0" layoutY="260.0" onAction="#close" prefHeight="32.0" prefWidth="82.0" style="-fx-background-color: #D2D2D2;" text="Close" textFill="WHITE" />
-      <JFXComboBox fx:id="businessComboBox" layoutX="192.0" layoutY="71.0" prefHeight="25.0" prefWidth="199.0" />
-      <Label layoutX="87.0" layoutY="72.0" prefHeight="25.0" prefWidth="98.0" text="Business Value:" />
-      <JFXComboBox fx:id="projectComboBox" layoutX="192.0" layoutY="119.0" prefHeight="25.0" prefWidth="199.0" />
-      <JFXComboBox fx:id="billableComboBox" layoutX="192.0" layoutY="167.0" prefHeight="25.0" prefWidth="199.0" />
+      <JFXComboBox fx:id="businessComboBox" layoutX="192.0" layoutY="116.0" prefHeight="25.0" prefWidth="199.0" />
+      <Label layoutX="87.0" layoutY="117.0" prefHeight="25.0" prefWidth="98.0" text="Business Value:" />
+      <JFXComboBox fx:id="projectComboBox" layoutX="192.0" layoutY="164.0" prefHeight="25.0" prefWidth="199.0" />
+      <JFXComboBox fx:id="billableComboBox" layoutX="192.0" layoutY="212.0" prefHeight="25.0" prefWidth="199.0" />
 </children>
 </AnchorPane>

@@ -2,9 +2,8 @@ package inc.pabacus.TaskMetrics.api.tasks.options;
 
 public enum Status implements Option {
 
-  BACKLOG("Backlog"),
+  BACKLOG("Pending"),
   IN_PROGRESS("In Progress"),
-  FOR_REVIEW("For Review"),
   DONE("Done");
 
   private String status;
@@ -19,8 +18,6 @@ public enum Status implements Option {
         return BACKLOG;
       case "In Progress":
         return IN_PROGRESS;
-      case "For review":
-        return FOR_REVIEW;
       case "Done":
         return DONE;
       default:

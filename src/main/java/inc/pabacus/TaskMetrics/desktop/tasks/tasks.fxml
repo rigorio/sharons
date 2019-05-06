@@ -44,7 +44,7 @@
       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
     </columnResizePolicy>
   </TableView>
-  <JFXComboBox layoutX="14.0" layoutY="57.0" prefWidth="150.0"/>
+  <JFXComboBox onAction="#wowStatusBoxChange" fx:id="statusBox" layoutX="14.0" layoutY="57.0" prefWidth="150.0"/>
   <Label layoutX="24.0" layoutY="685.0" text="Total">
     <font>
       <Font name="System Bold" size="15.0"/>

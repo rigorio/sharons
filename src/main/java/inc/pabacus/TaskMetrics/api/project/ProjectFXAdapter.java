@@ -18,7 +18,6 @@ public class ProjectFXAdapter {
   private DoubleProperty nonBillable;
   private DoubleProperty totalHours;
   private DoubleProperty percentBillable;
-  private DoubleProperty billRate;
   private DoubleProperty invoiceAmount;
   private List<ProjectTask> projectTasks;
 
@@ -41,9 +40,6 @@ public class ProjectFXAdapter {
 
     Double percentBillable = project.getPercentBillable();
     this.percentBillable = percentBillable != null ? new SimpleDoubleProperty(percentBillable) : null;
-
-    Double billRate = project.getBillRate();
-    this.billRate = billRate != null ? new SimpleDoubleProperty(billRate) : null;
 
     Double invoiceAmount = project.getInvoiceAmount();
     this.invoiceAmount = invoiceAmount != null ? new SimpleDoubleProperty(invoiceAmount) : null;

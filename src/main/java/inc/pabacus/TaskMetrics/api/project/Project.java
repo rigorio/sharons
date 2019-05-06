@@ -4,12 +4,14 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.StringProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Project {
@@ -20,7 +22,6 @@ public class Project {
   private Double nonBillable;
   private Double totalHours;
   private Double percentBillable;
-  private Double billRate;
   private Double invoiceAmount;
   private List<ProjectTask> tasks;
 
@@ -43,9 +44,6 @@ public class Project {
 
     DoubleProperty percentBillable = project.getPercentBillable();
     this.percentBillable = percentBillable != null ? percentBillable.get() : null;
-
-    DoubleProperty billRate = project.getBillRate();
-    this.billRate = billRate != null ? billRate.get() : null;
 
     DoubleProperty invoiceAmount = project.getInvoiceAmount();
     this.invoiceAmount = invoiceAmount != null ? invoiceAmount.get() : null;

@@ -15,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import okhttp3.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -50,15 +51,16 @@ public class InsertTaskPresenter implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-    //unfocus textfield
-    Platform.runLater( () -> closeButton.requestFocus() );
-
     getItems();
     billableComboBox.setPromptText("Choose Billable");
     projectComboBox.setPromptText("Choose Project");
     businessComboBox.setPromptText("Choose Business Value");
     projectComboBox.setItems(projectList);
     billableComboBox.setItems(billableList);
+    // set default value
+    projectComboBox.setValue("ABC");
+    billableComboBox.setValue("True");
+    businessComboBox.setValue("Accounting");
     }
 
     @FXML
@@ -90,15 +92,10 @@ public class InsertTaskPresenter implements Initializable {
             alert.setTitle(null);
             alert.setHeaderText(null);
             alert.setContentText("Task saved!");
-            projectComboBox.setValue(null);
-            billableComboBox.setValue(null);
-            businessComboBox.setValue(null);
-            descriptionField.setText("");
-
             alert.showAndWait();
-            billableComboBox.setPromptText("Choose Billable");
-            projectComboBox.setPromptText("Choose Project");
-            businessComboBox.setPromptText("Choose Business Value");
+            //close the window after creating the task
+            Stage stage = (Stage) projectComboBox.getScene().getWindow();
+            stage.close();
         }
     }
 
@@ -151,6 +148,8 @@ public class InsertTaskPresenter implements Initializable {
             }
 
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

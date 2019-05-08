@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,7 +16,15 @@
   <AnchorPane prefHeight="720.0" prefWidth="1080.0">
     <VBox prefHeight="720.0" prefWidth="155.0" style="-fx-background-color: #008080;" AnchorPane.bottomAnchor="0.0"
           AnchorPane.topAnchor="0.0">
-      <Pane prefHeight="77.0" prefWidth="301.0"/>
+      <Pane prefHeight="77.0" prefWidth="301.0">
+        <Label fx:id="username" layoutX="18.0" text="Rigo" textFill="WHITE">
+          <font>
+            <Font size="26.0"/>
+          </font>
+        </Label>
+        <JFXComboBox fx:id="status" focusColor="WHITE" layoutX="18.0" layoutY="37.0" onAction="#changeStatus"
+                     prefHeight="21.0" prefWidth="120.0" unFocusColor="WHITE"/>
+      </Pane>
       <JFXButton fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false"
                  onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Tasks" textFill="WHITE">
         <font>

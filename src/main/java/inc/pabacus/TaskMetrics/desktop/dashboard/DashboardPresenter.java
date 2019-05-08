@@ -1,19 +1,17 @@
 package inc.pabacus.TaskMetrics.desktop.dashboard;
 
 import com.jfoenix.controls.JFXButton;
-import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
+import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
-import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotPresenter;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
-import inc.pabacus.TaskMetrics.desktop.screenshot.ScreentShotImageView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -24,6 +22,10 @@ import java.util.ResourceBundle;
 
 public class DashboardPresenter implements Initializable {
 
+  @FXML
+  private JFXComboBox status;
+  @FXML
+  private Label username;
   @FXML
   private JFXButton screenshotButton;
   @FXML
@@ -54,6 +56,7 @@ public class DashboardPresenter implements Initializable {
     setSize(screenshotImage);
     screenshotButton.setGraphic(screenshotImage);
 
+    status.getItems().addAll("Busy", "Meeting", "Lunch", "Offline");
 
     viewTasks();
   }
@@ -86,6 +89,11 @@ public class DashboardPresenter implements Initializable {
     stages.close();
 
     GuiManager.getInstance().changeView(new LoginView());
+  }
+
+  @FXML
+  public void changeStatus() {
+    System.out.println(status.getValue());
   }
 
   private void setSize(ImageView taskImage) {

@@ -15,10 +15,8 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -92,7 +90,7 @@ public class TasksPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    statusBox.setValue("All");
+    statusBox.setValue("Pending");
     startButton.setDisable(true);
     saveTask.setDisable(true);
     deleteTask.setDisable(true);
@@ -123,12 +121,12 @@ public class TasksPresenter implements Initializable {
       return new SimpleStringProperty(b);
     });
 
-    TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Description");
+    TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Task");
     description.setCellValueFactory(param -> param.getValue().getTitle());
 
 
-    tasksTable.getColumns().addAll(projectName, startTime, endTime, billable,
-                                   billableHours, nonBillableHours, description);
+    tasksTable.getColumns().addAll(projectName, description, startTime, endTime,
+                                   billableHours, nonBillableHours, billable);
 
     initTasksTable();
 
@@ -316,10 +314,10 @@ public class TasksPresenter implements Initializable {
     if (progressText.getValue() != null && !progressText.getValue().equals(""))
       task.setProgress(Progress.convert(Integer.valueOf(progressText.getValue())));
 
-    if (!statusText.getValue().equals(""))
+    if (statusText.getValue() != null && !statusText.getValue().equals(""))
       task.setStatus(Status.convert(statusText.getValue()));
 
-    if (!priorityText.getValue().equals(""))
+    if (priorityText.getValue() != null && !priorityText.getValue().equals(""))
       task.setPriority(Priority.convert(Integer.valueOf(priorityText.getValue())));
   }
 

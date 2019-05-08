@@ -174,9 +174,16 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void startTask() {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-    String title = selectedItem.getTitle().get();
+    if (!selectedItem.getStatus().get().equals("Pending") && !selectedItem.getStatus().get().equals("In Progress")) {
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("Not Allowed");
+      alert.setHeaderText(null);
+      alert.setContentText("This task has already been marked has done. Please select a task under \"Pending\"");
+      alert.showAndWait();
+      return;
+    }
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     selectedItem.setStartTime(new SimpleStringProperty(formatter.format(LocalTime.now())));
     startButton.setDisable(true);
     TrackHandler.setSelectedTask(selectedItem);

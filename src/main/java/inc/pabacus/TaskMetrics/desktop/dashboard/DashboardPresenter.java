@@ -3,10 +3,14 @@ package inc.pabacus.TaskMetrics.desktop.dashboard;
 import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
+import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotPresenter;
+import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
+import inc.pabacus.TaskMetrics.desktop.screenshot.ScreentShotImageView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -20,6 +24,8 @@ import java.util.ResourceBundle;
 
 public class DashboardPresenter implements Initializable {
 
+  @FXML
+  private JFXButton screenshotButton;
   @FXML
   private AnchorPane dynamicContentPane;
   @FXML
@@ -44,12 +50,23 @@ public class DashboardPresenter implements Initializable {
     setSize(logoutImage);
     logoutBtn.setGraphic(logoutImage);
 
+    ImageView screenshotImage = new ImageView(new Image(getClass().getResourceAsStream("/img/screenshot.png")));
+    setSize(screenshotImage);
+    screenshotButton.setGraphic(screenshotImage);
+
+
     viewTasks();
   }
 
   @FXML
   public void viewTasks() {
     updateDynamicPaneContent(new TasksView().getView());
+  }
+
+  @FXML
+  public void viewScreenshots() {
+    updateDynamicPaneContent(new ScreenShotView().getView());
+//    GuiManager.getInstance().displayView(new ScreenShotView());
   }
 
   @FXML

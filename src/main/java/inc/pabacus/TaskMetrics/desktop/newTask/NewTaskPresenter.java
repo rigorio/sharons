@@ -75,7 +75,7 @@ public class NewTaskPresenter implements Initializable {
     // set default value
     projectComboBox.setValue("ABC");
     billableComboBox.setValue("True");
-    businessComboBox.setValue("Accounting");
+    businessComboBox.setValue("Development");
     }
 
   @FXML

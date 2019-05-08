@@ -289,7 +289,8 @@ public class TasksPresenter implements Initializable {
         // TODO extract this from listener for more readability
         saveTask.setDisable(false);
         deleteTask.setDisable(false);
-        startButton.setDisable(false);
+        if (TrackHandler.getSelectedTask() == null)
+          startButton.setDisable(false);
       } else {
         saveTask.setDisable(true);
         deleteTask.setDisable(true);

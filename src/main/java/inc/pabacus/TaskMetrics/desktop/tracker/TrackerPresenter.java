@@ -70,6 +70,7 @@ public class TrackerPresenter implements Initializable {
     Task task = new Task(selectedTask);
     task.setEndTime(formatter.format(LocalTime.now()));
     taskHandler.saveTask(task);
+    TrackHandler.setSelectedTask(null);
     ((Stage) complete.getScene().getWindow()).close();
   }
 }

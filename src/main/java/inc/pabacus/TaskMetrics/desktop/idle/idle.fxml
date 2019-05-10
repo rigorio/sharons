@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="243.0" prefWidth="484.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.idle.IdlePresenter">
+   <children>
+      <JFXButton layoutX="208.0" layoutY="186.0" mnemonicParsing="false" text="Update" />
+      <JFXTextArea layoutX="18.0" layoutY="71.0" prefHeight="105.0" prefWidth="438.0" />
+      <Label layoutX="9.0" layoutY="32.0" text="It seems you were inactive. Please update us with what you were doing." />
+   </children>
+</AnchorPane>

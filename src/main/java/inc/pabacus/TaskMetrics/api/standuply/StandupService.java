@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.desktop.standuply.StanduplyView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
 import okhttp3.*;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class StandupService {
       }
     });
 
-    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 10000L, TimeUnit.SECONDS);
+    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1, TimeUnit.SECONDS);
 
   }
 
@@ -99,8 +100,8 @@ public class StandupService {
       LocalTime schedule = LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
       return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
 
-    } catch (IOException e) {
-      return Boolean.parseBoolean(null);
+    } catch (IOException | JSONException e) {
+      return false;
     }
 
   }

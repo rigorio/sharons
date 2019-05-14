@@ -2,12 +2,14 @@ package inc.pabacus.TaskMetrics.desktop.dashboard;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -81,6 +83,11 @@ public class DashboardPresenter implements Initializable {
   public void viewSoftware() {
     Parent parent = new SoftwareView().getView();
     updateDynamicPaneContent(parent);
+  }
+
+  @FXML
+  public void viewChats() {
+    updateDynamicPaneContent(new ChatView().getView());
   }
 
   @FXML

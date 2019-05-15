@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.api.hardware;
 
 import com.google.gson.Gson;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.*;
 
 import java.text.DateFormat;
@@ -41,10 +42,9 @@ public class HardwareServiceAPI {
             RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"disks\":" + JsonDisks + ",\n\t\"displays\":" + JsonDisplays + ",\n\t\"usbDevices\":" + JsonUsbDevices + "}]");
             Request request = new Request.Builder()
                     .url(HOST + "/api/runningHardwares")
-                    .post(body)
                     .addHeader("content-type", "application/json")
-                    .addHeader("cache-control", "no-cache")
-                    .addHeader("postman-token", "08af0720-79cc-ff3d-2a7d-f208202e5ec0")
+                    .addHeader("Authorization", TokenRepository.getToken().getToken())
+                    .post(body)
                     .build();
 
             Response response = client.newCall(request).execute();

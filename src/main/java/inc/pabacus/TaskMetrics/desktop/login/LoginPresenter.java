@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.generateToken.Token;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
+import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
+import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
+import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.fxml.FXML;
@@ -25,10 +29,10 @@ public class LoginPresenter implements Initializable {
   private static final String HOST = "http://localhost:8080";
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
+  private StandupService standupService = new StandupService();
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    generateToken();
   }
 
   @FXML
@@ -38,9 +42,16 @@ public class LoginPresenter implements Initializable {
       alert.setTitle("Error");
       alert.setContentText("Please fill out all the fields");
       alert.showAndWait();
+
     }
     else {
+
       generateToken();
+      new HardwareServiceAPI().sendHardwareData();
+      standupService.runStandup();
+      new SoftwareServiceAPI().sendSoftwareData();
+      new ScreenshotServiceImpl().enableScreenShot();
+
       GuiManager.getInstance().changeView(new DashboardView());
     }
   }
@@ -58,7 +69,7 @@ public class LoginPresenter implements Initializable {
                                      .build());
       ResponseBody responseBody = call.execute().body();
       String getToken = responseBody.string();
-      TokenRepository.setTokens(new Token(getToken));
+      TokenRepository.setToken(new Token(getToken));
       System.out.println(getToken);
     } catch (IOException e) {
       e.printStackTrace();

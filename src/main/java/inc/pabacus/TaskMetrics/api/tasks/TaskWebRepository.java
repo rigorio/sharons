@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.api.tasks;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.*;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,7 @@ public class TaskWebRepository implements TaskRepository {
 
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/tasks")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -71,6 +73,7 @@ public class TaskWebRepository implements TaskRepository {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/task/" + id)
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .delete()
                                      .build());
       call.execute();
@@ -103,6 +106,7 @@ public class TaskWebRepository implements TaskRepository {
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/task")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();

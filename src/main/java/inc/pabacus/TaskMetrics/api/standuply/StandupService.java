@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.api.standuply;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.desktop.standuply.StanduplyView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
@@ -53,6 +54,7 @@ public class StandupService {
 
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/repository/save") // TODO add path
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
@@ -71,6 +73,7 @@ public class StandupService {
     Request request = new Request.Builder()
         .url(HOST + "/api/admin")
         .addHeader("Accept", "application/json")
+        .addHeader("Authorization", TokenRepository.getToken().getToken())
         .method("GET", null)
         .build();
 

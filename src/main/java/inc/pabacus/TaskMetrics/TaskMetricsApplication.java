@@ -1,8 +1,5 @@
 package inc.pabacus.TaskMetrics;
 
-import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
-import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
-import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -26,11 +23,7 @@ public class TaskMetricsApplication extends Application {
     stage.setResizable(false);
     stage.getIcons().add(new Image("/img/PabacusLogo.png"));
     MANAGER.setPrimaryStage(stage);
-    new HardwareServiceAPI().sendHardwareData();
     MANAGER.changeView(new LoginView());
-    standupService.runStandup();
-    new SoftwareServiceAPI().sendSoftwareData();
-    new ScreenshotServiceImpl().enableScreenShot();
   }
 
   @Override

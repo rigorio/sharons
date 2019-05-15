@@ -1,6 +1,8 @@
 package inc.pabacus.TaskMetrics.api.software;
 import com.google.gson.Gson;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.*;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -45,6 +47,7 @@ public class SoftwareServiceAPI {
                         .addHeader("content-type", "application/json")
                         .addHeader("cache-control", "no-cache")
                         .addHeader("postman-token", "08af0720-79cc-ff3d-2a7d-f208202e5ec0")
+                        .addHeader("Authorization", TokenRepository.getToken().getToken())
                         .build();
 
                 Response response = client.newCall(request).execute();
@@ -63,6 +66,7 @@ public class SoftwareServiceAPI {
         Request request = new Request.Builder()
                 .url(HOST + "/api/monitorSoftware")
                 .addHeader("Accept", "application/json")
+                .addHeader("Authorization", TokenRepository.getToken().getToken())
                 .method("GET", null)
                 .build();
 
@@ -84,7 +88,7 @@ public class SoftwareServiceAPI {
             }
 
 
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return getSoftwareMonitoringMinutes;

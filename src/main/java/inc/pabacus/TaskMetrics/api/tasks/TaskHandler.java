@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.api.tasks;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.project.Project;
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
@@ -45,6 +46,7 @@ public class TaskHandler implements TaskService {
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/project/task")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();

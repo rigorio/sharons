@@ -1,14 +1,10 @@
 package inc.pabacus.TaskMetrics.utils;
 
 import com.airhacks.afterburner.views.FXMLView;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 public class GuiManager {
 
@@ -75,6 +71,6 @@ public class GuiManager {
       evt.consume();
       preventClosing();
     });
-  }
 
+  }
 }

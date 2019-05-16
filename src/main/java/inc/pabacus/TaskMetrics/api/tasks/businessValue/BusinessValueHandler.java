@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.api.tasks.businessValue;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,6 +23,7 @@ public class BusinessValueHandler {
     Request request = new Request.Builder()
         .url("http://localhost:8080/api/businessValue")
         .addHeader("Accept", "application/json")
+        .addHeader("Authorization", TokenRepository.getToken().getToken())
         .method("GET", null)
         .build();
     List<BusinessValue> businessValues = new ArrayList<>();

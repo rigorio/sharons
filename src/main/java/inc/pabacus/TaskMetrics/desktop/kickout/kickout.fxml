@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="120.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.kickout.KickoutPresenter">
+  <Label fx:id="label" layoutX="28.0" layoutY="37.0" text="You are logged in a different machine. Do you want to log out from that machine?" />
+  <JFXButton layoutX="474.0" layoutY="73.0" onAction="#yes" mnemonicParsing="false" style="-fx-background-color: #008080;" text="Yes" textFill="WHITE" />
+  <JFXButton layoutX="531.0" layoutY="73.0" onAction="#no" mnemonicParsing="false" style="-fx-background-color: #008080;" text="No" textFill="WHITE" />
+</AnchorPane>

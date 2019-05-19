@@ -5,12 +5,15 @@ import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.generateToken.Token;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
+import inc.pabacus.TaskMetrics.api.kicker.KickerService;
+import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
+import inc.pabacus.TaskMetrics.desktop.kickout.KickoutView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
@@ -81,10 +84,20 @@ public class LoginPresenter implements Initializable {
       ResponseBody responseBody = call.execute().body();
       String getToken = responseBody.string();
       TokenRepository.setToken(new Token(getToken));
-      System.out.println(getToken);
     } catch (IOException e) {
       e.printStackTrace();
     }
+    kicker(userNameText);
+  }
 
+  private void kicker(String userNameText) {
+    KickerService kickerService = new KickerService();
+    String response = kickerService.login(userNameText);
+    if (response.equals("Exists")) {
+      kickerService.setUsername(userNameText);
+      GuiManager.getInstance().displayView(new KickoutView());
+      return;
+    }
+    TokenHolder.setToken(response);
   }
 }

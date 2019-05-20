@@ -15,6 +15,8 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 public class ScreenShotPresenter implements Initializable {
@@ -35,6 +37,7 @@ public class ScreenShotPresenter implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         File folder = FileUtils.tmpFile(".pabacus");
         File[] listOfFiles = folder.listFiles();
+        Arrays.sort(listOfFiles, Comparator.comparingLong(File::lastModified).reversed());
 
         TilePane tilePane = new TilePane();
         tilePane.setHgap(5);

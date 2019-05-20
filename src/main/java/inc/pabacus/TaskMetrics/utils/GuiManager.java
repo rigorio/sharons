@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.utils;
 
 import com.airhacks.afterburner.views.FXMLView;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -36,6 +37,15 @@ public class GuiManager {
   private double xOffset = 0;
   private double yOffset = 0;
 
+  private void preventClosing() {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+    stage.setAlwaysOnTop(true);
+    alert.setTitle("Error");
+    alert.setContentText("You're about to close the current running task. You may complete it if you are done.");
+    alert.showAndWait();
+  }
+
   public void displayAlwaysOnTop(FXMLView view) {
     Stage stage = new Stage();
 
@@ -56,6 +66,11 @@ public class GuiManager {
     stage.setAlwaysOnTop(true);
     stage.setResizable(false);
     stage.show();
-  }
+    //Prevent from closing
+    stage.setOnCloseRequest(evt -> {
+      evt.consume();
+      preventClosing();
+    });
 
+  }
 }

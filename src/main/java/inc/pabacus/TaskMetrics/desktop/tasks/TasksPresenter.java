@@ -4,6 +4,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import inc.pabacus.TaskMetrics.api.activity.Activity;
+import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.project.ProjectFXAdapter;
 import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
 import inc.pabacus.TaskMetrics.api.project.ProjectService;
@@ -82,10 +84,12 @@ public class TasksPresenter implements Initializable {
   private TaskHandler taskHandler;
 
   private ProjectService projectService;
+  private ActivityHandler activityHandler;
 
   public TasksPresenter() {
     taskHandler = new TaskHandler(new TaskWebRepository());
     projectService = new ProjectHandler();
+    activityHandler = new ActivityHandler();
   }
 
   @Override
@@ -174,6 +178,7 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void startTask() {
+    activityHandler.saveActivity(Activity.BUSY);
     TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
     if (!selectedItem.getStatus().get().equals("Pending") && !selectedItem.getStatus().get().equals("In Progress")) {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);

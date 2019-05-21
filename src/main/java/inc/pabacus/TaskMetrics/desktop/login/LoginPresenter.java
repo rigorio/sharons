@@ -92,14 +92,14 @@ public class LoginPresenter implements Initializable {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    kicker(userNameText);
+    kicker(usernameText);
   }
 
-  private void kicker(String userNameText) {
+  private void kicker(String usernameText) {
     KickerService kickerService = new KickerService();
-    String response = kickerService.login(userNameText);
+    String response = kickerService.login(usernameText);
     if (response.equals("Exists")) {
-      kickerService.setUsername(userNameText);
+      kickerService.setUsername(usernameText);
       GuiManager.getInstance().displayView(new KickoutView());
       return;
     }

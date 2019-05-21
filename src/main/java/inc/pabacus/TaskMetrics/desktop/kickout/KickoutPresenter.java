@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.kickout;
 
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
+import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -14,22 +15,22 @@ public class KickoutPresenter implements Initializable {
   @FXML
   private Label label;
   private KickerService kickerService;
-  private Stage stage;
+
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    stage = (Stage) label.getScene().getWindow();
-    kickerService = new KickerService();
+    kickerService = BeanManager.kickerService();
   }
 
   public void yes() {
-    kickerService.logout();
-    String username = kickerService.getUsername();
-    String loginStatus = kickerService.login(username);
+    String oldToken = kickerService.getOldToken();
+    kickerService.logout(oldToken);
+    Stage stage = (Stage) label.getScene().getWindow();
     stage.close();
   }
 
   public void no() {
+    Stage stage = (Stage) label.getScene().getWindow();
     stage.close();
   }
 }

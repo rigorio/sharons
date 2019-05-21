@@ -76,11 +76,11 @@ public class LoginPresenter implements Initializable {
 
   public void generateToken() {
 
-    String userNameText = usernameField.getText();
-    String role = passwordField.getText();
+    String usernameText = usernameField.getText();
+    String passwordText = passwordField.getText();
 
     try {
-      String jsonString = "{\"username\":\"" + userNameText + "\",\"password\":\"" + role + "\"}";
+      String jsonString = "{\"username\":\"" + usernameText + "\",\"password\":\"" + passwordText + "\"}";
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/token")

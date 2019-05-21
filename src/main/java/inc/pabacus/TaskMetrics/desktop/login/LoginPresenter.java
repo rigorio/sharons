@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.generateToken.Token;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
@@ -29,7 +30,10 @@ import java.util.ResourceBundle;
 public class LoginPresenter implements Initializable {
 
   @FXML
-  private JFXTextField userName;
+  private JFXTextField usernameField;
+
+  @FXML
+  private JFXPasswordField passwordField;
 
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
@@ -44,7 +48,7 @@ public class LoginPresenter implements Initializable {
 
   @FXML
   public void login() {
-    if (userName.getText().equals("")) {
+    if (usernameField.getText().equals("") || passwordField.getText().equals("")) {
       Alert alert = new Alert(Alert.AlertType.WARNING);
       alert.setTitle("Error");
       alert.setContentText("Please fill out all the fields");
@@ -72,10 +76,11 @@ public class LoginPresenter implements Initializable {
 
   public void generateToken() {
 
-    String userNameText = userName.getText();
-    String role = "admin";
+    String userNameText = usernameField.getText();
+    String role = passwordField.getText();
+
     try {
-      String jsonString = "{\"userName\":\"" + userNameText + "\",\"role\":\"" + role + "\"}";
+      String jsonString = "{\"username\":\"" + userNameText + "\",\"password\":\"" + role + "\"}";
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/token")

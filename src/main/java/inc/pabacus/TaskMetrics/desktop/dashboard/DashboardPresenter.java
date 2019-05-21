@@ -2,13 +2,21 @@ package inc.pabacus.TaskMetrics.desktop.dashboard;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
+import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
+import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
+import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
+import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
+import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
+import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.application.Platform;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,9 +50,23 @@ public class DashboardPresenter implements Initializable {
   private JFXButton timesheetButton;
   @FXML
   private JFXButton logoutBtn;
+  private StandupService standupService = new StandupService();
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    new HardwareServiceAPI().sendHardwareData();
+    standupService.runStandup();
+    new SoftwareServiceAPI().sendSoftwareData();
+    new ScreenshotServiceImpl().enableScreenShot();
+    ActivityListener activityListener = BeanManager.activityListener();
+    Runnable runnable = () -> {
+      Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
+      activityListener.unListen();
+    };
+    activityListener.setEvent(runnable);
+    activityListener.setInterval(120000);
+    activityListener.listen();
 
     ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
     setSize(taskImage);

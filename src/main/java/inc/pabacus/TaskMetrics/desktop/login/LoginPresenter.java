@@ -1,23 +1,18 @@
 package inc.pabacus.TaskMetrics.desktop.login;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.generateToken.Token;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
+import inc.pabacus.TaskMetrics.api.kicker.KickStatus;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
-import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
-import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
-import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
-import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
-import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.kickout.KickoutView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -40,7 +35,7 @@ public class LoginPresenter implements Initializable {
   private static final String HOST = "http://localhost:8080";
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
-  private StandupService standupService = new StandupService();
+  private KickerService kickerService = BeanManager.kickerService();
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -48,39 +43,30 @@ public class LoginPresenter implements Initializable {
 
   @FXML
   public void login() {
-    if (usernameField.getText().equals("") || passwordField.getText().equals("")) {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setTitle("Error");
-      alert.setContentText("Please fill out all the fields");
-      alert.showAndWait();
-
-    } else {
-
-      generateToken();
-      new HardwareServiceAPI().sendHardwareData();
-      standupService.runStandup();
-      new SoftwareServiceAPI().sendSoftwareData();
-      new ScreenshotServiceImpl().enableScreenShot();
-      ActivityListener activityListener = BeanManager.activityListener();
-      Runnable runnable = () -> {
-        Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
-        activityListener.unListen();
-      };
-      activityListener.setEvent(runnable);
-      activityListener.setInterval(120000);
-      activityListener.listen();
-
+    try {
+      if (blankFields()) return;
+      String userName = this.usernameField.getText();
+      jwtLogin(userName);
+      String response = kickerService.login(userName);
+      KickStatus status = mapper.readValue(response, new TypeReference<KickStatus>() {});
+      TokenHolder.setToken(status.getNewToken());
+      if (status.getStatus().equals("Exists")) {
+        kickerService.setUsername(userName);
+        kickerService.setOldToken(status.getOldToken());
+        GuiManager.getInstance().displayView(new KickoutView());
+      }
+      kickerService.kicker();
       GuiManager.getInstance().changeView(new DashboardView());
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
-  public void generateToken() {
-
-    String usernameText = usernameField.getText();
+  private void jwtLogin(String userNameText) {
+    String role = "admin";
     String passwordText = passwordField.getText();
-
     try {
-      String jsonString = "{\"username\":\"" + usernameText + "\",\"password\":\"" + passwordText + "\"}";
+      String jsonString = "{\"username\":\"" + userNameText + "\",\"password\":\"" + passwordText + "\"}";
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/token")
@@ -92,17 +78,17 @@ public class LoginPresenter implements Initializable {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    kicker(usernameText);
   }
 
-  private void kicker(String usernameText) {
-    KickerService kickerService = new KickerService();
-    String response = kickerService.login(usernameText);
-    if (response.equals("Exists")) {
-      kickerService.setUsername(usernameText);
-      GuiManager.getInstance().displayView(new KickoutView());
-      return;
+  private boolean blankFields() {
+    if (usernameField.getText().equals("") || passwordField.getText().equals("")) {
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("Invalid");
+      alert.setHeaderText(null);
+      alert.setContentText("Please fill out all the fields");
+      alert.showAndWait();
+      return true;
     }
-    TokenHolder.setToken(response);
+    return false;
   }
 }

@@ -3,6 +3,8 @@ package inc.pabacus.TaskMetrics.desktop.dashboard;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
+import inc.pabacus.TaskMetrics.api.kicker.KickerService;
+import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
@@ -51,6 +53,7 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXButton logoutBtn;
   private StandupService standupService = new StandupService();
+  private KickerService kickerService = BeanManager.kickerService();
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -129,6 +132,7 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void logout() {
+    kickerService.logout(TokenHolder.getToken());
     Stage stages = (Stage) logoutBtn.getScene().getWindow();
     stages.close();
 

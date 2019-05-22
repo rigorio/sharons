@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.leave.LeavePresenter">
+  <Label layoutX="14.0" layoutY="14.0" text="LEAVE FORM"/>
+  <JFXDatePicker layoutX="14.0" layoutY="50.0"/>
+  <TextArea layoutX="14.0" layoutY="88.0" prefHeight="260.0" prefWidth="573.0"/>
+  <JFXButton layoutX="494.0" layoutY="355.0" mnemonicParsing="false" style="-fx-background-color: #008080;"
+             text="Send Form" textFill="white"/>
+</AnchorPane>

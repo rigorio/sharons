@@ -51,6 +51,8 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXButton timesheetButton;
   @FXML
+  private JFXButton chatButton;
+  @FXML
   private JFXButton logoutBtn;
   private StandupService standupService = new StandupService();
   private KickerService kickerService = BeanManager.kickerService();
@@ -86,6 +88,10 @@ public class DashboardPresenter implements Initializable {
     ImageView screenshotImage = new ImageView(new Image(getClass().getResourceAsStream("/img/screenshot.png")));
     setSize(screenshotImage);
     screenshotButton.setGraphic(screenshotImage);
+
+    ImageView chatImage = new ImageView(new Image(getClass().getResourceAsStream("/img/chat.png")));
+    setSize(chatImage);
+    chatButton.setGraphic(chatImage);
 
     status.getItems().addAll("Busy", "Meeting", "Lunch", "Offline");
 

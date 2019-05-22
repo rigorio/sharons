@@ -18,23 +18,23 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <StackPane fx:id="imageStackPane" layoutX="408.0" layoutY="163.0" prefHeight="654.0" prefWidth="871.0" AnchorPane.bottomAnchor="91.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <Label fx:id="dateLabel" layoutX="120.0" layoutY="646.0" prefHeight="47.0" prefWidth="165.0" text="YYYY-MM-DD">
+                  <StackPane fx:id="imageStackPane" layoutX="408.0" layoutY="163.0" prefHeight="645.0" prefWidth="871.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Label fx:id="dateLabel" layoutX="120.0" layoutY="646.0" prefHeight="47.0" prefWidth="165.0" text="YYYY-MM-DD" AnchorPane.topAnchor="600.0">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label layoutX="58.0" layoutY="649.0" prefHeight="40.0" prefWidth="62.0" text="Date:">
+                  <Label layoutX="58.0" layoutY="603.0" prefHeight="40.0" prefWidth="62.0" text="Date:" AnchorPane.topAnchor="603.0">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label layoutX="374.0" layoutY="650.0" prefHeight="40.0" prefWidth="62.0" text="Time:">
+                  <Label layoutX="374.0" layoutY="603.0" prefHeight="40.0" prefWidth="62.0" text="Time:" AnchorPane.topAnchor="603.0">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="timeLabel" layoutX="436.0" layoutY="650.0" prefHeight="40.0" prefWidth="165.0" text="HH-MM-SS">
+                  <Label fx:id="timeLabel" layoutX="436.0" layoutY="603.0" prefHeight="40.0" prefWidth="165.0" text="HH-MM-SS" AnchorPane.topAnchor="603.0">
                      <font>
                         <Font size="16.0" />
                      </font>

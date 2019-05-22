@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="282.0" prefWidth="468.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.status.StatusPresenter">
+  <Label layoutX="14.0" layoutY="14.0" text="Status"/>
+  <JFXComboBox layoutX="14.0" layoutY="35.0" prefWidth="150.0"/>
+  <Label layoutX="14.0" layoutY="80.0" text="Comments (Optional - e.g Halfday AM or PM Only)"/>
+  <TextArea layoutX="14.0" layoutY="101.0" prefHeight="124.0" prefWidth="441.0"/>
+  <JFXButton layoutX="389.0" layoutY="237.0" mnemonicParsing="false" text="Button"
+             style="-fx-background-color: #008080;" textFill="white"/>
+</AnchorPane>

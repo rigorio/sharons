@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 public class ChatPresenter implements Initializable {
 
   @FXML
-  private JFXTextField chatBox;
+  private JFXTextField command;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.chat.ChatPresenter">
-  <JFXTextField fx:id="chatBox" layoutX="14.0" layoutY="659.0" prefHeight="31.0" prefWidth="796.0"/>
+  <JFXTextField fx:id="command" layoutX="14.0" layoutY="659.0" prefHeight="31.0" prefWidth="796.0"/>
   <JFXButton layoutX="831.0" layoutY="659.0" mnemonicParsing="false" onAction="#searchCommand" prefHeight="31.0"
              prefWidth="76.0" style="-fx-background-color: #008080;" text="Send" textFill="white"/>
   <JFXTreeTableView layoutX="14.0" layoutY="11.0" prefHeight="648.0" prefWidth="892.0"/>

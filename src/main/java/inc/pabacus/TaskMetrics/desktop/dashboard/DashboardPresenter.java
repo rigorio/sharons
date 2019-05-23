@@ -13,6 +13,7 @@ import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -78,8 +79,10 @@ public class DashboardPresenter implements Initializable {
     //PauseTransition to load completely the screenShotView
     PauseTransition pause = new PauseTransition(Duration.seconds(1));
     pause.setOnFinished(event -> {
-      updateDynamicPaneContent(new ScreenShotView().getView());
+      dynamicContentPane.setCache(true);
+      dynamicContentPane.setCacheHint(CacheHint.SPEED);
       dynamicContentPane.getScene().setCursor(Cursor.DEFAULT);
+      updateDynamicPaneContent(new ScreenShotView().getView());
     }
 );
     pause.play();

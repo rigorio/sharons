@@ -24,11 +24,16 @@ public class TaskMetricsApplication extends Application {
     stage.setAlwaysOnTop(true);
     alert.setTitle("You're about to close the application");
     alert.setHeaderText("Warning!");
-    alert.setContentText("You're about to close the application! \nPlease make sure there are no other window current opened or you will lost your data");
+    alert.setContentText("You're about to close the application! \nPlease make sure there are no other window current opened or you will lost your data!");
 
     Optional<ButtonType> result = alert.showAndWait();
     if (result.get() == ButtonType.OK){
+      //to force stop/close the threads.
+      Thread.currentThread().interrupt();
+      //to make sure app is close
+      Platform.setImplicitExit(true);
       Platform.exit();
+      System.exit(0);
     } else {
       alert.close();
     }

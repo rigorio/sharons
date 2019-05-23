@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.standuply;
 
 import com.jfoenix.controls.JFXButton;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.standuply.StandupAnswer;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import javafx.fxml.FXML;
@@ -65,6 +66,7 @@ public class StandupPresenter implements Initializable {
     Request request = new Request.Builder()
         .url(HOST + "/api/Questions")
         .addHeader("Accept", "application/json")
+        .addHeader("Authorization", TokenRepository.getToken().getToken())
         .method("GET", null)
         .build();
 

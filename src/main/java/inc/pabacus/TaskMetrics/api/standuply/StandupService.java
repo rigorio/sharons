@@ -53,7 +53,7 @@ public class StandupService {
       RequestBody body = RequestBody.create(JSON, jsonString);
 
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/repositories") // TODO add path
+                                     .url(HOST + "/api/repository/save") // TODO add path
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .post(body)
                                      .build());

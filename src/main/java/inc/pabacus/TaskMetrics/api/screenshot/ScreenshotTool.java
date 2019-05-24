@@ -16,8 +16,12 @@ public class ScreenshotTool {
   }
 
   public BufferedImage screenshot() throws AWTException {
+    Rectangle screenRectangular = new Rectangle(0, 0, 0, 0);
+    for (GraphicsDevice gd : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
+      screenRectangular = screenRectangular.union(gd.getDefaultConfiguration().getBounds());
+    }
     return new Robot()
-        .createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+        .createScreenCapture(screenRectangular);
   }
 
   public BufferedImage blurImage(BufferedImage image) {

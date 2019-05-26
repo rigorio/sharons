@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.api.screenshot;
 
 import inc.pabacus.TaskMetrics.utils.FileUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -16,11 +17,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
 import java.util.stream.Collectors;
 
 @Service
 public class ScreenshotServiceImpl implements ScreenshotService {
 
+  private static final Logger logger = Logger.getLogger(ScreenshotServiceImpl.class);
   private static final long DEFAULT_INTERVAL = 300;
   private final ScheduledExecutorService executorService;
   private ScheduledFuture<?> scheduledFuture;
@@ -93,8 +96,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
       tool.saveImage(image, "png", file);
       // retrieve image, send to assets
     } catch (AWTException | IOException e) {
-      // log
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
     return file.getAbsolutePath();
   }

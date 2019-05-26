@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.hardware;
 import com.google.gson.Gson;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.*;
+import org.apache.log4j.Logger;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,46 +15,48 @@ import java.util.concurrent.TimeUnit;
 
 public class HardwareServiceAPI {
 
-    private static final String HOST = "http://localhost:8080";
-    private HardwareService hardwareService;
+  private static final Logger logger = Logger.getLogger(HardwareServiceAPI.class);
+  private static final String HOST = "http://localhost:8080";
+  private HardwareService hardwareService;
 
-    public void sendHardwareData(){
+  public void sendHardwareData() {
 
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        Runnable task = () -> {
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    Runnable task = () -> {
 
-        try{
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Calendar cal = Calendar.getInstance();
-            System.out.println(dateFormat.format(cal.getTime()));
+      try {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+//            System.out.println(dateFormat.format(cal.getTime()));
 
-            hardwareService = new WindowsHardwareHandler();
+        hardwareService = new WindowsHardwareHandler();
 
-            List<HardwareData> disks = hardwareService.getDisks();
-            List<HardwareData> displays = hardwareService.getDisplays();
-            List<HardwareData> usbDevices = hardwareService.getUsbDevices();
+        List<HardwareData> disks = hardwareService.getDisks();
+        List<HardwareData> displays = hardwareService.getDisplays();
+        List<HardwareData> usbDevices = hardwareService.getUsbDevices();
 
-            String JsonDisks = new Gson().toJson(disks);
-            String JsonDisplays = new Gson().toJson(displays);
-            String JsonUsbDevices = new Gson().toJson(usbDevices);
+        String JsonDisks = new Gson().toJson(disks);
+        String JsonDisplays = new Gson().toJson(displays);
+        String JsonUsbDevices = new Gson().toJson(usbDevices);
 
-            OkHttpClient client = new OkHttpClient();
-            MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"disks\":" + JsonDisks + ",\n\t\"displays\":" + JsonDisplays + ",\n\t\"usbDevices\":" + JsonUsbDevices + "}]");
-            Request request = new Request.Builder()
-                    .url(HOST + "/api/runningHardwares")
-                    .addHeader("content-type", "application/json")
-                    .addHeader("Authorization", TokenRepository.getToken().getToken())
-                    .post(body)
-                    .build();
+        OkHttpClient client = new OkHttpClient();
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"disks\":" + JsonDisks + ",\n\t\"displays\":" + JsonDisplays + ",\n\t\"usbDevices\":" + JsonUsbDevices + "}]");
+        Request request = new Request.Builder()
+            .url(HOST + "/api/runningHardwares")
+            .addHeader("content-type", "application/json")
+            .addHeader("Authorization", TokenRepository.getToken().getToken())
+            .post(body)
+            .build();
 
-            Response response = client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
 
-        }catch (Exception x){
-            x.printStackTrace();}
+      } catch (Exception x) {
+        logger.warn(x.getMessage());
+      }
 
     };
-        //execute every 5 minutes
-        executor.scheduleWithFixedDelay(task, 0, 5, TimeUnit.MINUTES);
-    }
+    //execute every 5 minutes
+    executor.scheduleWithFixedDelay(task, 0, 5, TimeUnit.MINUTES);
+  }
 }

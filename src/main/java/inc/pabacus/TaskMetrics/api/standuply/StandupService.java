@@ -7,6 +7,7 @@ import inc.pabacus.TaskMetrics.desktop.standuply.StanduplyView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
 import okhttp3.*;
+import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StandupService {
 
+  private static final Logger logger = Logger.getLogger(StandupService.class);
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   private static final String HOST = "http://localhost:8080";
@@ -62,7 +64,7 @@ public class StandupService {
                                        new TypeReference<StandupAnswer>() {});
       return standupAnswer;
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
       return answer;
     }
   }

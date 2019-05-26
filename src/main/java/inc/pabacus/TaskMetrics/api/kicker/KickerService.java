@@ -9,6 +9,7 @@ import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class KickerService {
 
+  private static final Logger logger = Logger.getLogger(KickerService.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static final String HOST = "http://localhost:8080";
@@ -35,7 +37,7 @@ public class KickerService {
     try {
       response = call.execute().body().string();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
 
     return response;
@@ -49,7 +51,7 @@ public class KickerService {
     try {
       call.execute();
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
   }
 
@@ -89,7 +91,7 @@ public class KickerService {
       String response = call.execute().body().string();
       exists = Boolean.valueOf(response);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
     return exists;
   }

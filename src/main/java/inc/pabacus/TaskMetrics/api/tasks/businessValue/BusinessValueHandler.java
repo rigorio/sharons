@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class BusinessValueHandler {
 
+  private static final Logger logger = Logger.getLogger(BusinessValueHandler.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static final String HOST = "http://localhost:8080";
@@ -32,7 +34,7 @@ public class BusinessValueHandler {
       businessValues = mapper.readValue(jsonString, new TypeReference<List<BusinessValue>>() {});
 
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
     return businessValues;
   }

@@ -1,94 +1,85 @@
 package inc.pabacus.TaskMetrics.api.timesheet;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
+import inc.pabacus.TaskMetrics.api.timesheet.logs.LogItem;
+import okhttp3.*;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 @Service
 public class DailyLogHandler implements DailyLogService {
 
+  private static final Logger logger = Logger.getLogger(DailyLogHandler.class);
   private DailyLogRepository repository;
   private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
   private List<DailyLog> dailyLogs = new ArrayList<>();
+  private OkHttpClient client = new OkHttpClient();
+  private ObjectMapper mapper = new ObjectMapper();
+  private static final String HOST = "http://localhost:8080";
+  private static final MediaType JSON
+      = MediaType.parse("application/json; charset=utf-8");
 
   public DailyLogHandler() {
-    populate();
-  }
-
-  public DailyLogHandler(DailyLogRepository repository) {
-    this.repository = repository;
+    repository = new DailyLogWebRepository();
   }
 
   @Override
   public List<DailyLog> getAllLogs() {
-    return dailyLogs;
+    return repository.findAll();
   }
 
-  public String changeLog() {
-    Optional<DailyLog> anyLog = getAllLogs().stream()
-        .filter(dailyLog -> dailyLog.getDate().equals(LocalDate.now().toString()))
-        .findAny();
-    if (!anyLog.isPresent()) {
-      dailyLogs.add(new DailyLog(LocalDate.now().toString(), formatter.format(LocalTime.now()), "", "", ""));
-      return "IN";
-    } else {
-      DailyLog dailyLog = anyLog.get();
-      if (dailyLog.getIn().length() > 1) {
-        return "OTL";
-      } else if (dailyLog.getOtl().length() < 1) {
-        return "BFL";
-      } else if (dailyLog.getBfl().length() < 1) {
-        return "OUT";
-      }
+  @Override
+  public DailyLog changeLog(String status) {
+    DailyLog dailyLog = getToday();
+    try {
+      LogItem logItem = LogItem.builder()
+          .id(dailyLog.getId())
+          .status(status)
+          .time(formatter.format(LocalTime.now()))
+          .build();
+      String jsonString = mapper.writeValueAsString(logItem);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/log/update")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .post(body)
+                                     .build());
+      String responseString = call.execute().body().string();
+      dailyLog = mapper.readValue(responseString, new TypeReference<DailyLog>() {});
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
     }
-    return "OUT";
+    return dailyLog;
   }
 
-  @SuppressWarnings("all")
-  private List<DailyLog> populate() {
-    LocalTime now = LocalTime.now();
-    formatter.format(now);
-    dailyLogs.add(new DailyLog(LocalDate.now().minus(5, ChronoUnit.DAYS).toString(),
-                               formatter.format(now.minus(5, ChronoUnit.HOURS)),
-                               formatter.format(now.minus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(5, ChronoUnit.HOURS))));
-    dailyLogs.add(new DailyLog(LocalDate.now().minus(4, ChronoUnit.DAYS).toString(),
-                               formatter.format(now.minus(8, ChronoUnit.HOURS)),
-                               formatter.format(now.minus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(5, ChronoUnit.HOURS))));
-    dailyLogs.add(new DailyLog(LocalDate.now().minus(3, ChronoUnit.DAYS).toString(),
-                               formatter.format(now.minus(5, ChronoUnit.HOURS)),
-                               formatter.format(now.minus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(4, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(5, ChronoUnit.HOURS))));
-    dailyLogs.add(new DailyLog(LocalDate.now().minus(2, ChronoUnit.DAYS).toString(),
-                               formatter.format(now.minus(4, ChronoUnit.HOURS)),
-                               formatter.format(now.minus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(5, ChronoUnit.HOURS))));
-    dailyLogs.add(new DailyLog(LocalDate.now().minus(1, ChronoUnit.DAYS).toString(),
-                               formatter.format(now.minus(5, ChronoUnit.HOURS)),
-                               formatter.format(now.minus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(5, ChronoUnit.HOURS))));
-    dailyLogs.add(new DailyLog(LocalDate.now().toString(),
-                               formatter.format(now.minus(7, ChronoUnit.HOURS)),
-                               formatter.format(now.minus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(3, ChronoUnit.HOURS)),
-                               formatter.format(now.plus(7, ChronoUnit.HOURS))));
+  public DailyLog getToday() {
+    DailyLog dailyLog = null;
 
+    try {
+      String path = "/api/logs?date=" + LocalDate.now();
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + path)
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
 
-    return dailyLogs;
+                                     .build());
+      String responseString = call.execute().body().string();
+      dailyLog = mapper.readValue(responseString, new TypeReference<DailyLog>() {});
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+    return dailyLog;
   }
 
 }

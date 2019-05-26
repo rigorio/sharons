@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.*;
+import org.apache.log4j.Logger;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 public class ProjectWebRepository implements ProjectRepository {
 
+  private static final Logger logger = Logger.getLogger(ProjectWebRepository.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static final String HOST = "http://localhost:8080";
@@ -39,8 +41,7 @@ public class ProjectWebRepository implements ProjectRepository {
       projects = mapper.readValue(jsonString, new TypeReference<List<Project>>() {});
 
     } catch (IOException e) {
-      e.printStackTrace();
-      return projects;
+      logger.warn(e.getMessage());
     }
     return projects;
   }
@@ -115,8 +116,7 @@ public class ProjectWebRepository implements ProjectRepository {
       task = mapper.readValue(responseBody.string(), new TypeReference<Project>() {});
       s.setId(task.getId());
     } catch (IOException e) {
-      e.printStackTrace();
-      return s;
+      logger.warn(e.getMessage());
     }
     return s;
   }

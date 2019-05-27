@@ -2,16 +2,17 @@ package inc.pabacus.TaskMetrics.desktop.tasks;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.project.ProjectFXAdapter;
 import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
 import inc.pabacus.TaskMetrics.api.project.ProjectService;
-import inc.pabacus.TaskMetrics.api.tasks.*;
-import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
-import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.api.tasks.Task;
+import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
+import inc.pabacus.TaskMetrics.api.tasks.TaskWebRepository;
+import inc.pabacus.TaskMetrics.desktop.edit.EditView;
+import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
@@ -20,20 +21,24 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -42,6 +47,8 @@ import java.util.stream.Collectors;
 
 public class TasksPresenter implements Initializable {
 
+  @FXML
+  private JFXButton editButton;
   @FXML
   private JFXComboBox<String> statusBox;
   @FXML
@@ -54,21 +61,6 @@ public class TasksPresenter implements Initializable {
   private Label totalPercentBillable;
   @FXML
   private Label totalInvoice;
-
-  @FXML
-  private JFXTextField titleText;
-  @FXML
-  private JFXComboBox<String> progressText;
-  @FXML
-  private JFXComboBox<String> statusText;
-  @FXML
-  private JFXComboBox<String> priorityText;
-  @FXML
-  private JFXTextArea descriptionText;
-  @FXML
-  private JFXButton deleteTask;
-  @FXML
-  private JFXButton saveTask;
 
   @FXML
   private TableView<ProjectFXAdapter> taskTimesheet;
@@ -96,8 +88,6 @@ public class TasksPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     statusBox.setValue("Pending");
     startButton.setDisable(true);
-    saveTask.setDisable(true);
-    deleteTask.setDisable(true);
 
     TableColumn<TaskFXAdapter, String> projectName = new TableColumn<>("Project");
     projectName.setCellValueFactory(param -> param.getValue().getProjectName());
@@ -135,9 +125,13 @@ public class TasksPresenter implements Initializable {
     initTasksTable();
 
     initTaskSheet();
-    initEditables();
     refreshingService();
-//    hideHeaders();
+    statusBox.getItems().addAll(new ArrayList<String>() {{
+      add("Pending");
+      add("Done");
+      add("All");
+    }});
+
   }
 
   @FXML
@@ -152,35 +146,30 @@ public class TasksPresenter implements Initializable {
     tasksTable.setItems(tasksByStatus);
   }
 
-  @FXML
-  public void deleteTask() {
+  public void editTask() {
+
+    if (EditableTaskHolder.getTask() != null)
+      return;
+
+
     TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-    if (selectedItem != null) {
-      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-      alert.setTitle("Confirmation");
-      alert.setHeaderText("Delete task?");
-      alert.setContentText("Task #" + selectedItem.getId().get());
+    EditableTaskHolder.setTask(selectedItem);
 
-      Optional<ButtonType> result = alert.showAndWait();
-      if (result.isPresent() && result.get() == ButtonType.OK) {
-        taskHandler.deleteTask(selectedItem.getId().getValue());
-        refreshTasks();
-      }
-    }
-  }
+    EditView view = new EditView();
 
-  @FXML
-  public void saveTask() {
-    Task task = new Task(tasksTable.getSelectionModel().getSelectedItem());
-    saveTask(task);
-    refreshTasks();
+    Stage stage = new Stage();
+    stage.initStyle(StageStyle.UNDECORATED);
+    stage.setScene(new Scene(view.getView()));
+    stage.show();
+
+//    GuiManager.getInstance().displayView(view);
   }
 
   @FXML
   public void startTask() {
     activityHandler.saveActivity(Activity.BUSY);
     TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-    if (!selectedItem.getStatus().get().equals("Pending") && !selectedItem.getStatus().get().equals("In Progress")) {
+    if (!selectedItem.getStatus().get().equals("Pending")) {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
       alert.setTitle("Not Allowed");
       alert.setHeaderText(null);
@@ -203,22 +192,6 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void newTask() {
     GuiManager.getInstance().displayView(new NewTaskView());
-  }
-
-  @FXML
-  public void viewScreenShot() {
-    try {
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../screenshot/ScreenShot.fxml"));
-      Parent root1 = (Parent) fxmlLoader.load();
-      Stage stage = new Stage();
-      stage.getIcons().add(new Image("/img/PabacusLogo.png"));
-      stage.setTitle("Screen Shots");
-      stage.setScene(new Scene(root1));
-      stage.show();
-
-    } catch (Exception e) {
-      System.out.println(e);
-    }
   }
 
   private void initTaskSheet() {
@@ -253,87 +226,6 @@ public class TasksPresenter implements Initializable {
 
   }
 
-  private void initEditables() {
-
-    progressText.getItems().addAll(new ArrayList<String>() {{
-      add("0");
-      add("25");
-      add("50");
-      add("75");
-      add("100");
-    }});
-
-    ArrayList<String> statuses = new ArrayList<String>() {{
-      add("Pending");
-      add("In Progress");
-      add("Done");
-    }};
-    statusText.getItems().addAll(statuses);
-    statuses.add("All");
-    statusBox.getItems().addAll(statuses);
-
-
-    priorityText.getItems().addAll(new ArrayList<String>() {{
-      add("1");
-      add("2");
-      add("3");
-      add("4");
-      add("5");
-    }});
-
-    tasksTable.getSelectionModel().selectedItemProperty().addListener(item -> {
-      TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-      if (selectedItem != null) {
-        Task task = new Task(selectedItem);
-        titleText.setText(task.getTitle());
-        descriptionText.setText(task.getDescription());
-
-        Progress progress = task.getProgress();
-        progressText.setValue(progress != null ? progress.getProgress().toString() : "");
-
-        Status status = task.getStatus();
-        statusText.setValue(status != null ? status.getStatus() : "");
-
-        Priority priority = task.getPriority();
-        priorityText.setValue(priority != null ? priority.getPriority().toString() : "");
-
-
-        // TODO extract this from listener for more readability
-        saveTask.setDisable(false);
-        deleteTask.setDisable(false);
-        if (TrackHandler.getSelectedTask() == null)
-          startButton.setDisable(false);
-      } else {
-        saveTask.setDisable(true);
-        deleteTask.setDisable(true);
-        startButton.setDisable(true);
-      }
-    });
-
-
-  }
-
-  private void saveTask(Task task) {
-    // if title empty, prompt and do not execute
-    task.setTitle(titleText.getText());
-    checkOtherValues(task);
-    taskHandler.createTask(task);
-  }
-
-  private void checkOtherValues(Task task) {
-    if (descriptionText.getText() != null && !descriptionText.getText().equals(""))
-      task.setDescription(descriptionText.getText());
-
-    if (progressText.getValue() != null && !progressText.getValue().equals(""))
-      task.setProgress(Progress.convert(Integer.valueOf(progressText.getValue())));
-
-    if (statusText.getValue() != null && !statusText.getValue().equals(""))
-      task.setStatus(Status.convert(statusText.getValue()));
-
-    if (priorityText.getValue() != null && !priorityText.getValue().equals(""))
-      task.setPriority(Priority.convert(Integer.valueOf(priorityText.getValue())));
-  }
-
   private void initTaskTimeSheet() {
     taskTimesheet.setItems(getProjects());
   }
@@ -348,32 +240,17 @@ public class TasksPresenter implements Initializable {
   }
 
   private ObservableList<TaskFXAdapter> getTasksByStatus(String status) {
+
     List<TaskFXAdapter> backLogs = getAllTasks().stream()
         .filter(backlog -> backlog.getStatus().get().equalsIgnoreCase(status))
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(backLogs);
   }
 
-
-  /**
-   * This is also a quick hack... will explain possibly in the future when i
-   * do not forget
-   */
   private void refreshTasks() {
     int i = tasksTable.getSelectionModel().getSelectedIndex();
-    String d = descriptionText.getText();
-    String tt = titleText.getText();
-    String pro = progressText.getValue();
-    String sta = statusText.getValue();
-    String prio = priorityText.getValue();
     refreshTables();
     tasksTable.getSelectionModel().select(i);
-    descriptionText.setText(d);
-    titleText.setText(tt);
-    progressText.setValue(pro);
-    statusText.setValue(sta);
-    priorityText.setValue(prio);
-    descriptionText.positionCaret(descriptionText.getLength());
   }
 
   private void refreshTables() {
@@ -400,19 +277,24 @@ public class TasksPresenter implements Initializable {
 
 
   private List<TaskFXAdapter> getAllTasks() {
+    List<Task> allTasks = taskHandler.getAllTasks();
+//    System.out.println("yare yare daze");
+//    allTasks.forEach(System.out::println);
     return FXCollections
-        .observableArrayList(taskHandler.getAllTasks().stream()
+        .observableArrayList(allTasks.stream()
                                  .map(TaskFXAdapter::new)
                                  .collect(Collectors.toList()));
   }
 
-  private void hideHeaders() {
-    hideHeaders(tasksTable);
-  }
-
-  private void hideHeaders(TableView<TaskFXAdapter> doneTasksTable) {
-    doneTasksTable.widthProperty().addListener((observable, oldValue, newValue) -> {
-      Pane header = (Pane) doneTasksTable.lookup("TableHeaderRow");
+  /**
+   * Not currently in use, but not yet removed
+   * Just in case i might need them for future references
+   *
+   * @param table table to be modified
+   */
+  private void hideHeaders(TableView table) {
+    table.widthProperty().addListener((observable, oldValue, newValue) -> {
+      Pane header = (Pane) table.lookup("TableHeaderRow");
       if (header.isVisible()) {
         header.setMaxHeight(0);
         header.setMinHeight(0);

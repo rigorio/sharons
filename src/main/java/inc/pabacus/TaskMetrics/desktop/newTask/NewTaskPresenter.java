@@ -16,7 +16,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import okhttp3.*;
 
@@ -110,7 +109,7 @@ public class NewTaskPresenter implements Initializable {
           .businessValueId(businessValue.getId())
           .billable(billable)
           .timeSpent(0.0)
-          .status(Status.BACKLOG)
+          .status(Status.PENDING)
           .build();
 
       Task t = taskHandler.createTask(task);

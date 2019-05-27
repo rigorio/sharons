@@ -7,6 +7,7 @@ import inc.pabacus.TaskMetrics.api.project.Project;
 import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import okhttp3.*;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class TaskHandler implements TaskService {
 
+  private static final Logger logger = Logger.getLogger(TaskHandler.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static final String HOST = "http://localhost:8080";
@@ -53,8 +55,7 @@ public class TaskHandler implements TaskService {
       t = mapper.readValue(responseBody.string(), new TypeReference<Project>() {});
       task.setId(t.getId());
     } catch (IOException e) {
-      e.printStackTrace();
-      return t;
+      logger.warn(e.getMessage());
     }
     return t;
 
@@ -89,7 +90,7 @@ public class TaskHandler implements TaskService {
   @Override
   public List<Task> searchTasks(Status status) {
     return taskRepository.findAll().stream()
-        .filter(task -> task.getStatus().equals(Status.BACKLOG))
+        .filter(task -> task.getStatus().equals(Status.PENDING))
         .collect(Collectors.toList());
   }
 

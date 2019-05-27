@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.activity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.*;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -14,8 +15,9 @@ import java.util.Locale;
 
 public class ActivityHandler {
 
-  private ActivityWebRepository repository;
+  private static final Logger logger = Logger.getLogger(ActivityHandler.class);
 
+  private ActivityWebRepository repository;
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static final String HOST = "http://localhost:8080";
@@ -35,7 +37,7 @@ public class ActivityHandler {
     try {
       saveUserActivity(userActivity);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
   }
 
@@ -51,7 +53,7 @@ public class ActivityHandler {
 
       saveUserActivity(userActivity);
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
 
   }

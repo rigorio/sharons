@@ -1,5 +1,7 @@
 package inc.pabacus.TaskMetrics.api.software;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UbuntuSoftwareFetcher implements SoftwareFetcher<List<SoftwareData>> {
+
+  private static final Logger logger = Logger.getLogger(UbuntuSoftwareFetcher.class);
 
   @Override
   public List<SoftwareData> fetchSoftware() {
@@ -36,12 +40,12 @@ public class UbuntuSoftwareFetcher implements SoftwareFetcher<List<SoftwareData>
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     } finally {
       try {
         reader.close();
       } catch (IOException e) {
-        e.printStackTrace();
+        logger.warn(e.getMessage());
       }
     }
     return softwares;

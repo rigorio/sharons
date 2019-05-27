@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.listener;
 
+import org.apache.log4j.Logger;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.mouse.NativeMouseEvent;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class ActivityListenerService implements ActivityListener {
 
   private static final int INITIAL_DELAY = 0;
+  private static final Logger logger = Logger.getLogger(ActivityListenerService.class);
   private final ScheduledExecutorService executorService;
 
   private long previousTime = 0;
@@ -65,7 +67,7 @@ public class ActivityListenerService implements ActivityListener {
       listener.listen();
       scheduledFuture = executorService.scheduleWithFixedDelay(runnable, INITIAL_DELAY, interval, TimeUnit.MILLISECONDS);
     } catch (NativeHookException | NoEventFoundException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
   }
 
@@ -77,7 +79,7 @@ public class ActivityListenerService implements ActivityListener {
       scheduledFuture.cancel(true);
       listener.unListen();
     } catch (NativeHookException e) {
-      e.printStackTrace();
+      logger.warn(e.getMessage());
     }
   }
 

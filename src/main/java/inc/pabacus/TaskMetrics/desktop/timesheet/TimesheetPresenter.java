@@ -1,14 +1,14 @@
 package inc.pabacus.TaskMetrics.desktop.timesheet;
 
-import com.jfoenix.controls.*;
-import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
 import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
-import inc.pabacus.TaskMetrics.api.tasks.WorkLog;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
+import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -17,20 +17,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class TimesheetPresenter implements Initializable {
@@ -55,15 +49,13 @@ public class TimesheetPresenter implements Initializable {
   @FXML
   private Label hardware;
   @FXML
-  private JFXTreeTableView taskSheet;
-  @FXML
-  private JFXTreeTableView<DailyLogFXAdapter> timeSheet;
+  private TableView<DailyLogFXAdapter> timeSheet;
 
   private ObservableList<DailyLogFXAdapter> dailyLogFXAdapters;
 
   private ObservableList<TaskFXAdapter> taskFXAdapters;
 
-  private DailyLogService service = new DailyLogHandler(); // temporary
+  private DailyLogService dailyLogHandler = new DailyLogHandler(); // temporary
   private static final int DEF_SIZE = 900;
   private MockUser mockUser;
 
@@ -79,12 +71,39 @@ public class TimesheetPresenter implements Initializable {
 
   }
 
+  @FXML
+  public String changeStatus() {
+    String currentStatus = mockUser.getStatus();
+    switch (currentStatus) {
+      case "Logged Out":
+        currentStatus = "Logged In";
+        dailyLogHandler.changeLog(LogStatus.IN.getStatus());
+        break;
+      case "Logged In":
+        currentStatus = "Out To Lunch";
+        dailyLogHandler.changeLog(LogStatus.OTL.getStatus());
+        break;
+      case "Out To Lunch":
+        currentStatus = "Back From Lunch";
+        dailyLogHandler.changeLog(LogStatus.BFL.getStatus());
+        break;
+      case "Back From Lunch":
+        currentStatus = "Logged Out";
+        dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
+        break;
+    }
+    mockUser.setStatus(currentStatus);
+    statusText.setText(currentStatus);
+    refreshTimesheetTable();
+    return currentStatus;
+  }
+
   private void populateCombobox() {
     ObservableList<String> choices = FXCollections.observableArrayList();
     choices.add("Morning Break");
     choices.add("Afternoon Break");
     choices.add("Meeting");
-    choices.add("Training"); // TODO turn off activity listening service when on a break
+    choices.add("Training"); // TODO turn off activity listening dailyLogHandler when on a break
     comboBox.getItems().addAll(choices);
 //    comboBox = new JFXComboBox<>(choices);
   }
@@ -99,79 +118,42 @@ public class TimesheetPresenter implements Initializable {
     GuiManager.getInstance().displayView(new SoftwareView());
   }
 
-  @FXML
-  public String changeStatus() {
-    String currentStatus = mockUser.getStatus();
-    switch (currentStatus) {
-      case "Logged Out":
-        currentStatus = "Logged In";
-        break;
-      case "Logged In":
-        currentStatus = "Out To Lunch";
-        break;
-      case "Out To Lunch":
-        currentStatus = "Back From Lunch";
-        break;
-      case "Back From Lunch":
-        currentStatus = "Logged Out";
-        break;
-    }
-    mockUser.setStatus(currentStatus);
-    statusText.setText(currentStatus);
-    return currentStatus;
-  }
-
   private void initTimeSheet() {
     dailyLogFXAdapters = FXCollections.observableArrayList();
 
-    List<DailyLogFXAdapter> logs = service.getAllLogs().stream()
+    TableColumn<DailyLogFXAdapter, String> date = new TableColumn<>("DATE");
+    date.setCellValueFactory(param -> param.getValue().getDate());
+
+    TableColumn<DailyLogFXAdapter, String> in = new TableColumn<>("IN");
+    in.setCellValueFactory(param -> param.getValue().getIn());
+
+    TableColumn<DailyLogFXAdapter, String> otl = new TableColumn<>("OTL");
+    otl.setCellValueFactory(param -> param.getValue().getOtl());
+
+    TableColumn<DailyLogFXAdapter, String> bfl = new TableColumn<>("BFL");
+    bfl.setCellValueFactory(param -> param.getValue().getBfl());
+
+    TableColumn<DailyLogFXAdapter, String> out = new TableColumn<>("OUT");
+    out.setCellValueFactory(param -> param.getValue().getOtl());
+
+//    timeSheet.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+
+    getLogs();
+    timeSheet.getColumns().addAll(date, in, otl, bfl, out);
+
+    refreshTimesheetTable();
+
+  }
+
+  private ObservableList<DailyLogFXAdapter> getLogs() {
+    List<DailyLogFXAdapter> logs = dailyLogHandler.getAllLogs().stream()
         .map(DailyLogFXAdapter::new)
         .collect(Collectors.toList());
-
-    JFXTreeTableColumn<DailyLogFXAdapter, String> date = new JFXTreeTableColumn<>("DATE");
-    date.setCellValueFactory(param -> param.getValue().getValue().getDate());
-
-    JFXTreeTableColumn<DailyLogFXAdapter, String> in = new JFXTreeTableColumn<>("IN");
-    in.setCellValueFactory(param -> param.getValue().getValue().getIn());
-
-    JFXTreeTableColumn<DailyLogFXAdapter, String> otl = new JFXTreeTableColumn<>("OTL");
-    otl.setCellValueFactory(param -> param.getValue().getValue().getOtl());
-
-    JFXTreeTableColumn<DailyLogFXAdapter, String> bfl = new JFXTreeTableColumn<>("BFL");
-    bfl.setCellValueFactory(param -> param.getValue().getValue().getBfl());
-
-    JFXTreeTableColumn<DailyLogFXAdapter, String> out = new JFXTreeTableColumn<>("OUT");
-    out.setCellValueFactory(param -> param.getValue().getValue().getOtl());
-
-    timeSheet.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-    dailyLogFXAdapters.addAll(logs);
-
-    final TreeItem<DailyLogFXAdapter> root = new RecursiveTreeItem<>(dailyLogFXAdapters, RecursiveTreeObject::getChildren);
-    timeSheet.getColumns().addAll(date, in, otl, bfl, out);
-    timeSheet.setRoot(root);
-    timeSheet.setShowRoot(false);
+    return FXCollections.observableArrayList(logs);
   }
 
-  private Predicate<WorkLog> ifDateIsToday(String date) {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-    return workLog -> {
-      try {
-        return formatter.parse(workLog.getDate()).equals(formatter.parse(date));
-      } catch (ParseException e) {
-        e.printStackTrace();
-      }
-      return false;
-    };
-  }
-
-  private List<String> past5Days() {
-    List<String> past5Days = new ArrayList<>();
-    past5Days.add(LocalDate.now().toString());
-    past5Days.add(LocalDate.now().minus(1, ChronoUnit.DAYS).toString());
-    past5Days.add(LocalDate.now().minus(2, ChronoUnit.DAYS).toString());
-    past5Days.add(LocalDate.now().minus(3, ChronoUnit.DAYS).toString());
-    past5Days.add(LocalDate.now().minus(4, ChronoUnit.DAYS).toString());
-    return past5Days;
+  private void refreshTimesheetTable() {
+    timeSheet.setItems(getLogs());
   }
 
   private void initOshiInfo() {

@@ -18,9 +18,8 @@ import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.application.Platform;
 import javafx.animation.PauseTransition;
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.CacheHint;
@@ -60,18 +59,7 @@ public class DashboardPresenter implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    new HardwareServiceAPI().sendHardwareData();
-    standupService.runStandup();
-    new SoftwareServiceAPI().sendSoftwareData();
-    new ScreenshotServiceImpl().enableScreenShot();
-    ActivityListener activityListener = BeanManager.activityListener();
-    Runnable runnable = () -> {
-      Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
-      activityListener.unListen();
-    };
-    activityListener.setEvent(runnable);
-    activityListener.setInterval(120000);
-    activityListener.listen();
+    services();
 
     ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
     setSize(taskImage);
@@ -98,6 +86,21 @@ public class DashboardPresenter implements Initializable {
     viewTasks();
   }
 
+  private void services() {
+    new HardwareServiceAPI().sendHardwareData();
+    standupService.runStandup();
+    new SoftwareServiceAPI().sendSoftwareData();
+    new ScreenshotServiceImpl().enableScreenShot();
+    ActivityListener activityListener = BeanManager.activityListener();
+    Runnable runnable = () -> {
+      Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
+      activityListener.unListen();
+    };
+    activityListener.setEvent(runnable);
+    activityListener.setInterval(120000);
+    activityListener.listen();
+  }
+
   @FXML
   public void viewTasks() {
     updateDynamicPaneContent(new TasksView().getView());
@@ -110,12 +113,12 @@ public class DashboardPresenter implements Initializable {
     //PauseTransition to load completely the screenShotView
     PauseTransition pause = new PauseTransition(Duration.seconds(1));
     pause.setOnFinished(event -> {
-      dynamicContentPane.setCache(true);
-      dynamicContentPane.setCacheHint(CacheHint.SPEED);
-      dynamicContentPane.getScene().setCursor(Cursor.DEFAULT);
-      updateDynamicPaneContent(new ScreenShotView().getView());
-    }
-);
+                          dynamicContentPane.setCache(true);
+                          dynamicContentPane.setCacheHint(CacheHint.SPEED);
+                          dynamicContentPane.getScene().setCursor(Cursor.DEFAULT);
+                          updateDynamicPaneContent(new ScreenShotView().getView());
+                        }
+    );
     pause.play();
 //    GuiManager.getInstance().displayView(new ScreenShotView());
   }

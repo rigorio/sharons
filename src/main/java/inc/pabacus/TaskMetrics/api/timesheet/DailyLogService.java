@@ -8,4 +8,6 @@ public interface DailyLogService {
 
 
   List<DailyLog> getAllLogs();
+
+  DailyLog changeLog(String status);
 }

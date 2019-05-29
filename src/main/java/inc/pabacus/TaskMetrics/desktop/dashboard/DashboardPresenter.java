@@ -276,4 +276,10 @@ public class DashboardPresenter implements Initializable {
   y = event.getSceneY();
   }
 
+  @FXML
+  void minimize(MouseEvent event) {
+    Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+    stage.setIconified(true);
+  }
+
 }

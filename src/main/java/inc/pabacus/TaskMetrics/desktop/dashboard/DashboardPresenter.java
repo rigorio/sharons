@@ -262,6 +262,12 @@ public class DashboardPresenter implements Initializable {
     dynamicContentPane.getChildren().add(parent);
   }
 
+  @FXML
+  public void onEnter(ActionEvent ae){
+    String command = this.textCommand.getText();
+    chatService.sendCommand(command);
+  }
+
   double x, y;
   @FXML
   void dragged(MouseEvent event) {

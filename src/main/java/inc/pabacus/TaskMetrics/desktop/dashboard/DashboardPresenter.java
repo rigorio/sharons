@@ -111,6 +111,19 @@ public class DashboardPresenter implements Initializable {
     viewTasks();
   }
 
+  private void accessChatEngine() {
+    chatService = BeanManager.chatService();
+    textCommand.focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
+      if (newPropertyValue) {
+        textCommand.setAlignment(Pos.BASELINE_LEFT);
+      }
+      else {
+        textCommand.setText(null);
+        textCommand.setAlignment(Pos.CENTER);
+      }
+    });
+  }
+
   private void responsive() {
     dynamicContentPane.toBack();
     //calculate width and height

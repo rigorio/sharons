@@ -283,6 +283,29 @@ public class DashboardPresenter implements Initializable {
   }
 
   @FXML
+  void close(MouseEvent event) {
+    Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+    //Prevent from closing
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("You're about to close the application");
+    alert.setHeaderText("Warning!");
+    alert.setContentText("You're about to close the application! \nPlease make sure there are no other window current opened or you will lost your data!");
+
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.get() == ButtonType.OK){
+      //to force stop/close the threads.
+      Thread.currentThread().interrupt();
+      //to make sure app is close
+      Platform.setImplicitExit(true);
+      Platform.exit();
+      System.exit(0);
+      stage.close();
+    } else {
+      alert.close();
+    }
+  }
+
+  @FXML
   void minimize(MouseEvent event) {
     Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
     stage.setIconified(true);

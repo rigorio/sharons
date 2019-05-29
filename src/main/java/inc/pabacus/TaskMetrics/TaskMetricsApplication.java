@@ -22,6 +22,7 @@ public class TaskMetricsApplication extends Application {
   @Override
   public void start(Stage stage) {
     stage.setResizable(false);
+    stage.initStyle(StageStyle.TRANSPARENT);
     stage.getIcons().add(new Image("/img/PabacusLogo.png"));
     MANAGER.setPrimaryStage(stage);
     MANAGER.changeView(new LoginView());

@@ -2,3 +2,19 @@
     /*-fx-text-fill: #fff;*/
     /*-fx-background-color: #008080;*/
 }
+#minimize {
+    -fx-background-color: transparent;
+
+}
+#close {
+    -fx-background-color: transparent;
+
+}
+#minimize:hover {
+    -fx-background-color: #3D3E67;
+    -fx-cursor: hand;
+}
+#close:hover {
+    -fx-background-color: #E81123;
+    -fx-cursor: hand;
+}

@@ -85,6 +85,7 @@ public class DashboardPresenter implements Initializable {
 
     services();
     responsive();
+    accessChatEngine();
 
     ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
     setSize(taskImage);

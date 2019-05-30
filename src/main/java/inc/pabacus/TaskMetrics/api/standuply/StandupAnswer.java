@@ -12,13 +12,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 public class StandupAnswer {
-  private Long userId;
   private Long questionId;
   @OneToMany(cascade = CascadeType.ALL)
   private List<Answers> answers;
 
-  public StandupAnswer(Long userId, Long questionId, List<Answers> answers) {
-    this.userId = userId;
+  public StandupAnswer(Long questionId, List<Answers> answers) {
     this.questionId = questionId;
     this.answers = answers;
   }

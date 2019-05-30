@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,8 +65,8 @@ public class StandupPresenter implements Initializable {
     OkHttpClient client = new OkHttpClient();
     // code request code here
     Request request = new Request.Builder()
-        .url(HOST + "/api/Questions")
-        .addHeader("Accept", "application/json")
+        .url(HOST + "/api/concierge/questions")
+        .addHeader("Content-Type", "application/json")
         .addHeader("Authorization", TokenRepository.getToken().getToken())
         .method("GET", null)
         .build();
@@ -73,19 +74,16 @@ public class StandupPresenter implements Initializable {
     try {
       Response response = client.newCall(request).execute();
       String getQuestions = response.body().string();
+      JSONObject obj = new JSONObject(getQuestions);
+      JSONArray arr = obj.getJSONArray("questions");
 
-      if(getQuestions.equals("[]") || getQuestions.equals("")){
-        // default value of Questions
-        didYesterday.setText("What did you do yesterday? Answer!");
-        doToday.setText("What is your plan today?");
-        obstacles.setText("Do you have obstacles?");
-      }
-      else {
-        String getTimeJson = getQuestions.replaceAll("\\[|\\]", "");
-        JSONObject json = new JSONObject(getTimeJson);
-        didYesterday.setText(json.getString("questionDidYesterday"));
-        doToday.setText(json.getString("questionDoingToday"));
-        obstacles.setText(json.getString("questionObstacles"));
+      for (int i = 0; i < arr.length(); ++i) {
+        //will check it again after API is serving.
+        System.out.println(arr.getString(i));
+
+//        didYesterday.setText(arr.getString(0));
+//        doToday.setText(arr.getString(2));
+//        obstacles.setText(arr.getString(3));
       }
 
     } catch (IOException | JSONException e) {

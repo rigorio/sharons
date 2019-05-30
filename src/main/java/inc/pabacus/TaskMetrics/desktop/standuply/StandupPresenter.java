@@ -63,7 +63,7 @@ public class StandupPresenter implements Initializable {
         new Answers(obstacleQuestion,obstacleAnswer)
                                                );
     StandupService service = new StandupService();
-    StandupAnswer answers = service.sendAnswer(new StandupAnswer(3L, 3L, getallAnswers));
+    StandupAnswer answers = service.sendAnswer(new StandupAnswer(3L, getallAnswers));
     cancel();
 
   }

@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.desktop.standuply;
 
 import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.api.standuply.Answers;
 import inc.pabacus.TaskMetrics.api.standuply.StandupAnswer;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import javafx.fxml.FXML;
@@ -18,6 +19,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class StandupPresenter implements Initializable {
@@ -46,12 +50,20 @@ public class StandupPresenter implements Initializable {
 
   public void submitForm() {
 
-    String yesterday = yesterdayTextArea.getText();
-    String today = todayTextArea.getText();
-    String obstacles = obstaclesTextArea.getText();
+    String yesterdayQuestion = didYesterday.getText();
+    String yesterdayAnswer = yesterdayTextArea.getText();
+    String todayQuestion = doToday.getText();
+    String todayAnswer = todayTextArea.getText();
+    String obstacleQuestion = obstacles.getText();
+    String obstacleAnswer = obstaclesTextArea.getText();
+
+    List<Answers> getallAnswers = Arrays.asList(
+        new Answers(yesterdayQuestion,yesterdayAnswer),
+        new Answers(todayQuestion,todayAnswer),
+        new Answers(obstacleQuestion,obstacleAnswer)
+                                               );
     StandupService service = new StandupService();
-    StandupAnswer answer = service.sendAnswer(new StandupAnswer(yesterday, today, obstacles));
-    System.out.println(answer); // heh
+    StandupAnswer answers = service.sendAnswer(new StandupAnswer(3L, 3L, getallAnswers));
     cancel();
 
   }

@@ -1,21 +1,23 @@
 package inc.pabacus.TaskMetrics.api.standuply;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import java.util.List;
+
 @Data
-@AllArgsConstructor
+@Entity
+@Builder
 @NoArgsConstructor
 public class StandupAnswer {
-  private Long id;
-  private String didYesterday;
-  private String doingToday;
-  private String obstacles;
+  private Long questionId;
+  @OneToMany(cascade = CascadeType.ALL)
+  private List<Answers> answers;
 
-  public StandupAnswer(String didYesterday, String doingToday, String obstacles) {
-    this.didYesterday = didYesterday;
-    this.doingToday = doingToday;
-    this.obstacles = obstacles;
+  public StandupAnswer(Long questionId, List<Answers> answers) {
+    this.questionId = questionId;
+    this.answers = answers;
   }
 }

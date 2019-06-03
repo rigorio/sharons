@@ -51,23 +51,23 @@ public class StandupService {
   }
 
   public StandupAnswer sendAnswer(StandupAnswer answer) {
-    StandupAnswer standupAnswer;
     try {
       OkHttpClient client = new OkHttpClient();
       ObjectMapper mapper = new ObjectMapper();
 
       String jsonString = mapper.writeValueAsString(answer);
       RequestBody body = RequestBody.create(JSON, jsonString);
-
+      //print expected value
+      System.out.println(jsonString);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/repository/save")
+                                     .url(HOST + "/api/concierge/answers")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
-      standupAnswer = mapper.readValue(responseBody.string(),
+      answer = mapper.readValue(responseBody.string(),
                                        new TypeReference<StandupAnswer>() {});
-      return standupAnswer;
+      return answer;
     } catch (IOException e) {
       logger.warn(e.getMessage());
       return answer;

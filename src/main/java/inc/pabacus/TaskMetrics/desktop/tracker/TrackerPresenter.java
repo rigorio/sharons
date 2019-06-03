@@ -73,4 +73,9 @@ public class TrackerPresenter implements Initializable {
     TrackHandler.setSelectedTask(null);
     ((Stage) complete.getScene().getWindow()).close();
   }
+  @FXML
+  public void cancel(){
+    Stage stage = (Stage) title.getScene().getWindow();
+    stage.close();
+  }
 }

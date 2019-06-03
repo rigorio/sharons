@@ -12,13 +12,18 @@ import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
 import inc.pabacus.TaskMetrics.api.user.Password;
 import inc.pabacus.TaskMetrics.api.user.UserRepository;
 import inc.pabacus.TaskMetrics.api.user.Username;
+import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
 import inc.pabacus.TaskMetrics.desktop.kickout.KickoutView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 import okhttp3.*;
 import java.io.IOException;
 import java.net.URL;
@@ -27,8 +32,9 @@ import java.util.ResourceBundle;
 public class LoginPresenter implements Initializable {
 
   @FXML
+  private AnchorPane mainPane;
+  @FXML
   private JFXTextField usernameField;
-
   @FXML
   private JFXPasswordField passwordField;
 
@@ -46,6 +52,11 @@ public class LoginPresenter implements Initializable {
 
   @FXML
   public void login() {
+    //for smooth loading
+    mainPane.getScene().setCursor(Cursor.WAIT);
+    PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
+    pause.setOnFinished(event -> {
+
     try {
       if (blankFields()) return;
       String userName = this.usernameField.getText();
@@ -59,6 +70,7 @@ public class LoginPresenter implements Initializable {
       if (status.getStatus().equals("Exists")) {
         kickerService.setUsername(userName);
         kickerService.setOldToken(status.getOldToken());
+        mainPane.getScene().setCursor(Cursor.DEFAULT);
         GuiManager.getInstance().displayView(new KickoutView());
       }
       kickerService.kicker();
@@ -66,6 +78,9 @@ public class LoginPresenter implements Initializable {
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    });
+    pause.play();
   }
 
   private void jwtLogin(String userNameText,String passWordText) {

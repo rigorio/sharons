@@ -134,7 +134,7 @@ public class TimesheetPresenter implements Initializable {
     bfl.setCellValueFactory(param -> param.getValue().getBfl());
 
     TableColumn<DailyLogFXAdapter, String> out = new TableColumn<>("OUT");
-    out.setCellValueFactory(param -> param.getValue().getOtl());
+    out.setCellValueFactory(param -> param.getValue().getOut());
 
 //    timeSheet.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="login-background" prefHeight="550.0" prefWidth="900.0" stylesheets="login.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.login.LoginPresenter">
+<AnchorPane id="login-background" fx:id="mainPane" prefHeight="550.0" prefWidth="900.0" stylesheets="login.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.login.LoginPresenter">
   <!--   <ImageView fitHeight="642.0" fitWidth="1026.0" layoutX="-13.0" pickOnBounds="true" preserveRatio="true">-->
   <!--      <Image url="@../../../../../../resources/images/laptop-one-side.jpg" />-->
   <!--   </ImageView>-->

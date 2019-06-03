@@ -12,6 +12,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,6 +22,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.List;
@@ -29,6 +32,8 @@ import java.util.stream.Collectors;
 
 public class TimesheetPresenter implements Initializable {
 
+  @FXML
+  private AnchorPane mainPane;
   @FXML
   private JFXComboBox<String> comboBox;
   @FXML
@@ -62,13 +67,13 @@ public class TimesheetPresenter implements Initializable {
   @Override
   @SuppressWarnings("all")
   public void initialize(URL location, ResourceBundle resources) {
+    makeFadeIn();
     mockUser = new MockUser("Rigo", "Logged Out");
     statusText.setText(mockUser.getStatus());
     userName.setText(mockUser.getName());
     initOshiInfo();
     initTimeSheet();
     populateCombobox();
-
   }
 
   @FXML
@@ -134,10 +139,16 @@ public class TimesheetPresenter implements Initializable {
     bfl.setCellValueFactory(param -> param.getValue().getBfl());
 
     TableColumn<DailyLogFXAdapter, String> out = new TableColumn<>("OUT");
-    out.setCellValueFactory(param -> param.getValue().getOtl());
+    out.setCellValueFactory(param -> param.getValue().getOut());
 
 //    timeSheet.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 
+    //1 = 1 whole, 2 = 1/2, 8 = 1/8, 4 = 1/4
+    date.prefWidthProperty().bind(timeSheet.widthProperty().divide(2));
+    in.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
+    otl.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
+    bfl.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
+    out.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
     getLogs();
     timeSheet.getColumns().addAll(date, in, otl, bfl, out);
 
@@ -162,5 +173,14 @@ public class TimesheetPresenter implements Initializable {
 
     os.setText(new SoftwareHandler().getOs());
     hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
+  }
+
+  private void makeFadeIn(){
+    FadeTransition fadeTransition = new FadeTransition();
+    fadeTransition.setDuration(Duration.millis(1000)); // 1 second
+    fadeTransition.setNode(mainPane);
+    fadeTransition.setFromValue(0);
+    fadeTransition.setToValue(1);
+    fadeTransition.play();
   }
 }

@@ -23,6 +23,6 @@ public class DailyLogFXAdapter extends RecursiveTreeObject<DailyLogFXAdapter> {
     in = new SimpleStringProperty(dailyLog.getIn());
     otl = new SimpleStringProperty(dailyLog.getOtl());
     bfl = new SimpleStringProperty(dailyLog.getBfl());
-    out = new SimpleStringProperty(dailyLog.getOtl());
+    out = new SimpleStringProperty(dailyLog.getOut());
   }
 }

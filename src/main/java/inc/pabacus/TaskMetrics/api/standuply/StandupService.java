@@ -3,16 +3,21 @@ package inc.pabacus.TaskMetrics.api.standuply;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.desktop.leave.LeaveView;
 import inc.pabacus.TaskMetrics.desktop.standuply.StanduplyView;
+import inc.pabacus.TaskMetrics.desktop.status.StatusView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -73,41 +78,78 @@ public class StandupService {
     OkHttpClient client = new OkHttpClient();
     // code request code here
     Request request = new Request.Builder()
-        .url(HOST + "/api/admin")
+        .url(HOST + "/api/concierge/schedule")
         .addHeader("Accept", "application/json")
         .addHeader("Authorization", TokenRepository.getToken().getToken())
         .method("GET", null)
         .build();
 
-    Response response = null;
-
     try {
 
-      response = client.newCall(request).execute();
-      String getTimes = null;
-      getTimes = response.body().string();
-      String getTimeJson = getTimes.replaceAll("\\[|\\]", "");
-      JSONObject json = new JSONObject(getTimeJson);
-      String syncresponse = json.getString("time");
-      String hour;
-      String minute;
+      Response response = client.newCall(request).execute();
+      String getbody= response.body().string();
+      String time = null;
+      String frequency = null;
+      String day = null;
 
-      if (syncresponse.contains(":")) {
-        String[] parts = syncresponse.split(":");
-        hour = parts[0];
-        minute = parts[1];
-      } else {
-        hour = syncresponse;
-        minute = "00";
+      JSONArray jsonarray = new JSONArray(getbody);
+      for (int i = 0; i < jsonarray.length(); i++) {
+        JSONObject jsonobject = jsonarray.getJSONObject(i);
+        time = jsonobject.getString("time");
+        frequency = jsonobject.getString("frequency");
+        day = jsonobject.getString("day");
       }
+
+      String[] getHourAndMinute = time.split(":");
+      String hour = getHourAndMinute[0];
+      String minute = getHourAndMinute[1];
 
       LocalTime now = LocalTime.now();
       LocalTime schedule = LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
-      return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
+
+      if (frequency.equalsIgnoreCase("daily")){
+        return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
+      } else{
+        Calendar cal = Calendar.getInstance();
+        int dayDate = cal.get(Calendar.DAY_OF_WEEK);
+
+        day = day.toLowerCase();
+        switch (day){
+          case "sunday":
+            day = "1";
+            break;
+          case "monday":
+            day = "2";
+            break;
+          case "tuesday":
+            day = "3";
+            break;
+          case "wednesday":
+            day = "4";
+            break;
+          case "thursday":
+            day = "5";
+            break;
+          case "friday":
+            day = "6";
+            break;
+          case "saturday":
+            day = "7";
+            break;
+        }
+//        System.out.println(day);
+//        System.out.println(dayDate);
+        if (day.equals(String.valueOf(dayDate))){
+          return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
+        } else {
+          return false;
+        }
+      }
 
     } catch (IOException | JSONException e) {
       return false;
     }
 
   }
+
 }

@@ -7,6 +7,9 @@ import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.tasks.Task;
 import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskHandler;
+import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
+import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,18 +40,17 @@ public class EditPresenter implements Initializable {
   @FXML
   private JFXButton saveTask;
 
-  private Task task;
+  private XpmTask task;
 
   private TaskHandler taskHandler;
+  private XpmTaskHandler xpmTaskHandler;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     taskHandler = new TaskHandler();
-    TaskFXAdapter task = EditableTaskHolder.getTask();
-    System.out.println(task);
-    this.task = new Task(task);
-    System.out.println("ara");
-    System.out.println(this.task);
+    xpmTaskHandler = new XpmTaskHandler();
+    XpmTaskAdapter xpmTask = EditableTaskHolder.getTask();
+    task = new XpmTask(xpmTask);
     initEditables();
   }
 
@@ -69,7 +71,8 @@ public class EditPresenter implements Initializable {
   public void saveTask() {
     task.setTitle(titleText.getText());
     task.setDescription(descriptionText.getText());
-    taskHandler.createTask(task);
+    xpmTaskHandler.save(task);
+//    taskHandler.createTask(task);
     close();
   }
 

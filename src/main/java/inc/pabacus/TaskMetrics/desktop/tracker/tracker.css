@@ -1,0 +1,8 @@
+#complete:hover {
+    -fx-background-color: #81858C;
+    -fx-cursor: hand;
+}
+#cancel:hover {
+    -fx-background-color: #E81123;
+    -fx-cursor: hand;
+}

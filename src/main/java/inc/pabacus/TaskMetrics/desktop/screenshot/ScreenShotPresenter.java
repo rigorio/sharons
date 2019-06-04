@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.screenshot;
 
 import inc.pabacus.TaskMetrics.utils.FileUtils;
+import javafx.animation.FadeTransition;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,10 +9,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.net.URL;
@@ -22,19 +25,20 @@ import java.util.ResourceBundle;
 public class ScreenShotPresenter implements Initializable {
 
     @FXML
+    private AnchorPane mainPane;
+    @FXML
     private ScrollPane imageSlider;
-
     @FXML
     private StackPane imageStackPane;
-
     @FXML
     private Label dateLabel;
-
     @FXML
     private Label timeLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        makeFadeIn();
+
         File folder = FileUtils.tmpFile(".pabacus");
         File[] listOfFiles = folder.listFiles();
         Arrays.sort(listOfFiles, Comparator.comparingLong(File::lastModified).reversed());
@@ -93,6 +97,15 @@ public class ScreenShotPresenter implements Initializable {
                 event.consume();
             }
         });
+    }
+
+    private void makeFadeIn(){
+        FadeTransition fadeTransition = new FadeTransition();
+        fadeTransition.setDuration(Duration.millis(1000)); // 1 second
+        fadeTransition.setNode(mainPane);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+        fadeTransition.play();
     }
 
 

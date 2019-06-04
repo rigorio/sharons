@@ -18,3 +18,26 @@
     -fx-background-color: #E81123;
     -fx-cursor: hand;
 }
+#tasks:hover {
+    -fx-background-color: #81858C;
+    -fx-cursor: hand;
+}
+#timesheets:hover {
+    -fx-background-color: #81858C;
+    -fx-cursor: hand;
+}
+#screenShot:hover {
+    -fx-background-color: #81858C;
+    -fx-cursor: hand;
+}
+#chat:hover {
+    -fx-background-color: #81858C;
+    -fx-cursor: hand;
+}
+#logOut:hover {
+    -fx-background-color: #81858C;
+    -fx-cursor: hand;
+}
+#changeStatus:hover {
+    -fx-cursor: hand;
+}

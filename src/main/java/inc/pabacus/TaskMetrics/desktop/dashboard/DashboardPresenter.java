@@ -39,6 +39,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -58,6 +59,8 @@ public class DashboardPresenter implements Initializable {
   private Pane userPane;
   @FXML
   private VBox vboxPane;
+  @FXML
+  private HBox easyChat;
   @FXML
   private JFXComboBox status;
   @FXML
@@ -133,6 +136,7 @@ public class DashboardPresenter implements Initializable {
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         double width = (double) newValue;
         dashboardPane.setPrefWidth(width);
+        easyChat.setPrefWidth(width/1.15);
       }
     });
 
@@ -159,6 +163,14 @@ public class DashboardPresenter implements Initializable {
         double height = (double) newValue;
         dynamicContentPane.setPrefHeight(height);
         vboxPane.setPrefHeight(height);
+      }
+    });
+
+    easyChat.widthProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        double width = (double) newValue;
+        textCommand.setPrefWidth(width/1.5);
       }
     });
 
@@ -211,7 +223,12 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void viewTasks() {
-    updateDynamicPaneContent(new TasksView().getView());
+    //for smooth loading
+    PauseTransition pause = new PauseTransition(Duration.millis(500));
+    pause.setOnFinished(event -> {
+      updateDynamicPaneContent(new TasksView().getView());
+    });
+    pause.play();
   }
 
   @FXML
@@ -221,19 +238,24 @@ public class DashboardPresenter implements Initializable {
     //PauseTransition to load completely the screenShotView
     PauseTransition pause = new PauseTransition(Duration.seconds(1));
     pause.setOnFinished(event -> {
-                          dynamicContentPane.setCache(true);
-                          dynamicContentPane.setCacheHint(CacheHint.SPEED);
-                          dynamicContentPane.getScene().setCursor(Cursor.DEFAULT);
-                          updateDynamicPaneContent(new ScreenShotView().getView());
-                        }
-    );
+      dynamicContentPane.setCache(true);
+      dynamicContentPane.setCacheHint(CacheHint.SPEED);
+      dynamicContentPane.getScene().setCursor(Cursor.DEFAULT);
+      updateDynamicPaneContent(new ScreenShotView().getView());
+    });
     pause.play();
 //    GuiManager.getInstance().displayView(new ScreenShotView());
   }
 
   @FXML
   public void viewTimesheet() {
-    updateDynamicPaneContent(new TimesheetView().getView());
+    //for smooth loading
+    PauseTransition pause = new PauseTransition(Duration.millis(500));
+    pause.setOnFinished(event -> {
+      updateDynamicPaneContent(new TimesheetView().getView());
+    });
+    pause.play();
+
   }
 
   @FXML
@@ -244,16 +266,31 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void viewChats() {
-    updateDynamicPaneContent(new ChatView().getView());
+    //for smooth loading
+    PauseTransition pause = new PauseTransition(Duration.millis(500));
+    pause.setOnFinished(event -> {
+      updateDynamicPaneContent(new ChatView().getView());
+    });
+    pause.play();
   }
 
   @FXML
   public void logout() {
-    kickerService.logout(TokenHolder.getToken());
-    Stage stages = (Stage) logoutBtn.getScene().getWindow();
-    stages.close();
 
-    GuiManager.getInstance().changeView(new LoginView());
+    Stage stages = (Stage) logoutBtn.getScene().getWindow();
+    //Prevent from closing
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Log Out");
+    alert.setHeaderText("Warning!");
+    alert.setContentText("Are you sure you want to log out?");
+
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.get() == ButtonType.OK){
+      kickerService.logout(TokenHolder.getToken());
+      GuiManager.getInstance().changeView(new LoginView());
+    } else {
+      alert.close();
+    }
   }
 
   @FXML

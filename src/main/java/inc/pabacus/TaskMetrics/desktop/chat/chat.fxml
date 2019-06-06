@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextField?>
-<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mainPane" opacity="0.0" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.chat.ChatPresenter">
-  <JFXTextField fx:id="command" layoutX="14.0" layoutY="659.0" prefHeight="31.0" prefWidth="766.0" />
-  <JFXButton layoutX="791.0" layoutY="660.0" mnemonicParsing="false" onAction="#searchCommand" prefHeight="31.0" prefWidth="76.0" style="-fx-background-color: #008080;" text="Send" textFill="white" />
-  <JFXTreeTableView layoutX="14.0" layoutY="30.0" prefHeight="609.0" prefWidth="853.0" />
+<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.chat.ChatPresenter">
+  <JFXTextField fx:id="command" layoutX="84.0" layoutY="597.0" onAction="#onEnter" prefHeight="31.0" prefWidth="714.0" promptText="Type a command" />
+   <JFXListView fx:id="listView" layoutX="26.0" layoutY="54.0" prefHeight="525.0" prefWidth="772.0" />
+   <ImageView fx:id="image" fitHeight="46.0" fitWidth="54.0" layoutX="39.0" layoutY="597.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="39.0" />
 </AnchorPane>

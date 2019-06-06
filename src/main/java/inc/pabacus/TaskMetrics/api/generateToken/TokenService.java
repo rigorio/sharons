@@ -47,15 +47,12 @@ public class TokenService {
     //run every 55 minutes before 1 hour = 3300000
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable command = () -> Platform.runLater(() -> {
-
       String username = UserRepository.getUsername().getUsername();
       String password = UserRepository.getPassword().getPassword();
       TokenService service = new TokenService();
       Credentials token = service.generateToken(new Credentials(username,password));
-
     });
 
-    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 50000, TimeUnit.MILLISECONDS);
-
+    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 3300000, TimeUnit.MILLISECONDS);
   }
 }

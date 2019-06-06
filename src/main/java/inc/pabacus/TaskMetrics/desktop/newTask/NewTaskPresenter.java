@@ -5,19 +5,21 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.project.Project;
 import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
-import inc.pabacus.TaskMetrics.api.tasks.Task;
 import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import okhttp3.*;
+import okhttp3.MediaType;
 
 import java.net.URL;
 import java.util.List;
@@ -28,10 +30,15 @@ import java.util.stream.Collectors;
 public class NewTaskPresenter implements Initializable {
 
   @FXML
+  private Label customTaskLabel;
+  @FXML
+  private JFXTextField customTaskField;
+
+  @FXML
   private JFXTextField descriptionField;
 
   @FXML
-  private JFXComboBox<String> billableComboBox;
+  private JFXComboBox<String> taskCombobox;
 
   @FXML
   private JFXButton saveButton;
@@ -40,7 +47,7 @@ public class NewTaskPresenter implements Initializable {
   private JFXButton closeButton;
 
   @FXML
-  private JFXComboBox<String> projectComboBox;
+  private JFXComboBox<String> jobComboBox;
 
   @FXML
   private JFXComboBox<String> businessComboBox;
@@ -52,6 +59,7 @@ public class NewTaskPresenter implements Initializable {
   private BusinessValueHandler businessValueHandler = new BusinessValueHandler();
   private ProjectHandler projectHandler = new ProjectHandler();
   private TaskHandler taskHandler = new TaskHandler();
+  private XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -63,67 +71,86 @@ public class NewTaskPresenter implements Initializable {
         .map(BusinessValue::getBusiness)
         .collect(Collectors.toList());
     businessComboBox.getItems().addAll(businesses);
-    billableComboBox.setPromptText("Choose Billable");
-    projectComboBox.setPromptText("Choose Project");
+    taskCombobox.setPromptText("Select a task");
+    jobComboBox.setPromptText("Select a job");
     businessComboBox.setPromptText("Choose Business Value");
-    List<String> projects = getAllProjects().stream()
-        .map(Project::getProjectName)
-        .collect(Collectors.toList());
-    projectComboBox.setItems(FXCollections.observableArrayList(projects));
-    billableComboBox.setItems(billableList);
-    // set default value
-    projectComboBox.setValue("ABC");
-    billableComboBox.setValue("True");
+    jobComboBox.setItems(FXCollections.observableArrayList("IT Support", "Accounting"));
+    customTaskField.setDisable(true);
+    customTaskLabel.setDisable(true);
+
     businessComboBox.setValue("Development");
-    }
+  }
+
+  @FXML
+  public void changeTasks() {
+    String project = jobComboBox.getValue();
+    List<XpmTask> xpmTasks = xpmTaskHandler.findAll();
+    List<String> collect = xpmTasks.stream()
+        .filter(xpmTask -> xpmTask.getJob().equals(project))
+        .map(XpmTask::getTitle)
+        .collect(Collectors.toList());
+    taskCombobox.setItems(FXCollections.observableArrayList(collect));
+    taskCombobox.getItems().add("Custom Task");
+  }
+
+  @FXML
+  public void selectTask() {
+    String task = taskCombobox.getValue();
+    boolean status = !task.equalsIgnoreCase("Custom Task");
+    customTaskField.setDisable(status);
+    customTaskLabel.setDisable(status);
+    if (status)
+      customTaskField.clear();
+  }
 
   @FXML
   public void close() {
-    Stage stage = (Stage) projectComboBox.getScene().getWindow();
+    Stage stage = (Stage) jobComboBox.getScene().getWindow();
     stage.close();
   }
 
   @FXML
   public void save() {
-    boolean isMprojectComboBoxEmpty = projectComboBox.getSelectionModel().isEmpty();
-    boolean isbillableComboBoxEmpty = billableComboBox.getSelectionModel().isEmpty();
-    boolean isbusinessComboBoxEmpty = businessComboBox.getSelectionModel().isEmpty();
-    boolean isDescriptionEmpty = descriptionField.getText().isEmpty();
 
-    if (isMprojectComboBoxEmpty || isbillableComboBoxEmpty || isDescriptionEmpty || isbusinessComboBoxEmpty) {
+    if (isAlrightAlrightAlright()) {
       Alert alert = new Alert(Alert.AlertType.WARNING);
       alert.setTitle("Error");
       alert.setContentText("Please fill out all the fields");
       alert.showAndWait();
-    } else {
-      String title = descriptionField.getText(); // actually title of task
-      Boolean billable = Boolean.valueOf(billableComboBox.getValue());
-
-      BusinessValue businessValue = getBusinessValue();
-      Project project = getProject();
-
-      Task task = Task.builder()
-          .title(title)
-          .projectId(project.getId())
-          .projectName(project.getProjectName())
-          .businessValueId(businessValue.getId())
-          .billable(billable)
-          .timeSpent(0.0)
-          .status(Status.PENDING)
-          .build();
-
-      Task t = taskHandler.createTask(task);
-      Alert alert = new Alert(Alert.AlertType.INFORMATION);
-      alert.setContentText("Task saved!");
-      alert.showAndWait();
-      Stage stage = (Stage) projectComboBox.getScene().getWindow();
-      stage.close();
+      return;
     }
+
+    String description = descriptionField.getText(); // actually title of task
+    Boolean billable = Boolean.valueOf(taskCombobox.getValue());
+    String taskValue = taskCombobox.getValue();
+    String taskTitle = taskValue.equalsIgnoreCase("Custom Task")
+        ? customTaskField.getText()
+        : taskValue;
+    BusinessValue businessValue = getBusinessValue();
+//    Project project = getProject();
+
+    XpmTask xpmTask = XpmTask.builder()
+        .id(3L)
+        .title(taskTitle)
+        .job(jobComboBox.getValue())
+        .totalTime("0.0")
+        .status(Status.PENDING.getStatus())
+        .description(description)
+        .build();
+
+    xpmTaskHandler.save(xpmTask);
+
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setContentText("Task saved!");
+    alert.showAndWait();
+    Stage stage = (Stage) jobComboBox.getScene().getWindow();
+    stage.close();
+
   }
 
   private Project getProject() {
     Optional<Project> anyProject = getAllProjects().stream()
-        .filter(project -> project.getProjectName().equals(projectComboBox.getValue()))
+        .filter(project -> project.getProjectName().equals(jobComboBox.getValue()))
         .findAny();
 
     if (!anyProject.isPresent())
@@ -145,6 +172,10 @@ public class NewTaskPresenter implements Initializable {
 
   private List<BusinessValue> getAllBusinessValues() {
     return businessValueHandler.getAll();
+  }
+
+  private boolean isAlrightAlrightAlright() {
+    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() || businessComboBox.getSelectionModel().isEmpty();
   }
 
   private List<Project> getAllProjects() {

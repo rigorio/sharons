@@ -1,15 +1,15 @@
 package inc.pabacus.TaskMetrics.desktop.tracker;
 
-import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
+import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
 
 public class TrackHandler {
-  private static TaskFXAdapter selectedTask;
+  private static XpmTaskAdapter selectedTask;
 
-  public static TaskFXAdapter getSelectedTask() {
+  public static XpmTaskAdapter getSelectedTask() {
     return selectedTask;
   }
 
-  public static void setSelectedTask(TaskFXAdapter selectedTask) {
+  public static void setSelectedTask(XpmTaskAdapter selectedTask) {
     TrackHandler.selectedTask = selectedTask;
   }
 }

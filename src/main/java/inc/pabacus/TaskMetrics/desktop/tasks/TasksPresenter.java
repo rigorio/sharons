@@ -7,13 +7,14 @@ import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.project.ProjectFXAdapter;
 import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
 import inc.pabacus.TaskMetrics.api.project.ProjectService;
-import inc.pabacus.TaskMetrics.api.tasks.Task;
-import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.TaskWebRepository;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
+import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
+import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -32,8 +33,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,62 +70,45 @@ public class TasksPresenter implements Initializable {
   private JFXButton startButton;
 
   @FXML
-  private TableView<TaskFXAdapter> tasksTable;
+  private TableView<XpmTaskAdapter> tasksTable;
 
   private TaskHandler taskHandler;
 
   private ProjectService projectService;
   private ActivityHandler activityHandler;
+  private XpmTaskWebHandler xpmTaskHandler;
 
   public TasksPresenter() {
     taskHandler = new TaskHandler(new TaskWebRepository());
     projectService = new ProjectHandler();
     activityHandler = new ActivityHandler();
+    xpmTaskHandler = new XpmTaskWebHandler();
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    statusBox.setValue("Pending");
-    startButton.setDisable(true);
+    statusBox.setValue("All");
 
-    TableColumn<TaskFXAdapter, String> projectName = new TableColumn<>("Project");
-    projectName.setCellValueFactory(param -> param.getValue().getProjectName());
+    TableColumn<XpmTaskAdapter, String> projectName = new TableColumn<>("Job");
+    projectName.setCellValueFactory(param -> param.getValue().getJob());
+    TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Time");
+    billableHours.setCellValueFactory(param -> param.getValue().getTime());
 
-    TableColumn<TaskFXAdapter, String> startTime = new TableColumn<>("Start Time");
-    startTime.setCellValueFactory(param -> param.getValue().getStartTime());
-
-    TableColumn<TaskFXAdapter, String> endTime = new TableColumn<>("End Time");
-    endTime.setCellValueFactory(param -> param.getValue().getEndTime());
-
-    TableColumn<TaskFXAdapter, String> billable = new TableColumn<>("Billable?");
-    billable.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getBillable().get() ? "Y" : "N"));
-
-    TableColumn<TaskFXAdapter, String> billableHours = new TableColumn<>("Billable Hours");
-    billableHours.setCellValueFactory(param -> {
-      TaskFXAdapter adapter = param.getValue();
-      String b = adapter.getBillable().get() ? "" + adapter.getTimeSpent().get() : "0";
-      return new SimpleStringProperty(b);
-    });
-
-    TableColumn<TaskFXAdapter, String> nonBillableHours = new TableColumn<>("Non-Billable Hours");
-    nonBillableHours.setCellValueFactory(param -> {
-      TaskFXAdapter adapter = param.getValue();
-      String b = !adapter.getBillable().get() ? "" + adapter.getTimeSpent().get() : "0";
-      return new SimpleStringProperty(b);
-    });
-
-    TableColumn<TaskFXAdapter, String> description = new TableColumn<>("Task");
+    TableColumn<XpmTaskAdapter, String> description = new TableColumn<>("Task");
     description.setCellValueFactory(param -> param.getValue().getTitle());
 
+    TableColumn<XpmTaskAdapter, String> status = new TableColumn<>("State");
+    status.setCellValueFactory(param -> param.getValue().getStatus());
 
-    tasksTable.getColumns().addAll(projectName, description, startTime, endTime,
-                                   billableHours, nonBillableHours, billable);
+
+    tasksTable.getColumns().addAll(projectName, description, status, billableHours);
 
     initTasksTable();
 
-    initTaskSheet();
-    refreshingService();
+//    initTaskSheet();
+//    refreshingService();
     statusBox.getItems().addAll(new ArrayList<String>() {{
+      add("In Progress");
       add("Pending");
       add("Done");
       add("All");
@@ -137,7 +119,7 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void wowStatusBoxChange() {
     String value = statusBox.getValue();
-    ObservableList<TaskFXAdapter> tasksByStatus;
+    ObservableList<XpmTaskAdapter> tasksByStatus;
     if (value.equals("All")) {
       tasksByStatus = FXCollections.observableArrayList(getAllTasks());
     } else {
@@ -152,7 +134,7 @@ public class TasksPresenter implements Initializable {
       return;
 
 
-    TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
+    XpmTaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
     EditableTaskHolder.setTask(selectedItem);
 
     EditView view = new EditView();
@@ -168,18 +150,18 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void startTask() {
     activityHandler.saveActivity(Activity.BUSY);
-    TaskFXAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
+    XpmTaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
     if (!selectedItem.getStatus().get().equals("Pending")) {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
       alert.setTitle("Not Allowed");
       alert.setHeaderText(null);
-      alert.setContentText("This task has already been marked has done. Please select a task under \"Pending\"");
+      alert.setContentText("You can only select a task under \"Pending\"");
       alert.showAndWait();
       return;
     }
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-    selectedItem.setStartTime(new SimpleStringProperty(formatter.format(LocalTime.now())));
-    startButton.setDisable(true);
+//    selectedItem.setStartTime(new SimpleStringProperty(formatter.format(LocalTime.now())));
+//    startButton.setDisable(true);
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
   }
@@ -216,7 +198,7 @@ public class TasksPresenter implements Initializable {
 
     taskTimesheet.getColumns().addAll(projectName, billableHours, nonBillableHours,
                                       totalHours, billable, invoiceAmount);
-    initTaskTimeSheet();
+//    initTaskTimeSheet();
 
     totalbillable.setText("7.49");
     totalNonBillable.setText("1.92");
@@ -239,9 +221,9 @@ public class TasksPresenter implements Initializable {
     tasksTable.setItems(FXCollections.observableArrayList(getAllTasks()));
   }
 
-  private ObservableList<TaskFXAdapter> getTasksByStatus(String status) {
+  private ObservableList<XpmTaskAdapter> getTasksByStatus(String status) {
 
-    List<TaskFXAdapter> backLogs = getAllTasks().stream()
+    List<XpmTaskAdapter> backLogs = getAllTasks().stream()
         .filter(backlog -> backlog.getStatus().get().equalsIgnoreCase(status))
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(backLogs);
@@ -259,7 +241,7 @@ public class TasksPresenter implements Initializable {
     else
       tasksTable.setItems(getTasksByStatus(statusBox.getValue()));
 
-    initTaskTimeSheet();
+//    initTaskTimeSheet();
   }
 
   private void refreshingService() {
@@ -267,22 +249,13 @@ public class TasksPresenter implements Initializable {
     ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(this::refreshTasks, 5L, 5L, TimeUnit.SECONDS);
   }
 
-  private ObservableList<TaskFXAdapter> getTasksToday() {
-    String dateToday = LocalDate.now().toString();
-    List<TaskFXAdapter> tasks = getAllTasks().stream()
-        .filter(task -> task.getDateCompleted() != null && task.getDateCompleted().get().equalsIgnoreCase(dateToday))
-        .collect(Collectors.toList());
-    return FXCollections.observableArrayList(tasks);
-  }
-
-
-  private List<TaskFXAdapter> getAllTasks() {
-    List<Task> allTasks = taskHandler.getAllTasks();
+  private List<XpmTaskAdapter> getAllTasks() {
+    List<XpmTask> allTasks = xpmTaskHandler.findAll();
 //    System.out.println("yare yare daze");
 //    allTasks.forEach(System.out::println);
     return FXCollections
         .observableArrayList(allTasks.stream()
-                                 .map(TaskFXAdapter::new)
+                                 .map(XpmTaskAdapter::new)
                                  .collect(Collectors.toList()));
   }
 

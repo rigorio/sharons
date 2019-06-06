@@ -218,4 +218,6 @@ buildNumber.properties
 .mvn/*
 mvnw*
 
+*.log
+
 # End of https://www.gitignore.io/api/java,maven,intellij,intellij+iml,intellij+all

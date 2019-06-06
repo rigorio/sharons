@@ -4,20 +4,15 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-import inc.pabacus.TaskMetrics.api.tasks.Task;
-import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
-import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskHandler;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
 import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
-import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
-import javax.swing.table.TableColumn;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -42,13 +37,11 @@ public class EditPresenter implements Initializable {
 
   private XpmTask task;
 
-  private TaskHandler taskHandler;
-  private XpmTaskHandler xpmTaskHandler;
+  private XpmTaskWebHandler xpmTaskWebHandler;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    taskHandler = new TaskHandler();
-    xpmTaskHandler = new XpmTaskHandler();
+    xpmTaskWebHandler = new XpmTaskWebHandler();
     XpmTaskAdapter xpmTask = EditableTaskHolder.getTask();
     task = new XpmTask(xpmTask);
     initEditables();
@@ -63,7 +56,7 @@ public class EditPresenter implements Initializable {
 
     Optional<ButtonType> result = alert.showAndWait();
     if (result.isPresent() && result.get() == ButtonType.OK) {
-      taskHandler.deleteTask(task.getId());
+      xpmTaskWebHandler.deleteById(task.getId());
       close();
     }
   }
@@ -71,8 +64,7 @@ public class EditPresenter implements Initializable {
   public void saveTask() {
     task.setTitle(titleText.getText());
     task.setDescription(descriptionText.getText());
-    xpmTaskHandler.save(task);
-//    taskHandler.createTask(task);
+    xpmTaskWebHandler.save(task);
     close();
   }
 

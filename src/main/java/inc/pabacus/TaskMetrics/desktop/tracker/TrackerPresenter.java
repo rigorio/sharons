@@ -1,13 +1,13 @@
 package inc.pabacus.TaskMetrics.desktop.tracker;
 
 import com.jfoenix.controls.JFXButton;
-import inc.pabacus.TaskMetrics.api.tasks.Task;
-import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.TaskWebRepository;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
+import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.utils.TimerService;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,10 +15,6 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class TrackerPresenter implements Initializable {
@@ -31,7 +27,8 @@ public class TrackerPresenter implements Initializable {
 
   private TimerService timerService;
   private TaskHandler taskHandler;
-  private TaskFXAdapter selectedTask;
+  private XpmTaskAdapter selectedTask;
+  private XpmTaskWebHandler xpmTaskWebHandler;
 
   private Runnable process = () -> {
     long duration = timerService.getTime();
@@ -42,8 +39,8 @@ public class TrackerPresenter implements Initializable {
   public TrackerPresenter() {
     timerService = new TimerService();
     taskHandler = new TaskHandler(new TaskWebRepository());
+    xpmTaskWebHandler = new XpmTaskWebHandler();
   }
-
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -58,18 +55,15 @@ public class TrackerPresenter implements Initializable {
   public void completeTask() {
     long time = timerService.getTime();
     timerService.pause();
-    String timeSpent = timerService.formatSeconds(time);
-    selectedTask.setTotalTimeSpent(new SimpleStringProperty(timeSpent));
-    double totalTimeSpent = (double) (time / 3600);
+    double jikan = time / 3600.0;
+    double totalTimeSpent = jikan;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-//    totalTimeSpent = 3;
-    selectedTask.setTimeSpent(new SimpleDoubleProperty(totalTimeSpent));
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+
+    selectedTask.setTime(new SimpleStringProperty("" + totalTimeSpent));
     selectedTask.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
-    selectedTask.setDateCompleted(new SimpleStringProperty(LocalDate.now().toString()));
-    Task task = new Task(selectedTask);
-    task.setEndTime(formatter.format(LocalTime.now()));
-    taskHandler.saveTask(task);
+    XpmTask xpmTask = new XpmTask(selectedTask);
+    xpmTaskWebHandler.save(xpmTask);
     TrackHandler.setSelectedTask(null);
     ((Stage) complete.getScene().getWindow()).close();
   }

@@ -2,7 +2,6 @@ package inc.pabacus.TaskMetrics.desktop.dashboard;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
@@ -11,6 +10,7 @@ import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
+import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
@@ -23,21 +23,16 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -77,18 +72,15 @@ public class DashboardPresenter implements Initializable {
   private JFXButton chatButton;
   @FXML
   private JFXButton logoutBtn;
-  @FXML
-  private TextField textCommand;
   private StandupService standupService = new StandupService();
   private KickerService kickerService = BeanManager.kickerService();
-  private ChatService chatService;
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
     services();
     responsive();
-    accessChatEngine();
+    updateEasyChat(new EasyChatView().getView());
 
     ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
     setSize(taskImage);
@@ -115,19 +107,6 @@ public class DashboardPresenter implements Initializable {
     viewTasks();
   }
 
-  private void accessChatEngine() {
-    chatService = BeanManager.chatService();
-    textCommand.focusedProperty().addListener((arg0, oldPropertyValue, newPropertyValue) -> {
-      if (newPropertyValue) {
-        textCommand.setAlignment(Pos.BASELINE_LEFT);
-      }
-      else {
-        textCommand.setText(null);
-        textCommand.setAlignment(Pos.CENTER);
-      }
-    });
-  }
-
   private void responsive() {
     dynamicContentPane.toBack();
     //calculate width and height
@@ -135,6 +114,7 @@ public class DashboardPresenter implements Initializable {
       @Override
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         double width = (double) newValue;
+
         dashboardPane.setPrefWidth(width);
         easyChat.setPrefWidth(width/1.15);
       }
@@ -152,6 +132,7 @@ public class DashboardPresenter implements Initializable {
       @Override
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         double width = (double) newValue;
+        easyChat.setPrefWidth(width);
         dynamicContentPane.setPrefWidth(width/1.2);
         vboxPane.setPrefWidth(width/6.5);
       }
@@ -163,14 +144,6 @@ public class DashboardPresenter implements Initializable {
         double height = (double) newValue;
         dynamicContentPane.setPrefHeight(height);
         vboxPane.setPrefHeight(height);
-      }
-    });
-
-    easyChat.widthProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        double width = (double) newValue;
-        textCommand.setPrefWidth(width/1.5);
       }
     });
 
@@ -258,11 +231,11 @@ public class DashboardPresenter implements Initializable {
 
   }
 
-  @FXML
-  public void viewSoftware() {
-    Parent parent = new SoftwareView().getView();
-    updateDynamicPaneContent(parent);
-  }
+//  @FXML
+//  public void viewSoftware() {
+//    Parent parent = new SoftwareView().getView();
+//    updateDynamicPaneContent(parent);
+//  }
 
   @FXML
   public void viewChats() {
@@ -313,53 +286,14 @@ public class DashboardPresenter implements Initializable {
     dynamicContentPane.getChildren().add(parent);
   }
 
-  @FXML
-  public void onEnter(ActionEvent ae){
-    String command = this.textCommand.getText();
-    chatService.sendCommand(command);
-  }
+  private void updateEasyChat(Parent parent) {
+    AnchorPane.setTopAnchor(parent, 0.0);
+    AnchorPane.setLeftAnchor(parent, 0.0);
+    AnchorPane.setBottomAnchor(parent, 0.0);
+    AnchorPane.setRightAnchor(parent, 0.0);
 
-  double x, y;
-  @FXML
-  void dragged(MouseEvent event) {
-    Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-    stage.setX(event.getScreenX() - x);
-    stage.setY(event.getScreenY() - y);
-  }
-
-  @FXML
-  void pressed(MouseEvent event) {
-  x = event.getSceneX();
-  y = event.getSceneY();
-  }
-
-  @FXML
-  void close(MouseEvent event) {
-    Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-    //Prevent from closing
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("You're about to close the application");
-    alert.setHeaderText("Warning!");
-    alert.setContentText("You're about to close the application! \nPlease make sure there are no other window current opened or you will lost your data!");
-
-    Optional<ButtonType> result = alert.showAndWait();
-    if (result.get() == ButtonType.OK){
-      //to force stop/close the threads.
-      Thread.currentThread().interrupt();
-      //to make sure app is close
-      Platform.setImplicitExit(true);
-      Platform.exit();
-      System.exit(0);
-      stage.close();
-    } else {
-      alert.close();
-    }
-  }
-
-  @FXML
-  void minimize(MouseEvent event) {
-    Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-    stage.setIconified(true);
+    easyChat.getChildren().clear();
+    easyChat.getChildren().add(parent);
   }
 
 }

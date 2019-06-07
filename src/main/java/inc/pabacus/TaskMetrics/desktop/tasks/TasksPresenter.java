@@ -18,6 +18,7 @@ import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,9 +29,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +49,8 @@ import java.util.stream.Collectors;
 
 public class TasksPresenter implements Initializable {
 
+  @FXML
+  private AnchorPane mainPane;
   @FXML
   private JFXButton editButton;
   @FXML
@@ -87,6 +92,10 @@ public class TasksPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    //for fade effect
+    mainPane.setOpacity(0);
+    responsiveness();
+
     statusBox.setValue("All");
 
     TableColumn<XpmTaskAdapter, String> projectName = new TableColumn<>("Job");
@@ -276,4 +285,15 @@ public class TasksPresenter implements Initializable {
       }
     });
   }
+
+  private void responsiveness(){
+    //transition
+    FadeTransition fadeTransition = new FadeTransition();
+    fadeTransition.setDuration(Duration.millis(1000)); // 1 second
+    fadeTransition.setNode(mainPane);
+    fadeTransition.setFromValue(0);
+    fadeTransition.setToValue(1);
+    fadeTransition.play();
+  }
+
 }

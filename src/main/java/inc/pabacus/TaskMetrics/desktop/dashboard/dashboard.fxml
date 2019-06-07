@@ -2,9 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -17,12 +15,12 @@
   <AnchorPane fx:id="dashboardPane" layoutY="34.0" prefHeight="711.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="34.0">
     <VBox fx:id="vboxPane" prefHeight="720.0" prefWidth="155.0" style="-fx-background-color: #008080;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <Pane fx:id="userPane" prefHeight="133.0" prefWidth="155.0">
-        <Label fx:id="username" layoutX="18.0" layoutY="26.0" text="Rigo" textFill="WHITE">
+        <Label fx:id="username" layoutX="14.0" layoutY="14.0" text="Rigo" textFill="WHITE">
           <font>
             <Font size="26.0" />
           </font>
         </Label>
-        <JFXComboBox id="changeStatus" fx:id="status" focusColor="WHITE" layoutX="18.0" layoutY="81.0" onAction="#changeStatus" prefHeight="21.0" prefWidth="120.0" unFocusColor="WHITE" />
+        <JFXComboBox id="changeStatus" fx:id="status" focusColor="WHITE" layoutX="18.0" layoutY="72.0" onAction="#changeStatus" prefHeight="21.0" prefWidth="120.0" unFocusColor="WHITE" />
       </Pane>
       <JFXButton id="tasks" fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false" onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Tasks" textFill="WHITE">
         <font>
@@ -85,23 +83,5 @@
     </VBox>
       <VBox fx:id="dynamicContentPane" alignment="CENTER_LEFT" fillWidth="false" layoutX="155.0" layoutY="-9.0" prefHeight="720.0" prefWidth="925.0" AnchorPane.rightAnchor="0.0" />
   </AnchorPane>
-   <HBox fx:id="easyChat1" fillHeight="false" layoutX="859.0" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="35.0" prefWidth="292.0" style="-fx-background-color: #464775;" AnchorPane.rightAnchor="0.0">
-      <children>
-         <Pane prefHeight="32.0" prefWidth="280.0">
-            <children>
-               <Button id="close" layoutX="252.0" mnemonicParsing="false" onMouseClicked="#close" prefHeight="33.0" prefWidth="38.0" style="-fx-text-fill: white;" text="X" />
-               <Button id="minimize" layoutX="214.0" mnemonicParsing="false" onMouseClicked="#minimize" prefHeight="33.0" prefWidth="38.0" style="-fx-text-fill: white;" text="-" />
-            </children>
-         </Pane>
-      </children>
-   </HBox>
-   <HBox fx:id="easyChat" alignment="CENTER" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="35.0" prefWidth="836.0" style="-fx-background-color: #464775;">
-      <children>
-         <Pane prefHeight="35.0" prefWidth="607.0">
-            <children>
-               <TextField fx:id="textCommand" alignment="CENTER" layoutY="5.0" onAction="#onEnter" prefHeight="25.0" prefWidth="444.0" promptText="Type a command" style="-fx-background-color: #292828; -fx-text-fill: white;" />
-            </children>
-         </Pane>
-      </children>
-   </HBox>
+   <HBox fx:id="easyChat" alignment="CENTER" prefHeight="35.0" prefWidth="1080.0" style="-fx-background-color: #008080;" AnchorPane.leftAnchor="0.0" />
 </AnchorPane>

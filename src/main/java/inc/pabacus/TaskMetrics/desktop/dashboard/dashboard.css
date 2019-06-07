@@ -2,6 +2,7 @@
     /*-fx-text-fill: #fff;*/
     /*-fx-background-color: #008080;*/
 }
+/*
 #minimize {
     -fx-background-color: transparent;
 
@@ -18,24 +19,25 @@
     -fx-background-color: #E81123;
     -fx-cursor: hand;
 }
+*/
 #tasks:hover {
-    -fx-background-color: #81858C;
+    -fx-background-color: #007A7A;
     -fx-cursor: hand;
 }
 #timesheets:hover {
-    -fx-background-color: #81858C;
+    -fx-background-color: #007A7A;
     -fx-cursor: hand;
 }
 #screenShot:hover {
-    -fx-background-color: #81858C;
+    -fx-background-color: #007A7A;
     -fx-cursor: hand;
 }
 #chat:hover {
-    -fx-background-color: #81858C;
+    -fx-background-color: #007A7A;
     -fx-cursor: hand;
 }
 #logOut:hover {
-    -fx-background-color: #81858C;
+    -fx-background-color: #007A7A;
     -fx-cursor: hand;
 }
 #changeStatus:hover {

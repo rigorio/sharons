@@ -286,6 +286,14 @@ public class DashboardPresenter implements Initializable {
     dynamicContentPane.getChildren().add(parent);
   }
 
+  private void updateEasyChat(Parent parent) {
+    AnchorPane.setTopAnchor(parent, 0.0);
+    AnchorPane.setLeftAnchor(parent, 0.0);
+    AnchorPane.setBottomAnchor(parent, 0.0);
+    AnchorPane.setRightAnchor(parent, 0.0);
 
+    easyChat.getChildren().clear();
+    easyChat.getChildren().add(parent);
+  }
 
 }

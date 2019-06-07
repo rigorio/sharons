@@ -1,0 +1,8 @@
+#textCommand {
+    -fx-background-color:  #F4F4F4;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: #686767;
+}
+#clearButton:hover {
+    -fx-cursor: hand;
+}

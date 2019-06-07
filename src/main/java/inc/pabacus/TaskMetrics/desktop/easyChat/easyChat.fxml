@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane fx:id="mainPane" prefHeight="35.0" prefWidth="1081.0" style="-fx-background-color: #008080;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatPresenter">
+   <children>
+      <HBox fx:id="hboxContent" alignment="CENTER" layoutX="-7.0" layoutY="-3.0" prefHeight="35.0" prefWidth="1088.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Pane prefHeight="187.0" prefWidth="1088.0">
+               <children>
+                  <TextField id="textCommand" fx:id="textCommand" layoutX="168.0" layoutY="5.0" onAction="#onEnter" prefHeight="25.0" prefWidth="532.0" promptText="Type a command" stylesheets="@easyChat.css" />
+                  <JFXButton id="clearButton" fx:id="clearButton" layoutX="656.0" layoutY="5.0" onAction="#clearButton" text="Clear" textFill="#686767" />
+               </children>
+            </Pane>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -74,7 +74,7 @@ public class NewTaskPresenter implements Initializable {
     taskCombobox.setPromptText("Select a task");
     jobComboBox.setPromptText("Select a job");
     businessComboBox.setPromptText("Choose Business Value");
-    jobComboBox.setItems(FXCollections.observableArrayList("IT Support", "Accounting"));
+    jobComboBox.setItems(FXCollections.observableArrayList("Productivity App", "Market Research", "Administration"));
     customTaskField.setDisable(true);
     customTaskLabel.setDisable(true);
 
@@ -84,7 +84,7 @@ public class NewTaskPresenter implements Initializable {
   @FXML
   public void changeTasks() {
     String project = jobComboBox.getValue();
-    List<XpmTask> xpmTasks = xpmTaskHandler.findAll();
+    List<XpmTask> xpmTasks = xpmTaskHandler.findAllDefaults();
     List<String> collect = xpmTasks.stream()
         .filter(xpmTask -> xpmTask.getJob().equals(project))
         .map(XpmTask::getTitle)

@@ -9,6 +9,7 @@ import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
+import inc.pabacus.TaskMetrics.api.user.UserRepository;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
@@ -77,6 +78,8 @@ public class DashboardPresenter implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    //set username
+    username.setText(UserRepository.getUsername().getUsername());
 
     services();
     responsive();
@@ -260,6 +263,7 @@ public class DashboardPresenter implements Initializable {
     Optional<ButtonType> result = alert.showAndWait();
     if (result.get() == ButtonType.OK){
       kickerService.logout(TokenHolder.getToken());
+      standupService.close();
       GuiManager.getInstance().changeView(new LoginView());
     } else {
       alert.close();

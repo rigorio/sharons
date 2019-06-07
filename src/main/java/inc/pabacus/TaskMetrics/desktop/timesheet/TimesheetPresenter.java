@@ -9,6 +9,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
+import inc.pabacus.TaskMetrics.api.user.UserRepository;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -70,7 +71,7 @@ public class TimesheetPresenter implements Initializable {
     makeFadeIn();
     mockUser = new MockUser("Rigo", "Logged Out");
     statusText.setText(mockUser.getStatus());
-    userName.setText(mockUser.getName());
+    userName.setText(UserRepository.getUsername().getUsername()); //set username
     initOshiInfo();
     initTimeSheet();
     populateCombobox();

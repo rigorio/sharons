@@ -60,15 +60,17 @@ public class TrackerPresenter implements Initializable {
 
 //    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
 
-    selectedTask.setTime(new SimpleStringProperty("" + totalTimeSpent));
+    String timeRoundedOfToDouble = String.format("%.2f", totalTimeSpent);
+    selectedTask.setTime(new SimpleStringProperty(timeRoundedOfToDouble));
     selectedTask.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
     XpmTask xpmTask = new XpmTask(selectedTask);
     xpmTaskWebHandler.save(xpmTask);
     TrackHandler.setSelectedTask(null);
     ((Stage) complete.getScene().getWindow()).close();
   }
+
   @FXML
-  public void cancel(){
+  public void cancel() {
     Stage stage = (Stage) title.getScene().getWindow();
     stage.close();
   }

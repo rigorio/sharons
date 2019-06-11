@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 public class TrackerPresenter implements Initializable {
@@ -56,7 +57,9 @@ public class TrackerPresenter implements Initializable {
     long time = timerService.getTime();
     timerService.pause();
     double jikan = time / 3600.0;
-    double totalTimeSpent = jikan;
+    //rounding off to 2 nearest decimal places
+    DecimalFormat df = new DecimalFormat("0.00");
+    double totalTimeSpent = Double.parseDouble(df.format(jikan));
 
 //    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
 

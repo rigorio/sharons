@@ -19,6 +19,7 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.animation.FadeTransition;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -95,6 +96,8 @@ public class TasksPresenter implements Initializable {
     //for fade effect
     mainPane.setOpacity(0);
     responsiveness();
+    //Start button will be disable when you click it without choosing a task
+    startButton.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()));
 
     statusBox.setValue("All");
 

@@ -81,7 +81,7 @@ public class LoginPresenter implements Initializable {
   }
 
   private boolean blankFields() {
-    if (usernameField.getText().equals("") || passwordField.getText().equals("")) {
+    if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
       Alert alert = new Alert(Alert.AlertType.WARNING);
       alert.setTitle("Invalid");
       alert.setHeaderText(null);

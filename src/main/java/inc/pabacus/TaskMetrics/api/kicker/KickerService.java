@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class KickerService {
@@ -24,6 +25,7 @@ public class KickerService {
   private static final String HOST = "http://localhost:8080";
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
+  private ScheduledFuture<?> scheduledFuture;
   private String username;
   private String oldToken;
 
@@ -73,13 +75,15 @@ public class KickerService {
 
   public void kicker() {
     ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-    Runnable runnable = () -> {
+    Runnable task = () -> Platform.runLater(() -> {
       if (!exists()) {
         Platform.runLater(() -> GuiManager.getInstance().changeView(new LoginView()));
       }
-    };
-    service.scheduleAtFixedRate(runnable, 2L, 5L, TimeUnit.SECONDS);
+    });
+    scheduledFuture = service.scheduleAtFixedRate(task, 2L, 5L, TimeUnit.SECONDS);
   }
+
+
 
   private Boolean exists() {
     Boolean exists = false;

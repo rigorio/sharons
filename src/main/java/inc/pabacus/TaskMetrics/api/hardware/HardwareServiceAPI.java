@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.api.hardware;
 
 import com.google.gson.Gson;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
@@ -11,6 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class HardwareServiceAPI {
@@ -18,11 +20,12 @@ public class HardwareServiceAPI {
   private static final Logger logger = Logger.getLogger(HardwareServiceAPI.class);
   private static final String HOST = "http://localhost:8080";
   private HardwareService hardwareService;
+  private ScheduledFuture<?> scheduledFuture;
 
   public void sendHardwareData() {
 
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    Runnable task = () -> {
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    Runnable task = () -> Platform.runLater(() -> {
 
       try {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -55,8 +58,12 @@ public class HardwareServiceAPI {
         logger.warn(x.getMessage());
       }
 
-    };
+    });
     //execute every 5 minutes
-    executor.scheduleWithFixedDelay(task, 0, 5, TimeUnit.MINUTES);
+    scheduledFuture = executor.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
+  }
+
+  public void cancel() {
+    scheduledFuture.cancel(true);
   }
 }

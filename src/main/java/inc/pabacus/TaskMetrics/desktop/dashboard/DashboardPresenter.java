@@ -266,7 +266,11 @@ public class DashboardPresenter implements Initializable {
       //disable all services manually - maybe we can kill these threads/services automatically?
       kickerService.logout(TokenHolder.getToken());
       standupService.close();
-
+      hardwareServiceAPI.cancel();
+      softwareServiceAPI.cancel();
+      screenshotService.disableScreenshot();
+      screenshotService.shutdownScheduler();
+      kickerService.stopKicker();
       GuiManager.getInstance().changeView(new LoginView());
     } else {
       alert.close();

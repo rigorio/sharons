@@ -75,6 +75,9 @@ public class DashboardPresenter implements Initializable {
   private JFXButton logoutBtn;
   private StandupService standupService = new StandupService();
   private KickerService kickerService = BeanManager.kickerService();
+  private HardwareServiceAPI hardwareServiceAPI = new HardwareServiceAPI();
+  private SoftwareServiceAPI softwareServiceAPI = new SoftwareServiceAPI();
+  private ScreenshotServiceImpl screenshotService = new ScreenshotServiceImpl();
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -183,10 +186,10 @@ public class DashboardPresenter implements Initializable {
   }
 
   private void services() {
-    new HardwareServiceAPI().sendHardwareData();
+    hardwareServiceAPI.sendHardwareData();
     standupService.runStandup();
-    new SoftwareServiceAPI().sendSoftwareData();
-    new ScreenshotServiceImpl().enableScreenShot();
+    softwareServiceAPI.sendSoftwareData();
+    screenshotService.enableScreenShot();
     ActivityListener activityListener = BeanManager.activityListener();
     Runnable runnable = () -> {
       Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
@@ -252,8 +255,6 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void logout() {
-
-    Stage stages = (Stage) logoutBtn.getScene().getWindow();
     //Prevent from closing
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
     alert.setTitle("Log Out");
@@ -262,8 +263,10 @@ public class DashboardPresenter implements Initializable {
 
     Optional<ButtonType> result = alert.showAndWait();
     if (result.get() == ButtonType.OK){
+      //disable all services manually - maybe we can kill these threads/services automatically?
       kickerService.logout(TokenHolder.getToken());
       standupService.close();
+
       GuiManager.getInstance().changeView(new LoginView());
     } else {
       alert.close();

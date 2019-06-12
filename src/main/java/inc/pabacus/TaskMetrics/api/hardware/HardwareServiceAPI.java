@@ -63,5 +63,7 @@ public class HardwareServiceAPI {
     scheduledFuture = executor.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
   }
 
-
+  public void cancel() {
+    scheduledFuture.cancel(true);
+  }
 }

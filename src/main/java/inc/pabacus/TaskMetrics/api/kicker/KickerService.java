@@ -83,7 +83,9 @@ public class KickerService {
     scheduledFuture = service.scheduleAtFixedRate(task, 2L, 5L, TimeUnit.SECONDS);
   }
 
-
+  public void stopKicker() {
+    scheduledFuture.cancel(true);
+  }
 
   private Boolean exists() {
     Boolean exists = false;

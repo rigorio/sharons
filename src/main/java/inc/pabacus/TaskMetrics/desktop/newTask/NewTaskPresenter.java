@@ -33,22 +33,16 @@ public class NewTaskPresenter implements Initializable {
   private Label customTaskLabel;
   @FXML
   private JFXTextField customTaskField;
-
   @FXML
   private JFXTextField descriptionField;
-
   @FXML
   private JFXComboBox<String> taskCombobox;
-
   @FXML
   private JFXButton saveButton;
-
   @FXML
   private JFXButton closeButton;
-
   @FXML
   private JFXComboBox<String> jobComboBox;
-
   @FXML
   private JFXComboBox<String> businessComboBox;
 
@@ -112,7 +106,7 @@ public class NewTaskPresenter implements Initializable {
   @FXML
   public void save() {
 
-    if (isAlrightAlrightAlright()) {
+    if (isAlrightAlrightAlright() || isCustomTaskEmpty()) {
       Alert alert = new Alert(Alert.AlertType.WARNING);
       alert.setTitle("Error");
       alert.setContentText("Please fill out all the fields");
@@ -180,5 +174,14 @@ public class NewTaskPresenter implements Initializable {
 
   private List<Project> getAllProjects() {
     return projectHandler.getAllProjects();
+  }
+
+  private boolean isCustomTaskEmpty(){
+    String task = taskCombobox.getValue();
+    boolean status = task.equalsIgnoreCase("Custom Task");
+    if (status){
+      return customTaskField.getText().isEmpty();
+    }
+    return false;
   }
 }

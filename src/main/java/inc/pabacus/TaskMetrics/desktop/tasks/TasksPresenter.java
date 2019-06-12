@@ -13,6 +13,7 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
+import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
 import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
@@ -56,29 +57,13 @@ public class TasksPresenter implements Initializable {
   @FXML
   private JFXComboBox<String> statusBox;
   @FXML
-  private Label totalbillable;
-  @FXML
-  private Label totalNonBillable;
-  @FXML
-  private Label totalHours;
-  @FXML
-  private Label totalPercentBillable;
-  @FXML
-  private Label totalInvoice;
-
-  @FXML
-  private TableView<ProjectFXAdapter> taskTimesheet;
-
-  @FXML
   private JFXButton refreshButton;
   @FXML
   private JFXButton startButton;
-
   @FXML
   private TableView<XpmTaskAdapter> tasksTable;
 
   private TaskHandler taskHandler;
-
   private ProjectService projectService;
   private ActivityHandler activityHandler;
   private XpmTaskWebHandler xpmTaskHandler;
@@ -185,42 +170,6 @@ public class TasksPresenter implements Initializable {
     GuiManager.getInstance().displayView(new NewTaskView());
   }
 
-  private void initTaskSheet() {
-    TableColumn<ProjectFXAdapter, String> projectName = new TableColumn<>("Project");
-    projectName.setCellValueFactory(param -> param.getValue().getProjectName());
-
-    TableColumn<ProjectFXAdapter, String> billableHours = new TableColumn<>("Billable Hours");
-    billableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getBillable().get()));
-
-    TableColumn<ProjectFXAdapter, String> nonBillableHours = new TableColumn<>("Non-Billable Hours");
-    nonBillableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getNonBillable().get()));
-
-    TableColumn<ProjectFXAdapter, String> totalHours = new TableColumn<>("Total Hours");
-    totalHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getTotalHours().get()));
-
-    TableColumn<ProjectFXAdapter, String> billable = new TableColumn<>("Billable");
-    billable.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPercentBillable().get() + "%"));
-
-    TableColumn<ProjectFXAdapter, String> invoiceAmount = new TableColumn<>("Invoice Amount");
-    invoiceAmount.setCellValueFactory(param -> new SimpleStringProperty("$" + param.getValue().getInvoiceAmount().get()));
-
-
-    taskTimesheet.getColumns().addAll(projectName, billableHours, nonBillableHours,
-                                      totalHours, billable, invoiceAmount);
-//    initTaskTimeSheet();
-
-    totalbillable.setText("7.49");
-    totalNonBillable.setText("1.92");
-    this.totalHours.setText("9.41");
-    totalPercentBillable.setText("80%");
-    totalInvoice.setText("$491.00");
-
-  }
-
-  private void initTaskTimeSheet() {
-    taskTimesheet.setItems(getProjects());
-  }
-
   private ObservableList<ProjectFXAdapter> getProjects() {
     List<ProjectFXAdapter> projects = projectService.getAllFXProjects();
     return FXCollections.observableArrayList(projects);
@@ -294,6 +243,11 @@ public class TasksPresenter implements Initializable {
     fadeTransition.setFromValue(0);
     fadeTransition.setToValue(1);
     fadeTransition.play();
+  }
+
+  @FXML
+  private void viewWorkSummary(){
+    GuiManager.getInstance().displayView(new TaskTimesheetView());
   }
 
 }

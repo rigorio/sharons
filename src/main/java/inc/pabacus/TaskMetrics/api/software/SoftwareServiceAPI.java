@@ -63,7 +63,9 @@ public class SoftwareServiceAPI {
 
     }
 
-    
+    public void cancel() {
+        scheduledFuture.cancel(true);
+    }
 
     public String getSoftwareMonitoringMinutes(){
         OkHttpClient client = new OkHttpClient();

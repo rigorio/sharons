@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.utils;
 
+import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
@@ -24,6 +25,7 @@ public class BeanManager {
   private static UserHandler userHandler = new UserHandler();
   private static DailyLogService dailyLogService = new DailyLogHandler();
   private static XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
+  private static ActivityHandler activityHandler = new ActivityHandler();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -63,5 +65,9 @@ public class BeanManager {
 
   public static XpmTaskWebHandler xpmTaskHandler() {
     return xpmTaskHandler;
+  }
+
+  public static ActivityHandler activityHandler() {
+    return activityHandler;
   }
 }

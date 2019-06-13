@@ -8,6 +8,7 @@ import inc.pabacus.TaskMetrics.api.listener.ActivityListenerService;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
+import inc.pabacus.TaskMetrics.api.user.UserHandler;
 
 public class BeanManager {
   private static ActivityListener activityListener = new ActivityListenerService();
@@ -17,6 +18,7 @@ public class BeanManager {
   private static HardwareServiceAPI hardwareService = new HardwareServiceAPI();
   private static SoftwareServiceAPI softwareServiceAPI = new SoftwareServiceAPI();
   private static ScreenshotServiceImpl screenshotService = new ScreenshotServiceImpl();
+  private static UserHandler userHandler = new UserHandler();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -29,7 +31,7 @@ public class BeanManager {
   public static ChatService chatService() {
     return chatService;
   }
-  
+
   public static StandupService standupService() {
     return standupService;
   }
@@ -44,5 +46,9 @@ public class BeanManager {
 
   public static ScreenshotServiceImpl screenshotService() {
     return screenshotService;
+  }
+
+  public static UserHandler userHandler() {
+    return userHandler;
   }
 }

@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.utils;
 
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
@@ -26,6 +27,7 @@ public class BeanManager {
   private static DailyLogService dailyLogService = new DailyLogHandler();
   private static XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
   private static ActivityHandler activityHandler = new ActivityHandler();
+  private static TokenService tokenService = new TokenService();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -69,5 +71,9 @@ public class BeanManager {
 
   public static ActivityHandler activityHandler() {
     return activityHandler;
+  }
+
+  public static TokenService tokenService() {
+    return tokenService;
   }
 }

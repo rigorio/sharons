@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.kicker;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
@@ -30,19 +31,21 @@ public class KickerService {
   private String oldToken;
 
 
-  public String login(String username) {
-    String response = "";
+  public KickStatus login(String username) {
+    String response;
+    KickStatus status = null; // not right
     Call call = client.newCall(new Request.Builder()
                                    .url(HOST + "/api/kickout/" + username)
                                    .header("Authorization", TokenRepository.getToken().getToken())
                                    .build());
     try {
       response = call.execute().body().string();
+      status = mapper.readValue(response, new TypeReference<KickStatus>() {});
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
 
-    return response;
+    return status;
   }
 
   public void logout(String token) {

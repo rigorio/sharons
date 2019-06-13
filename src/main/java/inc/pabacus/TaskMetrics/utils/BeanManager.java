@@ -8,6 +8,7 @@ import inc.pabacus.TaskMetrics.api.listener.ActivityListenerService;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
@@ -22,6 +23,7 @@ public class BeanManager {
   private static ScreenshotServiceImpl screenshotService = new ScreenshotServiceImpl();
   private static UserHandler userHandler = new UserHandler();
   private static DailyLogService dailyLogService = new DailyLogHandler();
+  private static XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -57,5 +59,9 @@ public class BeanManager {
 
   public static DailyLogService dailyLogService() {
     return dailyLogService;
+  }
+
+  public static XpmTaskWebHandler xpmTaskHandler() {
+    return xpmTaskHandler;
   }
 }

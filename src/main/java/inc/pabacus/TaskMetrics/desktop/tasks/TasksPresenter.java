@@ -104,7 +104,7 @@ public class TasksPresenter implements Initializable {
   }
 
   @FXML
-  public void wowStatusBoxChange() {
+  public void updateTable() {
     String value = statusBox.getValue();
     ObservableList<XpmTaskAdapter> tasksByStatus;
     if (value.equals("All")) {

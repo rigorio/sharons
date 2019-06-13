@@ -62,4 +62,8 @@ public class TokenService {
 
     scheduledFuture = executor.scheduleAtFixedRate(command, 0, 3300000, TimeUnit.MILLISECONDS);
   }
+
+  public void stopToken() {
+    scheduledFuture.cancel(true);
+  }
 }

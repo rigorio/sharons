@@ -5,6 +5,7 @@ import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListenerService;
+import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 
@@ -15,6 +16,7 @@ public class BeanManager {
   private static StandupService standupService = new StandupService();
   private static HardwareServiceAPI hardwareService = new HardwareServiceAPI();
   private static SoftwareServiceAPI softwareServiceAPI = new SoftwareServiceAPI();
+  private static ScreenshotServiceImpl screenshotService = new ScreenshotServiceImpl();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -34,5 +36,9 @@ public class BeanManager {
 
   public static SoftwareServiceAPI softwareServiceAPI() {
     return softwareServiceAPI;
+  }
+
+  public static ScreenshotServiceImpl screenshotService() {
+    return screenshotService;
   }
 }

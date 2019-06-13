@@ -1,7 +1,5 @@
 package inc.pabacus.TaskMetrics.desktop.login;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.generateToken.Credentials;
@@ -21,10 +19,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -37,11 +32,6 @@ public class LoginPresenter implements Initializable {
   @FXML
   private JFXPasswordField passwordField;
 
-  private OkHttpClient client = new OkHttpClient();
-  private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
-  private static final MediaType JSON
-      = MediaType.parse("application/json; charset=utf-8");
   private KickerService kickerService = BeanManager.kickerService();
   private TokenService service = new TokenService();
   private UserHandler userHandler;
@@ -61,27 +51,22 @@ public class LoginPresenter implements Initializable {
     PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
     pause.setOnFinished(event -> {
 
-      try {
-        if (blankFields()) return;
-        String userName = this.usernameField.getText();
-        String passWord = passwordField.getText();
-        jwtLogin(userName, passWord);
-        createCredential();
-        service.refreshToken();
-        String response = kickerService.login(userName);
-        KickStatus status = mapper.readValue(response, new TypeReference<KickStatus>() {});
-        TokenHolder.setToken(status.getNewToken());
-        if (status.getStatus().equals("Exists")) {
-          kickerService.setUsername(userName);
-          kickerService.setOldToken(status.getOldToken());
-          mainPane.getScene().setCursor(Cursor.DEFAULT);
-          GuiManager.getInstance().displayView(new KickoutView());
-        }
-        kickerService.kicker();
-        GuiManager.getInstance().changeView(new DashboardView());
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (blankFields()) return;
+      String userName = this.usernameField.getText();
+      String passWord = passwordField.getText();
+      jwtLogin(userName, passWord);
+      createCredential();
+      service.refreshToken();
+      KickStatus status = kickerService.login(userName);
+      TokenHolder.setToken(status.getNewToken());
+      if (status.getStatus().equals("Exists")) {
+        kickerService.setUsername(userName);
+        kickerService.setOldToken(status.getOldToken());
+        mainPane.getScene().setCursor(Cursor.DEFAULT);
+        GuiManager.getInstance().displayView(new KickoutView());
       }
+      kickerService.kicker();
+      GuiManager.getInstance().changeView(new DashboardView());
 
     });
     pause.play();

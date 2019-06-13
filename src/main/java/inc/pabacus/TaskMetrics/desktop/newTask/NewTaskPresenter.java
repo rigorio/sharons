@@ -51,7 +51,6 @@ public class NewTaskPresenter implements Initializable {
   private static final String HOST = "http://localhost:8080";
   private BusinessValueHandler businessValueHandler = new BusinessValueHandler();
   private ProjectHandler projectHandler = new ProjectHandler();
-  private TaskHandler taskHandler = new TaskHandler();
   private XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
 
   @Override

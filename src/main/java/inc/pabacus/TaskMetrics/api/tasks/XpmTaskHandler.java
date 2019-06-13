@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.desktop.tasks.xpm;
+package inc.pabacus.TaskMetrics.api.tasks;
 
 import java.util.ArrayList;
 import java.util.List;

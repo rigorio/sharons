@@ -1,7 +1,6 @@
 package inc.pabacus.TaskMetrics.desktop.edit;
 
-import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
-import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 
 public class EditableTaskHolder {
 

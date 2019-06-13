@@ -1,6 +1,6 @@
 package inc.pabacus.TaskMetrics.desktop.tracker;
 
-import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 
 public class TrackHandler {
   private static XpmTaskAdapter selectedTask;

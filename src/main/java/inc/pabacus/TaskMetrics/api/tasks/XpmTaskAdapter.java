@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.desktop.tasks.xpm;
+package inc.pabacus.TaskMetrics.api.tasks;
 
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;

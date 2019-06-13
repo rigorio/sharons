@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.desktop.tasks.xpm;
+package inc.pabacus.TaskMetrics.api.tasks;
 
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.StringProperty;
@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class XpmTask {
+public class
+XpmTask {
 
   private Long id;
   private String title;

@@ -1,9 +1,5 @@
 package inc.pabacus.TaskMetrics.api;
 
-import inc.pabacus.TaskMetrics.api.tasks.Task;
-import inc.pabacus.TaskMetrics.api.tasks.options.Progress;
-import inc.pabacus.TaskMetrics.api.tasks.options.Status;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,7 +3,6 @@ package inc.pabacus.TaskMetrics.api.tasks;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
@@ -14,7 +13,7 @@ import java.util.Optional;
 
 public class XpmTaskWebHandler {
 
-  private static final Logger logger = Logger.getLogger(TaskHandler.class);
+  private static final Logger logger = Logger.getLogger(XpmTaskWebHandler.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static final String HOST = "http://localhost:8080";

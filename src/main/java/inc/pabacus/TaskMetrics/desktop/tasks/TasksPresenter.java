@@ -106,12 +106,9 @@ public class TasksPresenter implements Initializable {
   @FXML
   public void updateTable() {
     String value = statusBox.getValue();
-    ObservableList<XpmTaskAdapter> tasksByStatus;
-    if (value.equals("All")) {
-      tasksByStatus = FXCollections.observableArrayList(getAllTasks());
-    } else {
-      tasksByStatus = getTasksByStatus(value);
-    }
+    ObservableList<XpmTaskAdapter> tasksByStatus = value.equalsIgnoreCase("All")
+        ? FXCollections.observableArrayList(getAllTasks())
+        : getTasksByStatus(value);
     tasksTable.setItems(tasksByStatus);
   }
 

@@ -46,6 +46,36 @@ public class LoginPresenter implements Initializable {
 
   @FXML
   public void login() {
+    loginUser();
+  }
+
+  private void jwtLogin(String userNameText, String passWordText) {
+
+    Credentials credentials = service.generateToken(new Credentials(userNameText, passWordText));
+    System.out.println(credentials); // for checking
+  }
+
+  private boolean blankFields() {
+    if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("Invalid");
+      alert.setHeaderText(null);
+      alert.setContentText("Please fill out all the fields");
+      alert.showAndWait();
+      return true;
+    }
+    return false;
+  }
+
+  private void createCredential() {
+    String username = usernameField.getText();
+    String password = passwordField.getText();
+    userHandler.setUsername(username);
+    userHandler.setPassword(password);
+  }
+
+  private void loginUser() {
+    if (blankFields()) return;
     //for smooth loading
     mainPane.getScene().setCursor(Cursor.WAIT);
     PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
@@ -74,28 +104,13 @@ public class LoginPresenter implements Initializable {
     pause.play();
   }
 
-  private void jwtLogin(String userNameText, String passWordText) {
-
-    Credentials credentials = service.generateToken(new Credentials(userNameText, passWordText));
-    System.out.println(credentials); // for checking
+  @FXML
+  void onLoginUser() {
+    loginUser();
   }
 
-  private boolean blankFields() {
-    if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setTitle("Invalid");
-      alert.setHeaderText(null);
-      alert.setContentText("Please fill out all the fields");
-      alert.showAndWait();
-      return true;
-    }
-    return false;
-  }
-
-  private void createCredential() {
-    String username = usernameField.getText();
-    String password = passwordField.getText();
-    userHandler.setUsername(username);
-    userHandler.setPassword(password);
+  @FXML
+  void onLoginPassword() {
+    loginUser();
   }
 }

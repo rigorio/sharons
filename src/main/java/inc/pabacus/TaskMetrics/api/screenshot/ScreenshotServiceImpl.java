@@ -17,7 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 import java.util.stream.Collectors;
 
 @Service
@@ -25,14 +24,13 @@ public class ScreenshotServiceImpl implements ScreenshotService {
 
   private static final Logger logger = Logger.getLogger(ScreenshotServiceImpl.class);
   private static final long DEFAULT_INTERVAL = 300;
-  private final ScheduledExecutorService executorService;
+  private ScheduledExecutorService executorService;
   private ScheduledFuture<?> scheduledFuture;
   private Runnable run = this::takeScreenShot;
   private static final String dir = ".pabacus";
 
 
   public ScreenshotServiceImpl() {
-    executorService = Executors.newSingleThreadScheduledExecutor();
   }
 
   @Override
@@ -53,6 +51,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
 
   @Override
   public void enableScreenShot(long interval) {
+    executorService = Executors.newSingleThreadScheduledExecutor();
     scheduledFuture = executorService.scheduleAtFixedRate(run, 0, interval, TimeUnit.SECONDS);
   }
 

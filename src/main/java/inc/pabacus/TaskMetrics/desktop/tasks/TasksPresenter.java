@@ -4,11 +4,6 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.project.ProjectFXAdapter;
-import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
-import inc.pabacus.TaskMetrics.api.project.ProjectService;
-import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
-import inc.pabacus.TaskMetrics.api.tasks.TaskWebRepository;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
@@ -18,17 +13,16 @@ import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
 import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
+import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
@@ -64,16 +58,12 @@ public class TasksPresenter implements Initializable {
   @FXML
   private TableView<XpmTaskAdapter> tasksTable;
 
-  private TaskHandler taskHandler;
-  private ProjectService projectService;
   private ActivityHandler activityHandler;
   private XpmTaskWebHandler xpmTaskHandler;
 
   public TasksPresenter() {
-    taskHandler = new TaskHandler(new TaskWebRepository());
-    projectService = new ProjectHandler();
-    activityHandler = new ActivityHandler();
-    xpmTaskHandler = new XpmTaskWebHandler();
+    activityHandler = BeanManager.activityHandler();
+    xpmTaskHandler = BeanManager.xpmTaskHandler();
   }
 
   @Override
@@ -173,11 +163,6 @@ public class TasksPresenter implements Initializable {
     GuiManager.getInstance().displayView(new NewTaskView());
   }
 
-  private ObservableList<ProjectFXAdapter> getProjects() {
-    List<ProjectFXAdapter> projects = projectService.getAllFXProjects();
-    return FXCollections.observableArrayList(projects);
-  }
-
   private void initTasksTable() {
     tasksTable.setItems(FXCollections.observableArrayList(getAllTasks()));
   }
@@ -238,7 +223,7 @@ public class TasksPresenter implements Initializable {
     });
   }
 
-  private void responsiveness(){
+  private void responsiveness() {
     //transition
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(1000)); // 1 second
@@ -249,7 +234,7 @@ public class TasksPresenter implements Initializable {
   }
 
   @FXML
-  private void viewWorkSummary(){
+  private void viewWorkSummary() {
     GuiManager.getInstance().displayView(new TaskTimesheetView());
   }
 

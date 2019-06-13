@@ -9,13 +9,12 @@ import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
-import inc.pabacus.TaskMetrics.api.user.UserRepository;
+import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
-import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
@@ -38,7 +37,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -56,7 +54,7 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private VBox vboxPane;
   @FXML
-  private HBox easyChat;
+  private HBox easyChatHBox;
   @FXML
   private JFXComboBox status;
   @FXML
@@ -73,20 +71,31 @@ public class DashboardPresenter implements Initializable {
   private JFXButton chatButton;
   @FXML
   private JFXButton logoutBtn;
-  private StandupService standupService = new StandupService();
-  private KickerService kickerService = BeanManager.kickerService();
-  private HardwareServiceAPI hardwareServiceAPI = new HardwareServiceAPI();
-  private SoftwareServiceAPI softwareServiceAPI = new SoftwareServiceAPI();
-  private ScreenshotServiceImpl screenshotService = new ScreenshotServiceImpl();
+
+  private StandupService standupService;
+  private KickerService kickerService;
+  private HardwareServiceAPI hardwareServiceAPI;
+  private SoftwareServiceAPI softwareServiceAPI;
+  private ScreenshotServiceImpl screenshotService;
+  private UserHandler userHandler;
+
+  public DashboardPresenter() {
+    standupService = BeanManager.standupService();
+    kickerService = BeanManager.kickerService();
+    hardwareServiceAPI = BeanManager.hardwareServiceAPI();
+    softwareServiceAPI = BeanManager.softwareServiceAPI();
+    screenshotService = BeanManager.screenshotService();
+    userHandler = BeanManager.userHandler();
+  }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    //set username
-    username.setText(UserRepository.getUsername().getUsername());
+
+    username.setText(userHandler.getUsername());
 
     services();
     responsive();
-    updateEasyChat(new EasyChatView().getView());
+    showEasyChat();
 
     ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
     setSize(taskImage);
@@ -122,7 +131,7 @@ public class DashboardPresenter implements Initializable {
         double width = (double) newValue;
 
         dashboardPane.setPrefWidth(width);
-        easyChat.setPrefWidth(width/1.15);
+        easyChatHBox.setPrefWidth(width / 1.15);
       }
     });
 
@@ -138,9 +147,9 @@ public class DashboardPresenter implements Initializable {
       @Override
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         double width = (double) newValue;
-        easyChat.setPrefWidth(width);
-        dynamicContentPane.setPrefWidth(width/1.2);
-        vboxPane.setPrefWidth(width/6.5);
+        easyChatHBox.setPrefWidth(width);
+        dynamicContentPane.setPrefWidth(width / 1.2);
+        vboxPane.setPrefWidth(width / 6.5);
       }
     });
 
@@ -157,7 +166,7 @@ public class DashboardPresenter implements Initializable {
       @Override
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         double width = (double) newValue;
-        status.setPrefWidth(width/1.5);
+        status.setPrefWidth(width / 1.5);
         tasksButton.setPrefWidth(width);
         timesheetButton.setPrefWidth(width);
         screenshotButton.setPrefWidth(width);
@@ -172,14 +181,14 @@ public class DashboardPresenter implements Initializable {
       @Override
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         double height = (double) newValue;
-        status.setPrefHeight(height/20.5);
-        tasksButton.setPrefHeight(height/15);
-        timesheetButton.setPrefHeight(height/15);
-        screenshotButton.setPrefHeight(height/15);
-        chatButton.setPrefHeight(height/15);
-        logoutBtn.setPrefHeight(height/15);
-        username.setPrefHeight(height/15);
-        userPane.setPrefHeight(height/5);
+        status.setPrefHeight(height / 20.5);
+        tasksButton.setPrefHeight(height / 15);
+        timesheetButton.setPrefHeight(height / 15);
+        screenshotButton.setPrefHeight(height / 15);
+        chatButton.setPrefHeight(height / 15);
+        logoutBtn.setPrefHeight(height / 15);
+        username.setPrefHeight(height / 15);
+        userPane.setPrefHeight(height / 5);
       }
     });
 
@@ -237,12 +246,6 @@ public class DashboardPresenter implements Initializable {
 
   }
 
-//  @FXML
-//  public void viewSoftware() {
-//    Parent parent = new SoftwareView().getView();
-//    updateDynamicPaneContent(parent);
-//  }
-
   @FXML
   public void viewChats() {
     //for smooth loading
@@ -262,7 +265,7 @@ public class DashboardPresenter implements Initializable {
     alert.setContentText("Are you sure you want to log out?");
 
     Optional<ButtonType> result = alert.showAndWait();
-    if (result.get() == ButtonType.OK){
+    if (result.get() == ButtonType.OK) {
       //disable all services manually - maybe we can kill these threads/services automatically?
       kickerService.logout(TokenHolder.getToken());
       standupService.close();
@@ -297,14 +300,14 @@ public class DashboardPresenter implements Initializable {
     dynamicContentPane.getChildren().add(parent);
   }
 
-  private void updateEasyChat(Parent parent) {
+  private void showEasyChat() {
+    Parent parent = new EasyChatView().getView();
     AnchorPane.setTopAnchor(parent, 0.0);
     AnchorPane.setLeftAnchor(parent, 0.0);
     AnchorPane.setBottomAnchor(parent, 0.0);
     AnchorPane.setRightAnchor(parent, 0.0);
 
-    easyChat.getChildren().clear();
-    easyChat.getChildren().add(parent);
+    easyChatHBox.getChildren().clear();
+    easyChatHBox.getChildren().add(parent);
   }
-
 }

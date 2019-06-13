@@ -5,8 +5,6 @@ import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
-import inc.pabacus.TaskMetrics.desktop.edit.EditView;
-import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
@@ -21,21 +19,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -92,8 +84,8 @@ public class TasksPresenter implements Initializable {
 
     initTasksTable();
 
-//    initTaskSheet();
-//    refreshingService();
+//    initTaskSheet(); time sheet has been extracted
+//    refreshingService(); deactivated for maintenance
     statusBox.getItems().addAll(new ArrayList<String>() {{
       add("In Progress");
       add("Pending");
@@ -112,23 +104,9 @@ public class TasksPresenter implements Initializable {
     tasksTable.setItems(tasksByStatus);
   }
 
-  public void editTask() {
-
-    if (EditableTaskHolder.getTask() != null)
-      return;
-
-
-    XpmTaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-    EditableTaskHolder.setTask(selectedItem);
-
-    EditView view = new EditView();
-
-    Stage stage = new Stage();
-    stage.initStyle(StageStyle.UNDECORATED);
-    stage.setScene(new Scene(view.getView()));
-    stage.show();
-
-//    GuiManager.getInstance().displayView(view);
+  @FXML
+  private void viewWorkSummary() {
+    GuiManager.getInstance().displayView(new TaskTimesheetView());
   }
 
   @FXML
@@ -143,9 +121,6 @@ public class TasksPresenter implements Initializable {
       alert.showAndWait();
       return;
     }
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-//    selectedItem.setStartTime(new SimpleStringProperty(formatter.format(LocalTime.now())));
-//    startButton.setDisable(true);
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
   }
@@ -183,10 +158,12 @@ public class TasksPresenter implements Initializable {
       initTasksTable();
     else
       tasksTable.setItems(getTasksByStatus(statusBox.getValue()));
-
-//    initTaskTimeSheet();
   }
 
+  /**
+   * Auto refresh feature. To activate, just call this method.
+   * Currently disabled due to some trouble with JavaFX Table sorting
+   */
   private void refreshingService() {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(this::refreshTasks, 5L, 5L, TimeUnit.SECONDS);
@@ -194,30 +171,10 @@ public class TasksPresenter implements Initializable {
 
   private List<XpmTaskAdapter> getAllTasks() {
     List<XpmTask> allTasks = xpmTaskHandler.findAll();
-//    System.out.println("yare yare daze");
-//    allTasks.forEach(System.out::println);
     return FXCollections
         .observableArrayList(allTasks.stream()
                                  .map(XpmTaskAdapter::new)
                                  .collect(Collectors.toList()));
-  }
-
-  /**
-   * Not currently in use, but not yet removed
-   * Just in case i might need them for future references
-   *
-   * @param table table to be modified
-   */
-  private void hideHeaders(TableView table) {
-    table.widthProperty().addListener((observable, oldValue, newValue) -> {
-      Pane header = (Pane) table.lookup("TableHeaderRow");
-      if (header.isVisible()) {
-        header.setMaxHeight(0);
-        header.setMinHeight(0);
-        header.setPrefHeight(0);
-        header.setVisible(false);
-      }
-    });
   }
 
   private void responsiveness() {
@@ -228,11 +185,6 @@ public class TasksPresenter implements Initializable {
     fadeTransition.setFromValue(0);
     fadeTransition.setToValue(1);
     fadeTransition.play();
-  }
-
-  @FXML
-  private void viewWorkSummary() {
-    GuiManager.getInstance().displayView(new TaskTimesheetView());
   }
 
 }

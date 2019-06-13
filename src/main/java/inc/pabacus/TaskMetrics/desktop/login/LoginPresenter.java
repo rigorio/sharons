@@ -57,6 +57,8 @@ public class LoginPresenter implements Initializable {
       jwtLogin(userName, passWord);
       createCredential();
       service.refreshToken();
+
+      // TODO extract this process to a method in KickerService
       KickStatus status = kickerService.login(userName);
       TokenHolder.setToken(status.getNewToken());
       if (status.getStatus().equals("Exists")) {

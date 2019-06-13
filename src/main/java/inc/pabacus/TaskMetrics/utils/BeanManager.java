@@ -5,6 +5,7 @@ import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListenerService;
+import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 
 public class BeanManager {
@@ -13,6 +14,7 @@ public class BeanManager {
   private static ChatService chatService = new ChatService();
   private static StandupService standupService = new StandupService();
   private static HardwareServiceAPI hardwareService = new HardwareServiceAPI();
+  private static SoftwareServiceAPI softwareServiceAPI = new SoftwareServiceAPI();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -28,5 +30,9 @@ public class BeanManager {
 
   public static HardwareServiceAPI hardwareServiceAPI() {
     return hardwareService;
+  }
+
+  public static SoftwareServiceAPI softwareServiceAPI() {
+    return softwareServiceAPI;
   }
 }

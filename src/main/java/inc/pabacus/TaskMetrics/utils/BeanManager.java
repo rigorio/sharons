@@ -29,6 +29,10 @@ public class BeanManager {
   public static ChatService chatService() {
     return chatService;
   }
+  
+  public static StandupService standupService() {
+    return standupService;
+  }
 
   public static HardwareServiceAPI hardwareServiceAPI() {
     return hardwareService;

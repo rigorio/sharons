@@ -1,8 +1,6 @@
 package inc.pabacus.TaskMetrics.desktop.tracker;
 
 import com.jfoenix.controls.JFXButton;
-import inc.pabacus.TaskMetrics.api.tasks.TaskHandler;
-import inc.pabacus.TaskMetrics.api.tasks.TaskWebRepository;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.tasks.xpm.XpmTask;
@@ -18,6 +16,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TrackerPresenter implements Initializable {
+
   @FXML
   private Label title;
   @FXML
@@ -25,52 +24,74 @@ public class TrackerPresenter implements Initializable {
   @FXML
   private JFXButton complete;
 
+  private static final String STARTING_TIME = "00:00:00";
+  private static final double ONE_HOUR = 3600.0;
+
+  private final Runnable process;
+
   private TimerService timerService;
-  private TaskHandler taskHandler;
   private XpmTaskAdapter selectedTask;
   private XpmTaskWebHandler xpmTaskWebHandler;
 
-  private Runnable process = () -> {
-    long duration = timerService.getTime();
-    String time = timerService.formatSeconds(duration);
-    timer.setText(time);
-  };
-
   public TrackerPresenter() {
     timerService = new TimerService();
-    taskHandler = new TaskHandler(new TaskWebRepository());
     xpmTaskWebHandler = new XpmTaskWebHandler();
+    process = this::tickTime;
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    timer.setText("00:00:00");
+    timer.setText(STARTING_TIME);
     selectedTask = TrackHandler.getSelectedTask();
     timerService.setFxProcess(process);
     timerService.start();
-    title.setText(selectedTask.getTitle().get());
+    String taskTitle = selectedTask.getTitle().get();
+    title.setText(taskTitle);
   }
 
   @FXML
   public void completeTask() {
-    long time = timerService.getTime();
-    timerService.pause();
-    double totalTimeSpent = time / 3600.0;
-
-//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-
-    String timeRoundedOfToDouble = String.format("%.2f", totalTimeSpent);
-    selectedTask.setTime(new SimpleStringProperty(timeRoundedOfToDouble));
-    selectedTask.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
+    updateTask();
     XpmTask xpmTask = new XpmTask(selectedTask);
     xpmTaskWebHandler.save(xpmTask);
     TrackHandler.setSelectedTask(null);
-    ((Stage) complete.getScene().getWindow()).close();
+    closeWindow();
   }
 
   @FXML
   public void cancel() {
-    Stage stage = (Stage) title.getScene().getWindow();
-    stage.close();
+    closeWindow();
+  }
+
+  private void tickTime() {
+    long duration = timerService.getTime();
+    String time = timerService.formatSeconds(duration);
+    timer.setText(time);
+  }
+
+  private void closeWindow() {
+    ((Stage) title.getScene().getWindow()).close();
+  }
+
+  private void updateTask() {
+    // I might use this in the future don't touch because I'm forgetful
+    // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+    String totalTimeSpent = getTotalTimeSpent();
+    selectedTask.setTime(new SimpleStringProperty(totalTimeSpent));
+    selectedTask.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
+  }
+
+  private String getTotalTimeSpent() {
+    long timeInSeconds = timerService.getTime();
+    timerService.pause();
+    double rawComputedTime = timeInSeconds / ONE_HOUR;
+    return roundOffDecimal(rawComputedTime);
+  }
+
+  private String roundOffDecimal(double totalTimeSpent) {
+    // DecimalFormat df = new DecimalFormat("0.00");
+    // double t = Double.parseDouble(df.format(totalTimeSpent));
+    // This method is faster than using DecimalFormat and parseDouble
+    return String.format("%.2f", totalTimeSpent);
   }
 }

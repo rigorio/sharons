@@ -4,14 +4,13 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
-import inc.pabacus.TaskMetrics.api.tasks.TaskFXAdapter;
-import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
-import inc.pabacus.TaskMetrics.api.user.UserRepository;
+import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
+import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
@@ -57,13 +56,16 @@ public class TimesheetPresenter implements Initializable {
   @FXML
   private TableView<DailyLogFXAdapter> timeSheet;
 
-  private ObservableList<DailyLogFXAdapter> dailyLogFXAdapters;
-
-  private ObservableList<TaskFXAdapter> taskFXAdapters;
-
-  private DailyLogService dailyLogHandler = new DailyLogHandler(); // temporary
   private static final int DEF_SIZE = 900;
+
+  private DailyLogService dailyLogHandler;
   private MockUser mockUser;
+  private UserHandler userHandler;
+
+  public TimesheetPresenter() {
+    dailyLogHandler = BeanManager.dailyLogService();
+    userHandler = BeanManager.userHandler();
+  }
 
   @Override
   @SuppressWarnings("all")
@@ -71,7 +73,7 @@ public class TimesheetPresenter implements Initializable {
     makeFadeIn();
     mockUser = new MockUser("Rigo", "Logged Out");
     statusText.setText(mockUser.getStatus());
-    userName.setText(UserRepository.getUsername().getUsername()); //set username
+    userName.setText(userHandler.getUsername()); //set username
     initOshiInfo();
     initTimeSheet();
     populateCombobox();
@@ -125,7 +127,6 @@ public class TimesheetPresenter implements Initializable {
   }
 
   private void initTimeSheet() {
-    dailyLogFXAdapters = FXCollections.observableArrayList();
 
     TableColumn<DailyLogFXAdapter, String> date = new TableColumn<>("DATE");
     date.setCellValueFactory(param -> param.getValue().getDate());
@@ -176,7 +177,7 @@ public class TimesheetPresenter implements Initializable {
     hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
   }
 
-  private void makeFadeIn(){
+  private void makeFadeIn() {
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(1000)); // 1 second
     fadeTransition.setNode(mainPane);

@@ -2,7 +2,8 @@ package inc.pabacus.TaskMetrics.api.generateToken;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
-import inc.pabacus.TaskMetrics.api.user.UserRepository;
+import inc.pabacus.TaskMetrics.api.user.UserHandler;
+import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
@@ -20,6 +21,12 @@ public class TokenService {
       = MediaType.parse("application/json; charset=utf-8");
   private static final String HOST = "http://localhost:8080";
   private ScheduledFuture<?> scheduledFuture;
+
+  private UserHandler userHandler;
+
+  public TokenService() {
+    userHandler = BeanManager.userHandler();
+  }
 
   public Credentials generateToken(Credentials credentials) {
     try {
@@ -47,10 +54,10 @@ public class TokenService {
     //run every 55 minutes before 1 hour = 3300000
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable command = () -> Platform.runLater(() -> {
-      String username = UserRepository.getUsername().getUsername();
-      String password = UserRepository.getPassword().getPassword();
+      String username = userHandler.getUsername();
+      String password = userHandler.getPassword();
       TokenService service = new TokenService();
-      Credentials token = service.generateToken(new Credentials(username,password));
+      Credentials token = service.generateToken(new Credentials(username, password));
     });
 
     scheduledFuture = executor.scheduleAtFixedRate(command, 0, 3300000, TimeUnit.MILLISECONDS);

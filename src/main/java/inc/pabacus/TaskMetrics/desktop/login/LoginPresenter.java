@@ -1,7 +1,5 @@
 package inc.pabacus.TaskMetrics.desktop.login;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.generateToken.Credentials;
@@ -9,10 +7,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
 import inc.pabacus.TaskMetrics.api.kicker.KickStatus;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
-import inc.pabacus.TaskMetrics.api.user.Password;
-import inc.pabacus.TaskMetrics.api.user.UserRepository;
-import inc.pabacus.TaskMetrics.api.user.Username;
-import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
+import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
 import inc.pabacus.TaskMetrics.desktop.kickout.KickoutView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
@@ -24,8 +19,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import okhttp3.*;
-import java.io.IOException;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -38,13 +32,13 @@ public class LoginPresenter implements Initializable {
   @FXML
   private JFXPasswordField passwordField;
 
-  private OkHttpClient client = new OkHttpClient();
-  private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
-  private static final MediaType JSON
-      = MediaType.parse("application/json; charset=utf-8");
   private KickerService kickerService = BeanManager.kickerService();
   private TokenService service = new TokenService();
+  private UserHandler userHandler;
+
+  public LoginPresenter() {
+    userHandler = BeanManager.userHandler();
+  }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -57,15 +51,15 @@ public class LoginPresenter implements Initializable {
     PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
     pause.setOnFinished(event -> {
 
-    try {
       if (blankFields()) return;
       String userName = this.usernameField.getText();
       String passWord = passwordField.getText();
-      jwtLogin(userName,passWord);
+      jwtLogin(userName, passWord);
       createCredential();
       service.refreshToken();
-      String response = kickerService.login(userName);
-      KickStatus status = mapper.readValue(response, new TypeReference<KickStatus>() {});
+
+      // TODO extract this process to a method in KickerService
+      KickStatus status = kickerService.login(userName);
       TokenHolder.setToken(status.getNewToken());
       if (status.getStatus().equals("Exists")) {
         kickerService.setUsername(userName);
@@ -75,17 +69,14 @@ public class LoginPresenter implements Initializable {
       }
       kickerService.kicker();
       GuiManager.getInstance().changeView(new DashboardView());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     });
     pause.play();
   }
 
-  private void jwtLogin(String userNameText,String passWordText) {
+  private void jwtLogin(String userNameText, String passWordText) {
 
-    Credentials credentials = service.generateToken(new Credentials(userNameText,passWordText));
+    Credentials credentials = service.generateToken(new Credentials(userNameText, passWordText));
     System.out.println(credentials); // for checking
   }
 
@@ -101,10 +92,10 @@ public class LoginPresenter implements Initializable {
     return false;
   }
 
-  private void createCredential(){
+  private void createCredential() {
     String username = usernameField.getText();
     String password = passwordField.getText();
-    UserRepository.setUsername(new Username(username));
-    UserRepository.setPassword(new Password(password));
+    userHandler.setUsername(username);
+    userHandler.setPassword(password);
   }
 }

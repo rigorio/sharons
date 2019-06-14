@@ -1,8 +1,8 @@
 package inc.pabacus.TaskMetrics.desktop.taskTimesheet;
 
-import inc.pabacus.TaskMetrics.api.project.ProjectFXAdapter;
-import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
-import inc.pabacus.TaskMetrics.api.project.ProjectService;
+import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetAdapter;
+import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetHandler;
+import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +22,7 @@ public class TaskTimesheetPresenter implements Initializable {
   @FXML
   private AnchorPane mainPane;
   @FXML
-  private TableView<ProjectFXAdapter> taskTimesheet;
+  private TableView<XpmTimesheetAdapter> taskTimesheet;
   @FXML
   private Label totalbillable;
   @FXML
@@ -33,10 +33,10 @@ public class TaskTimesheetPresenter implements Initializable {
   private Label totalPercentBillable;
   @FXML
   private Label totalInvoice;
-  private ProjectService projectService;
+  private XpmTimesheetService xpmTimesheetService;
 
   public TaskTimesheetPresenter(){
-    projectService = new ProjectHandler();
+    xpmTimesheetService = new XpmTimesheetHandler();
   }
 
   @Override
@@ -45,28 +45,25 @@ public class TaskTimesheetPresenter implements Initializable {
   }
 
   private void initTaskSheet() {
-    TableColumn<ProjectFXAdapter, String> projectName = new TableColumn<>("Project");
-    projectName.setCellValueFactory(param -> param.getValue().getProjectName());
+    TableColumn<XpmTimesheetAdapter, String> client = new TableColumn<>("Client");
+    client.setCellValueFactory(param -> param.getValue().getClient());
 
-    TableColumn<ProjectFXAdapter, String> billableHours = new TableColumn<>("Billable Hours");
-    billableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getBillable().get()));
+    TableColumn<XpmTimesheetAdapter, String> job = new TableColumn<>("Job");
+    job.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getJob().get()));
 
-    TableColumn<ProjectFXAdapter, String> nonBillableHours = new TableColumn<>("Non-Billable Hours");
-    nonBillableHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getNonBillable().get()));
+    TableColumn<XpmTimesheetAdapter, String> task = new TableColumn<>("Task");
+    task.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getJob().get()));
 
-    TableColumn<ProjectFXAdapter, String> totalHours = new TableColumn<>("Total Hours");
-    totalHours.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getTotalHours().get()));
+    TableColumn<XpmTimesheetAdapter, String> date = new TableColumn<>("Date");
+    date.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getDate().get()));
 
-    TableColumn<ProjectFXAdapter, String> billable = new TableColumn<>("Billable");
-    billable.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPercentBillable().get() + "%"));
-
-    TableColumn<ProjectFXAdapter, String> invoiceAmount = new TableColumn<>("Invoice Amount");
-    invoiceAmount.setCellValueFactory(param -> new SimpleStringProperty("$" + param.getValue().getInvoiceAmount().get()));
+    TableColumn<XpmTimesheetAdapter, String> totalTimeSpent = new TableColumn<>("Total Time Spent");
+    totalTimeSpent.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getTotalTimeSpent().get() + "%"));
 
 
-    taskTimesheet.getColumns().addAll(projectName, billableHours, nonBillableHours,
-                                      totalHours, billable, invoiceAmount);
-//    initTaskTimeSheet();
+    taskTimesheet.getColumns().addAll(client, job, task,
+                                      date, totalTimeSpent);
+    initTaskTimeSheet();
 
     totalbillable.setText("7.49");
     totalNonBillable.setText("1.92");
@@ -77,11 +74,11 @@ public class TaskTimesheetPresenter implements Initializable {
   }
 
   private void initTaskTimeSheet() {
-    taskTimesheet.setItems(getProjects());
+    taskTimesheet.setItems(getXpmTimesheet());
   }
 
-  private ObservableList<ProjectFXAdapter> getProjects() {
-    List<ProjectFXAdapter> projects = projectService.getAllFXProjects();
+  private ObservableList<XpmTimesheetAdapter> getXpmTimesheet() {
+    List<XpmTimesheetAdapter> projects = xpmTimesheetService.getAllgetXpmTimesheetAdapter();
     return FXCollections.observableArrayList(projects);
   }
 

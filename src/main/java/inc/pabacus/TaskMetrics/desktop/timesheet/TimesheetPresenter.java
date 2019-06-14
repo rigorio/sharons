@@ -2,9 +2,11 @@ package inc.pabacus.TaskMetrics.desktop.timesheet;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
+import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
@@ -24,7 +26,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -44,7 +54,6 @@ public class TimesheetPresenter implements Initializable {
   private Label statusText;
   @FXML
   private Label userName;
-
   @FXML
   private ImageView softwareImg;
   @FXML
@@ -61,6 +70,10 @@ public class TimesheetPresenter implements Initializable {
   private DailyLogService dailyLogHandler;
   private MockUser mockUser;
   private UserHandler userHandler;
+  private DailyLog dailyLog = new DailyLog();
+  private static final MediaType JSON
+      = MediaType.parse("application/json; charset=utf-8");
+  private static final String HOST = "http://localhost:8080";
 
   public TimesheetPresenter() {
     dailyLogHandler = BeanManager.dailyLogService();
@@ -72,8 +85,9 @@ public class TimesheetPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     makeFadeIn();
     mockUser = new MockUser("Rigo", "Logged Out");
-    statusText.setText(mockUser.getStatus());
     userName.setText(userHandler.getUsername()); //set username
+
+    getStatus();
     initOshiInfo();
     initTimeSheet();
     populateCombobox();
@@ -81,7 +95,7 @@ public class TimesheetPresenter implements Initializable {
 
   @FXML
   public String changeStatus() {
-    String currentStatus = mockUser.getStatus();
+    String currentStatus = statusText.getText();
     switch (currentStatus) {
       case "Logged Out":
         currentStatus = "Logged In";
@@ -184,5 +198,48 @@ public class TimesheetPresenter implements Initializable {
     fadeTransition.setFromValue(0);
     fadeTransition.setToValue(1);
     fadeTransition.play();
+  }
+
+  private void getStatus(){
+    String in = null, otl = null, bfl = null, out = null;
+
+    OkHttpClient client = new OkHttpClient();
+    // code request code here
+    Request request = new Request.Builder()
+        .url(HOST + "/api/logs")
+        .addHeader("Accept", "application/json")
+        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .method("GET", null)
+        .build();
+
+    try {
+
+      Response response = client.newCall(request).execute();
+      String getbody= response.body().string();
+
+      JSONArray jsonarray = new JSONArray(getbody);
+      for (int i = 0; i < jsonarray.length(); i++) {
+        JSONObject jsonobject = jsonarray.getJSONObject(i);
+        in = jsonobject.getString("in");
+        otl = jsonobject.getString("otl");
+        bfl = jsonobject.getString("bfl");
+        out = jsonobject.getString("out");
+      }
+    } catch (JSONException | IOException e) {
+      e.printStackTrace();
+    }
+
+    if (in == null || in.equals("null")){
+      statusText.setText("Logged Out");
+    } else  if (otl == null || otl.equals("null")){
+      statusText.setText("Logged In");
+    } else if (bfl == null || bfl.equals("null")){
+      statusText.setText("Out To Lunch");
+    } else if (out == null || out.equals("null")){
+      statusText.setText("Back From Lunch");
+    } else {
+      statusText.setText("Logged Out"); //incase all status are null
+    }
+
   }
 }

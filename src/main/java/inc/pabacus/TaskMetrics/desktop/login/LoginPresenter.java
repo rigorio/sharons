@@ -33,7 +33,7 @@ public class LoginPresenter implements Initializable {
   private JFXPasswordField passwordField;
 
   private KickerService kickerService = BeanManager.kickerService();
-  private TokenService service = new TokenService();
+  private TokenService service = BeanManager.tokenService();
   private UserHandler userHandler;
 
   public LoginPresenter() {
@@ -81,7 +81,6 @@ public class LoginPresenter implements Initializable {
     PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
     pause.setOnFinished(event -> {
 
-      if (blankFields()) return;
       String userName = this.usernameField.getText();
       String passWord = passwordField.getText();
       jwtLogin(userName, passWord);

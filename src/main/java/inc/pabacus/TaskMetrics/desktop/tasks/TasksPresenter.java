@@ -60,9 +60,6 @@ public class TasksPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    //for fade effect
-    mainPane.setOpacity(0);
-    responsiveness();
     //Start button will be disable when you click it without choosing a task
     startButton.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()));
 
@@ -175,16 +172,6 @@ public class TasksPresenter implements Initializable {
         .observableArrayList(allTasks.stream()
                                  .map(XpmTaskAdapter::new)
                                  .collect(Collectors.toList()));
-  }
-
-  private void responsiveness() {
-    //transition
-    FadeTransition fadeTransition = new FadeTransition();
-    fadeTransition.setDuration(Duration.millis(1000)); // 1 second
-    fadeTransition.setNode(mainPane);
-    fadeTransition.setFromValue(0);
-    fadeTransition.setToValue(1);
-    fadeTransition.play();
   }
 
 }

@@ -15,5 +15,5 @@
   <JFXButton fx:id="startButton" layoutX="784.0" layoutY="13.0" mnemonicParsing="false" onAction="#startTask" style="-fx-background-color: #008080;" text="Start" textFill="WHITE" />
   <JFXButton fx:id="refreshButton" layoutX="841.0" layoutY="13.0" mnemonicParsing="false" onAction="#refreshTask" style="-fx-background-color: #008080;" text="Refresh" textFill="WHITE" />
   <JFXComboBox fx:id="statusBox" layoutX="14.0" layoutY="13.0" onAction="#updateTable" prefWidth="150.0" />
-   <JFXButton layoutX="765.0" layoutY="675.0" onAction="#viewWorkSummary" prefHeight="25.0" prefWidth="133.0" style="-fx-background-color: #008080;" text="View work summary" textFill="WHITE" />
+   <JFXButton layoutX="765.0" layoutY="675.0" mnemonicParsing="false" onAction="#viewWorkSummary" prefHeight="25.0" prefWidth="133.0" style="-fx-background-color: #008080;" text="View work summary" textFill="WHITE" />
 </AnchorPane>

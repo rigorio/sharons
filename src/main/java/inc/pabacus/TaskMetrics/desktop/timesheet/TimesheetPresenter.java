@@ -14,7 +14,6 @@ import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,7 +24,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -83,7 +81,7 @@ public class TimesheetPresenter implements Initializable {
   @Override
   @SuppressWarnings("all")
   public void initialize(URL location, ResourceBundle resources) {
-    makeFadeIn();
+
     mockUser = new MockUser("Rigo", "Logged Out");
     userName.setText(userHandler.getUsername()); //set username
 
@@ -189,15 +187,6 @@ public class TimesheetPresenter implements Initializable {
 
     os.setText(new SoftwareHandler().getOs());
     hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
-  }
-
-  private void makeFadeIn() {
-    FadeTransition fadeTransition = new FadeTransition();
-    fadeTransition.setDuration(Duration.millis(1000)); // 1 second
-    fadeTransition.setNode(mainPane);
-    fadeTransition.setFromValue(0);
-    fadeTransition.setToValue(1);
-    fadeTransition.play();
   }
 
   private void getStatus(){

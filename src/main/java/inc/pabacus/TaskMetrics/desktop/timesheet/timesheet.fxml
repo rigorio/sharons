@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" opacity="0.0" prefHeight="720" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetPresenter">
+<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetPresenter">
   <TableView id="timesheet" fx:id="timeSheet" layoutX="14.0" layoutY="303.0" prefHeight="403.0" prefWidth="872.0" />
   <Line endX="100.0" layoutX="192.0" layoutY="139.0" startX="-100.0" />
   <ImageView fx:id="hardwareImg" fitHeight="70.0" fitWidth="70.0" layoutX="29.0" layoutY="177.0" pickOnBounds="true" preserveRatio="true" />

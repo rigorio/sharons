@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" opacity="0.0" prefHeight="747.0" prefWidth="1079.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotPresenter">
+<AnchorPane fx:id="mainPane" prefHeight="747.0" prefWidth="1079.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotPresenter">
    <children>
       <SplitPane dividerPositions="0.29797979797979796" layoutX="181.0" layoutY="19.0" maxWidth="1079.0" minWidth="200.0" prefHeight="728.0" prefWidth="1064.0" style="-fx-border-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="19.0">
         <items>

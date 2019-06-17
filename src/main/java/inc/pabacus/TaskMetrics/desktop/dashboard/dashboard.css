@@ -2,24 +2,6 @@
     /*-fx-text-fill: #fff;*/
     /*-fx-background-color: #008080;*/
 }
-/*
-#minimize {
-    -fx-background-color: transparent;
-
-}
-#close {
-    -fx-background-color: transparent;
-
-}
-#minimize:hover {
-    -fx-background-color: #3D3E67;
-    -fx-cursor: hand;
-}
-#close:hover {
-    -fx-background-color: #E81123;
-    -fx-cursor: hand;
-}
-*/
 #tasks:hover {
     -fx-background-color: #007A7A;
     -fx-cursor: hand;
@@ -42,4 +24,29 @@
 }
 #changeStatus:hover {
     -fx-cursor: hand;
+}
+#tasks {
+             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+             -fx-background-radius: 5, 5, 4, 3;
+}
+#timesheets {
+             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+             -fx-background-radius: 5, 5, 4, 3;
+}
+#screenShot {
+             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+             -fx-background-radius: 5, 5, 4, 3;
+}
+#chat {
+             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+             -fx-background-radius: 5, 5, 4, 3;
+}
+#logOut {
+             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+             -fx-background-radius: 5, 5, 4, 3;
 }

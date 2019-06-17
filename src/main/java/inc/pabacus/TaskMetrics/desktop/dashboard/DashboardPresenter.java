@@ -216,12 +216,7 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void viewTasks() {
-    //for smooth loading
-    PauseTransition pause = new PauseTransition(Duration.millis(500));
-    pause.setOnFinished(event -> {
-      updateDynamicPaneContent(new TasksView().getView());
-    });
-    pause.play();
+    updateDynamicPaneContent(new TasksView().getView());
   }
 
   @FXML
@@ -242,23 +237,12 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void viewTimesheet() {
-    //for smooth loading
-    PauseTransition pause = new PauseTransition(Duration.millis(500));
-    pause.setOnFinished(event -> {
-      updateDynamicPaneContent(new TimesheetView().getView());
-    });
-    pause.play();
-
+    updateDynamicPaneContent(new TimesheetView().getView());
   }
 
   @FXML
   public void viewChats() {
-    //for smooth loading
-    PauseTransition pause = new PauseTransition(Duration.millis(500));
-    pause.setOnFinished(event -> {
-      updateDynamicPaneContent(new ChatView().getView());
-    });
-    pause.play();
+    updateDynamicPaneContent(new ChatView().getView());
   }
 
   @FXML

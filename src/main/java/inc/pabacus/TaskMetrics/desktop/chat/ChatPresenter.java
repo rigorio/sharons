@@ -4,14 +4,12 @@ import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
-import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.List;
@@ -31,19 +29,7 @@ public class ChatPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    //for fade effect
-    mainPane.setOpacity(0);
-    responsiveness();
     chatService = BeanManager.chatService();
-  }
-  private void responsiveness(){
-    //transition
-    FadeTransition fadeTransition = new FadeTransition();
-    fadeTransition.setDuration(Duration.millis(1000)); // 1 second
-    fadeTransition.setNode(mainPane);
-    fadeTransition.setFromValue(0);
-    fadeTransition.setToValue(1);
-    fadeTransition.play();
     //images
     Image imageView = new Image("/img/search.jpg");
     image.setImage(imageView);

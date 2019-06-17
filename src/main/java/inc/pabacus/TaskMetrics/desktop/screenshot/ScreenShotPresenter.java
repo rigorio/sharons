@@ -1,7 +1,6 @@
 package inc.pabacus.TaskMetrics.desktop.screenshot;
 
 import inc.pabacus.TaskMetrics.utils.FileUtils;
-import javafx.animation.FadeTransition;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,9 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
-
 import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
 
 import java.io.File;
 import java.net.URL;
@@ -37,7 +34,6 @@ public class ScreenShotPresenter implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        makeFadeIn();
 
         File folder = FileUtils.tmpFile(".pabacus");
         File[] listOfFiles = folder.listFiles();
@@ -98,15 +94,4 @@ public class ScreenShotPresenter implements Initializable {
             }
         });
     }
-
-    private void makeFadeIn(){
-        FadeTransition fadeTransition = new FadeTransition();
-        fadeTransition.setDuration(Duration.millis(1000)); // 1 second
-        fadeTransition.setNode(mainPane);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-        fadeTransition.play();
-    }
-
-
 }

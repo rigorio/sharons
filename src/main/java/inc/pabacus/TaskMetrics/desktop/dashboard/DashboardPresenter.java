@@ -39,7 +39,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import org.springframework.context.annotation.Bean;
 
 import java.net.URL;
 import java.util.Optional;
@@ -81,6 +80,7 @@ public class DashboardPresenter implements Initializable {
   private ScreenshotServiceImpl screenshotService;
   private UserHandler userHandler;
   private TokenService tokenService;
+  private ActivityListener activityListener;
 
   public DashboardPresenter() {
     standupService = BeanManager.standupService();
@@ -90,6 +90,7 @@ public class DashboardPresenter implements Initializable {
     screenshotService = BeanManager.screenshotService();
     userHandler = BeanManager.userHandler();
     tokenService = BeanManager.tokenService();
+    activityListener = BeanManager.activityListener();
   }
 
   @Override
@@ -279,6 +280,7 @@ public class DashboardPresenter implements Initializable {
       screenshotService.shutdownScheduler();
       kickerService.stopKicker();
       tokenService.stopToken();
+      activityListener.unListen();
       GuiManager.getInstance().changeView(new LoginView());
     } else {
       alert.close();

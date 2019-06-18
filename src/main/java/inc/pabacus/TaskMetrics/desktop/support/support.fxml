@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="inc.pabacus.TaskMetrics.desktop.support.SupportPresenter"
-            prefHeight="720" prefWidth="925">
-
+<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.support.SupportPresenter">
+  <TableView fx:id="leaveTable" layoutX="14.0" layoutY="59.0" prefHeight="180.0" prefWidth="884.0">
+    <columnResizePolicy>
+      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+    </columnResizePolicy>
+  </TableView>
 </AnchorPane>

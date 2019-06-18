@@ -11,77 +11,105 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1080.0" stylesheets="dashboard.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.dashboard.DashboardPresenter">
-  <AnchorPane fx:id="dashboardPane" layoutY="34.0" prefHeight="711.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="34.0">
-    <VBox fx:id="vboxPane" prefHeight="720.0" prefWidth="155.0" style="-fx-background-color: #008080;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1080.0" stylesheets="dashboard.css"
+            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.dashboard.DashboardPresenter">
+  <AnchorPane fx:id="dashboardPane" layoutY="34.0" prefHeight="711.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.topAnchor="34.0">
+    <VBox fx:id="vboxPane" prefHeight="720.0" prefWidth="155.0" style="-fx-background-color: #008080;"
+          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       <Pane fx:id="userPane" prefHeight="133.0" prefWidth="155.0">
         <Label fx:id="username" layoutX="14.0" layoutY="14.0" text="Rigo" textFill="WHITE">
           <font>
-            <Font size="26.0" />
+            <Font size="26.0"/>
           </font>
         </Label>
-        <JFXComboBox id="changeStatus" fx:id="status" focusColor="WHITE" layoutX="18.0" layoutY="72.0" onAction="#changeStatus" prefHeight="21.0" prefWidth="120.0" unFocusColor="WHITE" />
+        <JFXComboBox id="changeStatus" fx:id="status" focusColor="WHITE" layoutX="18.0" layoutY="72.0"
+                     onAction="#changeStatus" prefHeight="21.0" prefWidth="120.0" unFocusColor="WHITE"/>
       </Pane>
-      <JFXButton id="tasks" fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false" onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Tasks" textFill="WHITE">
+      <JFXButton id="tasks" fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false"
+                 onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Tasks" textFill="WHITE">
         <font>
-          <Font size="20.0" />
+          <Font size="20.0"/>
         </font>
         <graphic>
           <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
             <image>
-              <Image url="@../../../../../../resources/img/jobs.png" />
+              <Image url="@../../../../../../resources/img/jobs.png"/>
             </image>
           </ImageView>
         </graphic>
       </JFXButton>
-      <JFXButton id="timesheets" fx:id="timesheetButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false" onAction="#viewTimesheet" prefHeight="58.0" prefWidth="300.0" text="Timesheet" textFill="WHITE">
+      <JFXButton id="timesheets" fx:id="timesheetButton" alignment="BASELINE_LEFT" graphicTextGap="3.0"
+                 mnemonicParsing="false" onAction="#viewTimesheet" prefHeight="58.0" prefWidth="300.0" text="Timesheet"
+                 textFill="WHITE">
         <font>
-          <Font size="20.0" />
+          <Font size="20.0"/>
         </font>
         <graphic>
           <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
             <image>
-              <Image url="@../../../../../../resources/img/timesheet.png" />
+              <Image url="@../../../../../../resources/img/timesheet.png"/>
             </image>
           </ImageView>
         </graphic>
       </JFXButton>
-      <JFXButton id="screenShot" fx:id="screenshotButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false" onAction="#viewScreenshots" prefHeight="58.0" prefWidth="300.0" text="Screenshots" textFill="WHITE">
+      <JFXButton id="screenShot" fx:id="screenshotButton" alignment="BASELINE_LEFT" graphicTextGap="3.0"
+                 mnemonicParsing="false" onAction="#viewScreenshots" prefHeight="58.0" prefWidth="300.0"
+                 text="Screenshots" textFill="WHITE">
         <font>
-          <Font size="20.0" />
+          <Font size="20.0"/>
         </font>
         <graphic>
           <ImageView fx:id="screenShotIcon" fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
             <image>
-              <Image url="@../../../../../../resources/img/screenshot.png" />
+              <Image url="@../../../../../../resources/img/screenshot.png"/>
             </image>
           </ImageView>
         </graphic>
       </JFXButton>
-      <JFXButton id="chat" fx:id="chatButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false" onAction="#viewChats" prefHeight="58.0" prefWidth="300.0" text="Chat" textFill="WHITE">
+      <JFXButton id="chat" fx:id="supportButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" layoutX="10.0"
+                 layoutY="317.0" mnemonicParsing="false" onAction="#viewChats" prefHeight="58.0" prefWidth="300.0"
+                 text="Chat" textFill="WHITE">
         <font>
-          <Font size="20.0" />
+          <Font size="20.0"/>
+        </font>
+        <graphic>
+          <ImageView fx:id="supportIcon" fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+              <Image url="@../../../../../../resources/img/support.png"/>
+            </image>
+          </ImageView>
+        </graphic>
+      </JFXButton>
+      <JFXButton id="chat" fx:id="chatButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false"
+                 onAction="#viewChats" prefHeight="58.0" prefWidth="300.0" text="Chat" textFill="WHITE">
+        <font>
+          <Font size="20.0"/>
         </font>
         <graphic>
           <ImageView fx:id="screenShotIcon1" fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
             <image>
-              <Image url="@../../../../../../resources/img/chat.png" />
+              <Image url="@../../../../../../resources/img/chat.png"/>
             </image>
           </ImageView>
         </graphic>
       </JFXButton>
-      <JFXButton id="logOut" fx:id="logoutBtn" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false" onAction="#logout" prefHeight="58.0" prefWidth="300.0" text="Logout" textFill="WHITE">
+      <JFXButton id="logOut" fx:id="logoutBtn" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false"
+                 onAction="#logout" prefHeight="58.0" prefWidth="300.0" text="Logout" textFill="WHITE">
         <font>
-          <Font size="20.0" />
+          <Font size="20.0"/>
         </font>
         <graphic>
           <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../../../../../../resources/img/logout.png" />
+            <Image url="@../../../../../../resources/img/logout.png"/>
           </ImageView>
         </graphic>
       </JFXButton>
     </VBox>
-      <VBox fx:id="dynamicContentPane" alignment="CENTER_LEFT" fillWidth="false" layoutX="155.0" layoutY="-9.0" prefHeight="720.0" prefWidth="925.0" AnchorPane.rightAnchor="0.0" />
+    <VBox fx:id="dynamicContentPane" alignment="CENTER_LEFT" fillWidth="false" layoutX="155.0" layoutY="-9.0"
+          prefHeight="720.0" prefWidth="925.0" AnchorPane.rightAnchor="0.0"/>
   </AnchorPane>
-   <HBox fx:id="easyChatHBox" alignment="CENTER" prefHeight="35.0" prefWidth="1080.0" style="-fx-background-color: #008080;" AnchorPane.leftAnchor="0.0" />
+  <HBox fx:id="easyChatHBox" alignment="CENTER" prefHeight="35.0" prefWidth="1080.0"
+        style="-fx-background-color: #008080;" AnchorPane.leftAnchor="0.0"/>
 </AnchorPane>

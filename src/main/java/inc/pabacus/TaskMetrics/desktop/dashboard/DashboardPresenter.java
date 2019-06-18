@@ -50,6 +50,10 @@ import java.util.ResourceBundle;
 public class DashboardPresenter implements Initializable {
 
   @FXML
+  private ImageView supportIcon;
+  @FXML
+  private JFXButton supportButton;
+  @FXML
   private AnchorPane mainPane;
   @FXML
   private AnchorPane dashboardPane;

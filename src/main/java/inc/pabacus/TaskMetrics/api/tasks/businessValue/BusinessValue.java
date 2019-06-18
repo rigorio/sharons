@@ -6,5 +6,5 @@ import lombok.Data;
 public class BusinessValue {
   private Long id;
   private String business;
-  private Double rate;
+  private Double value;
 }

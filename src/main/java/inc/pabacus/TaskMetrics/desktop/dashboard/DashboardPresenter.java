@@ -16,6 +16,7 @@ import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
+import inc.pabacus.TaskMetrics.desktop.support.SupportView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
@@ -270,6 +271,10 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void viewChats() {
     updateDynamicPaneContent(new ChatView().getView());
+  }
+
+  public void viewSupport() {
+    updateDynamicPaneContent(new SupportView().getView());
   }
 
   @FXML

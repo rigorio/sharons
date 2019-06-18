@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <AnchorPane fx:id="mainPane" prefHeight="720.0" prefWidth="1080.0" stylesheets="dashboard.css"
             xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.dashboard.DashboardPresenter">
@@ -69,7 +63,7 @@
         </graphic>
       </JFXButton>
       <JFXButton id="chat" fx:id="supportButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" layoutX="10.0"
-                 layoutY="317.0" mnemonicParsing="false" onAction="#viewChats" prefHeight="58.0" prefWidth="300.0"
+                 layoutY="317.0" mnemonicParsing="false" onAction="#viewSupport" prefHeight="58.0" prefWidth="300.0"
                  text="Chat" textFill="WHITE">
         <font>
           <Font size="20.0"/>

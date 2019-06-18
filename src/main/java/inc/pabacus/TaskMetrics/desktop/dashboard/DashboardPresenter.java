@@ -23,8 +23,6 @@ import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.CacheHint;
@@ -162,71 +160,53 @@ public class DashboardPresenter implements Initializable {
 
     dynamicContentPane.toBack();
     //calculate width and height
-    mainPane.widthProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        double width = (double) newValue;
+    mainPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+      double width = (double) newValue;
 
-        dashboardPane.setPrefWidth(width);
-        easyChatHBox.setPrefWidth(width / 1.15);
-      }
+      dashboardPane.setPrefWidth(width);
+      easyChatHBox.setPrefWidth(width / 1.15);
     });
 
-    mainPane.heightProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        double height = (double) newValue;
-        dashboardPane.setPrefHeight(height);
-      }
+    mainPane.heightProperty().addListener((observable, oldValue, newValue) -> {
+      double height = (double) newValue;
+      dashboardPane.setPrefHeight(height);
     });
 
-    dashboardPane.widthProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        double width = (double) newValue;
-        easyChatHBox.setPrefWidth(width);
-        dynamicContentPane.setPrefWidth(width / 1.2);
-        vboxPane.setPrefWidth(width / 6.5);
-      }
+    dashboardPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+      double width = (double) newValue;
+      easyChatHBox.setPrefWidth(width);
+      dynamicContentPane.setPrefWidth(width / 1.2);
+      vboxPane.setPrefWidth(width / 6.5);
     });
 
-    dashboardPane.heightProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        double height = (double) newValue;
-        dynamicContentPane.setPrefHeight(height);
-        vboxPane.setPrefHeight(height);
-      }
+    dashboardPane.heightProperty().addListener((observable, oldValue, newValue) -> {
+      double height = (double) newValue;
+      dynamicContentPane.setPrefHeight(height);
+      vboxPane.setPrefHeight(height);
     });
 
-    vboxPane.widthProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        double width = (double) newValue;
-        status.setPrefWidth(width / 1.5);
-        tasksButton.setPrefWidth(width);
-        timesheetButton.setPrefWidth(width);
-        screenshotButton.setPrefWidth(width);
-        chatButton.setPrefWidth(width);
-        logoutBtn.setPrefWidth(width);
-        username.setPrefWidth(width);
-        userPane.setPrefWidth(width);
-      }
+    vboxPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+      double width = (double) newValue;
+      status.setPrefWidth(width / 1.5);
+      tasksButton.setPrefWidth(width);
+      timesheetButton.setPrefWidth(width);
+      screenshotButton.setPrefWidth(width);
+      chatButton.setPrefWidth(width);
+      logoutBtn.setPrefWidth(width);
+      username.setPrefWidth(width);
+      userPane.setPrefWidth(width);
     });
 
-    vboxPane.heightProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        double height = (double) newValue;
-        status.setPrefHeight(height / 20.5);
-        tasksButton.setPrefHeight(height / 15);
-        timesheetButton.setPrefHeight(height / 15);
-        screenshotButton.setPrefHeight(height / 15);
-        chatButton.setPrefHeight(height / 15);
-        logoutBtn.setPrefHeight(height / 15);
-        username.setPrefHeight(height / 15);
-        userPane.setPrefHeight(height / 5);
-      }
+    vboxPane.heightProperty().addListener((observable, oldValue, newValue) -> {
+      double height = (double) newValue;
+      status.setPrefHeight(height / 20.5);
+      tasksButton.setPrefHeight(height / 15);
+      timesheetButton.setPrefHeight(height / 15);
+      screenshotButton.setPrefHeight(height / 15);
+      chatButton.setPrefHeight(height / 15);
+      logoutBtn.setPrefHeight(height / 15);
+      username.setPrefHeight(height / 15);
+      userPane.setPrefHeight(height / 5);
     });
 
   }

@@ -130,6 +130,10 @@ public class DashboardPresenter implements Initializable {
     setSize(chatImage);
     chatButton.setGraphic(chatImage);
 
+    ImageView supportImage = new ImageView(new Image(getClass().getResourceAsStream("/img/support.png")));
+    setSize(supportImage);
+    supportButton.setGraphic(supportImage);
+
     status.getItems().addAll("Busy", "Meeting", "Lunch", "Offline");
 
     viewTasks();

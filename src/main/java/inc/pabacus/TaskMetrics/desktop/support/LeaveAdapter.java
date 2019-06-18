@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.desktop.support;
 
+import inc.pabacus.TaskMetrics.api.leave.Approver;
 import inc.pabacus.TaskMetrics.api.leave.Leave;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -10,6 +11,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,6 +22,7 @@ public class LeaveAdapter {
 
   private LongProperty id;
   private LongProperty userId;
+  private List<ApproverAdapter> approvers;
   private StringProperty startDate;
   private StringProperty endDate;
   private StringProperty reason;
@@ -31,6 +36,11 @@ public class LeaveAdapter {
 
     Long userId = leave.getUserId();
     this.userId = userId != null ? new SimpleLongProperty(userId) : null;
+
+    List<Approver> approver = leave.getApprover();
+    this.approvers.addAll(approver.stream()
+                              .map(ApproverAdapter::new)
+                              .collect(Collectors.toList()));
 
     String startDate = leave.getStartDate();
     this.startDate = startDate != null ? new SimpleStringProperty(startDate) : null;

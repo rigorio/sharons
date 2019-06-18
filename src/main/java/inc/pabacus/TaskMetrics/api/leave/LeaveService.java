@@ -7,6 +7,8 @@ import okhttp3.*;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LeaveService {
 
@@ -31,11 +33,15 @@ public class LeaveService {
                                      .build());
       ResponseBody responseBody = call.execute().body();
       leave = mapper.readValue(responseBody.string(),
-                                new TypeReference<Leave>() {});
+                               new TypeReference<Leave>() {});
       return leave;
     } catch (IOException e) {
       logger.warn(e.getMessage());
       return leave;
     }
+  }
+  
+  public List<Leave> getAll() {
+    return new ArrayList<>();
   }
 }

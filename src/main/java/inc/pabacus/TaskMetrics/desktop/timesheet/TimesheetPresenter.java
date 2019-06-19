@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -189,7 +190,7 @@ public class TimesheetPresenter implements Initializable {
     hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
   }
 
-  private void getStatus(){
+  private void getStatus() {
     String in = null, otl = null, bfl = null, out = null;
 
     OkHttpClient client = new OkHttpClient();
@@ -204,27 +205,36 @@ public class TimesheetPresenter implements Initializable {
     try {
 
       Response response = client.newCall(request).execute();
-      String getbody= response.body().string();
+      String getbody = response.body().string();
 
       JSONArray jsonarray = new JSONArray(getbody);
       for (int i = 0; i < jsonarray.length(); i++) {
         JSONObject jsonobject = jsonarray.getJSONObject(i);
-        in = jsonobject.getString("in");
-        otl = jsonobject.getString("otl");
-        bfl = jsonobject.getString("bfl");
-        out = jsonobject.getString("out");
+        LocalDate date = LocalDate.now();
+        String dateString = jsonobject.getString("date");
+        if (dateString.equalsIgnoreCase(String.valueOf(date))) {
+          in = jsonobject.getString("in");
+          otl = jsonobject.getString("otl");
+          bfl = jsonobject.getString("bfl");
+          out = jsonobject.getString("out");
+          System.out.println(date);
+          System.out.println(in);
+          System.out.println(otl);
+          System.out.println(bfl);
+          System.out.println(out);
+        }
       }
     } catch (JSONException | IOException e) {
       e.printStackTrace();
     }
 
-    if (in == null || in.equals("null")){
+    if (in == null || in.equals("null")) {
       statusText.setText("Logged Out");
-    } else  if (otl == null || otl.equals("null")){
+    } else if (otl == null || otl.equals("null")) {
       statusText.setText("Logged In");
-    } else if (bfl == null || bfl.equals("null")){
+    } else if (bfl == null || bfl.equals("null")) {
       statusText.setText("Out To Lunch");
-    } else if (out == null || out.equals("null")){
+    } else if (out == null || out.equals("null")) {
       statusText.setText("Back From Lunch");
     } else {
       statusText.setText("Logged Out"); //incase all status are null

@@ -31,6 +31,10 @@ public class NewTaskPresenter implements Initializable {
   @FXML
   private Label customTaskLabel;
   @FXML
+  private Label businessLabel;
+  @FXML
+  private Label descriptionLabel;
+  @FXML
   private JFXTextField customTaskField;
   @FXML
   private JFXTextField descriptionField;
@@ -67,8 +71,12 @@ public class NewTaskPresenter implements Initializable {
     jobComboBox.setPromptText("Select a job");
     businessComboBox.setPromptText("Choose Business Value");
     jobComboBox.setItems(FXCollections.observableArrayList("Productivity App", "Market Research", "Administration"));
-    customTaskField.setDisable(true);
-    customTaskLabel.setDisable(true);
+    customTaskField.setVisible(false);
+    customTaskLabel.setVisible(false);
+    businessLabel.setLayoutY(168);
+    businessComboBox.setLayoutY(168);
+    descriptionLabel.setLayoutY(203);
+    descriptionField.setLayoutY(203);
 
     businessComboBox.setValue("Development");
   }
@@ -89,10 +97,22 @@ public class NewTaskPresenter implements Initializable {
   public void selectTask() {
     String task = taskCombobox.getValue();
     boolean status = !task.equalsIgnoreCase("Custom Task");
-    customTaskField.setDisable(status);
-    customTaskLabel.setDisable(status);
-    if (status)
-      customTaskField.clear();
+    if (status) {
+      customTaskField.setVisible(false);
+      customTaskLabel.setVisible(false);
+      businessLabel.setLayoutY(168);
+      businessComboBox.setLayoutY(168);
+      descriptionLabel.setLayoutY(203);
+      descriptionField.setLayoutY(203);
+    } else {
+
+      customTaskField.setVisible(true);
+      customTaskLabel.setVisible(true);
+      businessLabel.setLayoutY(203);
+      businessComboBox.setLayoutY(203);
+      descriptionLabel.setLayoutY(246);
+      descriptionField.setLayoutY(246);
+    }
   }
 
   @FXML
@@ -174,10 +194,10 @@ public class NewTaskPresenter implements Initializable {
     return projectHandler.getAllProjects();
   }
 
-  private boolean isCustomTaskEmpty(){
+  private boolean isCustomTaskEmpty() {
     String task = taskCombobox.getValue();
     boolean status = task.equalsIgnoreCase("Custom Task");
-    if (status){
+    if (status) {
       return customTaskField.getText().isEmpty();
     }
     return false;

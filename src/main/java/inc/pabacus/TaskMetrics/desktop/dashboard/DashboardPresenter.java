@@ -34,6 +34,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -99,8 +102,8 @@ public class DashboardPresenter implements Initializable {
     username.setText(userHandler.getUsername());
 
     services();
-    responsive();
     showEasyChat();
+    responsive();
 
     ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
     setSize(taskImage);
@@ -125,9 +128,29 @@ public class DashboardPresenter implements Initializable {
     status.getItems().addAll("Busy", "Meeting", "Lunch", "Offline");
 
     viewTasks();
+    shortcutKeyPressed();
+  }
+
+  private void shortcutKeyPressed() {
+    mainPane.setOnKeyPressed(
+        event -> status.getScene().getAccelerators().put(new KeyCodeCombination(
+            KeyCode.F, KeyCombination.CONTROL_ANY), new Runnable() {
+          @Override
+          public void run() {
+            showEasyChat();
+          }
+        }));
   }
 
   private void responsive() {
+    //trick - remove focus on the easyChat ----
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        mainPane.requestFocus();
+      }
+    });
+
     dynamicContentPane.toBack();
     //calculate width and height
     mainPane.widthProperty().addListener(new ChangeListener<Number>() {

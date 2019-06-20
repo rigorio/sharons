@@ -40,8 +40,65 @@ public class LeaveService {
       return leave;
     }
   }
-  
+
   public List<Leave> getAll() {
-    return new ArrayList<>();
+    List<Leave> leaves = new ArrayList<>();
+    ArrayList<Approver> approverList = new ArrayList<>();
+    approverList.add(Approver.builder()
+                         .approverId(1L)
+                         .approver("wan")
+                         .status("Approved")
+                         .build());
+    approverList.add(Approver.builder()
+                         .approverId(1L)
+                         .approver("wan")
+                         .status("Rejected")
+                         .build());
+    approverList.add(Approver.builder()
+                         .approverId(1L)
+                         .approver("wan")
+                         .status("Denied")
+                         .build());
+    leaves.add(Leave.builder()
+                   .id(0L)
+                   .userId(2L)
+                   .approver(approverList)
+                   .startDate("4-2-2019")
+                   .endDate("4-4-2019")
+                   .reason("kasi kwan")
+                   .status("Pending")
+                   .typeOfRequest("Maternal")
+                   .build());
+    approverList.add(Approver.builder()
+                         .approverId(1L)
+                         .approver("wan")
+                         .status("Approved")
+                         .build());
+    leaves.add(Leave.builder()
+                   .id(0L)
+                   .userId(2L)
+                   .approver(approverList)
+                   .startDate("5-2-2019")
+                   .endDate("5-22-2019")
+                   .reason("kasi kwan")
+                   .status("Approved")
+                   .typeOfRequest("Maternal")
+                   .build());
+    approverList.add(Approver.builder()
+                         .approverId(1L)
+                         .approver("wan")
+                         .status("Approved")
+                         .build());
+    leaves.add(Leave.builder()
+                   .id(0L)
+                   .userId(2L)
+                   .approver(approverList)
+                   .startDate("7-5-2019")
+                   .endDate("7-12-2019")
+                   .reason("kasi kwan")
+                   .status("Pending")
+                   .typeOfRequest("Maternal")
+                   .build());
+    return leaves;
   }
 }

@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,9 +39,11 @@ public class LeaveAdapter {
     this.userId = userId != null ? new SimpleLongProperty(userId) : null;
 
     List<Approver> approver = leave.getApprover();
-    this.approvers.addAll(approver.stream()
+    this.approvers = approver != null
+        ? new ArrayList<>(approver.stream()
                               .map(ApproverAdapter::new)
-                              .collect(Collectors.toList()));
+                              .collect(Collectors.toList()))
+        : null;
 
     String startDate = leave.getStartDate();
     this.startDate = startDate != null ? new SimpleStringProperty(startDate) : null;

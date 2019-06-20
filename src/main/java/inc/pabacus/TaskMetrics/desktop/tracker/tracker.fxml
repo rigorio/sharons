@@ -3,14 +3,16 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane prefHeight="31.0" prefWidth="458.0" style="-fx-background-color: #008080;" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter">
-  <Label fx:id="timer" layoutX="223.0" layoutY="8.0" text="time" textFill="WHITE" />
-  <JFXButton id="complete" fx:id="complete" layoutX="335.0" layoutY="4.0" mnemonicParsing="false" onAction="#completeTask" prefHeight="25.0" prefWidth="70.0" text="Complete" textFill="WHITE" />
+<AnchorPane prefHeight="35.0" prefWidth="518.0" style="-fx-background-color: #008080;"
+            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter">
+  <Label fx:id="timer" layoutX="223.0" layoutY="8.0" text="time" textFill="WHITE"/>
+  <JFXButton id="complete" fx:id="complete" layoutX="335.0" layoutY="4.0" mnemonicParsing="false"
+             onAction="#completeTask" prefHeight="25.0" prefWidth="70.0" text="Complete" textFill="WHITE"/>
   <AnchorPane layoutY="6.0" prefHeight="25.0" prefWidth="95.0">
-    <children>
-      <Label fx:id="title" layoutX="14.0" layoutY="-1.0" prefHeight="21.0" prefWidth="162.0" text="task" textFill="WHITE" />
-    </children>
+    <Label fx:id="title" layoutX="14.0" layoutY="-1.0" prefHeight="21.0" prefWidth="162.0" text="task"
+           textFill="WHITE"/>
   </AnchorPane>
-   <JFXButton id="cancel" layoutX="405.0" layoutY="4.0" onAction="#cancel" text="Cancel" textFill="WHITE" />
+  <JFXButton id="cancel" layoutX="405.0" layoutY="4.0" onAction="#pause" text="Pause" textFill="WHITE"/>
+  <JFXButton id="cancel" layoutX="464.0" layoutY="4.0" onAction="#cancel" text="Cancel" textFill="WHITE"/>
 </AnchorPane>

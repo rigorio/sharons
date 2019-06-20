@@ -2,17 +2,30 @@ package inc.pabacus.TaskMetrics.desktop.chat;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
+import inc.pabacus.TaskMetrics.api.chat.Chat;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class ChatPresenter implements Initializable {
@@ -25,7 +38,9 @@ public class ChatPresenter implements Initializable {
   private JFXTextField command;
   @FXML
   private ImageView image;
+
   private ChatService chatService;
+  private static final String HOST = "http://localhost:8080";
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -35,9 +50,19 @@ public class ChatPresenter implements Initializable {
     image.setImage(imageView);
     image.setFitWidth(30);
     image.setFitHeight(30);
-    //textfield
-    command.setText(null);
-    command.requestFocus();
+
+    textProperty();
+    getChatData();
+  }
+
+  private void textProperty(){
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        command.setText(null);
+        command.requestFocus();
+      }
+    });
   }
 
   @FXML
@@ -48,6 +73,10 @@ public class ChatPresenter implements Initializable {
       chatService.sendCommand(commands);
       command.setText(null);
       command.requestFocus();
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+      ChatService service = new ChatService();
+      Chat answers = service.sendChat(new Chat(commands,formatter.format(LocalTime.now())));
+      System.out.println(answers);
     }
   }
 
@@ -56,6 +85,34 @@ public class ChatPresenter implements Initializable {
     int index = items.size();
     items.add(item);
     listView.scrollTo(index);
+  }
+
+  public void getChatData(){
+    OkHttpClient client = new OkHttpClient();
+    // code request code here
+    Request request = new Request.Builder()
+        .url(HOST + "/api/chats")
+        .addHeader("Content-Type", "application/json")
+        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .method("GET", null)
+        .build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      String getChats = response.body().string();
+      JSONArray jsonarray = new JSONArray(getChats);
+      for (int i = 0; i < jsonarray.length(); ++i) {
+        JSONObject jsonobject = jsonarray.getJSONObject(i);
+        List<String> items = listView.getItems();
+        int index = items.size();
+        items.add(jsonobject.getString("message"));
+        listView.scrollTo(index);
+      }
+
+    } catch (IOException | JSONException e) {
+      e.printStackTrace();
+    }
+
   }
 
 }

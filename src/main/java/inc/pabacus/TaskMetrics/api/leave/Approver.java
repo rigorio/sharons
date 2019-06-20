@@ -4,40 +4,40 @@ import javax.persistence.Entity;
 
 @Entity
 public class Approver {
-  private double teamLeader;
-  private double supervisorId;
-  private double managerId;
+  private Long approverId;
+  private String approver;
+  private String status;
 
   public Approver() {
   }
 
-  public Approver(double teamLeader, double supervisorId, double managerId) {
-    this.teamLeader = teamLeader;
-    this.supervisorId = supervisorId;
-    this.managerId = managerId;
+  public Approver(Long approverId, String approver, String status) {
+    this.approverId = approverId;
+    this.approver = approver;
+    this.status = status;
   }
 
-  public double getTeamLeader() {
-    return teamLeader;
+  public Long getApproverId() {
+    return approverId;
   }
 
-  public void setTeamLeader(double teamLeader) {
-    this.teamLeader = teamLeader;
+  public void setApproverId(Long approverId) {
+    this.approverId = approverId;
   }
 
-  public double getSupervisorId() {
-    return supervisorId;
+  public String getApprover() {
+    return approver;
   }
 
-  public void setSupervisorId(double supervisorId) {
-    this.supervisorId = supervisorId;
+  public void setApprover(String approver) {
+    this.approver = approver;
   }
 
-  public double getManagerId() {
-    return managerId;
+  public String getStatus() {
+    return status;
   }
 
-  public void setManagerId(double managerId) {
-    this.managerId = managerId;
+  public void setStatus(String status) {
+    this.status = status;
   }
 }

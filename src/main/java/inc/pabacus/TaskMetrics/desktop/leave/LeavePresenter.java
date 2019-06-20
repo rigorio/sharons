@@ -31,21 +31,26 @@ public class LeavePresenter implements Initializable {
   @FXML
   private JFXDatePicker endDate;
   @FXML
-  private JFXComboBox request;
+  private JFXComboBox<String> requestDropdown;
   @FXML
   private JFXButton close;
+  @FXML
+  private JFXComboBox<String> supervisorDropdown;
+  @FXML
+  private JFXComboBox<String> managerDropdown;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    endDate.requestFocus();
-    request.getItems().addAll("Vacation Leave", "Sick Leave", "Maternity Leave", "Unpaid Leave");
+    requestDropdown.getItems().addAll("Vacation Leave", "Sick Leave", "Maternity Leave", "Unpaid Leave");
+    supervisorDropdown.getItems().addAll("Rose Cayabyab", "Rufino Quimen");
+    managerDropdown.getItems().addAll("Joy Cuison","Rodel Caras");
 
     dates();
   }
 
   @FXML
   public void sendForm() {
-    if (isNotEmpty()){
+    if (isNotEmpty()) {
       Alert alert = new Alert(Alert.AlertType.WARNING);
       alert.setTitle("Error");
       alert.setContentText("Please fill out all the fields");
@@ -55,32 +60,39 @@ public class LeavePresenter implements Initializable {
     submitRequest();
   }
 
-  private void dates(){
+  private void dates() {
+    startDate.setDayCellFactory(picker -> new DateCell() {
+      public void updateItem(LocalDate date, boolean empty) {
+        super.updateItem(date, empty);
+        LocalDate today = LocalDate.now();
+        setDisable(empty || date.compareTo(today) < 0);
+      }
+    });
+
     startDate.valueProperty().addListener((ov, oldValue, newValue) -> {
       endDate.setDayCellFactory(picker -> new DateCell() {
         public void updateItem(LocalDate date, boolean empty) {
           super.updateItem(date, empty);
-          setDisable(empty || date.compareTo(startDate.getValue()) < 0 );
+          setDisable(empty || date.compareTo(startDate.getValue()) < 0);
         }
       });
     });
   }
 
   private void submitRequest() {
-    String requestString = (String) this.request.getValue();
+    String requestString = this.requestDropdown.getValue();
+    String supervisorString = this.supervisorDropdown.getValue();
+    String managerString = this.managerDropdown.getValue();
     String startDateString = String.valueOf(this.startDate.getValue());
     String endDateString = String.valueOf(this.endDate.getValue());
     String reason = this.reason.getText();
     String status = "Pending";
-    double teamLeader = 0;
-    double supervisor = 3;
-    double manager = 4;
 
-    List<Approver> getApprovers = Arrays.asList(
-        new Approver(teamLeader,supervisor,manager));
+    List<Approver> getApprovers = Arrays.asList(new Approver(3L, supervisorString, status),
+                                               new Approver(4L,managerString,status));
 
     LeaveService service = new LeaveService();
-    Leave leave = service.requestLeave(new Leave(2L,3L, getApprovers,startDateString,endDateString,reason,status,requestString));
+    Leave leave = service.requestLeave(new Leave(2L, 3L, getApprovers, startDateString, endDateString, reason, status, requestString));
     System.out.println(leave);
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Request submitted!");
@@ -93,7 +105,7 @@ public class LeavePresenter implements Initializable {
   }
 
   private boolean isNotEmpty() {
-    return reason.getText().isEmpty() || startDate.getValue() == null || endDate.getValue() == null || request.getValue() == null;
+    return reason.getText().isEmpty() || startDate.getValue() == null || endDate.getValue() == null || requestDropdown.getValue() == null;
   }
 
   @FXML

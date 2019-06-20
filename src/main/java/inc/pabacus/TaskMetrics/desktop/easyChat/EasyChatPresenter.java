@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.desktop.easyChat;
 import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -32,9 +33,22 @@ public class EasyChatPresenter implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     responsive();
+    shortcutKeyPressed();
     clearButton.setVisible(false);
     chatService = BeanManager.chatService();
+    textProperty();
+  }
 
+  private void shortcutKeyPressed() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        textCommand.requestFocus();
+      }
+    });
+  }
+
+  private void textProperty() {
     textCommand.textProperty().addListener(new ChangeListener<String>() {
       @Override
       public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -53,13 +67,13 @@ public class EasyChatPresenter implements Initializable {
   }
 
   @FXML
-  private void clearButton(){
+  private void clearButton() {
     textCommand.setText("");
     clearButton.setVisible(false);
     textCommand.requestFocus();
   }
 
-  private void responsive(){
+  private void responsive() {
     mainPane.widthProperty().addListener(new ChangeListener<Number>() {
       @Override
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {

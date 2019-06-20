@@ -4,16 +4,16 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
-import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
-import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
+import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,7 +23,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -110,11 +109,11 @@ public class TasksPresenter implements Initializable {
   public void startTask() {
     activityHandler.saveActivity(Activity.BUSY);
     XpmTaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
-    if (!selectedItem.getStatus().get().equals("Pending")) {
+    if (selectedItem.getStatus().get().equals(Status.DONE.getStatus())) {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
       alert.setTitle("Not Allowed");
       alert.setHeaderText(null);
-      alert.setContentText("You can only select a task under \"Pending\"");
+      alert.setContentText("This task has already been completed");
       alert.showAndWait();
       return;
     }

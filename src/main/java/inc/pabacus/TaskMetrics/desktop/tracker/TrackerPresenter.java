@@ -86,6 +86,8 @@ public class TrackerPresenter implements Initializable {
     // I might use this in the future don't touch because I'm forgetful
     // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     String totalTimeSpent = getTotalTimeSpent();
+    String currentTime = selectedTask.getTime().get();
+    totalTimeSpent = String.valueOf((Double.parseDouble(currentTime) + Double.parseDouble(totalTimeSpent)));
     selectedTask.setTime(new SimpleStringProperty(totalTimeSpent));
     selectedTask.setStatus(new SimpleStringProperty(status));
   }

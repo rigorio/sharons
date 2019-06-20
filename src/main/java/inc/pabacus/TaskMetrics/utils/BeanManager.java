@@ -5,6 +5,7 @@ import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
+import inc.pabacus.TaskMetrics.api.leave.LeaveService;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListenerService;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
@@ -28,6 +29,7 @@ public class BeanManager {
   private static XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
   private static ActivityHandler activityHandler = new ActivityHandler();
   private static TokenService tokenService = new TokenService();
+  private static LeaveService leaveService = new LeaveService();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -75,5 +77,9 @@ public class BeanManager {
 
   public static TokenService tokenService() {
     return tokenService;
+  }
+
+  public static LeaveService leaveService() {
+    return leaveService;
   }
 }

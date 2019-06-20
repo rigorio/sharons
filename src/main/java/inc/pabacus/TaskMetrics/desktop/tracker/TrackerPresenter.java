@@ -1,10 +1,10 @@
 package inc.pabacus.TaskMetrics.desktop.tracker;
 
 import com.jfoenix.controls.JFXButton;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
-import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -51,15 +51,24 @@ public class TrackerPresenter implements Initializable {
 
   @FXML
   public void completeTask() {
-    updateTask();
-    XpmTask xpmTask = new XpmTask(selectedTask);
-    xpmTaskWebHandler.save(xpmTask);
-    TrackHandler.setSelectedTask(null);
-    closeWindow();
+    updateTask(Status.DONE.getStatus());
+    saveAndClose();
+  }
+
+  public void pause() {
+    updateTask(Status.IN_PROGRESS.getStatus());
+    saveAndClose();
   }
 
   @FXML
   public void cancel() {
+    closeWindow();
+  }
+
+  private void saveAndClose() {
+    XpmTask xpmTask = new XpmTask(selectedTask);
+    xpmTaskWebHandler.save(xpmTask);
+    TrackHandler.setSelectedTask(null);
     closeWindow();
   }
 
@@ -73,12 +82,14 @@ public class TrackerPresenter implements Initializable {
     ((Stage) title.getScene().getWindow()).close();
   }
 
-  private void updateTask() {
+  private void updateTask(String status) {
     // I might use this in the future don't touch because I'm forgetful
     // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     String totalTimeSpent = getTotalTimeSpent();
+    String currentTime = selectedTask.getTime().get();
+    totalTimeSpent = String.valueOf((Double.parseDouble(currentTime) + Double.parseDouble(totalTimeSpent)));
     selectedTask.setTime(new SimpleStringProperty(totalTimeSpent));
-    selectedTask.setStatus(new SimpleStringProperty(Status.DONE.getStatus()));
+    selectedTask.setStatus(new SimpleStringProperty(status));
   }
 
   private String getTotalTimeSpent() {

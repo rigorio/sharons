@@ -35,9 +35,8 @@ public class IdlePresenter implements Initializable {
   public void submitActivity() {
     String activity = activityArea.getText();
     UserActivity userActivity = UserActivity.builder()
-        .startTime(startTime)
+        .time(startTime)
         .date(LocalDate.now().toString())
-        .endTime(timeFormatter.format(LocalTime.now()))
         .activity(activity)
         .build();
     activityHandler.saveActivity(userActivity);

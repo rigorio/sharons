@@ -65,6 +65,8 @@ public class TimesheetPresenter implements Initializable {
   private Label hardware;
   @FXML
   private TableView<DailyLogFXAdapter> timeSheet;
+  @FXML
+  private Label dateLabel;
 
   private static final int DEF_SIZE = 900;
 
@@ -229,41 +231,37 @@ public class TimesheetPresenter implements Initializable {
         .build();
 
     try {
-
       Response response = client.newCall(request).execute();
       String getbody = response.body().string();
 
       JSONArray jsonarray = new JSONArray(getbody);
       for (int i = 0; i < jsonarray.length(); i++) {
         JSONObject jsonobject = jsonarray.getJSONObject(i);
-        LocalDate date = LocalDate.now();
-        String dateString = jsonobject.getString("date");
-        if (dateString.equalsIgnoreCase(String.valueOf(date))) {
-          in = jsonobject.getString("in");
-          otl = jsonobject.getString("otl");
-          bfl = jsonobject.getString("bfl");
-          out = jsonobject.getString("out");
-          System.out.println(date);
-          System.out.println(in);
-          System.out.println(otl);
-          System.out.println(bfl);
-          System.out.println(out);
-        }
+        dateLabel.setText(jsonobject.getString("date"));
+        in = jsonobject.getString("in");
+        otl = jsonobject.getString("otl");
+        bfl = jsonobject.getString("bfl");
+        out = jsonobject.getString("out");
       }
     } catch (JSONException | IOException e) {
       e.printStackTrace();
     }
 
-    if (in == null || in.equals("null")) {
-      statusText.setText("Logged Out");
-    } else if (otl == null || otl.equals("null")) {
-      statusText.setText("Logged In");
-    } else if (bfl == null || bfl.equals("null")) {
-      statusText.setText("Out To Lunch");
-    } else if (out == null || out.equals("null")) {
-      statusText.setText("Back From Lunch");
+    LocalDate date = LocalDate.now();
+    if (dateLabel.getText().equalsIgnoreCase(String.valueOf(date))) {
+      if (in == null || in.equals("null")) {
+        statusText.setText("Logged Out");
+      } else if (otl == null || otl.equals("null")) {
+        statusText.setText("Logged In");
+      } else if (bfl == null || bfl.equals("null")) {
+        statusText.setText("Out To Lunch");
+      } else if (out == null || out.equals("null")) {
+        statusText.setText("Back From Lunch");
+      } else {
+        statusText.setText("Logged Out"); //incase all status are null
+      }
     } else {
-      statusText.setText("Logged Out"); //incase all status are null
+      statusText.setText("Logged Out");
     }
 
   }

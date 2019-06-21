@@ -31,6 +31,7 @@ public class XpmTaskAdapter {
   private StringProperty job;
   private StringProperty client;
   private StringProperty assignee;
+  private StringProperty dateCreated;
 
   public XpmTaskAdapter(XpmTask task) {
 
@@ -57,6 +58,9 @@ public class XpmTaskAdapter {
 
     String assignee = task.getAssignee();
     this.assignee = assignee != null ? new SimpleStringProperty(assignee) : null;
+
+    String dateCreated = task.getDateCreated();
+    this.dateCreated = dateCreated != null ? new SimpleStringProperty(dateCreated) : null;
 
   }
 }

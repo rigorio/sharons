@@ -2,29 +2,31 @@ package inc.pabacus.TaskMetrics.desktop.timesheet;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.api.activity.Activity;
+import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
-import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
 import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
+import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -69,14 +71,14 @@ public class TimesheetPresenter implements Initializable {
   private DailyLogService dailyLogHandler;
   private MockUser mockUser;
   private UserHandler userHandler;
-  private DailyLog dailyLog = new DailyLog();
-  private static final MediaType JSON
-      = MediaType.parse("application/json; charset=utf-8");
+  private ActivityHandler activityHandler;
+
   private static final String HOST = "http://localhost:8080";
 
   public TimesheetPresenter() {
     dailyLogHandler = BeanManager.dailyLogService();
     userHandler = BeanManager.userHandler();
+    activityHandler = BeanManager.activityHandler();
   }
 
   @Override
@@ -95,28 +97,51 @@ public class TimesheetPresenter implements Initializable {
   @FXML
   public String changeStatus() {
     String currentStatus = statusText.getText();
+
+    if (TrackHandler.getSelectedTask() != null) {
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("Not Allowed");
+      alert.setHeaderText(null);
+      alert.setContentText("Cannot change activity while tracking a task");
+      alert.showAndWait();
+      return currentStatus;
+    }
+
+    Activity activity = Activity.BUSY; // default ?
+
     switch (currentStatus) {
       case "Logged Out":
         currentStatus = "Logged In";
         dailyLogHandler.changeLog(LogStatus.IN.getStatus());
+        activity = Activity.IN;
         break;
       case "Logged In":
         currentStatus = "Out To Lunch";
         dailyLogHandler.changeLog(LogStatus.OTL.getStatus());
+        activity = Activity.OUT;
         break;
       case "Out To Lunch":
         currentStatus = "Back From Lunch";
         dailyLogHandler.changeLog(LogStatus.BFL.getStatus());
+        activity = Activity.OTL;
         break;
       case "Back From Lunch":
         currentStatus = "Logged Out";
         dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
+        activity = Activity.BFL;
         break;
     }
     mockUser.setStatus(currentStatus);
     statusText.setText(currentStatus);
     refreshTimesheetTable();
+    activityHandler.saveActivity(activity);
     return currentStatus;
+  }
+
+  @FXML
+  public void updateStatus() {
+    String activity = comboBox.getValue();
+    activityHandler.saveActivity(activity);
   }
 
   private void populateCombobox() {
@@ -189,6 +214,7 @@ public class TimesheetPresenter implements Initializable {
     os.setText(new SoftwareHandler().getOs());
     hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
   }
+  // TODO refactor/extract. Does not follow code by responsibility
 
   private void getStatus() {
     String in = null, otl = null, bfl = null, out = null;

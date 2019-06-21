@@ -16,17 +16,13 @@ import java.util.Locale;
 public class ActivityHandler {
 
   private static final Logger logger = Logger.getLogger(ActivityHandler.class);
+  private static final String HOST = "http://localhost:8080";
+  private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-  private ActivityWebRepository repository;
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
-  private static final MediaType JSON
-      = MediaType.parse("application/json; charset=utf-8");
-
 
   public ActivityHandler() {
-    repository = new ActivityWebRepository();
   }
 
   public void saveActivity(Activity activity) {
@@ -35,7 +31,7 @@ public class ActivityHandler {
 
   public void saveActivity(UserActivity userActivity) {
     try {
-      saveUserActivity(userActivity);
+      sendToHost(userActivity);
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
@@ -47,18 +43,18 @@ public class ActivityHandler {
       UserActivity userActivity = UserActivity.builder()
           .activity(activity)
           .date(LocalDate.now().toString())
-          .startTime(timeFormatter.format(LocalTime.now()))
+          .time(timeFormatter.format(LocalTime.now()))
           .build();
 
 
-      saveUserActivity(userActivity);
+      sendToHost(userActivity);
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
 
   }
 
-  private void saveUserActivity(UserActivity userActivity) throws IOException {
+  private void sendToHost(UserActivity userActivity) throws IOException {
     List<UserActivity> ua = new ArrayList<>();
     ua.add(userActivity);
     String jsonValue = mapper.writeValueAsString(ua);
@@ -71,5 +67,6 @@ public class ActivityHandler {
                                    .build());
     ResponseBody body = call.execute().body();
     String jsonString = body.string();
+    System.out.println(jsonString);
   }
 }

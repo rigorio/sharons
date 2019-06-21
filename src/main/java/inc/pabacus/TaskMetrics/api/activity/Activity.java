@@ -6,7 +6,13 @@ public enum Activity {
   IDLE("Idle"),
   MEETING("Meeting"),
   LUNCH("Lunch"),
-  OFFLINE("Offline");
+  BREAK("Break"),
+  ONLINE("Logged In"),
+  OFFLINE("Logged Out"),
+  IN("Time In"),
+  OTL("Out To Lunch"),
+  BFL("Back From Lunch"),
+  OUT("Time Out");
 
   private String activity;
 
@@ -28,8 +34,20 @@ public enum Activity {
         return MEETING;
       case "Lunch":
         return LUNCH;
-      case "Offline":
+      case "Break":
+        return BREAK;
+      case "Logged In":
+        return ONLINE;
+      case "Logged Out":
         return OFFLINE;
+      case "Time In":
+        return IN;
+      case "Out To Lunch":
+        return OTL;
+      case "Back From Lunch":
+        return BFL;
+      case "Time Out":
+        return OUT;
       default:
         return null;
     }

@@ -5,11 +5,11 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.project.Project;
 import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 import okhttp3.MediaType;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -148,6 +149,7 @@ public class NewTaskPresenter implements Initializable {
         .totalTime("0.0")
         .status(Status.PENDING.getStatus())
         .description(description)
+        .dateCreated(LocalDate.now().toString())
         .build();
 
     xpmTaskHandler.save(xpmTask);

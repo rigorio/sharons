@@ -64,6 +64,9 @@ public class TasksPresenter implements Initializable {
 
     statusBox.setValue("All");
 
+    TableColumn<XpmTaskAdapter, String> dateCreated = new TableColumn<>("Date Created");
+    dateCreated.setCellValueFactory(param -> param.getValue().getDateCreated());
+
     TableColumn<XpmTaskAdapter, String> projectName = new TableColumn<>("Job");
     projectName.setCellValueFactory(param -> param.getValue().getJob());
     TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Time");
@@ -76,7 +79,7 @@ public class TasksPresenter implements Initializable {
     status.setCellValueFactory(param -> param.getValue().getStatus());
 
 
-    tasksTable.getColumns().addAll(projectName, description, status, billableHours);
+    tasksTable.getColumns().addAll(dateCreated, projectName, description, status, billableHours);
 
     initTasksTable();
 

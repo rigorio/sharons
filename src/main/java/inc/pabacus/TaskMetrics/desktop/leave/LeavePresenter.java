@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.desktop.leave;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.leave.Approver;
 import inc.pabacus.TaskMetrics.api.leave.Leave;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
@@ -14,7 +15,14 @@ import javafx.scene.control.DateCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -39,12 +47,14 @@ public class LeavePresenter implements Initializable {
   @FXML
   private JFXComboBox<String> managerDropdown;
 
+  private static final String HOST = "http://localhost:8080";
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    requestDropdown.getItems().addAll("Vacation Leave", "Sick Leave", "Maternity Leave", "Unpaid Leave");
     supervisorDropdown.getItems().addAll("Rose Cayabyab", "Rufino Quimen");
-    managerDropdown.getItems().addAll("Joy Cuison","Rodel Caras");
+    managerDropdown.getItems().addAll("Joy Cuison", "Rodel Caras");
 
+    getTypesOfRequestLeave();
     dates();
   }
 
@@ -89,7 +99,7 @@ public class LeavePresenter implements Initializable {
     String status = "Pending";
 
     List<Approver> getApprovers = Arrays.asList(new Approver(3L, supervisorString, status),
-                                               new Approver(4L,managerString,status));
+                                                new Approver(4L, managerString, status));
 
     LeaveService service = new LeaveService();
     Leave leave = service.requestLeave(new Leave(2L, 3L, getApprovers, startDateString, endDateString, reason, status, requestString));
@@ -111,5 +121,29 @@ public class LeavePresenter implements Initializable {
   @FXML
   void close(ActionEvent event) {
     cancel();
+  }
+
+  private void getTypesOfRequestLeave() {
+    OkHttpClient client = new OkHttpClient();
+    // code request code here
+    Request request = new Request.Builder()
+        .url(HOST + "/api/typesOfLeaves")
+        .addHeader("Content-Type", "application/json")
+        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .method("GET", null)
+        .build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      String getTypesOfLeaves = response.body().string();
+      JSONArray jsonarray = new JSONArray(getTypesOfLeaves);
+      for (int i = 0; i < jsonarray.length(); ++i) {
+        JSONObject jsonobject = jsonarray.getJSONObject(i);
+        requestDropdown.getItems().addAll(jsonobject.getString("leave"));
+      }
+    } catch (IOException | JSONException e) {
+      e.printStackTrace();
+    }
+
   }
 }

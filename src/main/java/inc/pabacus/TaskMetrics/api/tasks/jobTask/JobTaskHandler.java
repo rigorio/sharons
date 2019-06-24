@@ -26,7 +26,7 @@ public class JobTaskHandler {
       String jsonString = mapper.writeValueAsString(task);
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/task")
+                                     .url(HOST + "/api/user/timesheet")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .post(body)
                                      .build());
@@ -46,6 +46,7 @@ public class JobTaskHandler {
         .findAny();
   }
 
+  // TODO api not ready yet
   public void deleteById(Long id) {
     try {
       Call call = client.newCall(new Request.Builder()
@@ -64,7 +65,7 @@ public class JobTaskHandler {
     try {
 
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/tasks")
+                                     .url(HOST + "/api/user/timesheet")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .build());
       ResponseBody body = call.execute().body();
@@ -77,6 +78,7 @@ public class JobTaskHandler {
     return tasks;
   }
 
+  @Deprecated
   public List<JobTask> findAllDefaults() {
     List<JobTask> tasks = new ArrayList<>();
     try {

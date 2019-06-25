@@ -110,7 +110,6 @@ public class TrackerPresenter implements Initializable {
   private void saveAndClose() {
     XpmTask xpmTask = new XpmTask(selectedTask);
     xpmTaskWebHandler.save(xpmTask);
-    TrackHandler.setSelectedTask(null);
     closeWindow();
   }
 
@@ -121,6 +120,7 @@ public class TrackerPresenter implements Initializable {
   }
 
   private void closeWindow() {
+    TrackHandler.setSelectedTask(null);
     ((Stage) title.getScene().getWindow()).close();
   }
 

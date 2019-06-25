@@ -110,6 +110,10 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void startTask() {
+
+    if (TrackHandler.getSelectedTask() != null)
+      return;
+
     activityHandler.saveActivity(Activity.BUSY);
     XpmTaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
     if (selectedItem.getStatus().get().equals(Status.DONE.getStatus())) {

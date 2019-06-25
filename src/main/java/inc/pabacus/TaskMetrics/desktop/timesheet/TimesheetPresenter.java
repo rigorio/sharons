@@ -220,6 +220,7 @@ public class TimesheetPresenter implements Initializable {
 
   private void getStatus() {
     String in = null, otl = null, bfl = null, out = null;
+    LocalDate date = LocalDate.now();
 
     OkHttpClient client = new OkHttpClient();
     // code request code here
@@ -238,16 +239,17 @@ public class TimesheetPresenter implements Initializable {
       for (int i = 0; i < jsonarray.length(); i++) {
         JSONObject jsonobject = jsonarray.getJSONObject(i);
         dateLabel.setText(jsonobject.getString("date"));
-        in = jsonobject.getString("in");
-        otl = jsonobject.getString("otl");
-        bfl = jsonobject.getString("bfl");
-        out = jsonobject.getString("out");
+        if (dateLabel.getText().equalsIgnoreCase(String.valueOf(date))) {
+          in = jsonobject.getString("in");
+          otl = jsonobject.getString("otl");
+          bfl = jsonobject.getString("bfl");
+          out = jsonobject.getString("out");
+        }
       }
     } catch (JSONException | IOException e) {
       e.printStackTrace();
     }
 
-    LocalDate date = LocalDate.now();
     if (dateLabel.getText().equalsIgnoreCase(String.valueOf(date))) {
       if (in == null || in.equals("null")) {
         statusText.setText("Logged Out");

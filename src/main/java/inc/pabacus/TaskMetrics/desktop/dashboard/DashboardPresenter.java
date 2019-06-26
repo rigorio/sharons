@@ -210,18 +210,18 @@ public class DashboardPresenter implements Initializable {
   }
 
   private void services() {
-    hardwareServiceAPI.sendHardwareData();
-    standupService.runStandup();
-    softwareServiceAPI.sendSoftwareData();
-    screenshotService.enableScreenShot();
-    ActivityListener activityListener = BeanManager.activityListener();
+//    hardwareServiceAPI.sendHardwareData();
+//    standupService.runStandup();
+//    softwareServiceAPI.sendSoftwareData();
+//    screenshotService.enableScreenShot();
+    ActivityListener activityLirstener = BeanManager.activityListener();
     Runnable runnable = () -> {
       Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
       activityListener.unListen();
     };
     activityListener.setEvent(runnable);
-    activityListener.setInterval(120000);
-    activityListener.listen();
+    activityListener.setInterval(10000);
+//    activityListener.listen();
   }
 
   @FXML

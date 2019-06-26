@@ -8,7 +8,6 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
-import inc.pabacus.TaskMetrics.desktop.edit.EditPresenter;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
@@ -18,9 +17,10 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -156,7 +156,12 @@ public class TasksPresenter implements Initializable {
   private ObservableList<XpmTaskAdapter> getTasksByStatus(String status) {
 
     List<XpmTaskAdapter> backLogs = getAllTasks().stream()
-        .filter(backlog -> backlog.getStatus().get().equalsIgnoreCase(status))
+        .filter(backlog -> {
+          StringProperty currentSTatus = backlog.getStatus();
+          if (currentSTatus == null)
+            currentSTatus = new SimpleStringProperty("");
+          return currentSTatus.get().equalsIgnoreCase(status);
+        })
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(backLogs);
   }

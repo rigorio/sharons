@@ -145,8 +145,12 @@ public class EditPresenter implements Initializable {
     Optional<Job> any = jobTaskHandler.allJobs().stream()
         .filter(job -> job.getJob().equals(project))
         .findAny();
-    if (!any.isPresent())
-      System.out.println("log this");
+
+    if (!any.isPresent()) {
+      jobComboBox.setValue("Select a Job");
+      taskCombobox.setValue("Select a Task");
+      return;
+    }
     Job job = any.get();
     List<Task> tasks = jobTaskHandler.allTasks();
     List<String> filteredTasks = tasks.stream()

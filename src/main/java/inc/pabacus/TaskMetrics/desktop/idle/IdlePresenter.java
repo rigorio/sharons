@@ -3,6 +3,8 @@ package inc.pabacus.TaskMetrics.desktop.idle;
 import com.jfoenix.controls.JFXTextArea;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.UserActivity;
+import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
+import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
@@ -21,6 +23,7 @@ public class IdlePresenter implements Initializable {
 
   private ActivityHandler activityHandler;
 
+
   private String startTime;
 
   private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
@@ -33,6 +36,8 @@ public class IdlePresenter implements Initializable {
 
   @FXML
   public void submitActivity() {
+    ActivityListener activityListener = BeanManager.activityListener();
+//    activityListener.listen();
     String activity = activityArea.getText();
     UserActivity userActivity = UserActivity.builder()
         .time(startTime)

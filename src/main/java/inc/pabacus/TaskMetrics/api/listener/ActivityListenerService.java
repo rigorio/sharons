@@ -15,11 +15,12 @@ public class ActivityListenerService implements ActivityListener {
 
   private static final int INITIAL_DELAY = 0;
   private static final Logger logger = Logger.getLogger(ActivityListenerService.class);
-  private final ScheduledExecutorService executorService;
+  private ScheduledExecutorService executorService;
 
   private long previousTime = 0;
   private long lastTime = System.currentTimeMillis();
-  private int interval = 300000; // in milliseconds = 5 minutes
+  private int interval = 10000; // in milliseconds = 5 minutes
+  private boolean hasRunBefore = false;
 
   private NativeKeyAndMouseListener listener;
   private ScheduledFuture<?> scheduledFuture;
@@ -28,13 +29,13 @@ public class ActivityListenerService implements ActivityListener {
     previousTime = lastTime;
     lastTime = listener.getTime();
     long timeGap = lastTime - previousTime;
+    System.out.println(timeGap);
     if (timeGap == 0)
       event.run();
   };
 
   public ActivityListenerService() {
     listener = new NativeKeyAndMouseListener();
-    executorService = Executors.newSingleThreadScheduledExecutor();
   }
 
   @Override
@@ -64,8 +65,11 @@ public class ActivityListenerService implements ActivityListener {
     try {
       if (event == null)
         throw new NoEventFoundException("Executable `event` not yet defined");
+      executorService = Executors.newSingleThreadScheduledExecutor();
       listener.listen();
-      scheduledFuture = executorService.scheduleWithFixedDelay(runnable, INITIAL_DELAY, interval, TimeUnit.MILLISECONDS);
+      int delay = hasRunBefore ? interval : 0;
+      System.out.println(delay);
+      scheduledFuture = executorService.scheduleWithFixedDelay(runnable, delay, interval, TimeUnit.MILLISECONDS);
     } catch (NativeHookException | NoEventFoundException e) {
       logger.warn(e.getMessage());
     }
@@ -74,6 +78,7 @@ public class ActivityListenerService implements ActivityListener {
   @Override
   public void unListen() {
     try {
+      hasRunBefore = true;
       if (scheduledFuture == null)
         throw new RuntimeException("Listener not activated");
       scheduledFuture.cancel(true);

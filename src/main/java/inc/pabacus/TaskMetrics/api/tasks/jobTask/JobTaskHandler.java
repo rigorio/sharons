@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class JobTaskHandler {
 
@@ -20,78 +19,33 @@ public class JobTaskHandler {
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
 
-  @SuppressWarnings("all")
-  public JobTask save(JobTask task) {
+  public List<Job> allJobs() {
+    List<Job> jobs = new ArrayList<>();
     try {
-      String jsonString = mapper.writeValueAsString(task);
-      RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/user/timesheet")
+                                     .url(HOST + "/api/jobs")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
-                                     .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
-      JobTask xpmTask;
-      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<JobTask>() {});
-      xpmTask.setId(xpmTask.getId());
-    } catch (IOException e) {
+      jobs = mapper.readValue(responseBody.string(), new TypeReference<List<Job>>() {});
+    } catch (
+        IOException e) {
       logger.warn(e.getMessage());
     }
-    return task;
+    return jobs;
   }
 
-  public Optional<JobTask> findById(Long id) {
-    return findAll().stream()
-        .filter(task -> task.getId().equals(id))
-        .findAny();
-  }
-
-  // TODO api not ready yet
-  public void deleteById(Long id) {
+  public List<Task> allTasks() {
+    List<Task> tasks = new ArrayList<>();
     try {
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/task/" + id)
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
-                                     .delete()
-                                     .build());
-      call.execute();
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-    }
-  }
-
-  public List<JobTask> findAll() {
-    List<JobTask> tasks = new ArrayList<>();
-    try {
-
-      Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/user/timesheet")
+                                     .url(HOST + "/api/jobs/tasks")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .build());
-      ResponseBody body = call.execute().body();
-      String jsonString = body.string();
-      tasks = mapper.readValue(jsonString, new TypeReference<List<JobTask>>() {});
-
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-    }
-    return tasks;
-  }
-
-  @Deprecated
-  public List<JobTask> findAllDefaults() {
-    List<JobTask> tasks = new ArrayList<>();
-    try {
-
-      Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/tasks/defaults")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
-                                     .build());
-      ResponseBody body = call.execute().body();
-      String jsonString = body.string();
-      tasks = mapper.readValue(jsonString, new TypeReference<List<JobTask>>() {});
-
-    } catch (IOException e) {
+      ResponseBody responseBody = call.execute().body();
+      tasks = mapper.readValue(responseBody.string(), new TypeReference<List<Task>>() {});
+    } catch (
+        IOException e) {
       logger.warn(e.getMessage());
     }
     return tasks;

@@ -20,8 +20,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.net.URL;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class TrackerPresenter implements Initializable {
@@ -43,6 +46,8 @@ public class TrackerPresenter implements Initializable {
   private XpmTaskWebHandler xpmTaskWebHandler;
   private ActivityHandler activityHandler;
   private DailyLogService dailyLogHandler;
+  private String startTime;
+  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
 
   public TrackerPresenter() {
     timerService = new TimerService();
@@ -58,12 +63,14 @@ public class TrackerPresenter implements Initializable {
     selectedTask = TrackHandler.getSelectedTask();
     timerService.setFxProcess(process);
     timerService.start();
-    String taskTitle = selectedTask.getTitle().get();
+    String taskTitle = selectedTask.getTask().get();
     title.setText(taskTitle);
+    startTime = getCurrentTime();
   }
 
   @FXML
   public void completeTask() {
+    selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
     updateTask(Status.DONE.getStatus());
     saveAndClose();
   }
@@ -109,6 +116,8 @@ public class TrackerPresenter implements Initializable {
 
   private void saveAndClose() {
     XpmTask xpmTask = new XpmTask(selectedTask);
+    if (xpmTask.getStartTime() == null)
+      xpmTask.setStartTime(startTime);
     xpmTaskWebHandler.save(xpmTask);
     closeWindow();
   }
@@ -128,9 +137,9 @@ public class TrackerPresenter implements Initializable {
     // I might use this in the future don't touch because I'm forgetful
     // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     String totalTimeSpent = getTotalTimeSpent();
-    String currentTime = selectedTask.getTime().get();
+    String currentTime = selectedTask.getTotalTimeSpent().get();
     totalTimeSpent = String.valueOf((Double.parseDouble(currentTime) + Double.parseDouble(totalTimeSpent)));
-    selectedTask.setTime(new SimpleStringProperty(totalTimeSpent));
+    selectedTask.setTotalTimeSpent(new SimpleStringProperty(totalTimeSpent));
     selectedTask.setStatus(new SimpleStringProperty(status));
   }
 
@@ -146,5 +155,9 @@ public class TrackerPresenter implements Initializable {
     // double t = Double.parseDouble(df.format(totalTimeSpent));
     // This method is faster than using DecimalFormat and parseDouble
     return String.format("%.2f", totalTimeSpent);
+  }
+
+  private String getCurrentTime() {
+    return formatter.format(LocalTime.now());
   }
 }

@@ -14,6 +14,7 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import javafx.application.Platform;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -111,13 +112,13 @@ public class EditPresenter implements Initializable {
     StringProperty endTime = taskBeingEdited.getEndTime();
     StringProperty totalTimeSpent = taskBeingEdited.getTotalTimeSpent();
     StringProperty dateCreated = taskBeingEdited.getDateCreated();
-    if (job.get() != null)
+    if (job != null)
       jobComboBox.setValue(job.get());
-    if (task.get() != null)
+    if (task != null)
       taskCombobox.setValue(task.get());
-    if (description.get() != null)
+    if (description != null)
       descriptionField.setText(description.get());
-    if (status.get() != null)
+    if (status != null)
       statusComboBox.setValue(status.get());
     if (startTime != null)
       startTimeField.setText(startTime.get());
@@ -189,7 +190,7 @@ public class EditPresenter implements Initializable {
 //    Project project = getProject();
 
     XpmTask xpmTask = XpmTask.builder()
-        .id(taskBeingEdited.getId().get())
+
         .job(jobComboBox.getValue())
         .task(taskTitle)
         .description(description)
@@ -201,6 +202,10 @@ public class EditPresenter implements Initializable {
         .startTime(startTimeField.getText())
         .endTime(endTimeField.getText())
         .build();
+    LongProperty id1 = taskBeingEdited.getId();
+
+    if (id1 != null)
+      xpmTask.setId(id1.get());
 
     xpmTaskHandler.save(xpmTask);
 

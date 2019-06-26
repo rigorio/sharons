@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.tasks;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.StringProperty;
 import lombok.AllArgsConstructor;
@@ -15,44 +16,63 @@ public class
 XpmTask {
 
   private Long id;
-  private String title;
-  private String description;
-  private String status;
-  private String totalTime;
-  private String job;
   private String client;
-  private String assignee;
+  private String job;
+  private String description;
+  private String task;
+  private String status;
   private String dateCreated;
+  private Boolean billable;
+  private String startTime;
+  private String endTime;
+  private String totalTimeSpent;
+  private Long businessValueId;
+  private InvoiceType invoiceType;
+  private Assignee assignee;
 
-  public XpmTask(XpmTaskAdapter task) {
+  public XpmTask(XpmTaskAdapter xpmTask) {
 
-    LongProperty id = task.getId();
+    LongProperty id = xpmTask.getId();
     this.id = id != null ? id.get() : null;
 
-    StringProperty title = task.getTitle();
-    this.title = title != null ? title.get() : null;
-
-    StringProperty description = task.getDescription();
-    this.description = description != null ? description.get() : null;
-
-    StringProperty status = task.getStatus();
-    this.status = status != null ? status.get() : null;
-
-    StringProperty time = task.getTime();
-    this.totalTime = time != null ? time.get() : null;
-
-    StringProperty job = task.getJob();
+    StringProperty job = xpmTask.getJob();
     this.job = job != null ? job.get() : null;
 
-    StringProperty client = task.getClient();
+    StringProperty client = xpmTask.getClient();
     this.client = client != null ? client.get() : null;
 
-    StringProperty assignee = task.getAssignee();
-    this.assignee = assignee != null ? assignee.get() : null;
+    StringProperty description = xpmTask.getDescription();
+    this.description = description != null ? description.get() : null;
 
-    StringProperty dateCreated = task.getDateCreated();
+    StringProperty task = xpmTask.getTask();
+    this.task = task != null ? task.get() : null;
+
+    StringProperty status = xpmTask.getStatus();
+    this.status = status != null ? status.get() : null;
+
+    StringProperty dateCreated = xpmTask.getDateCreated();
     this.dateCreated = dateCreated != null ? dateCreated.get() : null;
 
+    BooleanProperty billable = xpmTask.getBillable();
+    this.billable = billable != null ? billable.get() : null;
+
+    StringProperty startTime = xpmTask.getStartTime();
+    this.startTime = startTime != null ? startTime.get() : null;
+
+    StringProperty endTime = xpmTask.getEndTime();
+    this.endTime = endTime != null ? endTime.get() : null;
+
+    StringProperty totalTimeSpent = xpmTask.getTotalTimeSpent();
+    this.totalTimeSpent = totalTimeSpent != null ? totalTimeSpent.get() : null;
+
+    LongProperty businessValueId = xpmTask.getBusinessValueId();
+    this.businessValueId = businessValueId != null ? businessValueId.get() : null;
+
+    InvoiceTypeAdapter invoiceTypeAdapter = xpmTask.getInvoiceTypeAdapter();
+    this.invoiceType = invoiceTypeAdapter != null ? new InvoiceType(invoiceTypeAdapter) : null;
+
+    AssigneeAdapter assigneeAdapter = xpmTask.getAssigneeAdapter();
+    this.assignee = assigneeAdapter != null ? new Assignee(assigneeAdapter) : null;
 
   }
 }

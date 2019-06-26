@@ -28,9 +28,7 @@
         </font>
         <graphic>
           <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-              <Image url="@../../../../../../resources/img/jobs.png"/>
-            </image>
+            <Image url="@../../../../../../resources/img/jobs.png"/>
           </ImageView>
         </graphic>
       </JFXButton>
@@ -42,9 +40,7 @@
         </font>
         <graphic>
           <ImageView fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-              <Image url="@../../../../../../resources/img/timesheet.png"/>
-            </image>
+            <Image url="@../../../../../../resources/img/timesheet.png"/>
           </ImageView>
         </graphic>
       </JFXButton>
@@ -56,9 +52,7 @@
         </font>
         <graphic>
           <ImageView fx:id="screenShotIcon" fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-              <Image url="@../../../../../../resources/img/screenshot.png"/>
-            </image>
+            <Image url="@../../../../../../resources/img/screenshot.png"/>
           </ImageView>
         </graphic>
       </JFXButton>
@@ -70,9 +64,7 @@
         </font>
         <graphic>
           <ImageView fx:id="supportIcon" fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-              <Image url="@../../../../../../resources/img/support.png"/>
-            </image>
+            <Image url="@../../../../../../resources/img/support.png"/>
           </ImageView>
         </graphic>
       </JFXButton>
@@ -83,9 +75,19 @@
         </font>
         <graphic>
           <ImageView fx:id="screenShotIcon1" fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-              <Image url="@../../../../../../resources/img/chat.png"/>
-            </image>
+            <Image url="@../../../../../../resources/img/chat.png"/>
+          </ImageView>
+        </graphic>
+      </JFXButton>
+      <JFXButton id="chat" fx:id="settingsButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" layoutX="10.0"
+                 layoutY="375.0" mnemonicParsing="false" onAction="#viewSettings" prefHeight="58.0" prefWidth="300.0"
+                 text="Settings" textFill="WHITE">
+        <font>
+          <Font size="20.0"/>
+        </font>
+        <graphic>
+          <ImageView fx:id="settingsIcon" fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../../../../../resources/img/settings.png"/>
           </ImageView>
         </graphic>
       </JFXButton>

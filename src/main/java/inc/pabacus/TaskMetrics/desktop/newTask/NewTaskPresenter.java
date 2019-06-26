@@ -150,7 +150,6 @@ public class NewTaskPresenter implements Initializable {
         .id(3L)
         .task(taskTitle)
         .job(jobComboBox.getValue())
-        .dateCreated(LocalDate.now().toString())
         .billable(true)
         .totalTimeSpent("0.0")
         .status(Status.PENDING.getStatus())

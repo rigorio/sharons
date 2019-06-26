@@ -25,7 +25,9 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.*;
+import javafx.scene.CacheHint;
+import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -46,6 +48,10 @@ import java.util.ResourceBundle;
 
 public class DashboardPresenter implements Initializable {
 
+  @FXML
+  private JFXButton settingsButton;
+  @FXML
+  private ImageView settingsIcon;
   @FXML
   private ImageView supportIcon;
   @FXML
@@ -129,6 +135,10 @@ public class DashboardPresenter implements Initializable {
     ImageView supportImage = new ImageView(new Image(getClass().getResourceAsStream("/img/support.png")));
     setSize(supportImage);
     supportButton.setGraphic(supportImage);
+
+    ImageView settingsImage = new ImageView(new Image(getClass().getResourceAsStream("/img/settings.png")));
+    setSize(settingsImage);
+    settingsButton.setGraphic(settingsImage);
 
     status.getItems().addAll("Busy", "Meeting", "Lunch", "Offline");
 
@@ -253,6 +263,11 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void viewChats() {
     updateDynamicPaneContent(new ChatView().getView());
+  }
+
+  @FXML
+  public void viewSettings() {
+
   }
 
   public void viewSupport() {

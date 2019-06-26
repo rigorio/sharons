@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.utils;
 
 import com.airhacks.afterburner.views.FXMLView;
+import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -46,9 +47,13 @@ public class GuiManager {
     alert.showAndWait();
   }
 
-  public void displayAlwaysOnTop(FXMLView view) {
-    Stage stage = new Stage();
+  private FXMLView closeWindow;
 
+  public void displayAlwaysOnTop(FXMLView view) {
+    //pass view to closeWindow
+    closeWindow = view;
+
+    Stage stage = new Stage();
     Scene scene = new Scene(view.getView());
     scene.setOnMousePressed(event -> {
       xOffset = event.getSceneX();
@@ -71,6 +76,6 @@ public class GuiManager {
       evt.consume();
       preventClosing();
     });
-
   }
+
 }

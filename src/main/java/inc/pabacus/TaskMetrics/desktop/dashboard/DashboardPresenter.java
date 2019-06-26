@@ -25,9 +25,7 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.CacheHint;
-import javafx.scene.Cursor;
-import javafx.scene.Parent;
+import javafx.scene.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -281,6 +279,8 @@ public class DashboardPresenter implements Initializable {
       kickerService.stopKicker();
       tokenService.stopToken();
       activityListener.unListen();
+
+      GuiManager.getInstance().closeStage();
       GuiManager.getInstance().changeView(new LoginView());
     } else {
       alert.close();

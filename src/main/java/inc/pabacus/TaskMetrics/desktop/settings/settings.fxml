@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="inc.pabacus.TaskMetrics.desktop.settings.SettingsPresenter"
-            prefHeight="400.0" prefWidth="600.0">
-
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.settings.SettingsPresenter">
+  <JFXTextField layoutX="112.0" layoutY="110.0" prefHeight="31.0" prefWidth="372.0"/>
+  <JFXButton layoutX="502.0" layoutY="110.0" style="-fx-background-color: #008080;" textFill="WHITE"
+             mnemonicParsing="false" text="Update Host"/>
+  <Label layoutX="112.0" layoutY="89.0" text="Web API Host"/>
+  <JFXComboBox layoutX="112.0" layoutY="220.0" prefHeight="31.0" prefWidth="372.0"/>
+  <JFXButton layoutX="502.0" layoutY="220.0" style="-fx-background-color: #008080;" textFill="WHITE"
+             mnemonicParsing="false" text="Update Manager"/>
+  <Label layoutX="112.0" layoutY="199.0" text="Manager"/>
 </AnchorPane>

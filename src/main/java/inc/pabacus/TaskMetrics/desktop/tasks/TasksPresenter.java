@@ -8,6 +8,9 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.desktop.edit.EditPresenter;
+import inc.pabacus.TaskMetrics.desktop.edit.EditView;
+import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
@@ -17,6 +20,7 @@ import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -139,6 +143,12 @@ public class TasksPresenter implements Initializable {
     GuiManager.getInstance().displayView(new NewTaskView());
   }
 
+  @FXML
+  public void editTask() {
+    EditableTaskHolder.setTask(tasksTable.getSelectionModel().getSelectedItem());
+    GuiManager.getInstance().displayView(new EditView());
+  }
+
   private void initTasksTable() {
     tasksTable.setItems(FXCollections.observableArrayList(getAllTasks()));
   }
@@ -180,5 +190,4 @@ public class TasksPresenter implements Initializable {
                                  .map(XpmTaskAdapter::new)
                                  .collect(Collectors.toList()));
   }
-
 }

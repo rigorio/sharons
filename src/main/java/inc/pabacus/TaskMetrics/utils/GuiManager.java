@@ -78,4 +78,9 @@ public class GuiManager {
     });
   }
 
+  public void closeStage() {
+    TrackHandler.setSelectedTask(null);
+    Stage stage = (Stage) closeWindow.getView().getScene().getWindow();
+    stage.close();
+  }
 }

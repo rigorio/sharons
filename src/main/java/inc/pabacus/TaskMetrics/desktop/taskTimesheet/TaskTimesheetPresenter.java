@@ -1,6 +1,8 @@
 package inc.pabacus.TaskMetrics.desktop.taskTimesheet;
 
-import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetHandler;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetService;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,13 +18,14 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class TaskTimesheetPresenter implements Initializable {
 
   @FXML
   private AnchorPane mainPane;
   @FXML
-  private TableView<XpmTimesheetAdapter> taskTimesheet;
+  private TableView<XpmTaskAdapter> taskTimesheet;
   @FXML
   private Label totalbillable;
   @FXML
@@ -34,9 +37,11 @@ public class TaskTimesheetPresenter implements Initializable {
   @FXML
   private Label totalInvoice;
   private XpmTimesheetService xpmTimesheetService;
+  private XpmTaskWebHandler xpmTaskWebHandler;
 
-  public TaskTimesheetPresenter(){
+  public TaskTimesheetPresenter() {
     xpmTimesheetService = new XpmTimesheetHandler();
+    xpmTaskWebHandler = new XpmTaskWebHandler();
   }
 
   @Override
@@ -45,24 +50,44 @@ public class TaskTimesheetPresenter implements Initializable {
   }
 
   private void initTaskSheet() {
-    TableColumn<XpmTimesheetAdapter, String> client = new TableColumn<>("Client");
-    client.setCellValueFactory(param -> param.getValue().getClient());
 
-    TableColumn<XpmTimesheetAdapter, String> job = new TableColumn<>("Job");
-    job.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getJob().get()));
+    TableColumn<XpmTaskAdapter, String> project = new TableColumn<>("Project");
+    project.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getJob().get()));
 
-    TableColumn<XpmTimesheetAdapter, String> task = new TableColumn<>("Task");
-    task.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getJob().get()));
+    TableColumn<XpmTaskAdapter, String> startTime = new TableColumn<>("Start Time");
+    startTime.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getStartTime().get()));
 
-    TableColumn<XpmTimesheetAdapter, String> date = new TableColumn<>("Date");
-    date.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getDate().get()));
+    TableColumn<XpmTaskAdapter, String> endTime = new TableColumn<>("End Time");
+    endTime.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getEndTime().get()));
 
-    TableColumn<XpmTimesheetAdapter, String> totalTimeSpent = new TableColumn<>("Total Time Spent");
-    totalTimeSpent.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getTotalTimeSpent().get() + "%"));
+    TableColumn<XpmTaskAdapter, String> billable = new TableColumn<>("Billable?");
+    billable.setCellValueFactory(param -> {
+      Boolean isBillable = param.getValue().getBillable().getValue();
+      return new SimpleStringProperty("" + (isBillable ? "Y" : "N"));
+    });
+
+    TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Billable Hours");
+    billableHours.setCellValueFactory(param -> {
+      XpmTaskAdapter xpmTaskAdapter = param.getValue();
+      String totalTimeSpent = xpmTaskAdapter.getTotalTimeSpent().get();
+      Boolean isBillable = xpmTaskAdapter.getBillable().getValue();
+      return new SimpleStringProperty("" + (isBillable ? totalTimeSpent : "0"));
+    });
+
+    TableColumn<XpmTaskAdapter, String> nonBillableHours = new TableColumn<>("Non-Billable Hours");
+    nonBillableHours.setCellValueFactory(param -> {
+      XpmTaskAdapter xpmTaskAdapter = param.getValue();
+      String totalTimeSpent = xpmTaskAdapter.getTotalTimeSpent().get();
+      Boolean isBillable = xpmTaskAdapter.getBillable().getValue();
+      return new SimpleStringProperty("" + (!isBillable ? totalTimeSpent : "0"));
+    });
+
+    TableColumn<XpmTaskAdapter, String> description = new TableColumn<>("Description");
+    description.setCellValueFactory(param -> param.getValue().getTask());
 
 
-    taskTimesheet.getColumns().addAll(client, job, task,
-                                      date, totalTimeSpent);
+    taskTimesheet.getColumns().addAll(project, startTime, endTime, billable,
+                                      billableHours, nonBillableHours, description);
     initTaskTimeSheet();
 
     totalbillable.setText("7.49");
@@ -77,9 +102,13 @@ public class TaskTimesheetPresenter implements Initializable {
     taskTimesheet.setItems(getXpmTimesheet());
   }
 
-  private ObservableList<XpmTimesheetAdapter> getXpmTimesheet() {
-    List<XpmTimesheetAdapter> projects = xpmTimesheetService.getAllgetXpmTimesheetAdapter();
-    return FXCollections.observableArrayList(projects);
+  private ObservableList<XpmTaskAdapter> getXpmTimesheet() {
+    List<XpmTaskAdapter> tasks = xpmTaskWebHandler.findAll()
+        .stream()
+        .filter(xpmTask -> xpmTask.getStatus().equals(Status.DONE.getStatus()))
+        .map(XpmTaskAdapter::new)
+        .collect(Collectors.toList());
+    return FXCollections.observableArrayList(tasks);
   }
 
 }

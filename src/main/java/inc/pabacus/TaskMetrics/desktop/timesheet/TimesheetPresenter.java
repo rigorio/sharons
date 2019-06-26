@@ -247,7 +247,7 @@ public class TimesheetPresenter implements Initializable {
         }
       }
     } catch (JSONException | IOException e) {
-      e.printStackTrace();
+      System.out.println(e);
     }
 
     if (dateLabel.getText().equalsIgnoreCase(String.valueOf(date))) {

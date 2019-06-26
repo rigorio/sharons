@@ -4,9 +4,9 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -62,7 +62,7 @@ public class EditPresenter implements Initializable {
   }
 
   public void saveTask() {
-    task.setTitle(titleText.getText());
+    task.setTask(titleText.getText());
     task.setDescription(descriptionText.getText());
     xpmTaskWebHandler.save(task);
     close();
@@ -76,7 +76,7 @@ public class EditPresenter implements Initializable {
 
   private void initEditables() {
 
-    titleText.setText(task.getTitle());
+    titleText.setText(task.getTask());
     descriptionText.setText(task.getDescription());
 
     progressText.getItems().addAll(new ArrayList<String>() {{

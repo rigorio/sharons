@@ -34,8 +34,6 @@ public class NewTaskPresenter implements Initializable {
   @FXML
   private Label customTaskLabel;
   @FXML
-  private Label businessLabel;
-  @FXML
   private Label descriptionLabel;
   @FXML
   private JFXTextField customTaskField;
@@ -49,8 +47,6 @@ public class NewTaskPresenter implements Initializable {
   private JFXButton closeButton;
   @FXML
   private JFXComboBox<String> jobComboBox;
-  @FXML
-  private JFXComboBox<String> businessComboBox;
 
   ObservableList<String> billableList = FXCollections.observableArrayList("True", "False");
 
@@ -74,19 +70,19 @@ public class NewTaskPresenter implements Initializable {
     List<String> businesses = getAllBusinessValues().stream()
         .map(BusinessValue::getBusiness)
         .collect(Collectors.toList());
-    businessComboBox.getItems().addAll(businesses);
+//    businessComboBox.getItems().addAll(businesses);
     taskCombobox.setPromptText("Select a task");
     jobComboBox.setPromptText("Select a job");
-    businessComboBox.setPromptText("Choose Business Value");
+//    businessComboBox.setPromptText("Choose Business Value");
     jobComboBox.setItems(FXCollections.observableArrayList(getJobs()));
     customTaskField.setVisible(false);
     customTaskLabel.setVisible(false);
-    businessLabel.setLayoutY(168);
-    businessComboBox.setLayoutY(168);
+//    businessLabel.setLayoutY(168);
+//    businessComboBox.setLayoutY(168);
     descriptionLabel.setLayoutY(203);
     descriptionField.setLayoutY(203);
 
-    businessComboBox.setValue("Development");
+//    businessComboBox.setValue("Development");
   }
 
   private List<String> getJobs() {
@@ -143,7 +139,7 @@ public class NewTaskPresenter implements Initializable {
     String taskTitle = taskValue.equalsIgnoreCase("Custom Task")
         ? customTaskField.getText()
         : taskValue;
-    BusinessValue businessValue = getBusinessValue();
+//    BusinessValue businessValue = getBusinessValue();
 //    Project project = getProject();
 
     XpmTask xpmTask = XpmTask.builder()
@@ -168,23 +164,13 @@ public class NewTaskPresenter implements Initializable {
   }
 
 
-  private BusinessValue getBusinessValue() {
-    Optional<BusinessValue> any = getAllBusinessValues().stream()
-        .filter(businessValue -> businessValue.getBusiness().equals(businessComboBox.getValue()))
-        .findAny();
-
-    if (!any.isPresent())
-      throw new RuntimeException("No business value found"); // throw dialog box
-
-    return any.get();
-  }
 
   private List<BusinessValue> getAllBusinessValues() {
     return businessValueHandler.getAll();
   }
 
   private boolean isAlrightAlrightAlright() {
-    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() || businessComboBox.getSelectionModel().isEmpty();
+    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() ;
   }
 
   private boolean isCustomTaskEmpty() {
@@ -200,16 +186,16 @@ public class NewTaskPresenter implements Initializable {
     if (status) {
       customTaskField.setVisible(false);
       customTaskLabel.setVisible(false);
-      businessLabel.setLayoutY(168);
-      businessComboBox.setLayoutY(168);
+//      businessLabel.setLayoutY(168);
+//      businessComboBox.setLayoutY(168);
       descriptionLabel.setLayoutY(203);
       descriptionField.setLayoutY(203);
     } else {
 
       customTaskField.setVisible(true);
       customTaskLabel.setVisible(true);
-      businessLabel.setLayoutY(203);
-      businessComboBox.setLayoutY(203);
+//      businessLabel.setLayoutY(203);
+//      businessComboBox.setLayoutY(203);
       descriptionLabel.setLayoutY(246);
       descriptionField.setLayoutY(246);
     }

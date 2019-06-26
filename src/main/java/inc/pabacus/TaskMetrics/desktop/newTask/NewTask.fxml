@@ -26,8 +26,8 @@
              prefWidth="82.0" style="-fx-background-color: #008080;" text="Save" textFill="WHITE"/>
   <JFXButton fx:id="closeButton" layoutX="310.0" layoutY="286.0" onAction="#close" prefHeight="32.0" prefWidth="82.0"
              style="-fx-background-color: #D2D2D2;" text="Close" textFill="WHITE"/>
-  <JFXComboBox fx:id="businessComboBox" layoutX="192.0" layoutY="202.0" prefHeight="25.0" prefWidth="199.0"/>
-  <Label fx:id="businessLabel" layoutX="87.0" layoutY="203.0" prefHeight="25.0" prefWidth="98.0" text="Business Value"/>
+<!--  <JFXComboBox fx:id="businessComboBox" layoutX="192.0" layoutY="202.0" prefHeight="25.0" prefWidth="199.0"/>-->
+<!--  <Label fx:id="businessLabel" layoutX="87.0" layoutY="203.0" prefHeight="25.0" prefWidth="98.0" text="Business Value"/>-->
   <JFXComboBox fx:id="jobComboBox" layoutX="192.0" layoutY="71.0" onAction="#changeTasks" prefHeight="25.0"
                prefWidth="199.0"/>
   <JFXComboBox fx:id="taskCombobox" layoutX="191.0" layoutY="118.0" onAction="#selectTask" prefHeight="25.0"

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.*;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -68,5 +71,32 @@ public class ActivityHandler {
     ResponseBody body = call.execute().body();
     String jsonString = body.string();
     System.out.println(jsonString);
+  }
+
+  public String getLastLog() {
+    String activity = null;
+    OkHttpClient client = new OkHttpClient();
+    // code request code here
+    Request request = new Request.Builder()
+        .url(HOST + "/api/activities?date=" + LocalDate.now())
+        .addHeader("Content-Type", "application/json")
+        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .method("GET", null)
+        .build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      String getChats = response.body().string();
+      JSONArray jsonarray = new JSONArray(getChats);
+      for (int i = 0; i < jsonarray.length(); ++i) {
+        JSONObject jsonobject = jsonarray.getJSONObject(i);
+        activity = jsonobject.getString("activity");
+      }
+    } catch (IOException | JSONException e) {
+      e.printStackTrace();
+    }
+    System.out.println("----------------------------");
+    System.out.println(activity);
+    return activity;
   }
 }

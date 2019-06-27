@@ -102,8 +102,8 @@ public class LeavePresenter implements Initializable {
                                                 new Approver(4L, managerString, status));
 
     LeaveService service = new LeaveService();
-    Leave leave = service.requestLeave(new Leave(2L, 3L, getApprovers, startDateString, endDateString, reason, status, requestString));
-    System.out.println(leave);
+    Leave leave = service.saveLeave(new Leave(2L, 3L, getApprovers, startDateString, endDateString, reason, status, requestString));
+    // maybe log this (MAYBE)
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Request submitted!");
     alert.showAndWait();

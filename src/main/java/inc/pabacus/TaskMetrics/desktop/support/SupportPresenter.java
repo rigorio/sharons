@@ -30,10 +30,12 @@ public class SupportPresenter implements Initializable {
 
   private LeaveService leaveService;
   private UserHandler userHandler;
+  private TemporaryStaffHolder staffHolder;
 
   public SupportPresenter() {
     leaveService = BeanManager.leaveService();
     userHandler = BeanManager.userHandler();
+    staffHolder = new TemporaryStaffHolder();
   }
 
   @Override
@@ -47,7 +49,10 @@ public class SupportPresenter implements Initializable {
     ObservableList<LeaveAdapter> allLeaves = getAndConvertLeaves();
 
     TableColumn<LeaveAdapter, String> staff = new TableColumn<>("Staff");
-    staff.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getUserId().getValue()));
+    staff.setCellValueFactory(param -> {
+      Long value = param.getValue().getUserId().getValue();
+      return new SimpleStringProperty(staffHolder.getStaff(value));
+    });
 
     TableColumn<LeaveAdapter, String> startDate = new TableColumn<>("Start Date");
     startDate.setCellValueFactory(param -> param.getValue().getStartDate());

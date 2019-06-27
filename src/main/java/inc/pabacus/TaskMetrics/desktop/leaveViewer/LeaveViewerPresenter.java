@@ -9,6 +9,7 @@ import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -44,20 +45,36 @@ public class LeaveViewerPresenter implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     setValues();
-    denyButton.getScene().getWindow().setOnCloseRequest(e -> emptyLeaveHolder());
+//    denyButton.getScene().getWindow().setOnCloseRequest(e -> emptyLeaveHolder());
   }
 
   private void setValues() {
-    statusLabel.setText(leave.getStatus());
+    String status = leave.getStatus();
+    statusLabel.setText(status);
+
+    Color color = status.equals("Approved") ? Color.GREEN : status.equals("Denied") ? Color.RED : Color.MEDIUMPURPLE;
+    statusLabel.setTextFill(color);
+
     requestTypeField.setText(leave.getTypeOfRequest());
-    requestTypeField.setDisable(true);
+    setEditable(requestTypeField);
+
     startDateField.setText(leave.getStartDate());
-    startDateField.setDisable(true);
+    setEditable(startDateField);
+
     endDatefield.setText(leave.getEndDate());
-    endDatefield.setDisable(true);
+    setEditable(endDatefield);
+
     reasonField.setText(leave.getReason());
-    reasonField.setDisable(true);
+    reasonField.setEditable(false);
   }
+
+  private void setEditable(JFXTextField txtInput) {
+    txtInput.setEditable(false);
+    // Uncomment below to disable being able to select text
+    // txtInput.setMouseTransparent(true);
+    // txtInput.setFocusTraversable(false);
+  }
+
 
   @FXML
   public void approveRequest() {

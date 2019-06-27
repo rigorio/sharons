@@ -75,40 +75,6 @@ public class TrackerPresenter implements Initializable {
     saveAndClose();
   }
 
-  public void pause() {
-
-    List<String> choices = new ArrayList<>();
-    choices.add("Morning Break");
-    choices.add("Afternoon Break");
-    choices.add("Lunch");
-    choices.add("Bathroom Break");
-    choices.add("Will work on different task");
-    choices.add("Meeting");
-    choices.add("Training"); // TODO turn off activity listening dailyLogHandler when on a break
-
-    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a reason", choices);
-    dialog.initStyle(StageStyle.UNDECORATED);
-    dialog.setHeaderText("Please select a reason for putting this task on pause");
-    dialog.setContentText("Reasons");
-    dialog.showAndWait().ifPresent(reason -> {
-      if (reason.equals("Lunch")) {
-        dailyLogHandler.changeLog(LogStatus.OTL.getStatus());
-        activityHandler.saveActivity(Activity.OTL);
-      } else if (reason.contains("Break")) {
-        // TODO open up a dialog box that counts down 15 minutes break
-        // user should be put on idle if exceeding 15 minutes
-        System.out.println("thou art on a break");
-        activityHandler.saveActivity(Activity.BREAK);
-      } else if (reason.equals("Will work on different task")) { // magic string, refactor this kiddo
-        activityHandler.saveActivity(Activity.BUSY);
-      } else {
-        activityHandler.saveActivity(reason);
-      }
-      updateTask(Status.IN_PROGRESS.getStatus());
-      saveAndClose();
-    });
-  }
-
   @FXML
   public void cancel() {
     closeWindow();
@@ -159,5 +125,39 @@ public class TrackerPresenter implements Initializable {
 
   private String getCurrentTime() {
     return formatter.format(LocalTime.now());
+  }
+
+  public void pause() {
+
+    List<String> choices = new ArrayList<>();
+    choices.add("Morning Break");
+    choices.add("Afternoon Break");
+    choices.add("Lunch");
+    choices.add("Bathroom Break");
+    choices.add("Will work on different task");
+    choices.add("Meeting");
+    choices.add("Training"); // TODO turn off activity listening dailyLogHandler when on a break
+
+    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a reason", choices);
+    dialog.initStyle(StageStyle.UNDECORATED);
+    dialog.setHeaderText("Please select a reason for putting this task on pause");
+    dialog.setContentText("Reasons");
+    dialog.showAndWait().ifPresent(reason -> {
+      if (reason.equals("Lunch")) {
+        dailyLogHandler.changeLog(LogStatus.OTL.getStatus());
+        activityHandler.saveActivity(Activity.OTL);
+      } else if (reason.contains("Break")) {
+        // TODO open up a dialog box that counts down 15 minutes break
+        // user should be put on idle if exceeding 15 minutes
+        System.out.println("thou art on a break");
+        activityHandler.saveActivity(Activity.BREAK);
+      } else if (reason.equals("Will work on different task")) { // magic string, refactor this kiddo
+        activityHandler.saveActivity(Activity.BUSY);
+      } else {
+        activityHandler.saveActivity(reason);
+      }
+      updateTask(Status.IN_PROGRESS.getStatus());
+      saveAndClose();
+    });
   }
 }

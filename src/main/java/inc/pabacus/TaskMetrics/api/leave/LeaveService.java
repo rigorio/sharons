@@ -19,13 +19,27 @@ public class LeaveService {
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
 
+  public List<Leave> getAllLeaves() {
+    List<Leave> leaves = new ArrayList<>();
+    try {
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/leave")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      leaves = mapper.readValue(responseBody.string(),
+                                new TypeReference<List<Leave>>() {});
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+    return leaves;
+  }
+
   public Leave saveLeave(Leave leave) {
     try {
 
       String jsonString = mapper.writeValueAsString(leave);
       RequestBody body = RequestBody.create(JSON, jsonString);
-      //print expected value
-      System.out.println(jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/leave")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())

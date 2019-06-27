@@ -2,9 +2,13 @@ package inc.pabacus.TaskMetrics.desktop.chat;
 
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
+import inc.pabacus.TaskMetrics.api.activity.Activity;
+import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.chat.Chat;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
+import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -41,6 +45,13 @@ public class ChatPresenter implements Initializable {
 
   private ChatService chatService;
   private static final String HOST = "http://localhost:8080";
+  private ActivityHandler activityHandler;
+  private DailyLogService dailyLogHandler;
+
+  public ChatPresenter() {
+    activityHandler = BeanManager.activityHandler();
+    dailyLogHandler = BeanManager.dailyLogService();
+  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -55,7 +66,7 @@ public class ChatPresenter implements Initializable {
     getChatData();
   }
 
-  private void textProperty(){
+  private void textProperty() {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
@@ -66,28 +77,56 @@ public class ChatPresenter implements Initializable {
   }
 
   @FXML
-  private void onEnter(){
+  private void onEnter() {
     String commands = this.command.getText();
     if (commands != null) {
-      addItem(listView,commands);
-      chatService.sendCommand(commands);
+      addItem(listView, commands);
       command.setText(null);
       command.requestFocus();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
       ChatService service = new ChatService();
-      Chat answers = service.sendChat(new Chat(commands,formatter.format(LocalTime.now())));
+      Chat answers = service.sendChat(new Chat("Me: " + commands, formatter.format(LocalTime.now())));
       System.out.println(answers);
+      listView.getItems().add(chatService.pushCommand(commands));
+      //switch breaks
+      switch (commands.toLowerCase()) {
+        case "in":
+        case "login":
+        case "log in":
+          activityHandler.saveActivity(Activity.ONLINE);
+          dailyLogHandler.changeLog(LogStatus.IN.getStatus());
+          break;
+        case "otl":
+        case "out to lunch":
+          activityHandler.saveActivity(Activity.OTL);
+          dailyLogHandler.changeLog(LogStatus.OTL.getStatus());
+          break;
+        case "bfl":
+        case "back from lunch":
+          activityHandler.saveActivity(Activity.BFL);
+          dailyLogHandler.changeLog(LogStatus.BFL.getStatus());
+          break;
+        case "out":
+        case "logout":
+        case "log out":
+          activityHandler.saveActivity(Activity.OUT);
+          dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
+          break;
+        case "break":
+          activityHandler.saveActivity(Activity.BREAK);
+          break;
+      }
     }
   }
 
   private static <T> void addItem(ListView<T> listView, T item) {
     List<T> items = listView.getItems();
     int index = items.size();
-    items.add(item);
+    items.add((T) ("Me: " + item));
     listView.scrollTo(index);
   }
 
-  public void getChatData(){
+  public void getChatData() {
     OkHttpClient client = new OkHttpClient();
     // code request code here
     Request request = new Request.Builder()

@@ -125,13 +125,12 @@ public class ChatService {
 
     if (isValidDate(command)) {
       service.sendChat(new Chat(Systems + "Success!", formatter.format(LocalTime.now())));
-      String split[]=command.split("-");
+      String split[] = command.split("-");
       startDate = split[0];
       endDate = split[1];
       LeaveService services = new LeaveService();
-      Leave leave = services.requestLeave(new Leave(2L, 3L, getApprovers, startDate, endDate, "testing", status, typeOfRequest));
-      System.out.println("--------------------");
-      System.out.println(leave);
+      Leave leave = services.saveLeave(new Leave(2L, 3L, getApprovers, startDate, endDate, "testing", status, typeOfRequest));
+      // maybe log this
       return Systems + "Success!";
     } else {
       service.sendChat(new Chat(Systems + "Invalid Command!", formatter.format(LocalTime.now())));

@@ -16,16 +16,30 @@ public class LeaveService {
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   private static final String HOST = "http://localhost:8080";
+  private OkHttpClient client = new OkHttpClient();
+  private ObjectMapper mapper = new ObjectMapper();
 
-  public Leave requestLeave(Leave leave) {
+  public List<Leave> getAllLeaves() {
+    List<Leave> leaves = new ArrayList<>();
     try {
-      OkHttpClient client = new OkHttpClient();
-      ObjectMapper mapper = new ObjectMapper();
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/leave")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      leaves = mapper.readValue(responseBody.string(),
+                                new TypeReference<List<Leave>>() {});
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+    return leaves;
+  }
+
+  public Leave saveLeave(Leave leave) {
+    try {
 
       String jsonString = mapper.writeValueAsString(leave);
       RequestBody body = RequestBody.create(JSON, jsonString);
-      //print expected value
-      System.out.println(jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/leave")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
@@ -65,7 +79,7 @@ public class LeaveService {
     leaves.add(Leave.builder()
                    .id(1L)
                    .userId(2L)
-                   .approver(approverList)
+                   .approvers(approverList)
                    .startDate("4-2-2019")
                    .endDate("4-4-2019")
                    .reason("Family Outing")
@@ -83,7 +97,7 @@ public class LeaveService {
     leaves.add(Leave.builder()
                    .id(2L)
                    .userId(2L)
-                   .approver(approverList2)
+                   .approvers(approverList2)
                    .startDate("5-2-2019")
                    .endDate("5-22-2019")
                    .reason("At the hospital")
@@ -101,7 +115,7 @@ public class LeaveService {
     leaves.add(Leave.builder()
                    .id(3L)
                    .userId(2L)
-                   .approver(approverList3)
+                   .approvers(approverList3)
                    .startDate("7-5-2019")
                    .endDate("7-12-2019")
                    .reason("Child birth")

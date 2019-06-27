@@ -1,43 +1,31 @@
 package inc.pabacus.TaskMetrics.api.leave;
 
+import inc.pabacus.TaskMetrics.desktop.support.ApproverAdapter;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.StringProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Approver {
+
   private Long approverId;
   private String approver;
   private String status;
 
-  public Approver() {
-  }
+  public Approver(ApproverAdapter approverAdapter) {
+    LongProperty id = approverAdapter.getId();
+    this.approverId = id != null ? id.getValue() : null;
 
-  public Approver(Long approverId, String approver, String status) {
-    this.approverId = approverId;
-    this.approver = approver;
-    this.status = status;
-  }
+    StringProperty approver = approverAdapter.getApprover();
+    this.approver = approver != null ? approver.get() : null;
 
-  public Long getApproverId() {
-    return approverId;
-  }
-
-  public void setApproverId(Long approverId) {
-    this.approverId = approverId;
-  }
-
-  public String getApprover() {
-    return approver;
-  }
-
-  public void setApprover(String approver) {
-    this.approver = approver;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
+    StringProperty status = approverAdapter.getStatus();
+    this.status = status != null ? status.get() : null;
   }
 }

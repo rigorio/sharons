@@ -51,7 +51,7 @@ public class TaskTimesheetPresenter implements Initializable {
 
   private void initTaskSheet() {
 
-    TableColumn<XpmTaskAdapter, String> project = new TableColumn<>("Project");
+    TableColumn<XpmTaskAdapter, String> project = new TableColumn<>("Job");
     project.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getJob().get()));
 
     TableColumn<XpmTaskAdapter, String> startTime = new TableColumn<>("Start Time");
@@ -66,28 +66,24 @@ public class TaskTimesheetPresenter implements Initializable {
       return new SimpleStringProperty("" + (isBillable ? "Y" : "N"));
     });
 
-    TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Billable Hours");
+    TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Hours Spent");
     billableHours.setCellValueFactory(param -> {
       XpmTaskAdapter xpmTaskAdapter = param.getValue();
       String totalTimeSpent = xpmTaskAdapter.getTotalTimeSpent().get();
       Boolean isBillable = xpmTaskAdapter.getBillable().getValue();
-      return new SimpleStringProperty("" + (isBillable ? totalTimeSpent : "0"));
+      return new SimpleStringProperty("" + totalTimeSpent);
     });
 
-    TableColumn<XpmTaskAdapter, String> nonBillableHours = new TableColumn<>("Non-Billable Hours");
-    nonBillableHours.setCellValueFactory(param -> {
-      XpmTaskAdapter xpmTaskAdapter = param.getValue();
-      String totalTimeSpent = xpmTaskAdapter.getTotalTimeSpent().get();
-      Boolean isBillable = xpmTaskAdapter.getBillable().getValue();
-      return new SimpleStringProperty("" + (!isBillable ? totalTimeSpent : "0"));
-    });
+    TableColumn<XpmTaskAdapter, String> task = new TableColumn<>("Task");
+    task.setCellValueFactory(param -> param.getValue().getTask());
+
 
     TableColumn<XpmTaskAdapter, String> description = new TableColumn<>("Description");
-    description.setCellValueFactory(param -> param.getValue().getTask());
+    description.setCellValueFactory(param -> param.getValue().getDescription());
 
 
     taskTimesheet.getColumns().addAll(project, startTime, endTime, billable,
-                                      billableHours, nonBillableHours, description);
+                                      billableHours, task, description);
     initTaskTimeSheet();
 
     totalbillable.setText("7.49");

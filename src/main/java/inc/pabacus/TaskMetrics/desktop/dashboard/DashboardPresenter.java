@@ -294,7 +294,7 @@ public class DashboardPresenter implements Initializable {
       screenshotService.shutdownScheduler();
       kickerService.stopKicker();
       tokenService.stopToken();
-      activityListener.unListen();
+//      activityListener.unListen();
 
       GuiManager.getInstance().closeStage();
       GuiManager.getInstance().changeView(new LoginView());

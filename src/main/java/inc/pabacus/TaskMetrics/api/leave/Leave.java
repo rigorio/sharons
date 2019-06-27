@@ -10,7 +10,6 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 public class Leave {

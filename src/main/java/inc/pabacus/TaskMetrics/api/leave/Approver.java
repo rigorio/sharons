@@ -2,9 +2,6 @@ package inc.pabacus.TaskMetrics.api.leave;
 
 import lombok.Builder;
 
-import javax.persistence.Entity;
-
-@Entity
 @Builder
 public class Approver {
   private Long approverId;

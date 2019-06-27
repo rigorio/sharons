@@ -38,7 +38,7 @@ public class LeaveAdapter {
     Long userId = leave.getUserId();
     this.userId = userId != null ? new SimpleLongProperty(userId) : null;
 
-    List<Approver> approver = leave.getApprover();
+    List<Approver> approver = leave.getApprovers();
     this.approvers = approver != null
         ? new ArrayList<>(approver.stream()
                               .map(ApproverAdapter::new)

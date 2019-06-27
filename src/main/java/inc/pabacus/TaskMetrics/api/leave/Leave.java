@@ -4,6 +4,7 @@ import inc.pabacus.TaskMetrics.desktop.support.ApproverAdapter;
 import inc.pabacus.TaskMetrics.desktop.support.LeaveAdapter;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.StringProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Leave {
   private Long id;
   private Long userId;

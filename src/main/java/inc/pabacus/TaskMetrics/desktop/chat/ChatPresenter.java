@@ -178,6 +178,30 @@ public class ChatPresenter implements Initializable {
 
   }
 
+  private void setListView() {
+    listView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+      @Override
+      public ListCell<String> call(ListView<String> param) {
+        final ListCell cell = new ListCell() {
+          private Text text;
 
+          @Override
+          public void updateItem(Object item, boolean empty) {
+            super.updateItem(item, empty);
+            if (!isEmpty()) {
+              text = new Text(item.toString());
+              setWrapText(true);
+              setGraphic(text);
+//              if ((getIndex()) %6 < 3 ){
+//                setStyle("-fx-background-color: #EFF8FD;");
+//              }
+            }
+          }
+        };
+        return cell;
+      }
+
+    });
+  }
 
 }

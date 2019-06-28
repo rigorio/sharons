@@ -137,6 +137,7 @@ public class TrackerPresenter implements Initializable {
     choices.add("Lunch");
     choices.add("Bathroom Break");
     choices.add("Will work on different task");
+    choices.add("Testing a feature");
     choices.add("Meeting");
     choices.add("Training"); // TODO turn off activity listening dailyLogHandler when on a break
 

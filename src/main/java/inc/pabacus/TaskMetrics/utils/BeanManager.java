@@ -82,4 +82,16 @@ public class BeanManager {
   public static LeaveService leaveService() {
     return leaveService;
   }
+
+  // I am too lazy to provide an explanation as to why
+  // this is found below all else
+  private static ServiceManager serviceManager = new ServiceManager();
+
+  public static void activate() {
+    serviceManager.activate();
+  }
+
+  public static void deactivate() {
+    serviceManager.deactivate();
+  }
 }

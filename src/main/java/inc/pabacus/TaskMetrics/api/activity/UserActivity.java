@@ -14,7 +14,7 @@ public class UserActivity {
   private Long id;
   private String date;
   private String time;
-  public String activity;
+  private String activity;
 
   public UserActivity(String dateNow, String timeNow, String activity) {
     this.date = dateNow;

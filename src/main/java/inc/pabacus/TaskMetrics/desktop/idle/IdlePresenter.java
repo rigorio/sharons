@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.idle;
 
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.UserActivity;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,7 +36,13 @@ public class IdlePresenter implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     activityHandler = new ActivityHandler();
-    startTime = getTimeNow();
+    startTime = timeFormatter.format(LocalTime.now().minus(5, ChronoUnit.MINUTES));
+    UserActivity userActivity = UserActivity.builder()
+        .time(startTime)
+        .date(LocalDate.now().toString())
+        .activity(Activity.IDLE.getActivity())
+        .build();
+    activityHandler.saveActivity(userActivity);
 
     List<String> options = new ArrayList<>();
     options.add("Meeting");
@@ -55,16 +63,14 @@ public class IdlePresenter implements Initializable {
     String activity = actionsBox.getValue();
 
     UserActivity userActivity = UserActivity.builder()
-        .time(startTime)
+        .time(timeFormatter.format(LocalTime.now()))
         .date(LocalDate.now().toString())
-        .activity(activity)
+        .activity(Activity.BUSY.getActivity())
         .build();
     activityHandler.saveActivity(userActivity);
+
     Stage stage = (Stage) actionsBox.getScene().getWindow();
     stage.close();
   }
 
-  private String getTimeNow() {
-    return timeFormatter.format(LocalTime.now());
-  }
 }

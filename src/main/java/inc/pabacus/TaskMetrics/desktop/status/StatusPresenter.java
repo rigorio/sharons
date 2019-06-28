@@ -55,19 +55,19 @@ public class StatusPresenter implements Initializable {
     switch (currentStatus) {
       case "Out":
         status = LogStatus.OUT.getStatus();
-        activity = Activity.IN;
+//        activity = Activity.BUSY;
         break;
       case "In":
         status = LogStatus.IN.getStatus();
-        activity = Activity.OUT;
+        activity = Activity.BUSY;
         break;
       case "Out To Lunch":
         status = LogStatus.OTL.getStatus();
-        activity = Activity.OTL;
+        activity = Activity.IDLE;
         break;
       case "Back From Lunch":
         status = LogStatus.BFL.getStatus();
-        activity = Activity.BFL;
+        activity = Activity.BUSY;
         break;
     }
     dailyLogService.changeLog(status);

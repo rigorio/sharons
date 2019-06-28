@@ -115,22 +115,22 @@ public class TimesheetPresenter implements Initializable {
       case "Logged Out":
         currentStatus = "Logged In";
         dailyLogHandler.changeLog(LogStatus.IN.getStatus());
-        activity = Activity.IN;
+        activity = Activity.BUSY;
         break;
       case "Logged In":
         currentStatus = "Out To Lunch";
         dailyLogHandler.changeLog(LogStatus.OTL.getStatus());
-        activity = Activity.OUT;
+        activity = Activity.IDLE;
         break;
       case "Out To Lunch":
         currentStatus = "Back From Lunch";
         dailyLogHandler.changeLog(LogStatus.BFL.getStatus());
-        activity = Activity.OTL;
+        activity = Activity.BUSY;
         break;
       case "Back From Lunch":
         currentStatus = "Logged Out";
         dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
-        activity = Activity.BFL;
+//        activity = Activity.BUSY;
         break;
     }
     mockUser.setStatus(currentStatus);

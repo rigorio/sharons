@@ -98,12 +98,18 @@ public class LoginPresenter implements Initializable {
       TokenHolder.setToken(status.getNewToken());
       if (status.getStatus().equals("Exists")) {
         kickerService.setUsername(userName);
+        kickerService.setRunnable(() -> {
+          BeanManager.deactivate();
+//          activityHandler.saveActivity(Activity.BUSY);
+          GuiManager.getInstance().closeStage();
+          GuiManager.getInstance().changeView(new LoginView());
+        });
         kickerService.setOldToken(status.getOldToken());
         GuiManager.getInstance().displayView(new KickoutView());
         mainPane.getScene().setCursor(Cursor.DEFAULT);
       }
       kickerService.kicker();
-      activityHandler.saveActivity(Activity.ONLINE);
+      activityHandler.saveActivity(Activity.BUSY);
       GuiManager.getInstance().changeView(new DashboardView());
 
     });

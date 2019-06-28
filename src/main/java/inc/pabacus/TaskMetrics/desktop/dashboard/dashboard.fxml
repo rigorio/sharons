@@ -44,6 +44,19 @@
           </ImageView>
         </graphic>
       </JFXButton>
+      <JFXButton fx:id="productivityButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" layoutX="10.0"
+                 layoutY="201.0"
+                 mnemonicParsing="false" onAction="#viewProductivity" prefHeight="58.0" prefWidth="300.0"
+                 text="Productivity" textFill="WHITE">
+        <font>
+          <Font size="20.0"/>
+        </font>
+        <graphic>
+          <ImageView fx:id="productivityIcon" fitHeight="23.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../../../../../resources/img/productivity.png"/>
+          </ImageView>
+        </graphic>
+      </JFXButton>
       <JFXButton id="screenShot" fx:id="screenshotButton" alignment="BASELINE_LEFT" graphicTextGap="3.0"
                  mnemonicParsing="false" onAction="#viewScreenshots" prefHeight="58.0" prefWidth="300.0"
                  text="Screenshots" textFill="WHITE">

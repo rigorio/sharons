@@ -3,8 +3,6 @@ package inc.pabacus.TaskMetrics.api.kicker;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.desktop.login.LoginView;
-import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -29,6 +27,7 @@ public class KickerService {
   private ScheduledFuture<?> scheduledFuture;
   private String username;
   private String oldToken;
+  private Runnable runnable;
 
 
   public KickStatus login(String username) {
@@ -76,11 +75,15 @@ public class KickerService {
     this.oldToken = oldToken;
   }
 
+  public void setRunnable(Runnable runnable) {
+    this.runnable = runnable;
+  }
+
   public void kicker() {
     ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
     Runnable task = () -> Platform.runLater(() -> {
       if (!exists()) {
-        Platform.runLater(() -> GuiManager.getInstance().changeView(new LoginView()));
+        Platform.runLater(runnable);
       }
     });
     scheduledFuture = service.scheduleAtFixedRate(task, 2L, 5L, TimeUnit.SECONDS);

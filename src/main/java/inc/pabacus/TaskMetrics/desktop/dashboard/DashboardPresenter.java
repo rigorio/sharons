@@ -15,6 +15,7 @@ import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
+import inc.pabacus.TaskMetrics.desktop.productivity.ProductivityView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
 import inc.pabacus.TaskMetrics.desktop.settings.SettingsView;
 import inc.pabacus.TaskMetrics.desktop.support.SupportView;
@@ -83,6 +84,10 @@ public class DashboardPresenter implements Initializable {
   private JFXButton chatButton;
   @FXML
   private JFXButton logoutBtn;
+  @FXML
+  private ImageView productivityIcon;
+  @FXML
+  private JFXButton productivityButton;
 
   private StandupService standupService;
   private KickerService kickerService;
@@ -259,6 +264,11 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void viewTimesheet() {
     updateDynamicPaneContent(new TimesheetView().getView());
+  }
+
+  @FXML
+  public void viewProductivity() {
+    updateDynamicPaneContent(new ProductivityView().getView());
   }
 
   @FXML

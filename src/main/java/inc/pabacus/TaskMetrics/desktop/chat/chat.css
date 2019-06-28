@@ -20,3 +20,6 @@
    -fx-focus-color: transparent ;
  }
 
+.image-view:hover{
+     -fx-cursor: hand;
+}

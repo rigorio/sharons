@@ -48,7 +48,8 @@ public class TrackerPresenter implements Initializable {
   private DailyLogService dailyLogHandler;
   private String startTime;
   private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-  private Stage stage = (Stage) title.getScene().getWindow();
+  private Stage stage;
+  private double timeCompensation = 0;
 
   public TrackerPresenter() {
     timerService = new TimerService();
@@ -60,6 +61,7 @@ public class TrackerPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    stage = (Stage) title.getScene().getWindow();
     stage.setAlwaysOnTop(AlwaysOnTopCheckerConfiguration.isAlwaysOnTop());
     timer.setText(STARTING_TIME);
     selectedTask = TrackHandler.getSelectedTask();
@@ -115,6 +117,7 @@ public class TrackerPresenter implements Initializable {
     long timeInSeconds = timerService.getTime();
     timerService.pause();
     double rawComputedTime = timeInSeconds / ONE_HOUR;
+    rawComputedTime += timeCompensation;
     return roundOffDecimal(rawComputedTime);
   }
 
@@ -130,6 +133,8 @@ public class TrackerPresenter implements Initializable {
   }
 
   public void pause() {
+    String testing = "Testing a feature";
+    String development = "Development causes";
 
     List<String> choices = new ArrayList<>();
     choices.add("Morning Break");
@@ -137,7 +142,8 @@ public class TrackerPresenter implements Initializable {
     choices.add("Lunch");
     choices.add("Bathroom Break");
     choices.add("Will work on different task");
-    choices.add("Testing a feature");
+    choices.add(testing);
+    choices.add(development);
     choices.add("Meeting");
     choices.add("Training"); // TODO turn off activity listening dailyLogHandler when on a break
 
@@ -152,11 +158,11 @@ public class TrackerPresenter implements Initializable {
       } else if (reason.contains("Break")) {
         // TODO open up a dialog box that counts down 15 minutes break
         // user should be put on idle if exceeding 15 minutes
-        System.out.println("thou art on a break");
         activityHandler.saveActivity(Activity.BREAK);
       } else if (reason.equals("Will work on different task")) { // magic string, refactor this kiddo
         activityHandler.saveActivity(Activity.BUSY);
       } else {
+        timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
         activityHandler.saveActivity(reason);
       }
       updateTask(Status.IN_PROGRESS.getStatus());

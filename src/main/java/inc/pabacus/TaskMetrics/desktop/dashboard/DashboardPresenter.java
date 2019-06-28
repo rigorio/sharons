@@ -4,18 +4,9 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
-import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
-import inc.pabacus.TaskMetrics.api.kicker.KickerService;
-import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
-import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
-import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
-import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
-import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
-import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.productivity.ProductivityView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
@@ -91,26 +82,12 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXButton productivityButton;
 
-  private StandupService standupService;
-  private KickerService kickerService;
-  private HardwareServiceAPI hardwareServiceAPI;
-  private SoftwareServiceAPI softwareServiceAPI;
-  private ScreenshotServiceImpl screenshotService;
   private UserHandler userHandler;
-  private TokenService tokenService;
   private ActivityHandler activityHandler;
-  private ActivityListener activityListener;
 
   public DashboardPresenter() {
-    standupService = BeanManager.standupService();
-    kickerService = BeanManager.kickerService();
-    hardwareServiceAPI = BeanManager.hardwareServiceAPI();
-    softwareServiceAPI = BeanManager.softwareServiceAPI();
-    screenshotService = BeanManager.screenshotService();
     userHandler = BeanManager.userHandler();
-    tokenService = BeanManager.tokenService();
     activityHandler = BeanManager.activityHandler();
-    activityListener = BeanManager.activityListener();
   }
 
   @Override
@@ -234,18 +211,7 @@ public class DashboardPresenter implements Initializable {
   }
 
   private void services() {
-    hardwareServiceAPI.sendHardwareData();
-    standupService.runStandup();
-    softwareServiceAPI.sendSoftwareData();
-    screenshotService.enableScreenShot();
-    ActivityListener activityLirstener = BeanManager.activityListener();
-    Runnable runnable = () -> {
-      Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
-      activityListener.unListen();
-    };
-    activityListener.setEvent(runnable);
-    activityListener.setInterval(10000);
-//    activityListener.listen();
+    BeanManager.activate();
   }
 
   @FXML
@@ -304,16 +270,8 @@ public class DashboardPresenter implements Initializable {
     Optional<ButtonType> result = alert.showAndWait();
     if (result.get() == ButtonType.OK) {
       //disable all services manually - maybe we can kill these threads/services automatically?
-      kickerService.logout(TokenHolder.getToken());
-      standupService.close();
-      hardwareServiceAPI.cancel();
-      softwareServiceAPI.cancel();
-      screenshotService.disableScreenshot();
-      screenshotService.shutdownScheduler();
-      kickerService.stopKicker();
-      tokenService.stopToken();
-//      activityListener.unListen();
-      activityHandler.saveActivity(Activity.OFFLINE);
+      BeanManager.deactivate();
+      activityHandler.saveActivity(Activity.BUSY);
       GuiManager.getInstance().closeStage();
       GuiManager.getInstance().changeView(new LoginView());
     } else {

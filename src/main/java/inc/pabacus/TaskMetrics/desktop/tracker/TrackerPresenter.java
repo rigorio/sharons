@@ -48,6 +48,7 @@ public class TrackerPresenter implements Initializable {
   private DailyLogService dailyLogHandler;
   private String startTime;
   private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+  private Stage stage = (Stage) title.getScene().getWindow();
 
   public TrackerPresenter() {
     timerService = new TimerService();
@@ -59,6 +60,7 @@ public class TrackerPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    stage.setAlwaysOnTop(AlwaysOnTopCheckerConfiguration.isAlwaysOnTop());
     timer.setText(STARTING_TIME);
     selectedTask = TrackHandler.getSelectedTask();
     timerService.setFxProcess(process);
@@ -96,7 +98,7 @@ public class TrackerPresenter implements Initializable {
 
   private void closeWindow() {
     TrackHandler.setSelectedTask(null);
-    ((Stage) title.getScene().getWindow()).close();
+    stage.close();
   }
 
   private void updateTask(String status) {

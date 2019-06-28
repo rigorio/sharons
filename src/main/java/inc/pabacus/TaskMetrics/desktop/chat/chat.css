@@ -14,3 +14,9 @@
     -fx-scale-x: 0;
 }
 
+.text-field {
+   -fx-background-color: transparent;
+   -fx-text-box-border: transparent ;
+   -fx-focus-color: transparent ;
+ }
+

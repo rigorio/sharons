@@ -146,6 +146,10 @@ public class DashboardPresenter implements Initializable {
     setSize(settingsImage);
     settingsButton.setGraphic(settingsImage);
 
+    ImageView productivityImage = new ImageView(new Image(getClass().getResourceAsStream("/img/productivity.png")));
+    setSize(productivityImage);
+    productivityButton.setGraphic(productivityImage);
+
     status.getItems().addAll("Busy", "Meeting", "Lunch", "Offline");
 
     viewTasks();

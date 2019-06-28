@@ -2,6 +2,8 @@ package inc.pabacus.TaskMetrics.desktop.login;
 
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import inc.pabacus.TaskMetrics.api.activity.Activity;
+import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.Credentials;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
 import inc.pabacus.TaskMetrics.api.kicker.KickStatus;
@@ -32,12 +34,16 @@ public class LoginPresenter implements Initializable {
   @FXML
   private JFXPasswordField passwordField;
 
-  private KickerService kickerService = BeanManager.kickerService();
-  private TokenService service = BeanManager.tokenService();
+  private KickerService kickerService;
+  private TokenService service;
   private UserHandler userHandler;
+  private ActivityHandler activityHandler;
 
   public LoginPresenter() {
+    kickerService = BeanManager.kickerService();
+    service = BeanManager.tokenService();
     userHandler = BeanManager.userHandler();
+    activityHandler = BeanManager.activityHandler();
   }
 
   @Override
@@ -97,6 +103,7 @@ public class LoginPresenter implements Initializable {
         mainPane.getScene().setCursor(Cursor.DEFAULT);
       }
       kickerService.kicker();
+      activityHandler.saveActivity(Activity.ONLINE);
       GuiManager.getInstance().changeView(new DashboardView());
 
     });

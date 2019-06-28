@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.settings.SettingsPresenter">
   <JFXTextField layoutX="112.0" layoutY="110.0" prefHeight="31.0" prefWidth="372.0"/>
-  <JFXButton layoutX="502.0" layoutY="110.0" style="-fx-background-color: #008080;" textFill="WHITE"
-             mnemonicParsing="false" text="Update Host"/>
+  <JFXButton layoutX="502.0" layoutY="110.0" mnemonicParsing="false" style="-fx-background-color: #008080;"
+             text="Update Host" textFill="WHITE"/>
   <Label layoutX="112.0" layoutY="89.0" text="Web API Host"/>
   <JFXComboBox layoutX="112.0" layoutY="220.0" prefHeight="31.0" prefWidth="372.0"/>
-  <JFXButton layoutX="502.0" layoutY="220.0" style="-fx-background-color: #008080;" textFill="WHITE"
-             mnemonicParsing="false" text="Update Manager"/>
+  <JFXButton layoutX="502.0" layoutY="220.0" mnemonicParsing="false" style="-fx-background-color: #008080;"
+             text="Update Manager" textFill="WHITE"/>
   <Label layoutX="112.0" layoutY="199.0" text="Manager"/>
+  <JFXCheckBox fx:id="alwaysOnTopCheckbox" layoutX="112.0" layoutY="288.0" mnemonicParsing="false"
+               text="Keep Task Tracker always on top"/>
 </AnchorPane>

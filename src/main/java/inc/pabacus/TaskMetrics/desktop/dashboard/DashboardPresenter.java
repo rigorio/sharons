@@ -2,6 +2,8 @@ package inc.pabacus.TaskMetrics.desktop.dashboard;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.api.activity.Activity;
+import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
@@ -96,6 +98,7 @@ public class DashboardPresenter implements Initializable {
   private ScreenshotServiceImpl screenshotService;
   private UserHandler userHandler;
   private TokenService tokenService;
+  private ActivityHandler activityHandler;
   private ActivityListener activityListener;
 
   public DashboardPresenter() {
@@ -106,6 +109,7 @@ public class DashboardPresenter implements Initializable {
     screenshotService = BeanManager.screenshotService();
     userHandler = BeanManager.userHandler();
     tokenService = BeanManager.tokenService();
+    activityHandler = BeanManager.activityHandler();
     activityListener = BeanManager.activityListener();
   }
 
@@ -309,7 +313,7 @@ public class DashboardPresenter implements Initializable {
       kickerService.stopKicker();
       tokenService.stopToken();
 //      activityListener.unListen();
-
+      activityHandler.saveActivity(Activity.OFFLINE);
       GuiManager.getInstance().closeStage();
       GuiManager.getInstance().changeView(new LoginView());
     } else {

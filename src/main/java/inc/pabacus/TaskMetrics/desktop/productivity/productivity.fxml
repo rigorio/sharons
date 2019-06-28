@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane prefHeight="720" prefWidth="925"
-            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="inc.pabacus.TaskMetrics.desktop.productivity.ProductivityPresenter">
 
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.productivity.ProductivityPresenter">
+  <PieChart fx:id="taskPieChart" layoutX="213.0" layoutY="84.0"/>
 </AnchorPane>

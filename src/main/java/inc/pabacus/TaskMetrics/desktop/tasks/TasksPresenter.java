@@ -77,14 +77,18 @@ public class TasksPresenter implements Initializable {
     TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Time");
     billableHours.setCellValueFactory(param -> param.getValue().getTotalTimeSpent());
 
-    TableColumn<XpmTaskAdapter, String> description = new TableColumn<>("Task");
-    description.setCellValueFactory(param -> param.getValue().getTask());
+    TableColumn<XpmTaskAdapter, String> task = new TableColumn<>("Task");
+    task.setCellValueFactory(param -> param.getValue().getTask());
 
     TableColumn<XpmTaskAdapter, String> status = new TableColumn<>("State");
     status.setCellValueFactory(param -> param.getValue().getStatus());
 
+    TableColumn<XpmTaskAdapter, String> description = new TableColumn<>("Description");
+    description.setCellValueFactory(param -> param.getValue().getDescription());
 
-    tasksTable.getColumns().addAll(dateCreated, projectName, description, status, billableHours);
+
+    tasksTable.getColumns().addAll(dateCreated, projectName, task,
+                                   status, billableHours, description);
 
     initTasksTable();
 

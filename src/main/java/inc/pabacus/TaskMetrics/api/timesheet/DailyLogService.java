@@ -4,6 +4,9 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 
 import java.util.List;
 
+/**
+ * @see DailyLogHandler
+ */
 public interface DailyLogService {
 
 

@@ -13,7 +13,6 @@ import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
-import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 
 public class BeanManager {
@@ -25,7 +24,7 @@ public class BeanManager {
   private static SoftwareServiceAPI softwareServiceAPI = new SoftwareServiceAPI();
   private static ScreenshotServiceImpl screenshotService = new ScreenshotServiceImpl();
   private static UserHandler userHandler = new UserHandler();
-  private static DailyLogService dailyLogService = new DailyLogHandler();
+  private static DailyLogHandler dailyLogService = new DailyLogHandler();
   private static XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
   private static ActivityHandler activityHandler = new ActivityHandler();
   private static TokenService tokenService = new TokenService();
@@ -63,7 +62,7 @@ public class BeanManager {
     return userHandler;
   }
 
-  public static DailyLogService dailyLogService() {
+  public static DailyLogHandler dailyLogService() {
     return dailyLogService;
   }
 

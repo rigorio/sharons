@@ -70,7 +70,7 @@ public class ActivityHandler {
                                    .build());
     ResponseBody body = call.execute().body();
     String jsonString = body.string();
-    System.out.println(jsonString);
+//    System.out.println(jsonString);
   }
 
   public String getLastLog() {

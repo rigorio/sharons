@@ -176,7 +176,7 @@ public class NewTaskPresenter implements Initializable {
   }
 
   private boolean isAlrightAlrightAlright() {
-    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty();
+    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() || estimateField.getText().isEmpty();
   }
 
   private boolean isCustomTaskEmpty() {

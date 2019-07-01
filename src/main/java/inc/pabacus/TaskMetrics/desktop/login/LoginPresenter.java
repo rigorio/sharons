@@ -109,7 +109,7 @@ public class LoginPresenter implements Initializable {
         mainPane.getScene().setCursor(Cursor.DEFAULT);
       }
       kickerService.kicker();
-      activityHandler.saveActivity(Activity.BUSY);
+      activityHandler.saveActivity(Activity.ONLINE);
       GuiManager.getInstance().changeView(new DashboardView());
 
     });

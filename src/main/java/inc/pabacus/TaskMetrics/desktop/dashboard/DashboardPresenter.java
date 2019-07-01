@@ -271,7 +271,7 @@ public class DashboardPresenter implements Initializable {
     if (result.get() == ButtonType.OK) {
       //disable all services manually - maybe we can kill these threads/services automatically?
       BeanManager.deactivate();
-      activityHandler.saveActivity(Activity.BUSY);
+      activityHandler.saveActivity(Activity.OFFLINE);
       GuiManager.getInstance().closeStage();
       GuiManager.getInstance().changeView(new LoginView());
     } else {

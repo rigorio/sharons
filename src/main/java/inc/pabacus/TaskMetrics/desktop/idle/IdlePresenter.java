@@ -32,23 +32,16 @@ public class IdlePresenter implements Initializable {
   private String startTime;
 
   private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+  private static final String TECHNICAL_ISSUE = "Technical issue";
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     activityHandler = new ActivityHandler();
     startTime = timeFormatter.format(LocalTime.now().minus(5, ChronoUnit.MINUTES));
-    UserActivity userActivity = UserActivity.builder()
-        .time(startTime)
-        .date(LocalDate.now().toString())
-        .activity(Activity.IDLE.getActivity())
-        .build();
-    activityHandler.saveActivity(userActivity);
-
     List<String> options = new ArrayList<>();
     options.add("Meeting");
-    options.add("Coffee Break");
-    options.add("Bathroom Break");
-    options.add("Technical issue");
+    options.add("Break");
+    options.add(TECHNICAL_ISSUE);
     actionsBox.setItems(FXCollections.observableArrayList(options));
 
   }
@@ -56,18 +49,24 @@ public class IdlePresenter implements Initializable {
   @FXML
   public void submitActivity() {
 
+    UserActivity startActivity = UserActivity.builder()
+        .time(startTime)
+        .date(LocalDate.now().toString())
+        .build();
+
     ActivityListener activityListener = BeanManager.activityListener();
     activityListener.listen();
 
 
-    String activity = actionsBox.getValue();
+    String action = actionsBox.getValue();
+    Activity activity = action.equals(TECHNICAL_ISSUE)
+        ? Activity.BUSY
+        : Activity.convert(action);
 
-    UserActivity userActivity = UserActivity.builder()
-        .time(timeFormatter.format(LocalTime.now()))
-        .date(LocalDate.now().toString())
-        .activity(Activity.BUSY.getActivity())
-        .build();
-    activityHandler.saveActivity(userActivity);
+    startActivity.setActivity(activity.getActivity());
+    activityHandler.saveActivity(startActivity); // initial activity upon detecting idle
+    if (activity != Activity.BUSY)
+      activityHandler.saveActivity(Activity.BUSY); // update if not busy
 
     Stage stage = (Stage) actionsBox.getScene().getWindow();
     stage.close();

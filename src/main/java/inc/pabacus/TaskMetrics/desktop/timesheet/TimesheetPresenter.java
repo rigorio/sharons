@@ -115,22 +115,22 @@ public class TimesheetPresenter implements Initializable {
       case "Logged Out":
         currentStatus = "Logged In";
         dailyLogHandler.changeLog(LogStatus.IN.getStatus());
-        activity = Activity.BUSY;
+        activity = Activity.ONLINE;
         break;
       case "Logged In":
-        currentStatus = "Out To Lunch";
-        dailyLogHandler.changeLog(LogStatus.OTL.getStatus());
-        activity = Activity.IDLE;
+        currentStatus = "Lunch Break";
+        dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+        activity = Activity.BREAK;
         break;
       case "Out To Lunch":
-        currentStatus = "Back From Lunch";
-        dailyLogHandler.changeLog(LogStatus.BFL.getStatus());
+        currentStatus = "Back From Break";
+        dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
         activity = Activity.BUSY;
         break;
       case "Back From Lunch":
         currentStatus = "Logged Out";
         dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
-//        activity = Activity.BUSY;
+        activity = Activity.OFFLINE;
         break;
     }
     mockUser.setStatus(currentStatus);
@@ -174,10 +174,10 @@ public class TimesheetPresenter implements Initializable {
     TableColumn<DailyLogFXAdapter, String> in = new TableColumn<>("IN");
     in.setCellValueFactory(param -> param.getValue().getIn());
 
-    TableColumn<DailyLogFXAdapter, String> otl = new TableColumn<>("OTL");
+    TableColumn<DailyLogFXAdapter, String> otl = new TableColumn<>("LB");
     otl.setCellValueFactory(param -> param.getValue().getOtl());
 
-    TableColumn<DailyLogFXAdapter, String> bfl = new TableColumn<>("BFL");
+    TableColumn<DailyLogFXAdapter, String> bfl = new TableColumn<>("BFB");
     bfl.setCellValueFactory(param -> param.getValue().getBfl());
 
     TableColumn<DailyLogFXAdapter, String> out = new TableColumn<>("OUT");

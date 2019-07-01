@@ -136,25 +136,29 @@ public class TrackerPresenter implements Initializable {
     String development = "Development causes";
 
     List<String> choices = new ArrayList<>();
-    choices.add("Morning Break");
-    choices.add("Afternoon Break");
+    choices.add("Break");
     choices.add("Lunch");
-    choices.add("Bathroom Break");
     choices.add("Will work on different task");
     choices.add(testing);
     choices.add(development);
-    choices.add("Meeting");
-    choices.add("Training"); // TODO turn off activity listening dailyLogHandler when on a break
+    choices.add("Meeting"); // TODO turn off activity listening dailyLogHandler when on a break
 
     ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a reason", choices);
     dialog.initStyle(StageStyle.UNDECORATED);
     dialog.setHeaderText("Please select a reason for putting this task on pause");
     dialog.setContentText("Reasons");
     dialog.showAndWait().ifPresent(reason -> {
-      if (reason.equals("Lunch"))
-        dailyLogHandler.changeLog(LogStatus.OTL.getStatus());
+      Activity activity;
+      if (reason.equals("Lunch") || reason.equals("Break")) {
+        activity = Activity.BREAK;
+        if (reason.equals("Lunch"))
+          dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+      } else if (reason.equals("Meeting"))
+        activity = Activity.MEETING;
+      else
+        activity = Activity.BUSY;
       timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
-      activityHandler.saveActivity(Activity.IDLE);
+      activityHandler.saveActivity(activity);
       updateTask(Status.IN_PROGRESS.getStatus());
       saveAndClose();
     });

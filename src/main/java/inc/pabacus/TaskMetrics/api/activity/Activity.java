@@ -7,11 +7,11 @@ public enum Activity {
   MEETING("Meeting"),
   LUNCH("Lunch"),
   BREAK("Break"),
-  ONLINE("Logged In"),
-  OFFLINE("Logged Out"),
+  ONLINE("Online"),
+  OFFLINE("Offline"),
   IN("Time In"),
-  OTL("Out To Lunch"),
-  BFL("Back From Lunch"),
+  LB("Lunch Break"),
+  BFB("Back from Break"),
   OUT("Time Out");
 
   private String activity;
@@ -26,8 +26,6 @@ public enum Activity {
 
   public static Activity convert(String activity) {
     switch (activity) {
-      case "Busy":
-        return BUSY;
       case "Idle":
         return IDLE;
       case "Meeting":
@@ -36,20 +34,20 @@ public enum Activity {
         return LUNCH;
       case "Break":
         return BREAK;
-      case "Logged In":
+      case "Online":
         return ONLINE;
-      case "Logged Out":
+      case "Offline":
         return OFFLINE;
       case "Time In":
         return IN;
       case "Out To Lunch":
-        return OTL;
-      case "Back From Lunch":
-        return BFL;
+        return LB;
+      case "Back from Break":
+        return BFB;
       case "Time Out":
         return OUT;
       default:
-        return null;
+        return BUSY;
     }
   }
 }

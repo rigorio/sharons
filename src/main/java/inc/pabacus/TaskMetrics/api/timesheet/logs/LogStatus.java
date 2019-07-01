@@ -2,8 +2,8 @@ package inc.pabacus.TaskMetrics.api.timesheet.logs;
 
 public enum LogStatus {
   IN("in"),
-  OTL("otl"),
-  BFL("bfl"),
+  LB("lb"), // lunch break
+  BFB("bfb"), // back from break
   OUT("out");
 
   private String status;

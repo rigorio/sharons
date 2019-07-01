@@ -7,8 +7,6 @@ import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
-import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
@@ -27,8 +25,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,6 +33,7 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -56,14 +53,6 @@ public class TimesheetPresenter implements Initializable {
   private Label statusText;
   @FXML
   private Label userName;
-  @FXML
-  private ImageView softwareImg;
-  @FXML
-  private ImageView hardwareImg;
-  @FXML
-  private Label os;
-  @FXML
-  private Label hardware;
   @FXML
   private TableView<DailyLogFXAdapter> timeSheet;
   @FXML
@@ -91,7 +80,8 @@ public class TimesheetPresenter implements Initializable {
     mockUser = new MockUser("Rigo", "Logged Out");
     userName.setText(userHandler.getUsername()); //set username
 
-    getStatus();
+    String status = getStatus();
+    statusText.setText(status);
     initOshiInfo();
     initTimeSheet();
     populateCombobox();
@@ -143,16 +133,32 @@ public class TimesheetPresenter implements Initializable {
 
   @FXML
   public void updateStatus() {
-    String activity = comboBox.getValue();
-    activityHandler.saveActivity(activity);
+
+
+    String status = comboBox.getValue();
+    activityHandler.saveActivity(status);
   }
 
   private void populateCombobox() {
+
+
     ObservableList<String> choices = FXCollections.observableArrayList();
     choices.add("Break");
     choices.add("Meeting"); // TODO turn off activity listening dailyLogHandler when on a break
     comboBox.getItems().addAll(choices);
 //    comboBox = new JFXComboBox<>(choices);
+  }
+
+  private void reduxer() {
+    List<String> statuses = new ArrayList<>();
+    statuses.add("Log In");
+    statuses.add("Break");
+    statuses.add("Meeting");
+    statuses.add("Lunch Break");
+    statuses.add("Back From Break");
+    statuses.add("Log Out");
+
+
   }
 
   @FXML
@@ -209,28 +215,24 @@ public class TimesheetPresenter implements Initializable {
   }
 
   private void initOshiInfo() {
-    softwareImg.setImage(new Image("/img/software.png", DEF_SIZE, DEF_SIZE, false, true));
-    hardwareImg.setImage(new Image("/img/hardware.png", DEF_SIZE, DEF_SIZE, false, true));
-
-    os.setText(new SoftwareHandler().getOs());
-    hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
   }
   // TODO refactor/extract. Does not follow code by responsibility
 
-  private void getStatus() {
+  private String getStatus() {
 //    String in = null, otl = null, bfl = null, out = null;
-    LocalDate dateNow = LocalDate.now();
-
-    OkHttpClient client = new OkHttpClient();
-    // code request code here
-    Request request = new Request.Builder()
-        .url(HOST + "/api/logs")
-        .addHeader("Accept", "application/json")
-        .addHeader("Authorization", TokenRepository.getToken().getToken())
-        .method("GET", null)
-        .build();
-
+    String status = "";
     try {
+      LocalDate dateNow = LocalDate.now();
+
+      OkHttpClient client = new OkHttpClient();
+      // code request code here
+      Request request = new Request.Builder()
+          .url(HOST + "/api/logs")
+          .addHeader("Accept", "application/json")
+          .addHeader("Authorization", TokenRepository.getToken().getToken())
+          .method("GET", null)
+          .build();
+
       Response response = client.newCall(request).execute();
       String jsonString = response.body().string();
 
@@ -238,7 +240,6 @@ public class TimesheetPresenter implements Initializable {
       Optional<DailyLog> any = dailyLogs.stream()
           .filter(dailyLog -> dailyLog.getDate().equals(dateNow.toString()))
           .findAny();
-      String status;
       if (!any.isPresent())
         status = "Logged Out";
       else {
@@ -258,7 +259,7 @@ public class TimesheetPresenter implements Initializable {
         else
           status = "Logged Out";
       }
-      statusText.setText(status);
+
 /*
       JSONArray jsonarray = new JSONArray(jsonString);
       for (int i = 0; i < jsonarray.length(); i++) {
@@ -275,6 +276,7 @@ public class TimesheetPresenter implements Initializable {
     } catch (IOException e) {
       System.out.println(e); // TODO log exception
     }
+    return status;
 /*
     if (dateLabel.getText().equalsIgnoreCase(String.valueOf(dateNow))) {
       if (in == null || in.equals("null")) {

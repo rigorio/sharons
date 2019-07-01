@@ -154,6 +154,7 @@ public class NewTaskPresenter implements Initializable {
         .task(taskTitle)
         .job(jobComboBox.getValue())
         .billable(true)
+        .estimateTime(estimateFields)
         .totalTimeSpent("0.0")
         .status(Status.PENDING.getStatus())
         .description(description)

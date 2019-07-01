@@ -1,5 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.timesheet;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
@@ -8,6 +10,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
+import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
@@ -30,14 +33,13 @@ import javafx.scene.layout.AnchorPane;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -148,10 +150,8 @@ public class TimesheetPresenter implements Initializable {
 
   private void populateCombobox() {
     ObservableList<String> choices = FXCollections.observableArrayList();
-    choices.add("Morning Break");
-    choices.add("Afternoon Break");
-    choices.add("Meeting");
-    choices.add("Training"); // TODO turn off activity listening dailyLogHandler when on a break
+    choices.add("Break");
+    choices.add("Meeting"); // TODO turn off activity listening dailyLogHandler when on a break
     comboBox.getItems().addAll(choices);
 //    comboBox = new JFXComboBox<>(choices);
   }
@@ -219,8 +219,8 @@ public class TimesheetPresenter implements Initializable {
   // TODO refactor/extract. Does not follow code by responsibility
 
   private void getStatus() {
-    String in = null, otl = null, bfl = null, out = null;
-    LocalDate date = LocalDate.now();
+//    String in = null, otl = null, bfl = null, out = null;
+    LocalDate dateNow = LocalDate.now();
 
     OkHttpClient client = new OkHttpClient();
     // code request code here
@@ -233,24 +233,51 @@ public class TimesheetPresenter implements Initializable {
 
     try {
       Response response = client.newCall(request).execute();
-      String getbody = response.body().string();
+      String jsonString = response.body().string();
 
-      JSONArray jsonarray = new JSONArray(getbody);
+      List<DailyLog> dailyLogs = new ObjectMapper().readValue(jsonString, new TypeReference<List<DailyLog>>() {});
+      Optional<DailyLog> any = dailyLogs.stream()
+          .filter(dailyLog -> dailyLog.getDate().equals(dateNow.toString()))
+          .findAny();
+      String status;
+      if (!any.isPresent())
+        status = "Logged Out";
+      else {
+        DailyLog dailyLog = any.get();
+        String in = dailyLog.getIn();
+        String otl = dailyLog.getOtl();
+        String bfl = dailyLog.getBfl();
+        String out = dailyLog.getOut();
+        if (in == null || in.equals("null"))
+          status = "Logged Out";
+        else if (otl == null || otl.equals("null"))
+          status = "Logged In";
+        else if (bfl == null || bfl.equals("null"))
+          status = "Lunch Break";
+        else if (out == null || out.equals("null"))
+          status = "Back From Break";
+        else
+          status = "Logged Out";
+      }
+      statusText.setText(status);
+/*
+      JSONArray jsonarray = new JSONArray(jsonString);
       for (int i = 0; i < jsonarray.length(); i++) {
         JSONObject jsonobject = jsonarray.getJSONObject(i);
         dateLabel.setText(jsonobject.getString("date"));
-        if (dateLabel.getText().equalsIgnoreCase(String.valueOf(date))) {
+        if (dateLabel.getText().equalsIgnoreCase(String.valueOf(dateNow))) {
           in = jsonobject.getString("in");
           otl = jsonobject.getString("otl");
           bfl = jsonobject.getString("bfl");
           out = jsonobject.getString("out");
         }
       }
+      */
     } catch (JSONException | IOException e) {
-      System.out.println(e);
+      System.out.println(e); // TODO log exception
     }
-
-    if (dateLabel.getText().equalsIgnoreCase(String.valueOf(date))) {
+/*
+    if (dateLabel.getText().equalsIgnoreCase(String.valueOf(dateNow))) {
       if (in == null || in.equals("null")) {
         statusText.setText("Logged Out");
       } else if (otl == null || otl.equals("null")) {
@@ -265,6 +292,7 @@ public class TimesheetPresenter implements Initializable {
     } else {
       statusText.setText("Logged Out");
     }
+    */
 
   }
 }

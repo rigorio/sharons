@@ -91,6 +91,15 @@ public class NewTaskPresenter implements Initializable {
     estimateFieldTextProperty();
   }
 
+  private void estimateFieldTextProperty() {
+    Pattern pattern = Pattern.compile("\\d*|\\d+\\.\\d*");
+    TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
+      return pattern.matcher(change.getControlNewText()).matches() ? change : null;
+    });
+
+    estimateField.setTextFormatter(formatter);
+  }
+
   private List<String> getJobs() {
     return jobTaskHandler.allJobs().stream()
         .map(Job::getJob)

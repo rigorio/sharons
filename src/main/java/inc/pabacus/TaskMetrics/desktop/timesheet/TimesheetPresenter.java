@@ -9,7 +9,7 @@ import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
-import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
+import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
@@ -33,7 +33,6 @@ import javafx.scene.layout.AnchorPane;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -72,7 +71,7 @@ public class TimesheetPresenter implements Initializable {
 
   private static final int DEF_SIZE = 900;
 
-  private DailyLogService dailyLogHandler;
+  private DailyLogHandler dailyLogHandler;
   private MockUser mockUser;
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
@@ -124,12 +123,12 @@ public class TimesheetPresenter implements Initializable {
         dailyLogHandler.changeLog(LogStatus.LB.getStatus());
         activity = Activity.BREAK;
         break;
-      case "Out To Lunch":
+      case "Lunch Break":
         currentStatus = "Back From Break";
         dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
         activity = Activity.BUSY;
         break;
-      case "Back From Lunch":
+      case "Back From Break":
         currentStatus = "Logged Out";
         dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
         activity = Activity.OFFLINE;
@@ -273,7 +272,7 @@ public class TimesheetPresenter implements Initializable {
         }
       }
       */
-    } catch (JSONException | IOException e) {
+    } catch (IOException e) {
       System.out.println(e); // TODO log exception
     }
 /*

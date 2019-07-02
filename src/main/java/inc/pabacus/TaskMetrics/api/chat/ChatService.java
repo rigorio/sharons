@@ -105,14 +105,16 @@ public class ChatService {
       case "login":
         service.sendChat(new Chat(Tribely + "Logged in!", formatter.format(LocalTime.now())));
         return Tribely + "Logged in!";
-      case "otl":
-      case "out to lunch":
-        service.sendChat(new Chat(Tribely + "Status change to Out To Lunch!", formatter.format(LocalTime.now())));
-        return Tribely + "Status change to Out To Lunch!";
-      case "bfl":
+      case "lb":
+      case "lunch":
+      case "lunch break":
+        service.sendChat(new Chat(Tribely + "Status change to Lunch Break!", formatter.format(LocalTime.now())));
+        return Tribely + "Status change to Lunch Break!";
+      case "bfb":
       case "back from lunch":
-        service.sendChat(new Chat(Tribely + "Status change to Back From Lunch!", formatter.format(LocalTime.now())));
-        return Tribely + "Status change to Back From Lunch!";
+      case "back from break":
+        service.sendChat(new Chat(Tribely + "Status change to Back From Break!", formatter.format(LocalTime.now())));
+        return Tribely + "Status change to Back From Break!";
       case "out":
       case "logout":
       case "log out":
@@ -121,10 +123,6 @@ public class ChatService {
       case "break":
         service.sendChat(new Chat(Tribely + "Status change to Break!", formatter.format(LocalTime.now())));
         return Tribely + "Status change to Break!";
-
-      case "who am i?":
-        service.sendChat(new Chat(Tribely + "You are the most handsome guy!", formatter.format(LocalTime.now())));
-        return Tribely + "You are the most handsome guy!";
     }
 
     if (isValidDate(command)) {

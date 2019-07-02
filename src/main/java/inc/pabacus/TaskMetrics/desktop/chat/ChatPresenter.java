@@ -115,13 +115,13 @@ public class ChatPresenter implements Initializable {
           activityHandler.saveActivity(Activity.ONLINE);
           dailyLogHandler.changeLog(LogStatus.IN.getStatus());
           break;
-        case "otl":
-        case "out to lunch":
+        case "lb":
+        case "lunch":
         case "lunch break":
           activityHandler.saveActivity(Activity.LB);
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
           break;
-        case "bfl":
+        case "bfb":
         case "back from lunch":
         case "back from break":
           activityHandler.saveActivity(Activity.BFB);

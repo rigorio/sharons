@@ -12,11 +12,8 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
-import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
-import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
-import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -50,8 +47,6 @@ public class TimesheetPresenter implements Initializable {
   @FXML
   private JFXButton statusButton;
   @FXML
-  private Label statusText;
-  @FXML
   private Label userName;
   @FXML
   private TableView<DailyLogFXAdapter> timeSheet;
@@ -81,94 +76,72 @@ public class TimesheetPresenter implements Initializable {
     userName.setText(userHandler.getUsername()); //set username
 
     String status = getStatus();
-    statusText.setText(status);
-    initOshiInfo();
+    comboBox.setValue(status);
     initTimeSheet();
     populateCombobox();
   }
 
   @FXML
-  public String changeStatus() {
-    String currentStatus = statusText.getText();
-
-    if (TrackHandler.getSelectedTask() != null) {
-      Alert alert = new Alert(Alert.AlertType.INFORMATION);
-      alert.setTitle("Not Allowed");
-      alert.setHeaderText(null);
-      alert.setContentText("Cannot change activity while tracking a task");
-      alert.showAndWait();
-      return currentStatus;
-    }
-
-    Activity activity = Activity.BUSY; // default ?
-
-    switch (currentStatus) {
-      case "Logged Out":
-        currentStatus = "Logged In";
-        dailyLogHandler.changeLog(LogStatus.IN.getStatus());
-        activity = Activity.ONLINE;
-        break;
-      case "Logged In":
-        currentStatus = "Lunch Break";
-        dailyLogHandler.changeLog(LogStatus.LB.getStatus());
-        activity = Activity.BREAK;
-        break;
-      case "Lunch Break":
-        currentStatus = "Back From Break";
-        dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
-        activity = Activity.BUSY;
-        break;
-      case "Back From Break":
-        currentStatus = "Logged Out";
-        dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
-        activity = Activity.OFFLINE;
-        break;
-    }
-    mockUser.setStatus(currentStatus);
-    statusText.setText(currentStatus);
-    refreshTimesheetTable();
-    activityHandler.saveActivity(activity);
-    return currentStatus;
-  }
-
-  @FXML
   public void updateStatus() {
-
-
     String status = comboBox.getValue();
-    activityHandler.saveActivity(status);
+    if (status.equals("Break")) {
+      System.out.println("Spawn countdown timer");
+    } else if (status.equals("Meeting")) {
+      System.out.println("Spawn MEETING DONE box");
+    } else {
+
+      if (TrackHandler.getSelectedTask() != null) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Not Allowed");
+        alert.setHeaderText(null);
+        alert.setContentText("Cannot change activity while tracking a task");
+        alert.showAndWait();
+        return;
+      }
+
+      Activity activity = Activity.BUSY; // default ?
+
+      switch (status) {
+        case "Logged Out":
+          status = "Logged Out";
+          dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
+          activity = Activity.OFFLINE;
+          break;
+        case "Logged In":
+          status = "Logged In";
+          dailyLogHandler.changeLog(LogStatus.IN.getStatus());
+          activity = Activity.ONLINE;
+          break;
+        case "Lunch Break":
+          status = "Lunch Break";
+          dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+          activity = Activity.BREAK;
+          break;
+        case "Back From Break":
+          status = "Back From Break";
+          dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
+          activity = Activity.BUSY;
+          break;
+      }
+      mockUser.setStatus(status);
+      comboBox.setValue(status);
+      refreshTimesheetTable();
+      activityHandler.saveActivity(activity);
+    }
   }
 
   private void populateCombobox() {
 
-
-    ObservableList<String> choices = FXCollections.observableArrayList();
-    choices.add("Break");
-    choices.add("Meeting"); // TODO turn off activity listening dailyLogHandler when on a break
-    comboBox.getItems().addAll(choices);
-//    comboBox = new JFXComboBox<>(choices);
-  }
-
-  private void reduxer() {
     List<String> statuses = new ArrayList<>();
-    statuses.add("Log In");
-    statuses.add("Break");
-    statuses.add("Meeting");
+    statuses.add("Logged In");
     statuses.add("Lunch Break");
     statuses.add("Back From Break");
-    statuses.add("Log Out");
+    statuses.add("Logged Out");
+    statuses.add("Break");
+    statuses.add("Meeting");
+    ObservableList<String> defaultChoices = FXCollections.observableArrayList(statuses);
+    comboBox.getItems().addAll(defaultChoices);
 
-
-  }
-
-  @FXML
-  public void viewHardware() {
-    GuiManager.getInstance().displayView(new HardwareView());
-  }
-
-  @FXML
-  public void viewSoftware() {
-    GuiManager.getInstance().displayView(new SoftwareView());
   }
 
   private void initTimeSheet() {
@@ -214,8 +187,6 @@ public class TimesheetPresenter implements Initializable {
     timeSheet.setItems(getLogs());
   }
 
-  private void initOshiInfo() {
-  }
   // TODO refactor/extract. Does not follow code by responsibility
 
   private String getStatus() {

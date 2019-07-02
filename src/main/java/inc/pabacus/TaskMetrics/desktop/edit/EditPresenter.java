@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import okhttp3.MediaType;
 
@@ -29,6 +30,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("All")
@@ -135,7 +138,16 @@ public class EditPresenter implements Initializable {
       dateCreatedField.setText(dateCreated.get());
     changeTasks();
 
+    textFieldProperty();
+  }
 
+  private void textFieldProperty() {
+    Pattern pattern = Pattern.compile("\\d*|\\d+\\.\\d*");
+    TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
+      return pattern.matcher(change.getControlNewText()).matches() ? change : null;
+    });
+
+    estimateTimeField.setTextFormatter(formatter);
   }
 
   private List<String> getJobs() {

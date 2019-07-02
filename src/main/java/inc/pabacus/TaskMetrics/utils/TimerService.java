@@ -70,7 +70,7 @@ public class TimerService {
       @Override
       public void run() {
         Platform.runLater(() -> {
-          second++;
+          second--;
           process.run();
         });
       }

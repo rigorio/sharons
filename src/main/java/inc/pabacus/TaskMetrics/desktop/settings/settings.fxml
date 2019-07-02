@@ -22,4 +22,10 @@
                text="Keep Task Tracker always on top"/>
   <JFXCheckBox fx:id="countdownTimer" layoutX="112.0" layoutY="325.0" mnemonicParsing="false"
                text="Use Countdown Timer"/>
+  <JFXTextField fx:id="extendField" layoutX="112.0" layoutY="390.0" prefHeight="25.0" prefWidth="106.0" text="15"/>
+  <Label layoutX="112.0" layoutY="373.0" prefHeight="17.0" prefWidth="83.0" text="Default Extend"/>
+  <Label layoutX="221.0" layoutY="397.0" prefHeight="17.0" prefWidth="57.0" text="minute(s)"/>
+  <JFXButton fx:id="extendButton" layoutX="284.0" layoutY="393.0" mnemonicParsing="false" onAction="#extendButton"
+             prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: #008080;" text="Update Extend"
+             textFill="WHITE"/>
 </AnchorPane>

@@ -173,16 +173,14 @@ public class TrackerPresenter implements Initializable {
   }
 
   private void updateTask(String status) {
-    // I might use this in the future don't touch because I'm forgetful
-    // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-    String totalTimeSpent = getTotalTimeSpent();
-    String currentTime = selectedTask.getTotalTimeSpent().get();
-    totalTimeSpent = String.valueOf((Double.parseDouble(currentTime) + Double.parseDouble(totalTimeSpent)));
+    double currentTime = Double.parseDouble(selectedTask.getTotalTimeSpent().get());
+    double totalComputedTime = getRawComputedTime() + currentTime;
+    String totalTimeSpent = roundOffDecimal(totalComputedTime);
     selectedTask.setTotalTimeSpent(new SimpleStringProperty(totalTimeSpent));
     selectedTask.setStatus(new SimpleStringProperty(status));
   }
 
-  private String getTotalTimeSpent() {
+  private double getRawComputedTime() {
     if (CountdownTimerConfiguration.isCountdownTimer()) {
       //get the current task then get the estimate time
       selectedTask = TrackHandler.getSelectedTask();
@@ -194,13 +192,13 @@ public class TrackerPresenter implements Initializable {
       timerService.pause();
       double rawComputedTime = timeInSeconds / ONE_HOUR;
       rawComputedTime += timeCompensation;
-      return roundOffDecimal(rawComputedTime);
+      return rawComputedTime;
     } else {
       long timeInSeconds = timerService.getTime();
       timerService.pause();
       double rawComputedTime = timeInSeconds / ONE_HOUR;
       rawComputedTime += timeCompensation;
-      return roundOffDecimal(rawComputedTime);
+      return rawComputedTime;
     }
 
   }

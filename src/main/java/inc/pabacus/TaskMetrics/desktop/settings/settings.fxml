@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
+
+<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.141"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.settings.SettingsPresenter">
   <JFXTextField layoutX="112.0" layoutY="110.0" prefHeight="31.0" prefWidth="372.0"/>
@@ -16,4 +20,6 @@
   <Label layoutX="112.0" layoutY="199.0" text="Manager"/>
   <JFXCheckBox fx:id="alwaysOnTopCheckbox" layoutX="112.0" layoutY="288.0" mnemonicParsing="false"
                text="Keep Task Tracker always on top"/>
+  <JFXCheckBox fx:id="countdownTimer" layoutX="112.0" layoutY="325.0" mnemonicParsing="false"
+               text="Use Countdown Timer"/>
 </AnchorPane>

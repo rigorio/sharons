@@ -14,10 +14,14 @@ import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.time.LocalTime;
@@ -62,7 +66,16 @@ public class TrackerPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     timer.setText(STARTING_TIME);
     selectedTask = TrackHandler.getSelectedTask();
-    timerService.setFxProcess(process);
+
+    if (CountdownTimerConfiguration.isCountdownTimer()){
+      String getEstimateTime = selectedTask.getEstimateTime().get();
+      double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
+      timerService.setCountdownProcess(process);
+      timerService.setTime((long) estimateTime);
+    }else{
+      timerService.setFxProcess(process);
+    }
+
     timerService.start();
     String taskTitle = selectedTask.getTask().get();
     title.setText(taskTitle);
@@ -89,16 +102,53 @@ public class TrackerPresenter implements Initializable {
     closeWindow();
   }
 
+  private int tenMinutes = 1, twoMinutes = 1;
+
   private void tickTime() {
     Stage stage = (Stage) title.getScene().getWindow();
     stage.setAlwaysOnTop(AlwaysOnTopCheckerConfiguration.isAlwaysOnTop());
     long duration = timerService.getTime();
     String time = timerService.formatSeconds(duration);
-    timer.setText(time);
+
+    if (CountdownTimerConfiguration.isCountdownTimer()){
+
+//    timer.setText(time);
+    if (duration > 600) {
+      timer.setText(time);
+    } else if (duration < 600 && duration > 120) { //10 minutes
+      timer.setText(time);
+      if (tenMinutes == 1)
+        notification("10 minutes");
+      tenMinutes += 1;
+      timer.setStyle("-fx-text-fill: yellow");
+    } else if (duration <= 120 && duration >= 1) { //2 minutes
+      timer.setText(time);
+      if (twoMinutes == 1)
+        notification("2 minutes");
+      twoMinutes += 1;
+      timer.setStyle("-fx-text-fill: red");
+    } else if (duration == 0) { //0 timer will stop and then
+      Thread.currentThread().interrupt();
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("Timer Stopped");
+      alert.setContentText("Time's up! Will now complete the task.");
+      alert.showAndWait();
+      timer.setText(STARTING_TIME);
+      completeTask();
+    } else {
+      timer.setText(STARTING_TIME);
+    }
+
+    }else{
+      timer.setText(time);
+    }
+
+
   }
 
   private void closeWindow() {
     TrackHandler.setSelectedTask(null);
+    timerService.pause();
     ((Stage) title.getScene().getWindow()).close();
   }
 
@@ -113,11 +163,26 @@ public class TrackerPresenter implements Initializable {
   }
 
   private String getTotalTimeSpent() {
-    long timeInSeconds = timerService.getTime();
-    timerService.pause();
-    double rawComputedTime = timeInSeconds / ONE_HOUR;
-    rawComputedTime += timeCompensation;
-    return roundOffDecimal(rawComputedTime);
+    if (CountdownTimerConfiguration.isCountdownTimer()){
+      //get the current task then get the estimate time
+      selectedTask = TrackHandler.getSelectedTask();
+      String getEstimateTime = selectedTask.getEstimateTime().get();
+      double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
+      //
+      long timeInSeconds = (long)estimateTime - timerService.getTime();
+      System.out.println(timeInSeconds);
+      timerService.pause();
+      double rawComputedTime = timeInSeconds / ONE_HOUR;
+      rawComputedTime += timeCompensation;
+      return roundOffDecimal(rawComputedTime);
+    } else{
+      long timeInSeconds = timerService.getTime();
+      timerService.pause();
+      double rawComputedTime = timeInSeconds / ONE_HOUR;
+      rawComputedTime += timeCompensation;
+      return roundOffDecimal(rawComputedTime);
+    }
+
   }
 
   private String roundOffDecimal(double totalTimeSpent) {
@@ -162,5 +227,15 @@ public class TrackerPresenter implements Initializable {
       updateTask(Status.IN_PROGRESS.getStatus());
       saveAndClose();
     });
+  }
+
+  private void notification(String notif) {
+    Notifications notifications = Notifications.create()
+        .title("TRIBELY")
+        .text("You only have " + notif)
+        .position(Pos.BOTTOM_RIGHT)
+        .hideAfter(Duration.seconds(5));
+    notifications.darkStyle();
+    notifications.showWarning();
   }
 }

@@ -70,6 +70,24 @@ public class TimerService {
       @Override
       public void run() {
         Platform.runLater(() -> {
+          second++;
+          process.run();
+        });
+      }
+    };
+  }
+
+  /**
+   * javafx.application.Platform#runLater(java.lang.Runnable) is specifically
+   * used for countdowTimer
+   *
+   * @param process countdown timer to be executed by TimerTask
+   */
+  public void setCountdownProcess(Runnable process) {
+    timerTask = new TimerTask() {
+      @Override
+      public void run() {
+        Platform.runLater(() -> {
           second--;
           process.run();
         });

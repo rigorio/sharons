@@ -66,11 +66,16 @@ public class TrackerPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     timer.setText(STARTING_TIME);
     selectedTask = TrackHandler.getSelectedTask();
-    String getEstimateTime = selectedTask.getEstimateTime().get();
-    double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
 
-    timerService.setFxProcess(process);
-    timerService.setTime((long) estimateTime);
+    if (CountdownTimerConfiguration.isCountdownTimer()){
+      String getEstimateTime = selectedTask.getEstimateTime().get();
+      double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
+      timerService.setCountdownProcess(process);
+      timerService.setTime((long) estimateTime);
+    }else{
+      timerService.setFxProcess(process);
+    }
+
     timerService.start();
     String taskTitle = selectedTask.getTask().get();
     title.setText(taskTitle);
@@ -104,6 +109,9 @@ public class TrackerPresenter implements Initializable {
     stage.setAlwaysOnTop(AlwaysOnTopCheckerConfiguration.isAlwaysOnTop());
     long duration = timerService.getTime();
     String time = timerService.formatSeconds(duration);
+
+    if (CountdownTimerConfiguration.isCountdownTimer()){
+
 //    timer.setText(time);
     if (duration > 600) {
       timer.setText(time);
@@ -130,6 +138,12 @@ public class TrackerPresenter implements Initializable {
     } else {
       timer.setText(STARTING_TIME);
     }
+
+    }else{
+      timer.setText(time);
+    }
+
+
   }
 
   private void closeWindow() {
@@ -149,17 +163,26 @@ public class TrackerPresenter implements Initializable {
   }
 
   private String getTotalTimeSpent() {
-    //get the current task then get the estimate time
-    selectedTask = TrackHandler.getSelectedTask();
-    String getEstimateTime = selectedTask.getEstimateTime().get();
-    double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
-    //
-    long timeInSeconds = (long)estimateTime - timerService.getTime();
-    System.out.println(timeInSeconds);
-    timerService.pause();
-    double rawComputedTime = timeInSeconds / ONE_HOUR;
-    rawComputedTime += timeCompensation;
-    return roundOffDecimal(rawComputedTime);
+    if (CountdownTimerConfiguration.isCountdownTimer()){
+      //get the current task then get the estimate time
+      selectedTask = TrackHandler.getSelectedTask();
+      String getEstimateTime = selectedTask.getEstimateTime().get();
+      double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
+      //
+      long timeInSeconds = (long)estimateTime - timerService.getTime();
+      System.out.println(timeInSeconds);
+      timerService.pause();
+      double rawComputedTime = timeInSeconds / ONE_HOUR;
+      rawComputedTime += timeCompensation;
+      return roundOffDecimal(rawComputedTime);
+    } else{
+      long timeInSeconds = timerService.getTime();
+      timerService.pause();
+      double rawComputedTime = timeInSeconds / ONE_HOUR;
+      rawComputedTime += timeCompensation;
+      return roundOffDecimal(rawComputedTime);
+    }
+
   }
 
   private String roundOffDecimal(double totalTimeSpent) {

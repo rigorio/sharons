@@ -59,6 +59,8 @@ public class EditPresenter implements Initializable {
   @FXML
   private JFXTextField descriptionField;
   @FXML
+  private JFXTextField estimateTimeField;
+  @FXML
   private JFXComboBox<String> taskCombobox;
   @FXML
   private JFXButton saveButton;
@@ -108,6 +110,7 @@ public class EditPresenter implements Initializable {
     StringProperty task = taskBeingEdited.getTask();
     StringProperty description = taskBeingEdited.getDescription();
     StringProperty status = taskBeingEdited.getStatus();
+    StringProperty estimateTime = taskBeingEdited.getEstimateTime();
     StringProperty startTime = taskBeingEdited.getStartTime();
     StringProperty endTime = taskBeingEdited.getEndTime();
     StringProperty totalTimeSpent = taskBeingEdited.getTotalTimeSpent();
@@ -120,6 +123,8 @@ public class EditPresenter implements Initializable {
       descriptionField.setText(description.get());
     if (status != null)
       statusComboBox.setValue(status.get());
+    if (estimateTimeField != null)
+      estimateTimeField.setText(estimateTime.get());
     if (startTime != null)
       startTimeField.setText(startTime.get());
     if (endTime != null)
@@ -203,6 +208,7 @@ public class EditPresenter implements Initializable {
         .totalTimeSpent(totalTimeField.getText())
         .businessValueId(1L)
         .dateCreated(dateCreatedField.getText())
+        .estimateTime(estimateTimeField.getText())
         .startTime(startTimeField.getText())
         .endTime(endTimeField.getText())
         .build();

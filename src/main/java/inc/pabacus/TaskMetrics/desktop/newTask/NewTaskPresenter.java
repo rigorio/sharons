@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import okhttp3.MediaType;
 
@@ -27,6 +28,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class NewTaskPresenter implements Initializable {
@@ -47,6 +50,11 @@ public class NewTaskPresenter implements Initializable {
   private JFXButton closeButton;
   @FXML
   private JFXComboBox<String> jobComboBox;
+  @FXML
+  private Label estimateLabel;
+
+  @FXML
+  private JFXTextField estimateField;
 
   ObservableList<String> billableList = FXCollections.observableArrayList("True", "False");
 
@@ -70,19 +78,26 @@ public class NewTaskPresenter implements Initializable {
     List<String> businesses = getAllBusinessValues().stream()
         .map(BusinessValue::getBusiness)
         .collect(Collectors.toList());
-//    businessComboBox.getItems().addAll(businesses);
     taskCombobox.setPromptText("Select a task");
     jobComboBox.setPromptText("Select a job");
-//    businessComboBox.setPromptText("Choose Business Value");
     jobComboBox.setItems(FXCollections.observableArrayList(getJobs()));
     customTaskField.setVisible(false);
     customTaskLabel.setVisible(false);
-//    businessLabel.setLayoutY(168);
-//    businessComboBox.setLayoutY(168);
-    descriptionLabel.setLayoutY(203);
-    descriptionField.setLayoutY(203);
+    descriptionLabel.setLayoutY(205);
+    descriptionField.setLayoutY(201);
+    estimateLabel.setLayoutY(170);
+    estimateField.setLayoutY(165);
 
-//    businessComboBox.setValue("Development");
+    estimateFieldTextProperty();
+  }
+
+  private void estimateFieldTextProperty() {
+    Pattern pattern = Pattern.compile("\\d*|\\d+\\.\\d*");
+    TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
+      return pattern.matcher(change.getControlNewText()).matches() ? change : null;
+    });
+
+    estimateField.setTextFormatter(formatter);
   }
 
   private List<String> getJobs() {
@@ -136,6 +151,7 @@ public class NewTaskPresenter implements Initializable {
     String description = descriptionField.getText(); // actually task of task
     Boolean billable = Boolean.valueOf(taskCombobox.getValue());
     String taskValue = taskCombobox.getValue();
+    String estimateFields = estimateField.getText();
     String taskTitle = taskValue.equalsIgnoreCase("Custom Task")
         ? customTaskField.getText()
         : taskValue;
@@ -147,6 +163,7 @@ public class NewTaskPresenter implements Initializable {
         .task(taskTitle)
         .job(jobComboBox.getValue())
         .billable(true)
+        .estimateTime(estimateFields)
         .totalTimeSpent("0.0")
         .status(Status.PENDING.getStatus())
         .description(description)
@@ -164,13 +181,12 @@ public class NewTaskPresenter implements Initializable {
   }
 
 
-
   private List<BusinessValue> getAllBusinessValues() {
     return businessValueHandler.getAll();
   }
 
   private boolean isAlrightAlrightAlright() {
-    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() ;
+    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() || estimateField.getText().isEmpty();
   }
 
   private boolean isCustomTaskEmpty() {
@@ -186,18 +202,18 @@ public class NewTaskPresenter implements Initializable {
     if (status) {
       customTaskField.setVisible(false);
       customTaskLabel.setVisible(false);
-//      businessLabel.setLayoutY(168);
-//      businessComboBox.setLayoutY(168);
-      descriptionLabel.setLayoutY(203);
-      descriptionField.setLayoutY(203);
+      descriptionLabel.setLayoutY(205);
+      descriptionField.setLayoutY(201);
+      estimateLabel.setLayoutY(170);
+      estimateField.setLayoutY(165);
     } else {
 
       customTaskField.setVisible(true);
       customTaskLabel.setVisible(true);
-//      businessLabel.setLayoutY(203);
-//      businessComboBox.setLayoutY(203);
       descriptionLabel.setLayoutY(246);
-      descriptionField.setLayoutY(246);
+      descriptionField.setLayoutY(244);
+      estimateLabel.setLayoutY(205);
+      estimateField.setLayoutY(201);
     }
   }
 }

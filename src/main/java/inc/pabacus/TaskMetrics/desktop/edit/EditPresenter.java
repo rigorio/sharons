@@ -126,7 +126,7 @@ public class EditPresenter implements Initializable {
       descriptionField.setText(description.get());
     if (status != null)
       statusComboBox.setValue(status.get());
-    if (estimateTimeField != null)
+    if (estimateTime != null)
       estimateTimeField.setText(estimateTime.get());
     if (startTime != null)
       startTimeField.setText(startTime.get());

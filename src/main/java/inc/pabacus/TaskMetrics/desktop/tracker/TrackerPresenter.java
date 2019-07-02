@@ -149,7 +149,13 @@ public class TrackerPresenter implements Initializable {
   }
 
   private String getTotalTimeSpent() {
-    long timeInSeconds = timerService.getTime();
+    //get the current task then get the estimate time
+    selectedTask = TrackHandler.getSelectedTask();
+    String getEstimateTime = selectedTask.getEstimateTime().get();
+    double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
+    //
+    long timeInSeconds = (long)estimateTime - timerService.getTime();
+    System.out.println(timeInSeconds);
     timerService.pause();
     double rawComputedTime = timeInSeconds / ONE_HOUR;
     rawComputedTime += timeCompensation;

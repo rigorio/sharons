@@ -9,6 +9,7 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
+import inc.pabacus.TaskMetrics.desktop.settings.ExtendConfiguration;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,6 +40,10 @@ public class TrackerPresenter implements Initializable {
   private Label timer;
   @FXML
   private JFXButton complete;
+  @FXML
+  private JFXButton cancel;
+  @FXML
+  private JFXButton extend;
 
   private static final String STARTING_TIME = "00:00:00";
   private static final double ONE_HOUR = 3600.0;
@@ -67,12 +72,12 @@ public class TrackerPresenter implements Initializable {
     timer.setText(STARTING_TIME);
     selectedTask = TrackHandler.getSelectedTask();
 
-    if (CountdownTimerConfiguration.isCountdownTimer()){
+    if (CountdownTimerConfiguration.isCountdownTimer()) {
       String getEstimateTime = selectedTask.getEstimateTime().get();
       double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
       timerService.setCountdownProcess(process);
       timerService.setTime((long) estimateTime);
-    }else{
+    } else {
       timerService.setFxProcess(process);
     }
 
@@ -80,6 +85,16 @@ public class TrackerPresenter implements Initializable {
     String taskTitle = selectedTask.getTask().get();
     title.setText(taskTitle);
     startTime = getCurrentTime();
+    extend.setVisible(false);
+  }
+
+  @FXML
+  private void extend() {
+    double getExtendMinutes = Double.parseDouble(ExtendConfiguration.getExtendMinutes()) * 60;
+    timerService.setTime(timerService.getTime() + (long)getExtendMinutes);
+    //to reset the notification
+    tenMinutes = 0;
+    twoMinutes = 0;
   }
 
   @FXML
@@ -110,39 +125,44 @@ public class TrackerPresenter implements Initializable {
     long duration = timerService.getTime();
     String time = timerService.formatSeconds(duration);
 
-    if (CountdownTimerConfiguration.isCountdownTimer()){
-
+    if (CountdownTimerConfiguration.isCountdownTimer()) {
 //    timer.setText(time);
-    if (duration > 600) {
-      timer.setText(time);
-    } else if (duration < 600 && duration > 120) { //10 minutes
-      timer.setText(time);
-      if (tenMinutes == 1)
-        notification("10 minutes");
-      tenMinutes += 1;
-      timer.setStyle("-fx-text-fill: yellow");
-    } else if (duration <= 120 && duration >= 1) { //2 minutes
-      timer.setText(time);
-      if (twoMinutes == 1)
-        notification("2 minutes");
-      twoMinutes += 1;
-      timer.setStyle("-fx-text-fill: red");
-    } else if (duration == 0) { //0 timer will stop and then
-      Thread.currentThread().interrupt();
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setTitle("Timer Stopped");
-      alert.setContentText("Time's up! Will now complete the task.");
-      alert.showAndWait();
-      timer.setText(STARTING_TIME);
-      completeTask();
+      if (duration > 600) {
+        timer.setStyle("-fx-text-fill: white");
+        timer.setText(time);
+        extend.setVisible(false);
+        cancel.setVisible(true);
+      } else if (duration <= 600 && duration > 120) { //10 minutes in seconds
+        timer.setText(time);
+        if (tenMinutes == 1)
+          notification("10 minutes");
+        extend.setVisible(true);
+        cancel.setVisible(false);
+        tenMinutes += 1;
+        timer.setStyle("-fx-text-fill: yellow");
+      } else if (duration <= 120 && duration >= 1) { //2 minutes in seconds
+        timer.setText(time);
+        if (twoMinutes == 1)
+          notification("2 minutes");
+        extend.setVisible(true);
+        cancel.setVisible(false);
+        twoMinutes += 1;
+        timer.setStyle("-fx-text-fill: red");
+      } else if (duration == 0) { //0 timer will stop and then
+        Thread.currentThread().interrupt();
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Timer Stopped");
+        alert.setContentText("Time's up! Will now complete the task.");
+        alert.showAndWait();
+        timer.setText(STARTING_TIME);
+        completeTask();
+      } else {
+        timer.setText(STARTING_TIME);
+      }
+
     } else {
-      timer.setText(STARTING_TIME);
-    }
-
-    }else{
       timer.setText(time);
     }
-
 
   }
 
@@ -163,19 +183,19 @@ public class TrackerPresenter implements Initializable {
   }
 
   private String getTotalTimeSpent() {
-    if (CountdownTimerConfiguration.isCountdownTimer()){
+    if (CountdownTimerConfiguration.isCountdownTimer()) {
       //get the current task then get the estimate time
       selectedTask = TrackHandler.getSelectedTask();
       String getEstimateTime = selectedTask.getEstimateTime().get();
       double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
       //
-      long timeInSeconds = (long)estimateTime - timerService.getTime();
+      long timeInSeconds = (long) estimateTime - timerService.getTime();
       System.out.println(timeInSeconds);
       timerService.pause();
       double rawComputedTime = timeInSeconds / ONE_HOUR;
       rawComputedTime += timeCompensation;
       return roundOffDecimal(rawComputedTime);
-    } else{
+    } else {
       long timeInSeconds = timerService.getTime();
       timerService.pause();
       double rawComputedTime = timeInSeconds / ONE_HOUR;

@@ -2,9 +2,13 @@ package inc.pabacus.TaskMetrics.api.timesheet;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogItem;
+import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
+import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class DailyLogHandler implements DailyLogService {
@@ -29,6 +37,7 @@ public class DailyLogHandler implements DailyLogService {
   private static final String HOST = "http://localhost:8080";
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
+  public ScheduledFuture<?> scheduledFuture;
 
   public DailyLogHandler() {
     repository = new DailyLogWebRepository();
@@ -82,4 +91,22 @@ public class DailyLogHandler implements DailyLogService {
     return dailyLog;
   }
 
+  public void checkIfUserIsBreak() {
+    ActivityHandler activityHandler = new ActivityHandler();
+
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    Runnable command = () -> Platform.runLater(() -> {
+
+      if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
+        GuiManager.getInstance().displayView(new BreakView());
+        scheduledFuture.cancel(true);
+      }
+    });
+
+    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1, TimeUnit.SECONDS);
+  }
+
+  public void close() {
+    scheduledFuture.cancel(true);
+  }
 }

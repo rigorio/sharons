@@ -21,7 +21,7 @@ public class StatusUpdateHandler {
   private ObjectMapper mapper = new ObjectMapper();
   private static final String HOST = "http://localhost:8080";
 
-  private List<StatusUpdate> all() {
+  public List<StatusUpdate> all() {
 
     List<StatusUpdate> statusUpdates = new ArrayList<>();
     try {

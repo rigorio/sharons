@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserActivity {
 
   private Long id;
+  private Long userId;
   private String date;
   private String time;
   private String activity;

@@ -8,6 +8,7 @@ import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
+import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import javafx.application.Platform;
 
@@ -20,6 +21,7 @@ public class ServiceManager {
   private ScreenshotServiceImpl screenshotService = BeanManager.screenshotService();
   private TokenService tokenService = BeanManager.tokenService();
   private ActivityListener activityListener = BeanManager.activityListener();
+  private DailyLogHandler dailyLogHandler = BeanManager.dailyLogService();
 
 
   public void activate() {
@@ -34,6 +36,7 @@ public class ServiceManager {
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
     activityListener.listen();
+    dailyLogHandler.checkIfUserIsBreak();
   }
 
   public void deactivate() {

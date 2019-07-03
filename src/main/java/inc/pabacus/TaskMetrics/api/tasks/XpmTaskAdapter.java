@@ -31,6 +31,7 @@ public class XpmTaskAdapter {
   private StringProperty startTime;
   private StringProperty endTime;
   private StringProperty estimateTime;
+  private StringProperty extendCounter;
   private StringProperty totalTimeSpent;
   private LongProperty businessValueId;
   private InvoiceTypeAdapter invoiceTypeAdapter;
@@ -70,6 +71,9 @@ public class XpmTaskAdapter {
 
     String estimateTime = xpmTask.getEstimateTime();
     this.estimateTime = estimateTime != null ? new SimpleStringProperty(estimateTime) : null;
+
+    String extendCounter = xpmTask.getExtendCounter();
+    this.extendCounter = extendCounter != null ? new SimpleStringProperty(extendCounter) : null;
 
     String totalTimeSpent = xpmTask.getTotalTimeSpent();
     this.totalTimeSpent = totalTimeSpent != null ? new SimpleStringProperty(totalTimeSpent) : null;

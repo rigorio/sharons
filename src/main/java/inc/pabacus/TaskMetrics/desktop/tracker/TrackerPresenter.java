@@ -90,8 +90,25 @@ public class TrackerPresenter implements Initializable {
 
   @FXML
   private void extend() {
-    double getExtendMinutes = Double.parseDouble(ExtendConfiguration.getExtendMinutes()) * 60;
-    timerService.setTime(timerService.getTime() + (long)getExtendMinutes);
+    selectedTask = TrackHandler.getSelectedTask();
+    try {
+      String extendCounter = selectedTask.getExtendCounter().get();
+      long tick = Long.parseLong(extendCounter) + 1;
+      selectedTask.setExtendCounter(new SimpleStringProperty(String.valueOf(tick)));
+    } catch (Exception e) {
+      //in case that ExtendCounter is null
+      selectedTask.setExtendCounter(new SimpleStringProperty("1"));
+    }
+    //get Extended(minutes) * 60 = 1 hour
+    long getExtendMinutes = Long.parseLong(ExtendConfiguration.getExtendMinutes()) * 60;
+    timerService.setTime(timerService.getTime() + getExtendMinutes);
+    String getEstimateTime = selectedTask.getEstimateTime().get();
+
+    double getExtendMinutesConverted = getExtendMinutes / ONE_HOUR;
+    //add estimateTime and extendMinutes
+    double addBoth = Double.parseDouble(getEstimateTime) + getExtendMinutesConverted;
+    //setEstimateTime
+    selectedTask.setEstimateTime(new SimpleStringProperty(String.valueOf(addBoth)));
     //to reset the notification
     tenMinutes = 0;
     twoMinutes = 0;
@@ -149,13 +166,14 @@ public class TrackerPresenter implements Initializable {
         twoMinutes += 1;
         timer.setStyle("-fx-text-fill: red");
       } else if (duration == 0) { //0 timer will stop and then
+        completeTask();
         Thread.currentThread().interrupt();
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Timer Stopped");
         alert.setContentText("Time's up! Will now complete the task.");
         alert.showAndWait();
         timer.setText(STARTING_TIME);
-        completeTask();
+
       } else {
         timer.setText(STARTING_TIME);
       }
@@ -182,15 +200,15 @@ public class TrackerPresenter implements Initializable {
 
   private double getRawComputedTime() {
     if (CountdownTimerConfiguration.isCountdownTimer()) {
-      //get the current task then get the estimate time
       selectedTask = TrackHandler.getSelectedTask();
       String getEstimateTime = selectedTask.getEstimateTime().get();
-      double estimateTime = Double.parseDouble(getEstimateTime) * 60 * 60;
-      //
-      long timeInSeconds = (long) estimateTime - timerService.getTime();
-      System.out.println(timeInSeconds);
+      //get the estimateTime and timeInSeconds
+      double estimateTime = Double.parseDouble(getEstimateTime);
+      long timeInSeconds = timerService.getTime();
       timerService.pause();
-      double rawComputedTime = timeInSeconds / ONE_HOUR;
+      double timeInSecondsInHour = timeInSeconds / ONE_HOUR;
+      //subtract estimateTime and TimeInSecondsInHour
+      double rawComputedTime = estimateTime - timeInSecondsInHour;
       rawComputedTime += timeCompensation;
       return rawComputedTime;
     } else {

@@ -20,6 +20,7 @@ public class DailyLog {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+  private Long userId;
   private String date;
   private String in;
   private String otl;

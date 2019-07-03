@@ -27,6 +27,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -135,6 +136,7 @@ public class TasksPresenter implements Initializable {
     }
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
+    ((Stage) startButton.getScene().getWindow()).setIconified(true);
   }
 
   @FXML

@@ -7,18 +7,13 @@ import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
-import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
-import inc.pabacus.TaskMetrics.desktop.hardware.HardwareView;
-import inc.pabacus.TaskMetrics.desktop.software.SoftwareView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
-import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,8 +22,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,6 +30,7 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -53,17 +47,7 @@ public class TimesheetPresenter implements Initializable {
   @FXML
   private JFXButton statusButton;
   @FXML
-  private Label statusText;
-  @FXML
   private Label userName;
-  @FXML
-  private ImageView softwareImg;
-  @FXML
-  private ImageView hardwareImg;
-  @FXML
-  private Label os;
-  @FXML
-  private Label hardware;
   @FXML
   private TableView<DailyLogFXAdapter> timeSheet;
   @FXML
@@ -91,78 +75,73 @@ public class TimesheetPresenter implements Initializable {
     mockUser = new MockUser("Rigo", "Logged Out");
     userName.setText(userHandler.getUsername()); //set username
 
-    getStatus();
-    initOshiInfo();
+    String status = getStatus();
+    comboBox.setValue(status);
     initTimeSheet();
     populateCombobox();
   }
 
   @FXML
-  public String changeStatus() {
-    String currentStatus = statusText.getText();
-
-    if (TrackHandler.getSelectedTask() != null) {
-      Alert alert = new Alert(Alert.AlertType.INFORMATION);
-      alert.setTitle("Not Allowed");
-      alert.setHeaderText(null);
-      alert.setContentText("Cannot change activity while tracking a task");
-      alert.showAndWait();
-      return currentStatus;
-    }
-
-    Activity activity = Activity.BUSY; // default ?
-
-    switch (currentStatus) {
-      case "Logged Out":
-        currentStatus = "Logged In";
-        dailyLogHandler.changeLog(LogStatus.IN.getStatus());
-        activity = Activity.ONLINE;
-        break;
-      case "Logged In":
-        currentStatus = "Lunch Break";
-        dailyLogHandler.changeLog(LogStatus.LB.getStatus());
-        activity = Activity.BREAK;
-        break;
-      case "Lunch Break":
-        currentStatus = "Back From Break";
-        dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
-        activity = Activity.BUSY;
-        break;
-      case "Back From Break":
-        currentStatus = "Logged Out";
-        dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
-        activity = Activity.OFFLINE;
-        break;
-    }
-    mockUser.setStatus(currentStatus);
-    statusText.setText(currentStatus);
-    refreshTimesheetTable();
-    activityHandler.saveActivity(activity);
-    return currentStatus;
-  }
-
-  @FXML
   public void updateStatus() {
-    String activity = comboBox.getValue();
-    activityHandler.saveActivity(activity);
+    String status = comboBox.getValue();
+    if (status.equals("Break")) {
+      System.out.println("Spawn countdown timer");
+    } else if (status.equals("Meeting")) {
+      System.out.println("Spawn MEETING DONE box");
+    } else {
+
+      if (TrackHandler.getSelectedTask() != null) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Not Allowed");
+        alert.setHeaderText(null);
+        alert.setContentText("Cannot change activity while tracking a task");
+        alert.showAndWait();
+        return;
+      }
+
+      Activity activity = Activity.BUSY; // default ?
+
+      switch (status) {
+        case "Logged Out":
+          status = "Logged Out";
+          dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
+          activity = Activity.OFFLINE;
+          break;
+        case "Logged In":
+          status = "Logged In";
+          dailyLogHandler.changeLog(LogStatus.IN.getStatus());
+          activity = Activity.ONLINE;
+          break;
+        case "Lunch Break":
+          status = "Lunch Break";
+          dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+          activity = Activity.BREAK;
+          break;
+        case "Back From Break":
+          status = "Back From Break";
+          dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
+          activity = Activity.BUSY;
+          break;
+      }
+      mockUser.setStatus(status);
+      comboBox.setValue(status);
+      refreshTimesheetTable();
+      activityHandler.saveActivity(activity);
+    }
   }
 
   private void populateCombobox() {
-    ObservableList<String> choices = FXCollections.observableArrayList();
-    choices.add("Break");
-    choices.add("Meeting"); // TODO turn off activity listening dailyLogHandler when on a break
-    comboBox.getItems().addAll(choices);
-//    comboBox = new JFXComboBox<>(choices);
-  }
 
-  @FXML
-  public void viewHardware() {
-    GuiManager.getInstance().displayView(new HardwareView());
-  }
+    List<String> statuses = new ArrayList<>();
+    statuses.add("Logged In");
+    statuses.add("Lunch Break");
+    statuses.add("Back From Break");
+    statuses.add("Logged Out");
+    statuses.add("Break");
+    statuses.add("Meeting");
+    ObservableList<String> defaultChoices = FXCollections.observableArrayList(statuses);
+    comboBox.getItems().addAll(defaultChoices);
 
-  @FXML
-  public void viewSoftware() {
-    GuiManager.getInstance().displayView(new SoftwareView());
   }
 
   private void initTimeSheet() {
@@ -208,29 +187,23 @@ public class TimesheetPresenter implements Initializable {
     timeSheet.setItems(getLogs());
   }
 
-  private void initOshiInfo() {
-    softwareImg.setImage(new Image("/img/software.png", DEF_SIZE, DEF_SIZE, false, true));
-    hardwareImg.setImage(new Image("/img/hardware.png", DEF_SIZE, DEF_SIZE, false, true));
-
-    os.setText(new SoftwareHandler().getOs());
-    hardware.setText(new WindowsHardwareHandler().getAllInfo().getProcessor().getName());
-  }
   // TODO refactor/extract. Does not follow code by responsibility
 
-  private void getStatus() {
+  private String getStatus() {
 //    String in = null, otl = null, bfl = null, out = null;
-    LocalDate dateNow = LocalDate.now();
-
-    OkHttpClient client = new OkHttpClient();
-    // code request code here
-    Request request = new Request.Builder()
-        .url(HOST + "/api/logs")
-        .addHeader("Accept", "application/json")
-        .addHeader("Authorization", TokenRepository.getToken().getToken())
-        .method("GET", null)
-        .build();
-
+    String status = "";
     try {
+      LocalDate dateNow = LocalDate.now();
+
+      OkHttpClient client = new OkHttpClient();
+      // code request code here
+      Request request = new Request.Builder()
+          .url(HOST + "/api/logs")
+          .addHeader("Accept", "application/json")
+          .addHeader("Authorization", TokenRepository.getToken().getToken())
+          .method("GET", null)
+          .build();
+
       Response response = client.newCall(request).execute();
       String jsonString = response.body().string();
 
@@ -238,7 +211,6 @@ public class TimesheetPresenter implements Initializable {
       Optional<DailyLog> any = dailyLogs.stream()
           .filter(dailyLog -> dailyLog.getDate().equals(dateNow.toString()))
           .findAny();
-      String status;
       if (!any.isPresent())
         status = "Logged Out";
       else {
@@ -258,7 +230,7 @@ public class TimesheetPresenter implements Initializable {
         else
           status = "Logged Out";
       }
-      statusText.setText(status);
+
 /*
       JSONArray jsonarray = new JSONArray(jsonString);
       for (int i = 0; i < jsonarray.length(); i++) {
@@ -275,6 +247,7 @@ public class TimesheetPresenter implements Initializable {
     } catch (IOException e) {
       System.out.println(e); // TODO log exception
     }
+    return status;
 /*
     if (dateLabel.getText().equalsIgnoreCase(String.valueOf(dateNow))) {
       if (in == null || in.equals("null")) {

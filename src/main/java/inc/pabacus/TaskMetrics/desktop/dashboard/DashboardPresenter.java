@@ -16,16 +16,15 @@ import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -35,7 +34,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.Optional;
@@ -43,6 +41,8 @@ import java.util.ResourceBundle;
 
 public class DashboardPresenter implements Initializable {
 
+  @FXML
+  private ProgressBar progressBar;
   @FXML
   private JFXButton settingsButton;
   @FXML
@@ -222,17 +222,16 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void viewScreenshots() {
     //To change the cursor to loading
-    dynamicContentPane.getScene().setCursor(Cursor.WAIT);
+//    dynamicContentPane.getScene().setCursor(Cursor.WAIT);
     //PauseTransition to load completely the screenShotView
-    PauseTransition pause = new PauseTransition(Duration.seconds(1));
-    pause.setOnFinished(event -> {
-      dynamicContentPane.setCache(true);
-      dynamicContentPane.setCacheHint(CacheHint.SPEED);
-      dynamicContentPane.getScene().setCursor(Cursor.DEFAULT);
-      updateDynamicPaneContent(new ScreenShotView().getView());
-    });
-    pause.play();
-//    GuiManager.getInstance().displayView(new ScreenShotView());
+    updateDynamicPaneContent(new ScreenShotView().getView());
+//    dynamicContentPane.getScene().setCursor(Cursor.DEFAULT);
+//    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+//    pause.setOnFinished(event -> {
+//      dynamicContentPane.setCache(true);
+//      dynamicContentPane.setCacheHint(CacheHint.SPEED);
+//    });
+//    pause.play();
   }
 
   @FXML

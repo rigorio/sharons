@@ -13,6 +13,7 @@ import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.status.StatusUpdateHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 
 public class BeanManager {
@@ -29,6 +30,7 @@ public class BeanManager {
   private static ActivityHandler activityHandler = new ActivityHandler();
   private static TokenService tokenService = new TokenService();
   private static LeaveService leaveService = new LeaveService();
+  private static StatusUpdateHandler statusUpdateHandler = new StatusUpdateHandler();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -80,6 +82,10 @@ public class BeanManager {
 
   public static LeaveService leaveService() {
     return leaveService;
+  }
+
+  public static StatusUpdateHandler statusUpdateHandler() {
+    return statusUpdateHandler;
   }
 
   // I am too lazy to provide an explanation as to why

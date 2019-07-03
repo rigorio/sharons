@@ -21,6 +21,7 @@ public class TokenService {
       = MediaType.parse("application/json; charset=utf-8");
   private static final String HOST = "http://localhost:8080";
   private ScheduledFuture<?> scheduledFuture;
+  private static final long DEFAULT_INTERVAL = 3000000; // 55 minutes
 
   private UserHandler userHandler;
 
@@ -51,7 +52,6 @@ public class TokenService {
   }
 
   public void refreshToken() {
-    //run every 55 minutes before 1 hour = 3300000
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable command = () -> Platform.runLater(() -> {
       String username = userHandler.getUsername();
@@ -60,7 +60,7 @@ public class TokenService {
       Credentials token = service.generateToken(new Credentials(username, password));
     });
 
-    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 3300000, TimeUnit.MILLISECONDS);
+    scheduledFuture = executor.scheduleAtFixedRate(command, 0, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS);
   }
 
   public void stopToken() {

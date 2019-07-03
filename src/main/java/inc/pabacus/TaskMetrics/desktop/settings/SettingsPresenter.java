@@ -1,9 +1,15 @@
 package inc.pabacus.TaskMetrics.desktop.settings;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import inc.pabacus.TaskMetrics.api.hardware.HardwareData;
+import inc.pabacus.TaskMetrics.api.hardware.HardwareDataFXAdapter;
+import inc.pabacus.TaskMetrics.api.hardware.HardwareService;
+import inc.pabacus.TaskMetrics.api.hardware.WindowsHardwareHandler;
+import inc.pabacus.TaskMetrics.api.software.SoftwareData;
+import inc.pabacus.TaskMetrics.api.software.SoftwareDataFXAdapter;
+import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
+import inc.pabacus.TaskMetrics.api.software.SoftwareService;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
 import lombok.Data;
 
 import java.net.URL;
@@ -22,8 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+@SuppressWarnings("all")
 public class SettingsPresenter implements Initializable {
 
+  @FXML
+  private JFXTreeTableView<SoftwareDataFXAdapter> softwareTable;
+  @FXML
+  private JFXTreeTableView<HardwareDataFXAdapter> hardwareTable;
   @FXML
   private TableView managerTable;
   @FXML
@@ -40,6 +52,8 @@ public class SettingsPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    initSoftware();
+    initHardware();
     alwaysOnTop();
     countdownTimer();
     getDefaultExtend();
@@ -47,6 +61,61 @@ public class SettingsPresenter implements Initializable {
     TableColumn<String, String> managers = new TableColumn("Managers");
     managers.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()));
     managerTable.getColumns().addAll(managers);
+  }
+
+  private void initHardware() {
+    HardwareService hardwareService = new WindowsHardwareHandler();
+    ObservableList<HardwareDataFXAdapter> hardwares = FXCollections.observableArrayList();
+
+    JFXTreeTableColumn<HardwareDataFXAdapter, String> name = new JFXTreeTableColumn<>("Hardware");
+    name.setCellValueFactory(param -> param.getValue().getValue().getName());
+
+    JFXTreeTableColumn<HardwareDataFXAdapter, String> description = new JFXTreeTableColumn<>("Name");
+    description.setCellValueFactory(param -> param.getValue().getValue().getDescription());
+
+    name.prefWidthProperty().bind(hardwareTable.widthProperty().divide(2));
+    description.prefWidthProperty().bind(hardwareTable.widthProperty().divide(2));
+
+    List<HardwareData> disks = hardwareService.getDisks();
+    List<HardwareData> displays = hardwareService.getDisplays();
+    List<HardwareData> usbDevices = hardwareService.getUsbDevices();
+    disks.forEach(disk -> hardwares.add(new HardwareDataFXAdapter(disk)));
+    displays.forEach(display -> hardwares.add(new HardwareDataFXAdapter(display)));
+    usbDevices.forEach(usbDevice -> hardwares.add(new HardwareDataFXAdapter(usbDevice)));
+
+    final TreeItem<HardwareDataFXAdapter> root = new RecursiveTreeItem<>(hardwares, RecursiveTreeObject::getChildren);
+    hardwareTable.getColumns().addAll(name, description);
+    hardwareTable.setRoot(root);
+    hardwareTable.setShowRoot(false);
+
+  }
+
+  private void initSoftware() {
+    SoftwareService softwareService = new SoftwareHandler();
+    ObservableList<SoftwareDataFXAdapter> softwares = FXCollections.observableArrayList();
+
+    JFXTreeTableColumn<SoftwareDataFXAdapter, String> name = new JFXTreeTableColumn<>("Name");
+    name.setCellValueFactory(param -> param.getValue().getValue().getName());
+
+    JFXTreeTableColumn<SoftwareDataFXAdapter, String> version = new JFXTreeTableColumn<>("Version");
+    version.setCellValueFactory(param -> param.getValue().getValue().getVersion());
+
+    JFXTreeTableColumn<SoftwareDataFXAdapter, String> installedDate = new JFXTreeTableColumn<>("Last Updated");
+    installedDate.setCellValueFactory(param -> param.getValue().getValue().getDateInstalled());
+
+    name.prefWidthProperty().bind(softwareTable.widthProperty().divide(2));
+    version.prefWidthProperty().bind(softwareTable.widthProperty().divide(4));
+    installedDate.prefWidthProperty().bind(softwareTable.widthProperty().divide(4));
+
+    List<SoftwareData> allSoftware = softwareService.getSoftware();
+
+    for (SoftwareData s : allSoftware)
+      softwares.add(new SoftwareDataFXAdapter(s));
+
+    final TreeItem<SoftwareDataFXAdapter> root = new RecursiveTreeItem<>(softwares, RecursiveTreeObject::getChildren);
+    softwareTable.getColumns().addAll(name, version, installedDate);
+    softwareTable.setRoot(root);
+    softwareTable.setShowRoot(false);
   }
 
   private void getDefaultExtend() {

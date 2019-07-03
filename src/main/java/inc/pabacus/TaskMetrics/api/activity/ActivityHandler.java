@@ -95,8 +95,6 @@ public class ActivityHandler {
     } catch (IOException | JSONException e) {
       e.printStackTrace();
     }
-    System.out.println("----------------------------");
-    System.out.println(activity);
     return activity;
   }
 }

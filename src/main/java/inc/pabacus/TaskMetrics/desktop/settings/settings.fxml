@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.141"
+<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.settings.SettingsPresenter">
   <JFXTextField layoutX="112.0" layoutY="110.0" prefHeight="31.0" prefWidth="372.0"/>
   <JFXButton layoutX="502.0" layoutY="110.0" mnemonicParsing="false" style="-fx-background-color: #008080;"
              text="Update Host" textFill="WHITE"/>
   <Label layoutX="112.0" layoutY="89.0" text="Web API Host"/>
-  <JFXComboBox layoutX="112.0" layoutY="220.0" prefHeight="31.0" prefWidth="372.0"/>
-  <JFXButton layoutX="502.0" layoutY="220.0" mnemonicParsing="false" style="-fx-background-color: #008080;"
-             text="Update Manager" textFill="WHITE"/>
-  <Label layoutX="112.0" layoutY="199.0" text="Manager"/>
+  <JFXComboBox fx:id="managerBox" layoutX="110.0" layoutY="174.0" prefHeight="31.0" prefWidth="228.0"/>
+  <JFXButton layoutX="287.0" layoutY="228.0" mnemonicParsing="false" onAction="#addManager"
+             style="-fx-background-color: #008080;" text="Add" textFill="WHITE"/>
   <JFXCheckBox fx:id="alwaysOnTopCheckbox" layoutX="112.0" layoutY="288.0" mnemonicParsing="false"
                text="Keep Task Tracker always on top"/>
   <JFXCheckBox fx:id="countdownTimer" layoutX="112.0" layoutY="325.0" mnemonicParsing="false"
@@ -28,4 +24,7 @@
   <JFXButton fx:id="extendButton" layoutX="284.0" layoutY="393.0" mnemonicParsing="false" onAction="#extendButton"
              prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: #008080;" text="Update Extend"
              textFill="WHITE"/>
+  <TableView fx:id="managerTable" layoutX="354.0" layoutY="157.0" prefHeight="121.0" prefWidth="253.0"/>
+  <JFXButton layoutX="204.0" layoutY="228.0" mnemonicParsing="false" onAction="#removeManager"
+             style="-fx-background-color: #008080;" text="Remove" textFill="WHITE"/>
 </AnchorPane>

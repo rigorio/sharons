@@ -139,7 +139,7 @@ public class ChatPresenter implements Initializable {
       }
     }
 
-    setListView();
+//    setListView();
     command.setText(null);
     command.requestFocus();
   }
@@ -194,9 +194,9 @@ public class ChatPresenter implements Initializable {
               text = new Text(item.toString());
               setWrapText(true);
               setGraphic(text);
-//              if ((getIndex()) %6 < 3 ){
-//                setStyle("-fx-background-color: #EFF8FD;");
-//              }
+              if ((getIndex()) %6 < 3 ){
+                setStyle("-fx-background-color: #EFF8FD;");
+              } else setStyle("-fx-background-color: #FFFFFF;");
             }
           }
         };

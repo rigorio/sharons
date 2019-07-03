@@ -71,10 +71,10 @@ public class SettingsPresenter implements Initializable {
   }
 
   private void countdownTimer() {
-    if (AlwaysOnTopCheckerConfiguration.isAlwaysOnTop())
-      alwaysOnTopCheckbox.setSelected(true);
+    if (CountdownTimerConfiguration.isCountdownTimer())
+      countdownTimer.setSelected(true);
     else
-      alwaysOnTopCheckbox.setSelected(false);
+      countdownTimer.setSelected(false);
 
     countdownTimer.selectedProperty()
         .addListener((observable, oldValue, newValue) -> CountdownTimerConfiguration.setCountdownTimer(newValue));

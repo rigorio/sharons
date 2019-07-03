@@ -26,6 +26,7 @@ XpmTask {
   private String startTime;
   private String endTime;
   private String estimateTime;
+  private String extendCounter;
   private String totalTimeSpent;
   private Long businessValueId;
   private InvoiceType invoiceType;
@@ -65,6 +66,9 @@ XpmTask {
 
     StringProperty estimateTime = xpmTask.getEstimateTime();
     this.estimateTime = estimateTime != null ? estimateTime.get() : null;
+
+    StringProperty extendCounter = xpmTask.getExtendCounter();
+    this.extendCounter = extendCounter != null ? extendCounter.get() : null;
 
     StringProperty totalTimeSpent = xpmTask.getTotalTimeSpent();
     this.totalTimeSpent = totalTimeSpent != null ? totalTimeSpent.get() : null;

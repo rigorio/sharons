@@ -78,8 +78,14 @@ public class NewTaskPresenter implements Initializable {
     List<String> businesses = getAllBusinessValues().stream()
         .map(BusinessValue::getBusiness)
         .collect(Collectors.toList());
-    taskCombobox.setPromptText("Select a task");
     jobComboBox.setPromptText("Select a job");
+    if (DefaultTaskHolder.getDefaultJob() != null) {
+      jobComboBox.setValue(DefaultTaskHolder.getDefaultJob());
+      changeTask(DefaultTaskHolder.getDefaultJob());
+    }
+    taskCombobox.setPromptText("Select a task");
+    if (DefaultTaskHolder.getDefaultTask() != null)
+      taskCombobox.setValue(DefaultTaskHolder.getDefaultTask());
     jobComboBox.setItems(FXCollections.observableArrayList(getJobs()));
     customTaskField.setVisible(false);
     customTaskLabel.setVisible(false);
@@ -109,6 +115,10 @@ public class NewTaskPresenter implements Initializable {
   @FXML
   public void changeTasks() {
     String project = jobComboBox.getValue();
+    changeTask(project);
+  }
+
+  private void changeTask(String project) {
     Optional<Job> any = jobTaskHandler.allJobs().stream()
         .filter(job -> job.getJob().equals(project))
         .findAny();

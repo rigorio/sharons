@@ -36,7 +36,7 @@ public class IdlePresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    activityHandler = new ActivityHandler();
+    activityHandler = BeanManager.activityHandler();
     startTime = timeFormatter.format(LocalTime.now().minus(5, ChronoUnit.MINUTES));
     List<String> options = new ArrayList<>();
     options.add("Meeting");

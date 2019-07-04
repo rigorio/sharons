@@ -29,4 +29,11 @@ public class Tester {
     System.out.println("Total time is " + (System.nanoTime() - start));
   };
 
+//  @Test
+//  public void testValidation() {
+//    ValidationService validationService = new ValidationService();
+//    List<UserActivity> invalidStatuses = validationService.validation();
+//    System.out.println("-------------oooh");
+//    invalidStatuses.forEach(System.out::println);
+//  }
 }

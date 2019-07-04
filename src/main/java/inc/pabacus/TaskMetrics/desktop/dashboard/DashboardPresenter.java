@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
@@ -19,7 +20,6 @@ import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -84,10 +84,12 @@ public class DashboardPresenter implements Initializable {
 
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
+  private ValidationHandler validationHandler;
 
   public DashboardPresenter() {
     userHandler = BeanManager.userHandler();
     activityHandler = BeanManager.activityHandler();
+    validationHandler = BeanManager.validationHandler();
   }
 
   @Override
@@ -269,6 +271,7 @@ public class DashboardPresenter implements Initializable {
     Optional<ButtonType> result = alert.showAndWait();
     if (result.get() == ButtonType.OK) {
       //disable all services manually - maybe we can kill these threads/services automatically?
+      validationHandler.runValidationChecks();
       BeanManager.deactivate();
       activityHandler.saveActivity(Activity.OFFLINE);
       GuiManager.getInstance().closeStage();

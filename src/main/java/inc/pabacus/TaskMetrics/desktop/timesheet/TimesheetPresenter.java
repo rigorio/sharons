@@ -115,7 +115,7 @@ public class TimesheetPresenter implements Initializable {
         case "Lunch Break":
           status = "Lunch Break";
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
-          activity = Activity.BREAK;
+          activity = Activity.LUNCH;
           break;
         case "Back From Break":
           status = "Back From Break";

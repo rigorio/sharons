@@ -1,6 +1,8 @@
 package inc.pabacus.TaskMetrics;
 
+import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
+import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -57,6 +59,8 @@ public class TaskMetricsApplication extends Application {
   }
 
   private void stopProcesses() {
+    ValidationHandler validationHandler = BeanManager.validationHandler();
+    validationHandler.runValidationChecks();
     //to force stop/close the threads.
     Thread.currentThread().interrupt();
     //to make sure app is close

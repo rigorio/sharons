@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.api.activity;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import okhttp3.*;
@@ -26,6 +27,23 @@ public class ActivityHandler {
   private ObjectMapper mapper = new ObjectMapper();
 
   public ActivityHandler() {
+  }
+
+  public List<UserActivity> all() {
+    List<UserActivity> userActivities = new ArrayList<>();
+    try {
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/activities")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .build());
+      ResponseBody body = call.execute().body();
+      String jsonString = body.string();
+      userActivities = mapper.readValue(jsonString,
+                                        new TypeReference<List<UserActivity>>() {});
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return userActivities;
   }
 
   public void saveActivity(Activity activity) {

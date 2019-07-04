@@ -1,13 +1,9 @@
 package inc.pabacus.TaskMetrics.api;
 
-import inc.pabacus.TaskMetrics.api.activity.UserActivity;
-import inc.pabacus.TaskMetrics.api.timesheet.status.StatusUpdate;
-import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationService;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class Tester {
@@ -33,11 +29,11 @@ public class Tester {
     System.out.println("Total time is " + (System.nanoTime() - start));
   };
 
-  @Test
-  public void testValidation() {
-    ValidationService validationService = new ValidationService();
-    List<UserActivity> invalidStatuses = validationService.validation();
-    System.out.println("-------------oooh");
-    invalidStatuses.forEach(System.out::println);
-  }
+//  @Test
+//  public void testValidation() {
+//    ValidationService validationService = new ValidationService();
+//    List<UserActivity> invalidStatuses = validationService.validation();
+//    System.out.println("-------------oooh");
+//    invalidStatuses.forEach(System.out::println);
+//  }
 }

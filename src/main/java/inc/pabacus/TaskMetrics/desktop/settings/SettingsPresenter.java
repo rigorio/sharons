@@ -10,6 +10,10 @@ import inc.pabacus.TaskMetrics.api.software.SoftwareData;
 import inc.pabacus.TaskMetrics.api.software.SoftwareDataFXAdapter;
 import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareService;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
+import inc.pabacus.TaskMetrics.desktop.newTask.DefaultTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,11 +31,17 @@ import lombok.Data;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("all")
 public class SettingsPresenter implements Initializable {
 
+  @FXML
+  private JFXComboBox<String> jobBox;
+  @FXML
+  private JFXComboBox<String> taskBox;
   @FXML
   private JFXTreeTableView<SoftwareDataFXAdapter> softwareTable;
   @FXML
@@ -50,8 +60,23 @@ public class SettingsPresenter implements Initializable {
   @FXML
   private JFXButton extendButton;
 
+
+  private JobTaskHandler jobTaskHandler;
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    jobTaskHandler = new JobTaskHandler();
+    if (DefaultTaskHolder.getDefaultJob() == null)
+      jobBox.setPromptText("Select a default Job");
+    else
+      jobBox.setValue(DefaultTaskHolder.getDefaultJob());
+    if (DefaultTaskHolder.getDefaultTask() == null)
+      taskBox.setPromptText("Select a default Task");
+    else
+      taskBox.setValue(DefaultTaskHolder.getDefaultTask());
+
+    jobBox.setItems(FXCollections.observableArrayList(getJobs()));
+
     initSoftware();
     initHardware();
     alwaysOnTop();
@@ -61,6 +86,43 @@ public class SettingsPresenter implements Initializable {
     TableColumn<String, String> managers = new TableColumn("Managers");
     managers.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()));
     managerTable.getColumns().addAll(managers);
+  }
+
+  @FXML
+  public void changeJob() {
+    String project = jobBox.getValue();
+    Optional<Job> any = jobTaskHandler.allJobs().stream()
+        .filter(job -> job.getJob().equals(project))
+        .findAny();
+    if (!any.isPresent())
+      System.out.println("log this");
+    Job job = any.get();
+    List<Task> tasks = jobTaskHandler.allTasks();
+    List<String> filteredTasks = tasks.stream()
+        .filter(task -> task.getJobId().equals(job.getId()))
+        .map(Task::getTask)
+        .collect(Collectors.toList());
+    taskBox.setItems(FXCollections.observableArrayList(filteredTasks));
+    taskBox.getItems().add("None");
+    if (project.equals("None"))
+      DefaultTaskHolder.setDefaultJob(null);
+    else
+      DefaultTaskHolder.setDefaultJob(project);
+  }
+
+  @FXML
+  public void changeTask() {
+    String task = taskBox.getValue();
+    if (task.equals("None"))
+      DefaultTaskHolder.setDefaultTask(null);
+    else
+      DefaultTaskHolder.setDefaultTask(task);
+  }
+
+  private List<String> getJobs() {
+    return jobTaskHandler.allJobs().stream()
+        .map(Job::getJob)
+        .collect(Collectors.toList());
   }
 
   private void initHardware() {

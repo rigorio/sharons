@@ -2,7 +2,6 @@ package inc.pabacus.TaskMetrics.desktop.tasks;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
@@ -124,7 +123,6 @@ public class TasksPresenter implements Initializable {
     if (TrackHandler.getSelectedTask() != null)
       return;
 
-    activityHandler.saveActivity(Activity.BUSY);
     XpmTaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
     if (selectedItem.getStatus().get().equals(Status.DONE.getStatus())) {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);

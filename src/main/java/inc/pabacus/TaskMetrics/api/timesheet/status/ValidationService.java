@@ -6,9 +6,9 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,11 +38,11 @@ public class ValidationService {
   }
 
 
-  public List<UserActivity> validation() {
+  public List<UserActivity> unrecognizedLogs() {
     List<UserActivity> activities = activities();
 //    System.out.println(activities);
     List<StatusUpdate> statusUpdates = statusUpdates();
-    LocalDate today = LocalDate.now().plus(1, ChronoUnit.DAYS);
+    LocalDate today = LocalDate.now();
     List<UserActivity> activitiesToday = activities.stream()
         .filter(userActivity -> userActivity.getDate().equals(today.toString()))
         .collect(Collectors.toList());
@@ -59,14 +59,44 @@ public class ValidationService {
 //              System.out.println("----");
 //              System.out.println("activity");
 //              System.out.println(activity);
-              String updateTime = statusUpdate.getTime();
-              LocalTime statusUpdateTime = LocalTime.parse(updateTime);
+              LocalTime statusUpdateTime = LocalTime.parse(statusUpdate.getTime());
               LocalTime activityTime = LocalTime.parse(activity.getTime());
-              LocalTime lowRange = statusUpdateTime.minus(3, ChronoUnit.MINUTES);
-              LocalTime highRange = statusUpdateTime.plus(3, ChronoUnit.MINUTES);
-              System.out.println(activityTime);
-              System.out.println(updateTime);
-              return (activityTime.isBefore(highRange) && activityTime.isAfter(lowRange));
+
+              Duration duration = Duration.between(statusUpdateTime, activityTime);
+
+              long totalGap = Math.abs(duration.toMinutes());
+              return (totalGap >= 5);
+            }))
+        .collect(Collectors.toList());
+  }
+
+  public List<UserActivity> unrecognizedTasks() {
+    List<UserActivity> activities = activities();
+    List<XpmTask> xpmTasks = xpmTasks();
+    LocalDate today = LocalDate.now();
+    List<UserActivity> activitiesToday = activities.stream()
+        .filter(userActivity -> userActivity.getDate().equals(today.toString()))
+        .collect(Collectors.toList());
+    List<XpmTask> updatesToday = xpmTasks.stream()
+        .filter(statusUpdate -> statusUpdate.getStartTime().equals(today.toString()))
+        .collect(Collectors.toList());
+
+
+    return activitiesToday.stream()
+        .filter(activity -> updatesToday.stream()
+            .anyMatch(statusUpdate -> {
+//              System.out.println("Status");
+//              System.out.println(statusUpdate);
+//              System.out.println("----");
+//              System.out.println("activity");
+//              System.out.println(activity);
+              LocalTime statusUpdateTime = LocalTime.parse(statusUpdate.getStartTime());
+              LocalTime activityTime = LocalTime.parse(activity.getTime());
+
+              Duration duration = Duration.between(statusUpdateTime, activityTime);
+
+              long totalGap = Math.abs(duration.toMinutes());
+              return (totalGap >= 5);
             }))
         .collect(Collectors.toList());
   }

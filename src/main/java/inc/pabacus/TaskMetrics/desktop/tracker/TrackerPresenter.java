@@ -128,8 +128,10 @@ public class TrackerPresenter implements Initializable {
 
   private void saveAndClose() {
     XpmTask xpmTask = new XpmTask(selectedTask);
-    if (xpmTask.getStartTime() == null)
+    if (xpmTask.getStartTime() == null) {
+      activityHandler.saveActivity(Activity.BUSY);
       xpmTask.setStartTime(startTime);
+    }
     xpmTaskWebHandler.save(xpmTask);
     closeWindow();
   }
@@ -249,17 +251,20 @@ public class TrackerPresenter implements Initializable {
     dialog.setHeaderText("Please select a reason for putting this task on pause");
     dialog.setContentText("Reasons");
     dialog.showAndWait().ifPresent(reason -> {
-      Activity activity;
-      if (reason.equals("Lunch") || reason.equals("Break")) {
-        activity = Activity.BREAK;
-        if (reason.equals("Lunch"))
+      switch (reason) {
+        case "Break":
+          activityHandler.saveActivity(Activity.BREAK);
+          break;
+        case "Lunch":
+          activityHandler.saveActivity(Activity.LUNCH);
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
-      } else if (reason.equals("Meeting"))
-        activity = Activity.MEETING;
-      else
-        activity = Activity.BUSY;
+          break;
+        case "Meeting":
+          activityHandler.saveActivity(Activity.MEETING);
+          break;
+      }
+
       timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
-      activityHandler.saveActivity(activity);
       updateTask(Status.IN_PROGRESS.getStatus());
       saveAndClose();
     });

@@ -14,6 +14,7 @@ import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.status.StatusUpdateHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 
 public class BeanManager {
@@ -31,6 +32,7 @@ public class BeanManager {
   private static TokenService tokenService = new TokenService();
   private static LeaveService leaveService = new LeaveService();
   private static StatusUpdateHandler statusUpdateHandler = new StatusUpdateHandler();
+  private static ValidationHandler validationHandler = new ValidationHandler();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -98,5 +100,9 @@ public class BeanManager {
 
   public static void deactivate() {
     serviceManager.deactivate();
+  }
+
+  public static ValidationHandler validationHandler() {
+    return validationHandler;
   }
 }

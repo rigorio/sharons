@@ -63,7 +63,7 @@ public class StatusPresenter implements Initializable {
         break;
       case "Out To Lunch":
         status = LogStatus.LB.getStatus();
-        activity = Activity.BREAK;
+        activity = Activity.LUNCH;
         break;
       case "Back From Lunch":
         status = LogStatus.BFB.getStatus();

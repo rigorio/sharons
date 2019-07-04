@@ -49,24 +49,23 @@ public class IdlePresenter implements Initializable {
   @FXML
   public void submitActivity() {
 
-    UserActivity startActivity = UserActivity.builder()
-        .time(startTime)
-        .date(LocalDate.now().toString())
-        .build();
-
     ActivityListener activityListener = BeanManager.activityListener();
     activityListener.listen();
 
-
     String action = actionsBox.getValue();
-    Activity activity = action.equals(TECHNICAL_ISSUE)
-        ? Activity.BUSY
-        : Activity.convert(action);
+    if (!action.equals(TECHNICAL_ISSUE)) {
 
-    startActivity.setActivity(activity.getActivity());
-    activityHandler.saveActivity(startActivity); // initial activity upon detecting idle
-    if (activity != Activity.BUSY)
+      UserActivity startActivity = UserActivity.builder()
+          .time(startTime)
+          .date(LocalDate.now().toString())
+          .build();
+      startActivity.setActivity(Activity.convert(action).getActivity());
+      activityHandler.saveActivity(startActivity); // initial activity upon detecting idle
+
       activityHandler.saveActivity(Activity.BUSY); // update if not busy
+    } else {
+      // show a dialogue that let's staff report technical issue
+    }
 
     Stage stage = (Stage) actionsBox.getScene().getWindow();
     stage.close();

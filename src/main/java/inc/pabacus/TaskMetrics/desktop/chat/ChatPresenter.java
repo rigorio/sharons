@@ -139,7 +139,7 @@ public class ChatPresenter implements Initializable {
       }
     }
 
-//    setListView();
+    setListView();
     command.setText(null);
     command.requestFocus();
   }

@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
+import inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.fxml.FXML;
@@ -29,7 +30,7 @@ public class BreakPresenter implements Initializable {
   private TimerService timerService;
   private ActivityHandler activityHandler;
 
-  public BreakPresenter(){
+  public BreakPresenter() {
     activityHandler = BeanManager.activityHandler();
     timerService = new TimerService();
     process = this::tickTime;
@@ -48,23 +49,31 @@ public class BreakPresenter implements Initializable {
 
   }
 
-  private void tickTime(){
+  private void tickTime() {
+    ActivityHandler activityHandler = new ActivityHandler();
     long duration = timerService.getTime();
     String time = timerService.formatSeconds(duration);
 
     timerText.setText(time);
     //13 minutes
-    if(duration == 780){
-      timerText.setStyle("-fx-text-fill: red");
+    if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
+      if (duration == 780) {
+        timerText.setStyle("-fx-text-fill: red");
+      }
+    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")){
+      if (duration == 3300) { // 55 minutes
+        timerText.setStyle("-fx-text-fill: red");
+      }
     }
   }
 
   @FXML
-  private void backOnline(){
+  private void backOnline() {
     activityHandler.saveActivity(Activity.ONLINE);
     timerService.pause();
     DailyLogHandler dailyLogHandler = new DailyLogHandler();
     dailyLogHandler.checkIfUserIsBreak();
+    TrackerPresenter.isContinue = true;
     Stage stage = (Stage) backOnline.getScene().getWindow();
     stage.close();
   }

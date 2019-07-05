@@ -43,6 +43,12 @@ public class TimerService {
     second = 0;
   }
 
+  public void reRun() {
+    long getSecond = second;
+    timer.cancel();
+    second = getSecond;
+  }
+
   public String formatSeconds(long seconds) {
     return String.format("%02d:%02d:%02d",
                          TimeUnit.SECONDS.toHours(seconds),

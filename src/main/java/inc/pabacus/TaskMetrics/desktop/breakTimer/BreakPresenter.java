@@ -9,10 +9,13 @@ import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -70,11 +73,22 @@ public class BreakPresenter implements Initializable {
   @FXML
   private void backOnline() {
     activityHandler.saveActivity(Activity.ONLINE);
+    notification("Online");
     timerService.pause();
     DailyLogHandler dailyLogHandler = new DailyLogHandler();
     dailyLogHandler.checkIfUserIsBreak();
     TrackerPresenter.isContinue = true;
     Stage stage = (Stage) backOnline.getScene().getWindow();
     stage.close();
+  }
+
+  private void notification(String notif) {
+    Notifications notifications = Notifications.create()
+        .title("TRIBELY")
+        .text("Status change to " + notif)
+        .position(Pos.BOTTOM_RIGHT)
+        .hideAfter(Duration.seconds(5));
+    notifications.darkStyle();
+    notifications.showWarning();
   }
 }

@@ -5,6 +5,7 @@
 <AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.productivity.ProductivityPresenter">
-  <PieChart fx:id="taskPieChart" layoutX="106.0" layoutY="456.0" prefHeight="215.0" prefWidth="309.0"/>
-  <AnchorPane fx:id="barPane" layoutX="81.0" layoutY="99.0" prefHeight="200.0" prefWidth="639.0"/>
+  <AnchorPane fx:id="mainPane" layoutX="175.0" layoutY="39.0" prefHeight="418.0" prefWidth="509.0">
+    <PieChart fx:id="taskPieChart" prefHeight="418.0" prefWidth="509"/>
+  </AnchorPane>
 </AnchorPane>

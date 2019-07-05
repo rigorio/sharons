@@ -118,5 +118,13 @@ public class DailyLogHandler implements DailyLogService {
     scheduledFuture.cancel(true);
   }
 
-
+  private void notification(String notif) {
+    Notifications notifications = Notifications.create()
+        .title("TRIBELY")
+        .text("Status change to " + notif)
+        .position(Pos.BOTTOM_RIGHT)
+        .hideAfter(Duration.seconds(5));
+    notifications.darkStyle();
+    notifications.showWarning();
+  }
 }

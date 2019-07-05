@@ -9,8 +9,11 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.LogItem;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.util.Duration;
 import okhttp3.*;
 import org.apache.log4j.Logger;
+import org.controlsfx.control.Notifications;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -100,6 +103,11 @@ public class DailyLogHandler implements DailyLogService {
       if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
         GuiManager.getInstance().displayView(new BreakView());
         scheduledFuture.cancel(true);
+        notification("Break");
+      } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")) {
+        GuiManager.getInstance().displayView(new BreakView());
+        scheduledFuture.cancel(true);
+        notification("Lunch Break");
       }
     });
 
@@ -109,4 +117,6 @@ public class DailyLogHandler implements DailyLogService {
   public void close() {
     scheduledFuture.cancel(true);
   }
+
+
 }

@@ -16,6 +16,7 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.desktop.newTask.DefaultTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -77,8 +78,6 @@ public class SettingsPresenter implements Initializable {
 
     jobBox.setItems(FXCollections.observableArrayList(getJobs()));
 
-    initSoftware();
-    initHardware();
     alwaysOnTop();
     countdownTimer();
     getDefaultExtend();
@@ -86,6 +85,10 @@ public class SettingsPresenter implements Initializable {
     TableColumn<String, String> managers = new TableColumn("Managers");
     managers.setCellValueFactory(param -> new SimpleStringProperty(param.getValue()));
     managerTable.getColumns().addAll(managers);
+    Platform.runLater(() -> {
+      initSoftware();
+      initHardware();
+    });
   }
 
   @FXML

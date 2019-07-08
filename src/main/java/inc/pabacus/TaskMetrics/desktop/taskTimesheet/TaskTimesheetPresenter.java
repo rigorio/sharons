@@ -58,7 +58,11 @@ public class TaskTimesheetPresenter implements Initializable {
     startTime.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getStartTime().get()));
 
     TableColumn<XpmTaskAdapter, String> endTime = new TableColumn<>("End Time");
-    endTime.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getEndTime().get()));
+    endTime.setCellValueFactory(param -> {
+      // handle null value
+      String getEndTime = param.getValue().getEndTime().getValue();
+      return new SimpleStringProperty("" + getEndTime);
+    });
 
     TableColumn<XpmTaskAdapter, String> billable = new TableColumn<>("Billable?");
     billable.setCellValueFactory(param -> {
@@ -74,6 +78,13 @@ public class TaskTimesheetPresenter implements Initializable {
       return new SimpleStringProperty("" + totalTimeSpent);
     });
 
+    TableColumn<XpmTaskAdapter, String> percentCompleted = new TableColumn<>("Percentage Completed");
+    percentCompleted.setCellValueFactory(param -> {
+      // handle null value
+      String getPercentage = param.getValue().getPercentCompleted().getValue();
+      return new SimpleStringProperty("" + getPercentage);
+    });
+
     TableColumn<XpmTaskAdapter, String> task = new TableColumn<>("Task");
     task.setCellValueFactory(param -> param.getValue().getTask());
 
@@ -83,7 +94,7 @@ public class TaskTimesheetPresenter implements Initializable {
 
 
     taskTimesheet.getColumns().addAll(project, startTime, endTime, billable,
-                                      billableHours, task, description);
+                                      billableHours, percentCompleted, task, description);
     initTaskTimeSheet();
 
     totalbillable.setText("7.49");

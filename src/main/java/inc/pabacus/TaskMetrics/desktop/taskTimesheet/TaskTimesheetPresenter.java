@@ -81,7 +81,12 @@ public class TaskTimesheetPresenter implements Initializable {
     TableColumn<XpmTaskAdapter, String> percentCompleted = new TableColumn<>("Percentage Completed");
     percentCompleted.setCellValueFactory(param -> {
       // handle null value
-      String getPercentage = param.getValue().getPercentCompleted().getValue();
+      String getPercentage;
+      try {
+        getPercentage = param.getValue().getPercentCompleted().getValue();
+      } catch (Exception e){
+        getPercentage = "0%";
+      }
       return new SimpleStringProperty("" + getPercentage);
     });
 

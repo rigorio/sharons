@@ -5,6 +5,7 @@ import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
@@ -36,10 +37,12 @@ public class BreakPresenter implements Initializable {
   private final Runnable process;
   private TimerService timerService;
   private ActivityHandler activityHandler;
+  private DailyLogHandler dailyLogHandler;
   private ActivityListener activityListener = BeanManager.activityListener();
 
   public BreakPresenter() {
     activityHandler = BeanManager.activityHandler();
+    dailyLogHandler = BeanManager.dailyLogService();
     timerService = new TimerService();
     process = this::tickTime;
   }
@@ -70,7 +73,7 @@ public class BreakPresenter implements Initializable {
       if (duration == 780) {
         timerText.setStyle("-fx-text-fill: red");
       }
-    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")){
+    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")) {
       if (duration == 3300) { // 55 minutes
         timerText.setStyle("-fx-text-fill: red");
       }
@@ -79,8 +82,15 @@ public class BreakPresenter implements Initializable {
 
   @FXML
   private void backOnline() {
-    activityHandler.saveActivity(Activity.ONLINE);
-    notification("Online");
+    if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
+      activityHandler.saveActivity(Activity.ONLINE);
+      notification("Online");
+    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")) {
+      activityHandler.saveActivity(Activity.BFB);
+      dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
+      notification("Back From Lunch");
+    }
+
     timerService.pause();
     DailyLogHandler dailyLogHandler = new DailyLogHandler();
     dailyLogHandler.checkIfUserIsBreak();

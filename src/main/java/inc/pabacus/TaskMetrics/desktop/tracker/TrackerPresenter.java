@@ -12,6 +12,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.desktop.settings.ExtendConfiguration;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,6 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class TrackerPresenter implements Initializable {
 
@@ -44,6 +49,10 @@ public class TrackerPresenter implements Initializable {
   private JFXButton cancel;
   @FXML
   private JFXButton extend;
+  @FXML
+  private JFXButton pauseButton;
+  @FXML
+  private JFXButton continueButton;
 
   private static final String STARTING_TIME = "00:00:00";
   private static final double ONE_HOUR = 3600.0;
@@ -58,6 +67,7 @@ public class TrackerPresenter implements Initializable {
   private String startTime;
   private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
   private double timeCompensation = 0;
+  public ScheduledFuture<?> scheduledFuture;
 
   public TrackerPresenter() {
     timerService = new TimerService();
@@ -86,6 +96,7 @@ public class TrackerPresenter implements Initializable {
     title.setText(taskTitle);
     startTime = getCurrentTime();
     extend.setVisible(false);
+    continueButton.setVisible(false);
   }
 
   @FXML
@@ -128,10 +139,8 @@ public class TrackerPresenter implements Initializable {
 
   private void saveAndClose() {
     XpmTask xpmTask = new XpmTask(selectedTask);
-    if (xpmTask.getStartTime() == null) {
-      activityHandler.saveActivity(Activity.BUSY);
+    if (xpmTask.getStartTime() == null)
       xpmTask.setStartTime(startTime);
-    }
     xpmTaskWebHandler.save(xpmTask);
     closeWindow();
   }
@@ -180,6 +189,13 @@ public class TrackerPresenter implements Initializable {
         timer.setText(STARTING_TIME);
       }
 
+    } else if (isPause) {
+      //if Pause timer will re-Run
+      long durations = timerService.getTime();
+      timerService.setTime(durations);
+      String times = timerService.formatSeconds(durations);
+      timer.setText(times);
+      isPause = false;
     } else {
       timer.setText(time);
     }
@@ -251,23 +267,80 @@ public class TrackerPresenter implements Initializable {
     dialog.setHeaderText("Please select a reason for putting this task on pause");
     dialog.setContentText("Reasons");
     dialog.showAndWait().ifPresent(reason -> {
+      Activity activity;
       switch (reason) {
         case "Break":
-          activityHandler.saveActivity(Activity.BREAK);
+          activity = Activity.BREAK;
+          activityHandler.saveActivity(activity);
+          timerService.reRun(); // rerun services
+
+          checkIfContinue();
+          continueButton.setVisible(true);
+          pauseButton.setVisible(false);
+          Stage stage = (Stage) continueButton.getScene().getWindow();
+          stage.hide();
           break;
         case "Lunch":
-          activityHandler.saveActivity(Activity.LUNCH);
+          activity = Activity.LUNCH;
+          activityHandler.saveActivity(activity);
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+          timerService.reRun(); // rerun services
+
+          checkIfContinue();
+          continueButton.setVisible(true);
+          pauseButton.setVisible(false);
+          Stage stages = (Stage) continueButton.getScene().getWindow();
+          stages.hide();
           break;
         case "Meeting":
-          activityHandler.saveActivity(Activity.MEETING);
+          activity = Activity.MEETING;
+          activityHandler.saveActivity(activity);
+          updateTask(Status.IN_PROGRESS.getStatus());
+          saveAndClose();
+          break;
+        default:
+          activity = Activity.BUSY;
+          timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
+          activityHandler.saveActivity(activity);
+          updateTask(Status.IN_PROGRESS.getStatus());
+          saveAndClose();
           break;
       }
-
-      timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
-      updateTask(Status.IN_PROGRESS.getStatus());
-      saveAndClose();
     });
+  }
+
+  private static boolean isPause = false;
+  public static boolean isContinue = false;
+
+  @FXML
+  public void continueButton() {
+    scheduledFuture.cancel(true);
+    Stage stage = (Stage) continueButton.getScene().getWindow();
+    stage.show();
+    long getTime = timerService.getTime();
+    timerService = new TimerService();
+
+    if (CountdownTimerConfiguration.isCountdownTimer())
+      timerService.setCountdownProcess(process);
+    else timerService.setFxProcess(process);
+    timerService.setTime(getTime);
+    timerService.start();
+    continueButton.setVisible(false);
+    pauseButton.setVisible(true);
+    isPause = true;
+    isContinue = false;
+  }
+
+  private void checkIfContinue() {
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    Runnable command = () -> Platform.runLater(() -> {
+
+      if (isContinue) {
+        continueButton();
+      }
+    });
+
+    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1, TimeUnit.SECONDS);
   }
 
   private void notification(String notif) {

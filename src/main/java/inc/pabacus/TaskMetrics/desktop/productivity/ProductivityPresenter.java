@@ -43,8 +43,6 @@ public class ProductivityPresenter implements Initializable {
         });
 
     double nonWorkingTime = 9.0 - totalWorkedTime;
-    System.out.println(totalWorkedTime);
-    System.out.println(nonWorkingTime);
 
     ObservableList<PieChart.Data> pieChartData =
         FXCollections.observableArrayList(
@@ -62,9 +60,13 @@ public class ProductivityPresenter implements Initializable {
                                      e -> {
                                        caption.setTranslateX(e.getSceneX() - 300.0);
                                        caption.setTranslateY(e.getSceneY() - 10.0);
-                                       caption.setText(String.format("%.2f", data.getPieValue()) + "%");
+                                       caption.setText(String.format("%.2f", percent(data.getPieValue())) + "%");
                                      });
     }
     mainPane.getChildren().add(caption);
+  }
+
+  double percent(double value) {
+    return 100.0 * (value / 9.0);
   }
 }

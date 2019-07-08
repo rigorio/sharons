@@ -127,9 +127,33 @@ public class TrackerPresenter implements Initializable {
 
   @FXML
   public void completeTask() {
-    selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
-    updateTask(Status.DONE.getStatus());
-    saveAndClose();
+
+    List<String> choices = new ArrayList<>();
+    choices.add("0%");
+    choices.add("10%");
+    choices.add("20%");
+    choices.add("30%");
+    choices.add("40%");
+    choices.add("50%");
+    choices.add("60%");
+    choices.add("70%");
+    choices.add("80%");
+    choices.add("90%");
+    choices.add("100%");
+
+    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a percentage", choices);
+    dialog.initStyle(StageStyle.UNDECORATED);
+    dialog.setHeaderText("Please select how many percentage this task has been completed");
+    dialog.setContentText("Percentages");
+    dialog.showAndWait().ifPresent(reason -> {
+      if (reason.equals("100%")) {
+        selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
+        updateTask(Status.DONE.getStatus());
+      } else
+        updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(reason));
+      saveAndClose();
+    });
   }
 
   @FXML

@@ -122,7 +122,7 @@ public class TaskTimesheetPresenter implements Initializable {
   private ObservableList<XpmTaskAdapter> getXpmTimesheet() {
     List<XpmTaskAdapter> tasks = xpmTaskWebHandler.findAll()
         .stream()
-        .filter(xpmTask -> xpmTask.getStatus().equals(Status.DONE.getStatus()))
+        .filter(xpmTask -> xpmTask.getStatus().equals(Status.IN_PROGRESS.getStatus()) || xpmTask.getStatus().equals(Status.DONE.getStatus()))
         .map(XpmTaskAdapter::new)
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(tasks);

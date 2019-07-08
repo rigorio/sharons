@@ -85,6 +85,5 @@ XpmTask {
 
     AssigneeAdapter assigneeAdapter = xpmTask.getAssigneeAdapter();
     this.assignee = assigneeAdapter != null ? new Assignee(assigneeAdapter) : null;
-
   }
 }

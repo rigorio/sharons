@@ -29,6 +29,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -98,6 +99,7 @@ public class TasksPresenter implements Initializable {
       add("In Progress");
       add("Pending");
       add("Done");
+      add("Today");
       add("All");
     }});
 
@@ -158,15 +160,22 @@ public class TasksPresenter implements Initializable {
   }
 
   private ObservableList<XpmTaskAdapter> getTasksByStatus(String status) {
-
-    List<XpmTaskAdapter> backLogs = getAllTasks().stream()
-        .filter(backlog -> {
-          StringProperty currentSTatus = backlog.getStatus();
-          if (currentSTatus == null)
-            currentSTatus = new SimpleStringProperty("");
-          return currentSTatus.get().equalsIgnoreCase(status);
-        })
-        .collect(Collectors.toList());
+    List<XpmTaskAdapter> backLogs;
+//    System.out.println("status " + status);
+//    System.out.println(obj);
+    if (status.equals("Today"))
+      backLogs = getAllTasks().stream()
+          .filter(backLog -> backLog.getDateCreated().get().equals(LocalDate.now().toString()))
+          .collect(Collectors.toList());
+    else
+      backLogs = getAllTasks().stream()
+          .filter(backlog -> {
+            StringProperty currentSTatus = backlog.getStatus();
+            if (currentSTatus == null)
+              currentSTatus = new SimpleStringProperty("");
+            return currentSTatus.get().equalsIgnoreCase(status);
+          })
+          .collect(Collectors.toList());
     return FXCollections.observableArrayList(backLogs);
   }
 

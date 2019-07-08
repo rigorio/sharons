@@ -303,7 +303,7 @@ public class TrackerPresenter implements Initializable {
       switch (reason) {
         case "Break":
           activity = Activity.BREAK;
-          activityHandler.saveActivity(activity);
+          activityHandler.saveTimestamp(activity);
           timerService.reRun(); // rerun services
 
 //          checkIfContinue();
@@ -315,7 +315,7 @@ public class TrackerPresenter implements Initializable {
           break;
         case "Lunch":
           activity = Activity.LUNCH;
-          activityHandler.saveActivity(activity);
+          activityHandler.saveTimestamp(activity);
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
           timerService.reRun(); // rerun services
 
@@ -328,14 +328,14 @@ public class TrackerPresenter implements Initializable {
           break;
         case "Meeting":
           activity = Activity.MEETING;
-          activityHandler.saveActivity(activity);
+          activityHandler.saveTimestamp(activity);
           updateTask(Status.IN_PROGRESS.getStatus());
           saveAndClose();
           break;
         default:
           activity = Activity.BUSY;
           timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
-          activityHandler.saveActivity(activity);
+          activityHandler.saveTimestamp(activity);
           updateTask(Status.IN_PROGRESS.getStatus());
           saveAndClose();
           break;

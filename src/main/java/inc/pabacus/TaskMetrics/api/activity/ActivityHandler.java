@@ -29,8 +29,8 @@ public class ActivityHandler {
   public ActivityHandler() {
   }
 
-  public List<UserActivity> all() {
-    List<UserActivity> userActivities = new ArrayList<>();
+  public List<ActivityTimestamp> allTimestamps() {
+    List<ActivityTimestamp> userActivities = new ArrayList<>();
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/activities")
@@ -39,45 +39,45 @@ public class ActivityHandler {
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
       userActivities = mapper.readValue(jsonString,
-                                        new TypeReference<List<UserActivity>>() {});
+                                        new TypeReference<List<ActivityTimestamp>>() {});
     } catch (IOException e) {
       e.printStackTrace();
     }
     return userActivities;
   }
 
-  public void saveActivity(Activity activity) {
-    saveActivity(activity.getActivity());
+  public void saveTimestamp(Activity activity) {
+    saveTimestamp(activity.getActivity());
   }
 
-  public void saveActivity(UserActivity userActivity) {
+  public void saveTimestamp(ActivityTimestamp activityTimestamp) {
     try {
-      sendToHost(userActivity);
+      sendToHost(activityTimestamp);
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
   }
 
-  public void saveActivity(String activity) {
+  public void saveTimestamp(String activity) {
     try {
       DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-      UserActivity userActivity = UserActivity.builder()
+      ActivityTimestamp activityTimestamp = ActivityTimestamp.builder()
           .activity(activity)
           .date(LocalDate.now().toString())
           .time(timeFormatter.format(LocalTime.now()))
           .build();
 
 
-      sendToHost(userActivity);
+      sendToHost(activityTimestamp);
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
 
   }
 
-  private void sendToHost(UserActivity userActivity) throws IOException {
-    List<UserActivity> ua = new ArrayList<>();
-    ua.add(userActivity);
+  private void sendToHost(ActivityTimestamp activityTimestamp) throws IOException {
+    List<ActivityTimestamp> ua = new ArrayList<>();
+    ua.add(activityTimestamp);
     String jsonValue = mapper.writeValueAsString(ua);
     RequestBody requestBody = RequestBody.create(JSON, jsonValue);
 

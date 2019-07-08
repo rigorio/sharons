@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserActivity {
+public class ActivityTimestamp {
 
   private Long id;
   private Long userId;
@@ -17,7 +17,7 @@ public class UserActivity {
   private String time;
   private String activity;
 
-  public UserActivity(String dateNow, String timeNow, String activity) {
+  public ActivityTimestamp(String dateNow, String timeNow, String activity) {
     this.date = dateNow;
     this.time = timeNow;
     this.activity = activity;

@@ -2,7 +2,7 @@ package inc.pabacus.TaskMetrics.api.timesheet.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inc.pabacus.TaskMetrics.api.activity.UserActivity;
+import inc.pabacus.TaskMetrics.api.activity.ActivityTimestamp;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogWebRepository;
 import okhttp3.*;
@@ -22,9 +22,9 @@ public class ValidationHandler {
       = MediaType.parse("application/json; charset=utf-8");
   private ValidationService validationService = new ValidationService();
 
-  public List<UserActivity> save(List<UserActivity> userActivities) {
+  public List<ActivityTimestamp> save(List<ActivityTimestamp> userActivities) {
 
-    List<UserActivity> unrecognizedActivities = new ArrayList<>();
+    List<ActivityTimestamp> unrecognizedActivities = new ArrayList<>();
     try {
 
       String jsonString = mapper.writeValueAsString(userActivities);
@@ -36,7 +36,7 @@ public class ValidationHandler {
                                      .post(body)
                                      .build());
       String responseString = call.execute().body().string();
-      unrecognizedActivities = mapper.readValue(responseString, new TypeReference<List<UserActivity>>() {});
+      unrecognizedActivities = mapper.readValue(responseString, new TypeReference<List<ActivityTimestamp>>() {});
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -44,8 +44,8 @@ public class ValidationHandler {
   }
 
   public void runValidationChecks() {
-    List<UserActivity> unrecognizedLogs = validationService.unrecognizedLogs();
-    List<UserActivity> unrecognizedTasks = validationService.unrecognizedTasks();
+    List<ActivityTimestamp> unrecognizedLogs = validationService.unrecognizedLogs();
+    List<ActivityTimestamp> unrecognizedTasks = validationService.unrecognizedTasks();
     save(unrecognizedLogs);
     save(unrecognizedTasks);
   }

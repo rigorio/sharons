@@ -126,7 +126,7 @@ public class TimesheetPresenter implements Initializable {
       mockUser.setStatus(status);
       comboBox.setValue(status);
       refreshTimesheetTable();
-      activityHandler.saveActivity(activity);
+      activityHandler.saveTimestamp(activity);
     }
   }
 

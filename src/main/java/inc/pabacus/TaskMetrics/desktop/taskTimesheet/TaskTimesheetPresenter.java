@@ -60,7 +60,12 @@ public class TaskTimesheetPresenter implements Initializable {
     TableColumn<XpmTaskAdapter, String> endTime = new TableColumn<>("End Time");
     endTime.setCellValueFactory(param -> {
       // handle null value
-      String getEndTime = param.getValue().getEndTime().getValue();
+      String getEndTime;
+      try {
+        getEndTime = param.getValue().getEndTime().getValue();
+      } catch (Exception e){
+        getEndTime = "";
+      }
       return new SimpleStringProperty("" + getEndTime);
     });
 

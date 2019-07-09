@@ -9,9 +9,9 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>inc.pabacus</groupId>
-  <artifactId>Tribely</artifactId>
+  <artifactId>PABACUS</artifactId>
   <version>0.12.2-SNAPSHOT</version>
-  <name>TaskMetrics</name>
+  <name>Tribely</name>
   <description>Program to track projects and user productivity</description>
 
   <properties>

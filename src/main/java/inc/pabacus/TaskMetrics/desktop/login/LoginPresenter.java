@@ -91,7 +91,7 @@ public class LoginPresenter implements Initializable {
       String passWord = passwordField.getText();
       jwtLogin(userName, passWord);
       createCredential();
-      service.refreshToken();
+//      service.refreshToken(); turn off
 
       // TODO extract this process to a method in KickerService
       KickStatus status = kickerService.login(userName);
@@ -101,7 +101,7 @@ public class LoginPresenter implements Initializable {
         kickerService.setRunnable(() -> {
           BeanManager.deactivate();
 //          activityHandler.saveActivity(Activity.BUSY);
-          GuiManager.getInstance().closeStage();
+          GuiManager.getInstance().closeStageDisplayOnTop();
           GuiManager.getInstance().changeView(new LoginView());
         });
         kickerService.setOldToken(status.getOldToken());

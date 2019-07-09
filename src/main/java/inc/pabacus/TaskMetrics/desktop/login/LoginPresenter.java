@@ -6,12 +6,9 @@ import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.Credentials;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
-import inc.pabacus.TaskMetrics.api.kicker.KickStatus;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
-import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
-import inc.pabacus.TaskMetrics.desktop.kickout.KickoutView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.animation.PauseTransition;
@@ -94,21 +91,21 @@ public class LoginPresenter implements Initializable {
 //      service.refreshToken(); turn off
 
       // TODO extract this process to a method in KickerService
-      KickStatus status = kickerService.login(userName);
-      TokenHolder.setToken(status.getNewToken());
-      if (status.getStatus().equals("Exists")) {
-        kickerService.setUsername(userName);
-        kickerService.setRunnable(() -> {
-          BeanManager.deactivate();
-//          activityHandler.saveActivity(Activity.BUSY);
-          GuiManager.getInstance().closeStageDisplayOnTop();
-          GuiManager.getInstance().changeView(new LoginView());
-        });
-        kickerService.setOldToken(status.getOldToken());
-        GuiManager.getInstance().displayView(new KickoutView());
-        mainPane.getScene().setCursor(Cursor.DEFAULT);
-      }
-      kickerService.kicker();
+//      KickStatus status = kickerService.login(userName);
+//      TokenHolder.setToken(status.getNewToken());
+//      if (status.getStatus().equals("Exists")) {
+//        kickerService.setUsername(userName);
+//        kickerService.setRunnable(() -> {
+//          BeanManager.deactivate();
+////          activityHandler.saveActivity(Activity.BUSY);
+//          GuiManager.getInstance().closeStageDisplayOnTop();
+//          GuiManager.getInstance().changeView(new LoginView());
+//        });
+//        kickerService.setOldToken(status.getOldToken());
+//        GuiManager.getInstance().displayView(new KickoutView());
+//        mainPane.getScene().setCursor(Cursor.DEFAULT);
+//      }
+//      kickerService.kicker();
       activityHandler.saveActivity(Activity.ONLINE);
       GuiManager.getInstance().changeView(new DashboardView());
 

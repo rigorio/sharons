@@ -47,7 +47,13 @@ public class ActivityHandler {
   }
 
   public void saveTimestamp(Activity activity) {
-    saveTimestamp(activity.getActivity());
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+    ActivityTimestamp activityTimestamp = ActivityTimestamp.builder()
+        .activity(activity.getActivity())
+        .date(LocalDate.now().toString())
+        .time(timeFormatter.format(LocalTime.now()))
+        .build();
+    saveTimestamp(activityTimestamp);
   }
 
   public void saveTimestamp(ActivityTimestamp activityTimestamp) {
@@ -56,23 +62,6 @@ public class ActivityHandler {
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
-  }
-
-  public void saveTimestamp(String activity) {
-    try {
-      DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-      ActivityTimestamp activityTimestamp = ActivityTimestamp.builder()
-          .activity(activity)
-          .date(LocalDate.now().toString())
-          .time(timeFormatter.format(LocalTime.now()))
-          .build();
-
-
-      sendToHost(activityTimestamp);
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-    }
-
   }
 
   private void sendToHost(ActivityTimestamp activityTimestamp) throws IOException {

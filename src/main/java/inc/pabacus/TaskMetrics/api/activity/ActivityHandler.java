@@ -70,7 +70,7 @@ public class ActivityHandler {
     ActivityRecord activityRecord = ActivityRecord.builder()
         .date(LocalDate.now().toString())
         .time(timeFormatter.format(LocalTime.now()))
-        .duration(record.getDuration())
+        .duration("" + record.getDuration())
         .type(record.getRecordType().getActivity())
         .activity(record.getActivity())
         .userId(1L)

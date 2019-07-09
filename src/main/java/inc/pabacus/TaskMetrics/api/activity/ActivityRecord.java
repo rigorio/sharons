@@ -21,7 +21,7 @@ public class ActivityRecord {
   private Long id;
   private Long userId;
   private String date;
-  private Double duration;
+  private String duration;
   private String time;
   private String type;
   private String activity;

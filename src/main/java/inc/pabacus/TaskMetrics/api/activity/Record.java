@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class Record {
   private RecordType recordType;
   private String activity;
-  private Double duration;
+  private String duration;
 }

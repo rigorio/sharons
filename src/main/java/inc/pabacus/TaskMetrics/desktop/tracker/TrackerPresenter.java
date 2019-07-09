@@ -3,6 +3,8 @@ package inc.pabacus.TaskMetrics.desktop.tracker;
 import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.activity.Record;
+import inc.pabacus.TaskMetrics.api.activity.RecordType;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
@@ -173,6 +175,11 @@ public class TrackerPresenter implements Initializable {
     if (xpmTask.getStartTime() == null)
       xpmTask.setStartTime(startTime);
     xpmTaskWebHandler.save(xpmTask);
+    activityHandler.saveRecord(Record.builder()
+                                   .recordType(RecordType.TASK)
+                                   .duration("" + roundOffDecimal(getRawComputedTime()))
+                                   .activity(xpmTask.getTask())
+                                   .build());
     closeWindow();
   }
 

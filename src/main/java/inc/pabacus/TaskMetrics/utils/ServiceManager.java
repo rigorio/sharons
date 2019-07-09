@@ -47,7 +47,7 @@ public class ServiceManager {
     softwareServiceAPI.cancel();
     screenshotService.disableScreenshot();
     screenshotService.shutdownScheduler();
-    kickerService.stopKicker();
+//    kickerService.stopKicker();
 //    tokenService.stopToken();
     activityListener.unListen();
     dailyLogHandler.close();

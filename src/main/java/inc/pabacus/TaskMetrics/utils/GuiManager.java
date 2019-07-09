@@ -47,11 +47,11 @@ public class GuiManager {
     alert.showAndWait();
   }
 
-  private FXMLView closeWindow;
+  private FXMLView closeWindowDisplayWindow;
 
   public void displayAlwaysOnTop(FXMLView view) {
     //pass view to closeWindow
-    closeWindow = view;
+    closeWindowDisplayWindow = view;
 
     Stage stage = new Stage();
     Scene scene = new Scene(view.getView());
@@ -78,10 +78,10 @@ public class GuiManager {
     });
   }
 
-  public void closeStage() {
-    if (closeWindow != null){
+  public void closeStageDisplayOnTop() {
+    if (closeWindowDisplayWindow != null){
       TrackHandler.setSelectedTask(null);
-      Stage stage = (Stage) closeWindow.getView().getScene().getWindow();
+      Stage stage = (Stage) closeWindowDisplayWindow.getView().getScene().getWindow();
       stage.close();
     }
   }

@@ -23,11 +23,13 @@ public class ActivityHandler {
   private static final String HOST = "http://localhost:8080";
   private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+  private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
 
   public ActivityHandler() {
   }
+
 
   public List<ActivityTimestamp> allTimestamps() {
     List<ActivityTimestamp> userActivities = new ArrayList<>();
@@ -46,8 +48,54 @@ public class ActivityHandler {
     return userActivities;
   }
 
+  public List<ActivityRecord> allRecords() {
+    List<ActivityRecord> activityRecords = new ArrayList<>();
+    try {
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/activities/records")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .build());
+      ResponseBody body = call.execute().body();
+      String jsonString = body.string();
+      activityRecords = mapper.readValue(jsonString,
+                                         new TypeReference<List<ActivityRecord>>() {});
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return activityRecords;
+  }
+
+
+  public void saveRecord(Record record) {
+    ActivityRecord activityRecord = ActivityRecord.builder()
+        .date(LocalDate.now().toString())
+        .time(timeFormatter.format(LocalTime.now()))
+        .duration(record.getDuration())
+        .type(record.getRecordType().getActivity())
+        .activity(record.getActivity())
+        .userId(1L)
+        .build();
+
+    try {
+
+      String jsonValue = mapper.writeValueAsString(activityRecord);
+      RequestBody requestBody = RequestBody.create(JSON, jsonValue);
+
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/activity/record")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .post(requestBody)
+                                     .build());
+      ResponseBody body = call.execute().body();
+      String jsonString = body.string();
+      System.out.println(jsonString);
+    } catch (IOException e) {
+      System.out.println("ha");
+      logger.warn(e.getMessage());
+    }
+  }
+
   public void saveTimestamp(Activity activity) {
-    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     ActivityTimestamp activityTimestamp = ActivityTimestamp.builder()
         .activity(activity.getActivity())
         .date(LocalDate.now().toString())
@@ -58,26 +106,22 @@ public class ActivityHandler {
 
   public void saveTimestamp(ActivityTimestamp activityTimestamp) {
     try {
-      sendToHost(activityTimestamp);
+      List<ActivityTimestamp> ua = new ArrayList<>();
+      ua.add(activityTimestamp);
+      String jsonValue = mapper.writeValueAsString(ua);
+      RequestBody requestBody = RequestBody.create(JSON, jsonValue);
+
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/activities")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .post(requestBody)
+                                     .build());
+      ResponseBody body = call.execute().body();
+      String jsonString = body.string();
+//    System.out.println(jsonString);
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
-  }
-
-  private void sendToHost(ActivityTimestamp activityTimestamp) throws IOException {
-    List<ActivityTimestamp> ua = new ArrayList<>();
-    ua.add(activityTimestamp);
-    String jsonValue = mapper.writeValueAsString(ua);
-    RequestBody requestBody = RequestBody.create(JSON, jsonValue);
-
-    Call call = client.newCall(new Request.Builder()
-                                   .url(HOST + "/api/activities")
-                                   .addHeader("Authorization", TokenRepository.getToken().getToken())
-                                   .post(requestBody)
-                                   .build());
-    ResponseBody body = call.execute().body();
-    String jsonString = body.string();
-//    System.out.println(jsonString);
   }
 
   public String getLastLog() {

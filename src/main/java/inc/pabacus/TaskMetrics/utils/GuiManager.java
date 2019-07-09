@@ -29,6 +29,8 @@ public class GuiManager {
     primaryStage.show();
   }
 
+  private FXMLView closeWindowDisplayView;
+
   public void displayView(FXMLView view) {
     Stage stage = new Stage();
     stage.setScene(new Scene(view.getView()));

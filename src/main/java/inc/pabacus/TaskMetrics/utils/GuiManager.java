@@ -38,7 +38,7 @@ public class GuiManager {
     stage.show();
   }
 
-  public void closeStageDisplayView() {
+  private void closeStageDisplayView() {
     if (closeWindowDisplayView != null){
       TrackHandler.setSelectedTask(null);
       Stage stage = (Stage) closeWindowDisplayView.getView().getScene().getWindow();
@@ -89,11 +89,16 @@ public class GuiManager {
     });
   }
 
-  public void closeStageDisplayOnTop() {
+  private void closeStageDisplayOnTop() {
     if (closeWindowDisplayWindow != null){
       TrackHandler.setSelectedTask(null);
       Stage stage = (Stage) closeWindowDisplayWindow.getView().getScene().getWindow();
       stage.close();
     }
+  }
+
+  public void closeAllStages(){
+    closeStageDisplayView();
+    closeStageDisplayOnTop();
   }
 }

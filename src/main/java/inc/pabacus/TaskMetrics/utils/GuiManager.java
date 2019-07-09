@@ -32,9 +32,18 @@ public class GuiManager {
   private FXMLView closeWindowDisplayView;
 
   public void displayView(FXMLView view) {
+    closeWindowDisplayView = view;
     Stage stage = new Stage();
     stage.setScene(new Scene(view.getView()));
     stage.show();
+  }
+
+  public void closeStageDisplayView() {
+    if (closeWindowDisplayView != null){
+      TrackHandler.setSelectedTask(null);
+      Stage stage = (Stage) closeWindowDisplayView.getView().getScene().getWindow();
+      stage.close();
+    }
   }
 
   private double xOffset = 0;

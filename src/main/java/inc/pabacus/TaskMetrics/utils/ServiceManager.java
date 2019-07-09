@@ -50,5 +50,6 @@ public class ServiceManager {
     kickerService.stopKicker();
     tokenService.stopToken();
     activityListener.unListen();
+    dailyLogHandler.close();
   }
 }

@@ -49,8 +49,9 @@ public class BreakPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    //unlisten idle
-    activityListener.unListen();
+
+    dailyLogHandler.close(); // turn Off
+    activityListener.unListen(); //unlisten idle
 
     Image imageView = new Image("/img/break.png");
     image.setImage(imageView);

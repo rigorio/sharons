@@ -274,8 +274,7 @@ public class DashboardPresenter implements Initializable {
       validationHandler.runValidationChecks();
       BeanManager.deactivate();
       activityHandler.saveActivity(Activity.OFFLINE);
-      GuiManager.getInstance().closeStageDisplayOnTop();
-      GuiManager.getInstance().closeStageDisplayView();
+      GuiManager.getInstance().closeAllStages(); //close opened stages
       GuiManager.getInstance().changeView(new LoginView());
     } else {
       alert.close();

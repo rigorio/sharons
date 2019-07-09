@@ -101,12 +101,12 @@ public class DailyLogHandler implements DailyLogService {
     Runnable command = () -> Platform.runLater(() -> {
 
       if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
+        close();
         GuiManager.getInstance().displayView(new BreakView());
-        scheduledFuture.cancel(true);
         notification("Break");
       } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")) {
+        close();
         GuiManager.getInstance().displayView(new BreakView());
-        scheduledFuture.cancel(true);
         notification("Lunch Break");
       }
     });

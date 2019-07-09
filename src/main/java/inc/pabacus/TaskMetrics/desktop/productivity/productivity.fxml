@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.productivity.ProductivityPresenter">
-  <PieChart fx:id="taskPieChart" layoutX="106.0" layoutY="456.0" prefHeight="215.0" prefWidth="309.0" />
-   <StackedBarChart fx:id="stackedBarChart" layoutX="54.0" layoutY="35.0">
-     <xAxis>
-       <CategoryAxis side="BOTTOM" />
-     </xAxis>
-     <yAxis>
-       <NumberAxis side="LEFT" />
-     </yAxis>
-   </StackedBarChart>
+<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.productivity.ProductivityPresenter">
+  <PieChart fx:id="taskPieChart" layoutX="106.0" layoutY="456.0" prefHeight="215.0" prefWidth="309.0"/>
+  <AnchorPane fx:id="barPane" layoutX="81.0" layoutY="99.0" prefHeight="200.0" prefWidth="639.0"/>
 </AnchorPane>

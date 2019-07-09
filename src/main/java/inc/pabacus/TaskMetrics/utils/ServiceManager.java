@@ -48,7 +48,8 @@ public class ServiceManager {
     screenshotService.disableScreenshot();
     screenshotService.shutdownScheduler();
     kickerService.stopKicker();
-    tokenService.stopToken();
+//    tokenService.stopToken();
     activityListener.unListen();
+    dailyLogHandler.close();
   }
 }

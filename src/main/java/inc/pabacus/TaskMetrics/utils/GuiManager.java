@@ -29,10 +29,21 @@ public class GuiManager {
     primaryStage.show();
   }
 
+  private FXMLView closeWindowDisplayView;
+
   public void displayView(FXMLView view) {
+    closeWindowDisplayView = view;
     Stage stage = new Stage();
     stage.setScene(new Scene(view.getView()));
     stage.show();
+  }
+
+  private void closeStageDisplayView() {
+    if (closeWindowDisplayView != null){
+      TrackHandler.setSelectedTask(null);
+      Stage stage = (Stage) closeWindowDisplayView.getView().getScene().getWindow();
+      stage.close();
+    }
   }
 
   private double xOffset = 0;
@@ -47,11 +58,11 @@ public class GuiManager {
     alert.showAndWait();
   }
 
-  private FXMLView closeWindow;
+  private FXMLView closeWindowDisplayWindow;
 
   public void displayAlwaysOnTop(FXMLView view) {
     //pass view to closeWindow
-    closeWindow = view;
+    closeWindowDisplayWindow = view;
 
     Stage stage = new Stage();
     Scene scene = new Scene(view.getView());
@@ -78,11 +89,16 @@ public class GuiManager {
     });
   }
 
-  public void closeStage() {
-    if (closeWindow != null){
+  private void closeStageDisplayOnTop() {
+    if (closeWindowDisplayWindow != null){
       TrackHandler.setSelectedTask(null);
-      Stage stage = (Stage) closeWindow.getView().getScene().getWindow();
+      Stage stage = (Stage) closeWindowDisplayWindow.getView().getScene().getWindow();
       stage.close();
     }
+  }
+
+  public void closeAllStages(){
+    closeStageDisplayView();
+    closeStageDisplayOnTop();
   }
 }

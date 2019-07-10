@@ -1,9 +1,9 @@
 package inc.pabacus.TaskMetrics.utils;
 
-import inc.pabacus.TaskMetrics.utils.what.DefaultSettings;
-import inc.pabacus.TaskMetrics.utils.what.FlatFileRepository;
-import inc.pabacus.TaskMetrics.utils.what.FlatFileSettings;
-import inc.pabacus.TaskMetrics.utils.what.Repository;
+import inc.pabacus.TaskMetrics.utils.file.DefaultSettings;
+import inc.pabacus.TaskMetrics.utils.file.FlatFileRepository;
+import inc.pabacus.TaskMetrics.utils.file.FlatFileSettings;
+import inc.pabacus.TaskMetrics.utils.file.Repository;
 import javafx.scene.control.TextInputDialog;
 
 import java.util.HashMap;

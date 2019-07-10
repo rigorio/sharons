@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
@@ -19,13 +20,14 @@ public class TokenService {
   private static final Logger logger = Logger.getLogger(StandupService.class);
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
   private ScheduledFuture<?> scheduledFuture;
   private static final long DEFAULT_INTERVAL = 3000000; // 55 minutes
 
   private UserHandler userHandler;
 
   public TokenService() {
+    HOST = new HostConfig().getHost();
     userHandler = BeanManager.userHandler();
   }
 

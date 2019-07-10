@@ -10,6 +10,7 @@ import inc.pabacus.TaskMetrics.api.leave.LeaveService;
 import inc.pabacus.TaskMetrics.desktop.leave.LeaveView;
 import inc.pabacus.TaskMetrics.desktop.status.StatusView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
@@ -26,7 +27,7 @@ public class ChatService {
 
 
   private static final Logger logger = Logger.getLogger(ChatService.class);
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   ActivityHandler activityHandler = new ActivityHandler();
@@ -34,6 +35,10 @@ public class ChatService {
   private static String endDate;
   private static String typeOfRequest;
   private static String status = "Pending";
+
+  public ChatService() {
+    HOST = new HostConfig().getHost();
+  }
 
   public void sendCommand(String command) {
     switch (command.toLowerCase()) {

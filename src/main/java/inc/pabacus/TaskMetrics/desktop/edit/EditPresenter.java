@@ -75,7 +75,7 @@ public class EditPresenter implements Initializable {
   ObservableList<String> billableList = FXCollections.observableArrayList("True", "False");
 
   private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
   private BusinessValueHandler businessValueHandler = new BusinessValueHandler();
   private ProjectHandler projectHandler = new ProjectHandler();
   private XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();

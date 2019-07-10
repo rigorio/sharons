@@ -8,6 +8,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogItem;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.util.Duration;
@@ -37,12 +38,14 @@ public class DailyLogHandler implements DailyLogService {
   private List<DailyLog> dailyLogs = new ArrayList<>();
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   public ScheduledFuture<?> scheduledFuture;
+  private HostConfig hostConfig = new HostConfig();
 
   public DailyLogHandler() {
+    HOST = hostConfig.getHost();
     repository = new DailyLogWebRepository();
   }
 

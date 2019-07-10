@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.leave;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
@@ -15,9 +16,13 @@ public class LeaveService {
   private static final Logger logger = Logger.getLogger(LeaveService.class);
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
+
+  public LeaveService() {
+    HOST = new HostConfig().getHost();
+  }
 
   public List<Leave> getAllLeaves() {
     List<Leave> leaves = new ArrayList<>();

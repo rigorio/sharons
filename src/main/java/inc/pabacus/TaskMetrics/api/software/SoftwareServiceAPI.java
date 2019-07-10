@@ -1,12 +1,14 @@
 package inc.pabacus.TaskMetrics.api.software;
+
 import com.google.gson.Gson;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,87 +20,92 @@ import java.util.concurrent.TimeUnit;
 
 
 public class SoftwareServiceAPI {
-    private static final String HOST = "http://localhost:8080";
-    private SoftwareService softwareService;
-    private ScheduledFuture<?> scheduledFuture;
+  private static String HOST;
+  private HostConfig hostConfig = new HostConfig();
+  private SoftwareService softwareService;
+  private ScheduledFuture<?> scheduledFuture;
 
-    public void sendSoftwareData() {
-        getSoftwareMonitoringMinutes();
-        String minutes = getSoftwareMonitoringMinutes();
+  public SoftwareServiceAPI() {
+    HOST = hostConfig.getHost();
+  }
 
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        Runnable task = () -> Platform.runLater(() -> {
+  public void sendSoftwareData() {
+    getSoftwareMonitoringMinutes();
+    String minutes = getSoftwareMonitoringMinutes();
 
-            try{
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    Runnable task = () -> Platform.runLater(() -> {
 
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                Calendar cal = Calendar.getInstance();
-                System.out.println(dateFormat.format(cal.getTime()));
+      try {
 
-                softwareService = new SoftwareHandler();
-                List<SoftwareData> allSoftware = softwareService.getSoftware();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        System.out.println(dateFormat.format(cal.getTime()));
 
-                String json = new Gson().toJson(allSoftware);
+        softwareService = new SoftwareHandler();
+        List<SoftwareData> allSoftware = softwareService.getSoftware();
 
-                OkHttpClient client = new OkHttpClient();
-                System.out.println(json);
-                MediaType mediaType = MediaType.parse("application/json");
-                RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"runningSoftwares\":" + json +  "}]");
-                Request request = new Request.Builder()
-                    .url(HOST + "/api/runningSoftwares")
-                    .post(body)
-                    .addHeader("content-type", "application/json")
-                    .addHeader("cache-control", "no-cache")
-                    .addHeader("postman-token", "08af0720-79cc-ff3d-2a7d-f208202e5ec0")
-                    .addHeader("Authorization", TokenRepository.getToken().getToken())
-                    .build();
+        String json = new Gson().toJson(allSoftware);
 
-                Response response = client.newCall(request).execute();
-
-            }catch (Exception x){
-                x.printStackTrace();}
-
-        });
-        scheduledFuture = executor.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
-
-    }
-
-    public void cancel() {
-        scheduledFuture.cancel(true);
-    }
-
-    public String getSoftwareMonitoringMinutes(){
         OkHttpClient client = new OkHttpClient();
-        // code request code here
+        System.out.println(json);
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"runningSoftwares\":" + json + "}]");
         Request request = new Request.Builder()
-            .url(HOST + "/api/monitorSoftware")
-            .addHeader("Accept", "application/json")
+            .url(HOST + "/api/runningSoftwares")
+            .post(body)
+            .addHeader("content-type", "application/json")
+            .addHeader("cache-control", "no-cache")
+            .addHeader("postman-token", "08af0720-79cc-ff3d-2a7d-f208202e5ec0")
             .addHeader("Authorization", TokenRepository.getToken().getToken())
-            .method("GET", null)
             .build();
 
-        String getSoftwareMonitoringMinutes = null;
+        Response response = client.newCall(request).execute();
 
-        try {
+      } catch (Exception x) {
+        x.printStackTrace();
+      }
 
-            Response response = client.newCall(request).execute();
-            String getTimes = response.body().string();
+    });
+    scheduledFuture = executor.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
 
-            if(getTimes.equals("[]") || getTimes.equals("")){
-                // default value of 5 minutes
-                getSoftwareMonitoringMinutes = "5";
-            }
-            else {
-                String getTimeJson = getTimes.replaceAll("\\[|\\]", "");
-                JSONObject json = new JSONObject(getTimeJson);
-                getSoftwareMonitoringMinutes = json.getString("minutes");
-            }
+  }
+
+  public void cancel() {
+    scheduledFuture.cancel(true);
+  }
+
+  public String getSoftwareMonitoringMinutes() {
+    OkHttpClient client = new OkHttpClient();
+    // code request code here
+    Request request = new Request.Builder()
+        .url(HOST + "/api/monitorSoftware")
+        .addHeader("Accept", "application/json")
+        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .method("GET", null)
+        .build();
+
+    String getSoftwareMonitoringMinutes = null;
+
+    try {
+
+      Response response = client.newCall(request).execute();
+      String getTimes = response.body().string();
+
+      if (getTimes.equals("[]") || getTimes.equals("")) {
+        // default value of 5 minutes
+        getSoftwareMonitoringMinutes = "5";
+      } else {
+        String getTimeJson = getTimes.replaceAll("\\[|\\]", "");
+        JSONObject json = new JSONObject(getTimeJson);
+        getSoftwareMonitoringMinutes = json.getString("minutes");
+      }
 
 
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
-        return getSoftwareMonitoringMinutes;
+    } catch (IOException | JSONException e) {
+      e.printStackTrace();
     }
+    return getSoftwareMonitoringMinutes;
+  }
 
 }

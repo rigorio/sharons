@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogWebRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,7 +20,11 @@ public class StatusUpdateHandler {
   private static final Logger logger = Logger.getLogger(DailyLogWebRepository.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
+
+  public StatusUpdateHandler() {
+    HOST = new HostConfig().getHost();
+  }
 
   public List<StatusUpdate> all() {
 

@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.tasks.businessValue;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,9 +18,14 @@ public class BusinessValueHandler {
   private static final Logger logger = Logger.getLogger(BusinessValueHandler.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
+  private HostConfig hostConfig = new HostConfig();
+
+  public BusinessValueHandler() {
+    HOST = hostConfig.getHost();
+  }
 
   public List<BusinessValue> getAll() {
     Request request = new Request.Builder()

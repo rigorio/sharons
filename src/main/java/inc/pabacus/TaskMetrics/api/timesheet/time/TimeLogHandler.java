@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogWebRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
@@ -21,9 +22,13 @@ public class TimeLogHandler {
   private static final Logger logger = Logger.getLogger(DailyLogWebRepository.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
+
+  public TimeLogHandler() {
+    HOST = new HostConfig().getHost();
+  }
 
   public List<TimeLog> all() {
 
@@ -58,7 +63,7 @@ public class TimeLogHandler {
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
-return null;
+    return null;
   }
 
   public String lastLog() {

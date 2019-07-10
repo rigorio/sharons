@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.activity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -20,7 +21,8 @@ import java.util.Locale;
 public class ActivityHandler {
 
   private static final Logger logger = Logger.getLogger(ActivityHandler.class);
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST ;
+  private HostConfig hostConfig = new HostConfig();
   private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
   private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
@@ -28,6 +30,7 @@ public class ActivityHandler {
   private ObjectMapper mapper = new ObjectMapper();
 
   public ActivityHandler() {
+    HOST = hostConfig.getHost();
   }
 
 

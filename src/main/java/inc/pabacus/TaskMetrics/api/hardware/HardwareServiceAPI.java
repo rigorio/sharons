@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.api.hardware;
 
 import com.google.gson.Gson;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
@@ -18,9 +19,14 @@ import java.util.concurrent.TimeUnit;
 public class HardwareServiceAPI {
 
   private static final Logger logger = Logger.getLogger(HardwareServiceAPI.class);
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
+  private HostConfig hostConfig = new HostConfig();
   private HardwareService hardwareService;
   private ScheduledFuture<?> scheduledFuture;
+
+  public HardwareServiceAPI() {
+    HOST = hostConfig.getHost();
+  }
 
   public void sendHardwareData() {
 

@@ -52,7 +52,7 @@ public class ActivityHandler {
     List<ActivityRecord> activityRecords = new ArrayList<>();
     try {
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/activities/records")
+                                     .url(HOST + "/api/activity/records")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .build());
       ResponseBody body = call.execute().body();

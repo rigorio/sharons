@@ -4,6 +4,7 @@ import inc.pabacus.TaskMetrics.utils.what.DefaultSettings;
 import inc.pabacus.TaskMetrics.utils.what.FlatFileRepository;
 import inc.pabacus.TaskMetrics.utils.what.FlatFileSettings;
 import inc.pabacus.TaskMetrics.utils.what.Repository;
+import javafx.scene.control.TextInputDialog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +22,41 @@ public class HostConfig {
   }
 
   public String getHost() {
-    Optional<Map<String, Object>> any = hostRepository.findAll().stream().findAny();
-    if (!any.isPresent())
-      hostRepository.save(new HashMap<>()); // to write a file
-    Map<String, Object> hostSettings = any.get();
-    return (String) hostSettings.get(KEY);
+    Optional<Map<String, Object>> allList = hostRepository.findAll().stream().findAny();
+
+    if (!allList.isPresent()) {
+      HashMap<String, Object> map = new HashMap<>();
+      map.put(KEY, "");
+      hostRepository.save(map);
+      allList = hostRepository.findAll().stream().findAny();
+    }
+
+    Map<String, Object> any = allList.get();
+
+
+    Map<String, Object> sampMAp = new HashMap<>();
+    String host = "";
+    if (any.get(KEY).equals("") || !any.containsKey(KEY)) {
+      TextInputDialog dialog = new TextInputDialog();
+      dialog.setTitle("Error");
+      dialog.setHeaderText("Host has not been set");
+      dialog.setContentText("Please enter host url:");
+
+// Traditional way to get the response value.
+      Optional<String> result = dialog.showAndWait();
+      if (result.isPresent()) {
+
+        host = result.get();
+      }
+      sampMAp.put(KEY, host);
+      hostRepository.save(sampMAp); // to write a file
+      return (String) hostRepository.findAll().stream().findAny().get().get(KEY);
+    } else {
+
+//      Map<String, Object> hostSettings = any.get();
+      Object value = any.get(KEY);
+      return (String) value;
+    }
   }
 
   public void updateHost(String host) {

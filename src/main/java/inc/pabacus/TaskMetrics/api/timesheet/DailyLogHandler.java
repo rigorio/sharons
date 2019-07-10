@@ -104,7 +104,7 @@ public class DailyLogHandler implements DailyLogService {
         close();
         GuiManager.getInstance().displayView(new BreakView());
         notification("Break");
-      } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")) {
+      } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
         close();
         GuiManager.getInstance().displayView(new BreakView());
         notification("Lunch Break");

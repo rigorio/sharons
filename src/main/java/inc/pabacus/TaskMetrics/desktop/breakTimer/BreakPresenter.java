@@ -50,6 +50,9 @@ public class BreakPresenter implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 
+    if (TrackerPresenter.windowIsOpen) {
+      TrackerPresenter.isPause = true;
+    }
     dailyLogHandler.close(); // turn Off
     activityListener.unListen(); //unlisten idle
 
@@ -93,9 +96,11 @@ public class BreakPresenter implements Initializable {
     }
 
     timerService.pause();
-    DailyLogHandler dailyLogHandler = new DailyLogHandler();
     dailyLogHandler.checkIfUserIsBreak();
-    TrackerPresenter.isContinue = true;
+    if (TrackerPresenter.windowIsOpen) {
+      TrackerPresenter.isContinue = true;
+    }
+
     Stage stage = (Stage) backOnline.getScene().getWindow();
     stage.close();
     //reRun Listener

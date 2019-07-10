@@ -16,11 +16,13 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.desktop.newTask.DefaultTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -39,6 +41,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings("all")
 public class SettingsPresenter implements Initializable {
 
+  @FXML
+  private JFXTextField hostTextBox;
   @FXML
   private JFXComboBox<String> jobBox;
   @FXML
@@ -63,9 +67,13 @@ public class SettingsPresenter implements Initializable {
 
 
   private JobTaskHandler jobTaskHandler;
+  private HostConfig hostConfig;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    hostConfig = new HostConfig();
+    hostTextBox.setText(hostConfig.getHost());
+
     jobTaskHandler = new JobTaskHandler();
     if (DefaultTaskHolder.getDefaultJob() == null)
       jobBox.setPromptText("Select a default Job");
@@ -218,6 +226,11 @@ public class SettingsPresenter implements Initializable {
 
   @FXML
   public void removeManager() {
+  }
+
+  @FXML
+  public void updateHost() {
+    hostConfig.updateHost(hostTextBox.getText());
   }
 
   public ObservableList<String> populateManagers() {

@@ -69,6 +69,10 @@ public class TrackerPresenter implements Initializable {
   private double timeCompensation = 0;
   public ScheduledFuture<?> scheduledFuture;
 
+  public static boolean isPause = false;
+  public static boolean isContinue = false;
+  public static boolean windowIsOpen = false;
+
   public TrackerPresenter() {
     timerService = new TimerService();
     xpmTaskWebHandler = new XpmTaskWebHandler();
@@ -97,6 +101,9 @@ public class TrackerPresenter implements Initializable {
     startTime = getCurrentTime();
     extend.setVisible(false);
     continueButton.setVisible(false);
+    checkIfContinue();
+    checkIfPause();
+    windowIsOpen = true;
   }
 
   @FXML
@@ -212,14 +219,14 @@ public class TrackerPresenter implements Initializable {
       } else {
         timer.setText(STARTING_TIME);
       }
-
-    } else if (isPause) {
-      //if Pause timer will re-Run
-      long durations = timerService.getTime();
-      timerService.setTime(durations);
-      String times = timerService.formatSeconds(durations);
-      timer.setText(times);
-      isPause = false;
+//
+//    } else if (isPause) {
+//      //if Pause timer will re-Run
+//      long durations = timerService.getTime();
+//      timerService.setTime(durations);
+//      String times = timerService.formatSeconds(durations);
+//      timer.setText(times);
+//      isPause = false;
     } else {
       timer.setText(time);
     }
@@ -230,6 +237,7 @@ public class TrackerPresenter implements Initializable {
     TrackHandler.setSelectedTask(null);
     timerService.pause();
     ((Stage) title.getScene().getWindow()).close();
+    windowIsOpen = false;
   }
 
   private void updateTask(String status) {
@@ -298,11 +306,12 @@ public class TrackerPresenter implements Initializable {
           activityHandler.saveActivity(activity);
           timerService.reRun(); // rerun services
 
-          checkIfContinue();
+//          checkIfContinue();
           continueButton.setVisible(true);
           pauseButton.setVisible(false);
           Stage stage = (Stage) continueButton.getScene().getWindow();
           stage.hide();
+//          isPause = true;
           break;
         case "Lunch":
           activity = Activity.LUNCH;
@@ -310,11 +319,12 @@ public class TrackerPresenter implements Initializable {
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
           timerService.reRun(); // rerun services
 
-          checkIfContinue();
+//          checkIfContinue();
           continueButton.setVisible(true);
           pauseButton.setVisible(false);
           Stage stages = (Stage) continueButton.getScene().getWindow();
           stages.hide();
+//          isPause = true;
           break;
         case "Meeting":
           activity = Activity.MEETING;
@@ -333,9 +343,6 @@ public class TrackerPresenter implements Initializable {
     });
   }
 
-  private static boolean isPause = false;
-  public static boolean isContinue = false;
-
   @FXML
   public void continueButton() {
     scheduledFuture.cancel(true);
@@ -351,8 +358,10 @@ public class TrackerPresenter implements Initializable {
     timerService.start();
     continueButton.setVisible(false);
     pauseButton.setVisible(true);
-    isPause = true;
+    isPause = false;
     isContinue = false;
+    checkIfContinue();
+    checkIfPause();
   }
 
   private void checkIfContinue() {
@@ -361,6 +370,20 @@ public class TrackerPresenter implements Initializable {
 
       if (isContinue) {
         continueButton();
+      }
+    });
+
+    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1, TimeUnit.SECONDS);
+  }
+
+  private void checkIfPause() {
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    Runnable command = () -> Platform.runLater(() -> {
+
+      if (isPause) {
+        timerService.reRun();
+        Stage stages = (Stage) continueButton.getScene().getWindow();
+        stages.hide();
       }
     });
 

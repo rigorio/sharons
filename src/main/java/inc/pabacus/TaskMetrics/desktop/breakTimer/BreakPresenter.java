@@ -89,7 +89,7 @@ public class BreakPresenter implements Initializable {
     if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
       activityHandler.saveActivity(Activity.ONLINE);
       notification("Online");
-    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")) {
+    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
       activityHandler.saveActivity(Activity.BFB);
       dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
       notification("Back From Lunch");

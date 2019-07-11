@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.productivity.ProductivityPresenter">
-  <PieChart fx:id="taskPieChart" layoutX="106.0" layoutY="456.0" prefHeight="215.0" prefWidth="309.0" />
-   <StackedBarChart fx:id="stackedBarChart" layoutX="54.0" layoutY="35.0">
-     <xAxis>
-       <CategoryAxis side="BOTTOM" />
-     </xAxis>
-     <yAxis>
-       <NumberAxis side="LEFT" />
-     </yAxis>
-   </StackedBarChart>
+<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.productivity.ProductivityPresenter">
+  <BarChart fx:id="barChart" layoutX="24.0" layoutY="450.0" prefHeight="206.0" prefWidth="530.0">
+    <xAxis>
+      <CategoryAxis side="BOTTOM"/>
+    </xAxis>
+    <yAxis>
+      <NumberAxis side="LEFT"/>
+    </yAxis>
+  </BarChart>
+  <JFXComboBox fx:id="dayCombobox" layoutX="38.0" layoutY="402.0" onAction="#filterTasks" prefWidth="150.0"/>
+  <AnchorPane fx:id="mainPane" layoutX="217.0" layoutY="14.0" prefHeight="293.0" prefWidth="328.0">
+    <PieChart fx:id="taskPieChart" prefHeight="437.0" prefWidth="530.0"/>
+  </AnchorPane>
 </AnchorPane>

@@ -5,6 +5,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.standuply.Answers;
 import inc.pabacus.TaskMetrics.api.standuply.StandupAnswer;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -20,7 +21,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -42,7 +42,12 @@ public class StandupPresenter implements Initializable {
   @FXML
   private Label doToday;
 
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
+  private HostConfig hostConfig = new HostConfig();
+
+  public StandupPresenter() {
+    HOST = hostConfig.getHost();
+  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {

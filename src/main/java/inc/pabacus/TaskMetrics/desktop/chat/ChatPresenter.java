@@ -9,6 +9,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,11 +49,13 @@ public class ChatPresenter implements Initializable {
   private ImageView image;
 
   private ChatService chatService;
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
+  private HostConfig hostConfig = new HostConfig();
   private ActivityHandler activityHandler;
   private DailyLogService dailyLogHandler;
 
   public ChatPresenter() {
+    HOST = hostConfig.getHost();
     activityHandler = BeanManager.activityHandler();
     dailyLogHandler = BeanManager.dailyLogService();
   }
@@ -112,29 +115,29 @@ public class ChatPresenter implements Initializable {
         case "in":
         case "login":
         case "log in":
-          activityHandler.saveActivity(Activity.ONLINE);
+          activityHandler.saveTimestamp(Activity.ONLINE);
           dailyLogHandler.changeLog(LogStatus.IN.getStatus());
           break;
         case "lb":
         case "lunch":
         case "lunch break":
-          activityHandler.saveActivity(Activity.LB);
+          activityHandler.saveTimestamp(Activity.LB);
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
           break;
         case "bfb":
         case "back from lunch":
         case "back from break":
-          activityHandler.saveActivity(Activity.BFB);
+          activityHandler.saveTimestamp(Activity.BFB);
           dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
           break;
         case "out":
         case "logout":
         case "log out":
-          activityHandler.saveActivity(Activity.OFFLINE);
+          activityHandler.saveTimestamp(Activity.OFFLINE);
           dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
           break;
         case "break":
-          activityHandler.saveActivity(Activity.BREAK);
+          activityHandler.saveTimestamp(Activity.BREAK);
           break;
       }
     }
@@ -194,7 +197,7 @@ public class ChatPresenter implements Initializable {
               text = new Text(item.toString());
               setWrapText(true);
               setGraphic(text);
-              if ((getIndex()) %6 < 3 ){
+              if ((getIndex()) % 6 < 3) {
                 setStyle("-fx-background-color: #EFF8FD;");
               } else setStyle("-fx-background-color: #FFFFFF;");
             }

@@ -1,7 +1,7 @@
 package inc.pabacus.TaskMetrics.api.timesheet.status;
 
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.activity.UserActivity;
+import inc.pabacus.TaskMetrics.api.activity.ActivityTimestamp;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
@@ -25,8 +25,8 @@ public class ValidationService {
   }
 
 
-  public List<UserActivity> activities() {
-    return activityHandler.all();
+  public List<ActivityTimestamp> activities() {
+    return activityHandler.allTimestamps();
   }
 
   public List<StatusUpdate> statusUpdates() {
@@ -38,13 +38,13 @@ public class ValidationService {
   }
 
 
-  public List<UserActivity> unrecognizedLogs() {
-    List<UserActivity> activities = activities();
+  public List<ActivityTimestamp> unrecognizedLogs() {
+    List<ActivityTimestamp> activities = activities();
 //    System.out.println(activities);
     List<StatusUpdate> statusUpdates = statusUpdates();
     LocalDate today = LocalDate.now();
-    List<UserActivity> activitiesToday = activities.stream()
-        .filter(userActivity -> userActivity.getDate().equals(today.toString()))
+    List<ActivityTimestamp> activitiesToday = activities.stream()
+        .filter(activityTimestamp -> activityTimestamp.getDate().equals(today.toString()))
         .collect(Collectors.toList());
 //    System.out.println(activitiesToday);
     List<StatusUpdate> updatesToday = statusUpdates.stream()
@@ -70,12 +70,12 @@ public class ValidationService {
         .collect(Collectors.toList());
   }
 
-  public List<UserActivity> unrecognizedTasks() {
-    List<UserActivity> activities = activities();
+  public List<ActivityTimestamp> unrecognizedTasks() {
+    List<ActivityTimestamp> activities = activities();
     List<XpmTask> xpmTasks = xpmTasks();
     LocalDate today = LocalDate.now();
-    List<UserActivity> activitiesToday = activities.stream()
-        .filter(userActivity -> userActivity.getDate().equals(today.toString()))
+    List<ActivityTimestamp> activitiesToday = activities.stream()
+        .filter(activityTimestamp -> activityTimestamp.getDate().equals(today.toString()))
         .collect(Collectors.toList());
     List<XpmTask> updatesToday = xpmTasks.stream()
         .filter(statusUpdate -> statusUpdate.getStartTime().equals(today.toString()))

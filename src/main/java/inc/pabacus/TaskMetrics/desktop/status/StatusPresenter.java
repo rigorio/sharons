@@ -71,7 +71,7 @@ public class StatusPresenter implements Initializable {
         break;
     }
     dailyLogService.changeLog(status);
-    activityHandler.saveActivity(activity);
+    activityHandler.saveTimestamp(activity);
 
     String comment = this.comment.getText();
     // now what to do with comment

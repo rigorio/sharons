@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.kicker;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.application.Platform;
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -21,7 +22,8 @@ public class KickerService {
   private static final Logger logger = Logger.getLogger(KickerService.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
+  private HostConfig hostConfig = new HostConfig();
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   private ScheduledFuture<?> scheduledFuture;
@@ -29,6 +31,9 @@ public class KickerService {
   private String oldToken;
   private Runnable runnable;
 
+  public KickerService() {
+    HOST = hostConfig.getHost();
+  }
 
   public KickStatus login(String username) {
     String response;

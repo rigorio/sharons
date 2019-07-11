@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.project;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Example;
@@ -20,11 +21,13 @@ public class ProjectWebRepository implements ProjectRepository {
   private static final Logger logger = Logger.getLogger(ProjectWebRepository.class);
   private OkHttpClient client = new OkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
+  private HostConfig hostConfig = new HostConfig();
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
 
   public ProjectWebRepository() {
+    HOST = hostConfig.getHost();
   }
 
   @Override

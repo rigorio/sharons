@@ -87,10 +87,10 @@ public class BreakPresenter implements Initializable {
   @FXML
   private void backOnline() {
     if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
-      activityHandler.saveActivity(Activity.ONLINE);
+      activityHandler.saveTimestamp(Activity.ONLINE);
       notification("Online");
     } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
-      activityHandler.saveActivity(Activity.BFB);
+      activityHandler.saveTimestamp(Activity.BFB);
       dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
       notification("Back From Lunch");
     }

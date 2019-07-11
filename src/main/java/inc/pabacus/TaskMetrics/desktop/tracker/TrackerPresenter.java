@@ -3,6 +3,8 @@ package inc.pabacus.TaskMetrics.desktop.tracker;
 import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.activity.Record;
+import inc.pabacus.TaskMetrics.api.activity.RecordType;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
@@ -173,6 +175,11 @@ public class TrackerPresenter implements Initializable {
     if (xpmTask.getStartTime() == null)
       xpmTask.setStartTime(startTime);
     xpmTaskWebHandler.save(xpmTask);
+    activityHandler.saveRecord(Record.builder()
+                                   .recordType(RecordType.TASK)
+                                   .duration("" + roundOffDecimal(getRawComputedTime()))
+                                   .activity(xpmTask.getTask())
+                                   .build());
     closeWindow();
   }
 
@@ -303,7 +310,7 @@ public class TrackerPresenter implements Initializable {
       switch (reason) {
         case "Break":
           activity = Activity.BREAK;
-          activityHandler.saveActivity(activity);
+          activityHandler.saveTimestamp(activity);
           timerService.reRun(); // rerun services
 
 //          checkIfContinue();
@@ -315,7 +322,7 @@ public class TrackerPresenter implements Initializable {
           break;
         case "Lunch":
           activity = Activity.LUNCH;
-          activityHandler.saveActivity(activity);
+          activityHandler.saveTimestamp(activity);
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
           timerService.reRun(); // rerun services
 
@@ -328,14 +335,14 @@ public class TrackerPresenter implements Initializable {
           break;
         case "Meeting":
           activity = Activity.MEETING;
-          activityHandler.saveActivity(activity);
+          activityHandler.saveTimestamp(activity);
           updateTask(Status.IN_PROGRESS.getStatus());
           saveAndClose();
           break;
         default:
           activity = Activity.BUSY;
           timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
-          activityHandler.saveActivity(activity);
+          activityHandler.saveTimestamp(activity);
           updateTask(Status.IN_PROGRESS.getStatus());
           saveAndClose();
           break;

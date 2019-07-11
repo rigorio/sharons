@@ -3,10 +3,9 @@ package inc.pabacus.TaskMetrics.api.standuply;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.desktop.leave.LeaveView;
 import inc.pabacus.TaskMetrics.desktop.standuply.StanduplyView;
-import inc.pabacus.TaskMetrics.desktop.status.StatusView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
@@ -17,7 +16,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -28,8 +26,13 @@ public class StandupService {
   private static final Logger logger = Logger.getLogger(StandupService.class);
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
   private ScheduledFuture<?> scheduledFuture;
+  private HostConfig hostConfig = new HostConfig();
+
+  public StandupService() {
+    HOST = hostConfig.getHost();
+  }
 
   public void runStandup() {
     // amm what. harder than i thought.. i will hack. **hacking noise**
@@ -66,7 +69,7 @@ public class StandupService {
                                      .build());
       ResponseBody responseBody = call.execute().body();
       answer = mapper.readValue(responseBody.string(),
-                                       new TypeReference<StandupAnswer>() {});
+                                new TypeReference<StandupAnswer>() {});
       return answer;
     } catch (IOException e) {
       logger.warn(e.getMessage());
@@ -87,7 +90,7 @@ public class StandupService {
     try {
 
       Response response = client.newCall(request).execute();
-      String getbody= response.body().string();
+      String getbody = response.body().string();
       String time = null;
       String frequency = null;
       String day = null;
@@ -107,14 +110,14 @@ public class StandupService {
       LocalTime now = LocalTime.now();
       LocalTime schedule = LocalTime.of(Integer.parseInt(hour), Integer.parseInt(minute));
 
-      if (frequency.equalsIgnoreCase("daily")){
+      if (frequency.equalsIgnoreCase("daily")) {
         return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
-      } else{
+      } else {
         Calendar cal = Calendar.getInstance();
         int dayDate = cal.get(Calendar.DAY_OF_WEEK);
 
         day = day.toLowerCase();
-        switch (day){
+        switch (day) {
           case "sunday":
             day = "1";
             break;
@@ -139,7 +142,7 @@ public class StandupService {
         }
 //        System.out.println(day);
 //        System.out.println(dayDate);
-        if (day.equals(String.valueOf(dayDate))){
+        if (day.equals(String.valueOf(dayDate))) {
           return now.getHour() == schedule.getHour() && now.getMinute() == schedule.getMinute();
         } else {
           return false;

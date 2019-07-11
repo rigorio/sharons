@@ -32,7 +32,7 @@ public class Tester {
 //  @Test
 //  public void testValidation() {
 //    ValidationService validationService = new ValidationService();
-//    List<UserActivity> invalidStatuses = validationService.validation();
+//    List<ActivityTimestamp> invalidStatuses = validationService.validation();
 //    System.out.println("-------------oooh");
 //    invalidStatuses.forEach(System.out::println);
 //  }

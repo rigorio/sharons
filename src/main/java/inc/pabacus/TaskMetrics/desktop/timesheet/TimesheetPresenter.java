@@ -14,6 +14,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -59,10 +60,12 @@ public class TimesheetPresenter implements Initializable {
   private MockUser mockUser;
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
+  private HostConfig hostConfig = new HostConfig();
 
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
 
   public TimesheetPresenter() {
+    HOST = hostConfig.getHost();
     dailyLogHandler = BeanManager.dailyLogService();
     userHandler = BeanManager.userHandler();
     activityHandler = BeanManager.activityHandler();
@@ -126,7 +129,7 @@ public class TimesheetPresenter implements Initializable {
       mockUser.setStatus(status);
       comboBox.setValue(status);
       refreshTimesheetTable();
-      activityHandler.saveActivity(activity);
+      activityHandler.saveTimestamp(activity);
     }
   }
 

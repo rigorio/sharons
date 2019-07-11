@@ -273,8 +273,8 @@ public class DashboardPresenter implements Initializable {
       //disable all services manually - maybe we can kill these threads/services automatically?
       validationHandler.runValidationChecks();
       BeanManager.deactivate();
-      activityHandler.saveActivity(Activity.OFFLINE);
-      GuiManager.getInstance().closeAllStages(); //close opened stages
+      activityHandler.saveTimestamp(Activity.OFFLINE);
+      GuiManager.getInstance().closeAllStages();
       GuiManager.getInstance().changeView(new LoginView());
     } else {
       alert.close();

@@ -3,7 +3,6 @@ package inc.pabacus.TaskMetrics.desktop.newTask;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
@@ -14,14 +13,12 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
-import okhttp3.MediaType;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -56,12 +53,7 @@ public class NewTaskPresenter implements Initializable {
   @FXML
   private JFXTextField estimateField;
 
-  ObservableList<String> billableList = FXCollections.observableArrayList("True", "False");
-
-  private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-  private static final String HOST = "http://localhost:8080";
   private BusinessValueHandler businessValueHandler = new BusinessValueHandler();
-  private ProjectHandler projectHandler = new ProjectHandler();
   private XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
   private JobTaskHandler jobTaskHandler;
 

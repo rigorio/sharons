@@ -5,22 +5,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 @Data
+@Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class UserActivity {
-
+public class ActivityRecord {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   private Long userId;
   private String date;
+  private String duration;
   private String time;
+  private String type;
   private String activity;
-
-  public UserActivity(String dateNow, String timeNow, String activity) {
-    this.date = dateNow;
-    this.time = timeNow;
-    this.activity = activity;
-  }
-
 }

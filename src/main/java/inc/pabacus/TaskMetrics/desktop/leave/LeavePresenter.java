@@ -7,6 +7,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.leave.Approver;
 import inc.pabacus.TaskMetrics.api.leave.Leave;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
+import inc.pabacus.TaskMetrics.utils.HostConfig;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,7 +48,11 @@ public class LeavePresenter implements Initializable {
   @FXML
   private JFXComboBox<String> managerDropdown;
 
-  private static final String HOST = "http://localhost:8080";
+  private static String HOST;
+
+  public LeavePresenter() {
+    HOST = new HostConfig().getHost();
+  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {

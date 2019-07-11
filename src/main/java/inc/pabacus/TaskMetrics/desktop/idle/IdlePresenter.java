@@ -3,7 +3,7 @@ package inc.pabacus.TaskMetrics.desktop.idle;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.activity.UserActivity;
+import inc.pabacus.TaskMetrics.api.activity.ActivityTimestamp;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.collections.FXCollections;
@@ -55,14 +55,14 @@ public class IdlePresenter implements Initializable {
     String action = actionsBox.getValue();
     if (!action.equals(TECHNICAL_ISSUE)) {
 
-      UserActivity startActivity = UserActivity.builder()
+      ActivityTimestamp startActivity = ActivityTimestamp.builder()
           .time(startTime)
           .date(LocalDate.now().toString())
           .build();
       startActivity.setActivity(Activity.convert(action).getActivity());
-      activityHandler.saveActivity(startActivity); // initial activity upon detecting idle
+      activityHandler.saveTimestamp(startActivity); // initial activity upon detecting idle
 
-      activityHandler.saveActivity(Activity.BUSY); // update if not busy
+      activityHandler.saveTimestamp(Activity.BUSY); // update if not busy
     } else {
       // show a dialogue that let's staff report technical issue
     }

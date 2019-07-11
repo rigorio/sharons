@@ -9,9 +9,9 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>inc.pabacus</groupId>
-  <artifactId>TaskMetrics</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>TaskMetrics</name>
+  <artifactId>Tribely</artifactId>
+  <version>0.13.0-SNAPSHOT</version>
+  <name>Tribely</name>
   <description>Program to track projects and user productivity</description>
 
   <properties>
@@ -133,13 +133,6 @@
       <version>20160212</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
-    <dependency>
-      <groupId>org.controlsfx</groupId>
-      <artifactId>controlsfx</artifactId>
-      <version>8.40.15</version>
-    </dependency>
-
     <!-- DEFAULTS -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -159,6 +152,12 @@
       <groupId>org.controlsfx</groupId>
       <artifactId>controlsfx</artifactId>
       <version>8.40.14</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>13.0</version>
+      <scope>compile</scope>
     </dependency>
 
   </dependencies>

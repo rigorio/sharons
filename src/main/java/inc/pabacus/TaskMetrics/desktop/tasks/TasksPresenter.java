@@ -2,7 +2,6 @@ package inc.pabacus.TaskMetrics.desktop.tasks;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
@@ -23,8 +22,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -60,8 +57,8 @@ public class TasksPresenter implements Initializable {
   private JFXButton startButton;
   @FXML
   private TableView<XpmTaskAdapter> tasksTable;
-  @FXML
-  private JFXTextField sortTask;
+//  @FXML
+//  private JFXTextField sortTask;
   @FXML
   private JFXComboBox<String> timeBox;
 
@@ -104,8 +101,7 @@ public class TasksPresenter implements Initializable {
                                    status, billableHours, description);
 
     initTasksTable();
-    filtering();
-
+//    filtering(); Search Function
 //    initTaskSheet(); time sheet has been extracted
     refreshingService(); //deactivated for maintenance
 
@@ -126,35 +122,35 @@ public class TasksPresenter implements Initializable {
 
   }
 
-  private void filtering() {
-
-    sortTask.setOnKeyReleased(e -> {
-      sortTask.textProperty().addListener((observable, oldValue, newValue) -> {
-        ObservableList<XpmTaskAdapter> masterData = FXCollections.observableArrayList(getAllTasks());
-        FilteredList<XpmTaskAdapter> filteredList = new FilteredList<>(masterData, p -> true);
-        filteredList.setPredicate(sortTask -> {
-          // If filter text is empty, display all persons.
-
-          // Compare first name and last name of every person with filter text.
-          String lowerCaseFilter = newValue.toLowerCase();
-
-          if (newValue.isEmpty()) {
-            return true;
-          } else if (sortTask.getDescription().get().toLowerCase().contains(lowerCaseFilter)) {
-            return true; // Filter matches first name.
-          } else return sortTask.getTask().get().toLowerCase().contains(lowerCaseFilter); // Filter matches last name.
-          // Does not match.
-        });
-        SortedList<XpmTaskAdapter> sortedData = new SortedList<>(filteredList);
-        sortedData.comparatorProperty().bind(tasksTable.comparatorProperty());
-        tasksTable.setItems(sortedData);
-      });
-//      refreshTasks();
-
-
-    });
-
-  }
+//  private void filtering() {
+//
+//    sortTask.setOnKeyReleased(e -> {
+//      sortTask.textProperty().addListener((observable, oldValue, newValue) -> {
+//        ObservableList<XpmTaskAdapter> masterData = FXCollections.observableArrayList(getAllTasks());
+//        FilteredList<XpmTaskAdapter> filteredList = new FilteredList<>(masterData, p -> true);
+//        filteredList.setPredicate(sortTask -> {
+//          // If filter text is empty, display all persons.
+//
+//          // Compare first name and last name of every person with filter text.
+//          String lowerCaseFilter = newValue.toLowerCase();
+//
+//          if (newValue.isEmpty()) {
+//            return true;
+//          } else if (sortTask.getDescription().get().toLowerCase().contains(lowerCaseFilter)) {
+//            return true; // Filter matches first name.
+//          } else return sortTask.getTask().get().toLowerCase().contains(lowerCaseFilter); // Filter matches last name.
+//          // Does not match.
+//        });
+//        SortedList<XpmTaskAdapter> sortedData = new SortedList<>(filteredList);
+//        sortedData.comparatorProperty().bind(tasksTable.comparatorProperty());
+//        tasksTable.setItems(sortedData);
+//      });
+////      refreshTasks();
+//
+//
+//    });
+//
+//  }
 
   @FXML
   void tableClicked(MouseEvent event) {

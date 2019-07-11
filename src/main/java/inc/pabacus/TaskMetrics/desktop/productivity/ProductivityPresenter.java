@@ -159,14 +159,12 @@ public class ProductivityPresenter implements Initializable {
   }
 
   private double percent(double value) {
-    return round(100.0 * (value / 9.0), 2);
+    return round(100.0 * (value / 9.0));
   }
 
-  private double round(double value, int places) {
-    if (places < 0) throw new IllegalArgumentException();
-
+  private double round(double value) {
     BigDecimal bd = new BigDecimal(value);
-    bd = bd.setScale(places, RoundingMode.HALF_UP);
+    bd = bd.setScale(2, RoundingMode.HALF_UP);
     return bd.doubleValue();
   }
 }

@@ -3,7 +3,7 @@
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.141"
+<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.tasks.TasksPresenter">
   <TableView fx:id="tasksTable" layoutX="14.0" layoutY="59.0" prefHeight="609.0" prefWidth="884.0">
     <columnResizePolicy>

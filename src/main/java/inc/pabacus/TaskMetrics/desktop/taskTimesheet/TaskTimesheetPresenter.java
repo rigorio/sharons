@@ -52,10 +52,28 @@ public class TaskTimesheetPresenter implements Initializable {
   private void initTaskSheet() {
 
     TableColumn<XpmTaskAdapter, String> project = new TableColumn<>("Job");
-    project.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getJob().get()));
+    project.setCellValueFactory(param -> {
+      // handle null value
+      String getProject;
+      try {
+        getProject = param.getValue().getJob().getValue();
+      } catch (Exception e) {
+        getProject = "";
+      }
+      return new SimpleStringProperty("" + getProject);
+    });
 
     TableColumn<XpmTaskAdapter, String> startTime = new TableColumn<>("Start Time");
-    startTime.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getStartTime().get()));
+    startTime.setCellValueFactory(param -> {
+      // handle null value
+      String getStartTime;
+      try {
+        getStartTime = param.getValue().getStartTime().getValue();
+      } catch (Exception e) {
+        getStartTime = "";
+      }
+      return new SimpleStringProperty("" + getStartTime);
+    });
 
     TableColumn<XpmTaskAdapter, String> endTime = new TableColumn<>("End Time");
     endTime.setCellValueFactory(param -> {
@@ -63,7 +81,7 @@ public class TaskTimesheetPresenter implements Initializable {
       String getEndTime;
       try {
         getEndTime = param.getValue().getEndTime().getValue();
-      } catch (Exception e){
+      } catch (Exception e) {
         getEndTime = "";
       }
       return new SimpleStringProperty("" + getEndTime);
@@ -71,15 +89,29 @@ public class TaskTimesheetPresenter implements Initializable {
 
     TableColumn<XpmTaskAdapter, String> billable = new TableColumn<>("Billable?");
     billable.setCellValueFactory(param -> {
-      Boolean isBillable = param.getValue().getBillable().getValue();
+      // handle null value
+      Boolean isBillable;
+      try {
+        isBillable = param.getValue().getBillable().getValue();
+      } catch (Exception e) {
+        isBillable = false;
+      }
+
       return new SimpleStringProperty("" + (isBillable ? "Y" : "N"));
     });
 
     TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Hours Spent");
     billableHours.setCellValueFactory(param -> {
       XpmTaskAdapter xpmTaskAdapter = param.getValue();
-      String totalTimeSpent = xpmTaskAdapter.getTotalTimeSpent().get();
-      Boolean isBillable = xpmTaskAdapter.getBillable().getValue();
+      // handle null value
+      String totalTimeSpent;
+      try {
+        totalTimeSpent = xpmTaskAdapter.getTotalTimeSpent().get();
+      } catch (Exception e) {
+        totalTimeSpent = "";
+      }
+
+//    Boolean isBillable = xpmTaskAdapter.getBillable().getValue();
       return new SimpleStringProperty("" + totalTimeSpent);
     });
 
@@ -89,18 +121,36 @@ public class TaskTimesheetPresenter implements Initializable {
       String getPercentage;
       try {
         getPercentage = param.getValue().getPercentCompleted().getValue();
-      } catch (Exception e){
+      } catch (Exception e) {
         getPercentage = "0%";
       }
       return new SimpleStringProperty("" + getPercentage);
     });
 
     TableColumn<XpmTaskAdapter, String> task = new TableColumn<>("Task");
-    task.setCellValueFactory(param -> param.getValue().getTask());
+    task.setCellValueFactory(param -> {
+      // handle null value
+      String getTask;
+      try {
+        getTask = param.getValue().getTask().getValue();
+      } catch (Exception e) {
+        getTask = "";
+      }
+      return new SimpleStringProperty("" + getTask);
+    });
 
 
     TableColumn<XpmTaskAdapter, String> description = new TableColumn<>("Description");
-    description.setCellValueFactory(param -> param.getValue().getDescription());
+    description.setCellValueFactory(param -> {
+      // handle null value
+      String getDescription;
+      try {
+        getDescription = param.getValue().getDescription().getValue();
+      } catch (Exception e) {
+        getDescription = "";
+      }
+      return new SimpleStringProperty("" + getDescription);
+    });
 
 
     taskTimesheet.getColumns().addAll(project, startTime, endTime, billable,

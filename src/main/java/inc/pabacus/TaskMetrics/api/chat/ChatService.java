@@ -31,10 +31,11 @@ public class ChatService {
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   ActivityHandler activityHandler = new ActivityHandler();
+  public static String leaveDate;
   private static String startDate;
   private static String endDate;
-  private static String typeOfRequest;
-  private static String status = "Pending";
+  public static String typeOfRequest;
+  public static String status = "Pending";
 
   public ChatService() {
     HOST = new HostConfig().getHost();
@@ -132,6 +133,7 @@ public class ChatService {
 
     if (isValidDate(command)) {
       service.sendChat(new Chat(Tribely + "Success!", formatter.format(LocalTime.now())));
+      leaveDate = command;
       String split[] = command.split("-");
       startDate = split[0];
       endDate = split[1];

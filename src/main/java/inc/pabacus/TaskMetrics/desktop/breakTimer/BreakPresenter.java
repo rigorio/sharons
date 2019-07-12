@@ -39,6 +39,7 @@ public class BreakPresenter implements Initializable {
   private ActivityHandler activityHandler;
   private DailyLogHandler dailyLogHandler;
   private ActivityListener activityListener = BeanManager.activityListener();
+  public static boolean windowIsOpen = false;
 
   public BreakPresenter() {
     activityHandler = BeanManager.activityHandler();
@@ -63,6 +64,7 @@ public class BreakPresenter implements Initializable {
 
     timerService.setFxProcess(process);
     timerService.start();
+    windowIsOpen = true;
 
   }
 
@@ -101,6 +103,7 @@ public class BreakPresenter implements Initializable {
       TrackerPresenter.isContinue = true;
     }
 
+    windowIsOpen = false;
     Stage stage = (Stage) backOnline.getScene().getWindow();
     stage.close();
     //reRun Listener

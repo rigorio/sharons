@@ -11,17 +11,17 @@
     </columnResizePolicy>
   </TableView>
   <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="683.0" layoutY="21.0" onAction="#newTask"
-             style="-fx-background-color: #008080;" text="+ New Task" textFill="WHITE"/>
+             style="-fx-background-color: #E65100;" text="+ New Task" textFill="WHITE"/>
   <JFXButton fx:id="startButton" layoutX="785.0" layoutY="21.0" mnemonicParsing="false" onAction="#startTask"
-             style="-fx-background-color: #008080;" text="Start" textFill="WHITE"/>
+             style="-fx-background-color: #E65100;" text="Start" textFill="WHITE"/>
   <JFXButton fx:id="refreshButton" layoutX="842.0" layoutY="21.0" mnemonicParsing="false" onAction="#refreshTask"
-             style="-fx-background-color: #008080;" text="Refresh" textFill="WHITE"/>
+             style="-fx-background-color: #E65100;" text="Refresh" textFill="WHITE"/>
   <JFXComboBox fx:id="statusBox" layoutX="134.0" layoutY="21.0" onAction="#updateTable" prefHeight="25.0"
                prefWidth="148.0"/>
   <JFXButton layoutX="765.0" layoutY="675.0" mnemonicParsing="false" onAction="#viewWorkSummary" prefHeight="25.0"
-             prefWidth="133.0" style="-fx-background-color: #008080;" text="View work summary" textFill="WHITE"/>
+             prefWidth="133.0" style="-fx-background-color: #E65100;" text="View work summary" textFill="WHITE"/>
   <JFXButton fx:id="editButton" layoutX="623.0" layoutY="21.0" mnemonicParsing="false" onAction="#editTask"
-             style="-fx-background-color: #008080;" text="Edit" textFill="WHITE"/>
+             style="-fx-background-color: #E65100;" text="Edit" textFill="WHITE"/>
   <Label layoutX="14.0" layoutY="25.0" prefHeight="17.0" prefWidth="79.0" text="Filter Task by:"/>
   <Label layoutX="93.0" layoutY="25.0" prefHeight="17.0" prefWidth="41.0" text="Status"/>
   <Label layoutX="285.0" layoutY="25.0" prefHeight="17.0" prefWidth="41.0" text="Time"/>

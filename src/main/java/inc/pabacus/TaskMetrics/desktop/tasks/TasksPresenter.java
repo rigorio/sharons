@@ -7,6 +7,7 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
@@ -16,6 +17,7 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -25,6 +27,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -103,6 +106,12 @@ public class TasksPresenter implements Initializable {
       add("All");
     }});
 
+  }
+
+  @FXML
+  void tableClicked(MouseEvent event) {
+    event.consume();
+    startButton.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()).or(Bindings.when(new SimpleBooleanProperty(BreakPresenter.windowIsOpen)).then(true).otherwise(false)));
   }
 
   @FXML

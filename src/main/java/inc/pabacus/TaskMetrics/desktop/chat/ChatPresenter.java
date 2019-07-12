@@ -99,10 +99,42 @@ public class ChatPresenter implements Initializable {
     return formatter.format(LocalTime.now());
   }
 
+  private Integer checking = 0;
+
   private void send() {
     String commands = this.command.getText();
-
-    if (commands != null) {
+    if (commands.toLowerCase().equalsIgnoreCase("clear")) {
+      listView.getItems().clear();
+    } else if (commands.toLowerCase().equalsIgnoreCase("leave approval") || commands.toLowerCase().equalsIgnoreCase("leave approvals")) {
+      addItem(listView, commands);
+      if (checking.equals(1))
+        listView.getItems().add("TRIBELY: 1. Carlo Montemayor - Sick Leave - 07/11/2019-07/11/2019");
+      else if (checking.equals(3))
+        listView.getItems().add("TRIBELY: 1. Christopher May Nebril - Vacation Leave - 07/30/2019-07/30/2019");
+      else if (checking.equals(0))
+        listView.getItems().add("TRIBELY: 1. Christopher May Nebril - Vacation Leave - 07/30/2019-07/30/2019 | 2. Carlo Montemayor - Sick Leave - 07/11/2019-07/11/2019");
+      else listView.getItems().add("TRIBELY: Nothing to approve");
+    } else if (commands.toLowerCase().equalsIgnoreCase("1 approve") || commands.toLowerCase().equalsIgnoreCase("1 approved")) {
+      addItem(listView, commands);
+      if (checking.equals(3))
+        checking = 2;
+      else checking = 1;
+      listView.getItems().add("TRIBELY: Success!");
+    } else if (commands.toLowerCase().equalsIgnoreCase("2 approve") || commands.toLowerCase().equalsIgnoreCase("2 approved")) {
+      addItem(listView, commands);
+      if (checking.equals(1))
+        checking = 2;
+      else checking = 3;
+      listView.getItems().add("TRIBELY: Success!");
+    } else if (commands.toLowerCase().equalsIgnoreCase("1 approve and 2 approve") || commands.toLowerCase().equalsIgnoreCase("1 approved and 2 approved")) {
+      addItem(listView, commands);
+      checking = 2;
+      listView.getItems().add("TRIBELY: Success!");
+    } else if (commands.toLowerCase().equalsIgnoreCase("my leave")) {
+      addItem(listView, commands);
+      checking = 2;
+      listView.getItems().add("TRIBELY: Type:" + ChatService.typeOfRequest + ", Date: " + ChatService.leaveDate + ", Status:" + ChatService.status);
+    }  else if (commands != null) {
       addItem(listView, commands);
 
       ChatService service = new ChatService();
@@ -145,6 +177,7 @@ public class ChatPresenter implements Initializable {
     setListView();
     command.setText(null);
     command.requestFocus();
+
   }
 
   private <T> void addItem(ListView<T> listView, T item) {

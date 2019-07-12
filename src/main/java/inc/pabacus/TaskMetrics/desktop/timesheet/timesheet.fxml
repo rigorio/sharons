@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+<AnchorPane style="-fx-background-color: #FFF;" fx:id="mainPane" prefHeight="720" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetPresenter">
   <TableView id="timesheet" fx:id="timeSheet" layoutX="14.0" layoutY="122.0" prefHeight="584.0" prefWidth="872.0"/>

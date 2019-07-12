@@ -149,6 +149,6 @@ public class ActivityHandler {
     } catch (IOException | JSONException e) {
       e.printStackTrace();
     }
-    return activity;
+    return activity != null ? activity : "";
   }
 }

@@ -12,5 +12,6 @@ public class Credentials {
   public Credentials(String username, String password) {
     this.username = username;
     this.password = password;
+    UsernameHolder.username = username;
   }
 }

@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
 import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
@@ -95,10 +96,10 @@ public class DashboardPresenter implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    username.setText(userHandler.getUsername());
+    username.setText(UsernameHolder.username);
 
     services();
-    showEasyChat();
+//    showEasyChat();
     responsive();
 
     ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
@@ -145,7 +146,7 @@ public class DashboardPresenter implements Initializable {
             KeyCode.F, KeyCombination.CONTROL_ANY), new Runnable() {
           @Override
           public void run() {
-            showEasyChat();
+//            showEasyChat();
           }
         }));
   }
@@ -161,24 +162,24 @@ public class DashboardPresenter implements Initializable {
 
     dynamicContentPane.toBack();
     //calculate width and height
-    mainPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-      double width = (double) newValue;
-
-      dashboardPane.setPrefWidth(width);
-      easyChatHBox.setPrefWidth(width / 1.15);
-    });
+//    mainPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+//      double width = (double) newValue;
+//
+//      dashboardPane.setPrefWidth(width);
+//      easyChatHBox.setPrefWidth(width / 1.15);
+//    });
 
     mainPane.heightProperty().addListener((observable, oldValue, newValue) -> {
       double height = (double) newValue;
       dashboardPane.setPrefHeight(height);
     });
 
-    dashboardPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-      double width = (double) newValue;
-      easyChatHBox.setPrefWidth(width);
-      dynamicContentPane.setPrefWidth(width / 1.2);
-      vboxPane.setPrefWidth(width / 6.5);
-    });
+//    dashboardPane.widthProperty().addListener((observable, oldValue, newValue) -> {
+//      double width = (double) newValue;
+//      easyChatHBox.setPrefWidth(width);
+//      dynamicContentPane.setPrefWidth(width / 1.2);
+//      vboxPane.setPrefWidth(width / 6.5);
+//    });
 
     dashboardPane.heightProperty().addListener((observable, oldValue, newValue) -> {
       double height = (double) newValue;

@@ -2,51 +2,67 @@
     /*-fx-text-fill: #fff;*/
     /*-fx-background-color: #008080;*/
 }
+
 #tasks:hover {
-    -fx-background-color: #007A7A;
+    -fx-background-color: #E65100;
     -fx-cursor: hand;
 }
+
 #timesheets:hover {
-    -fx-background-color: #007A7A;
+    -fx-background-color: #E65100;
     -fx-cursor: hand;
 }
+
+#productivityButton:hover {
+    -fx-background-color: #E65100;
+    -fx-cursor: hand;
+}
+
 #screenShot:hover {
-    -fx-background-color: #007A7A;
+    -fx-background-color: #E65100;
     -fx-cursor: hand;
 }
+
 #chat:hover {
-    -fx-background-color: #007A7A;
+    -fx-background-color: #E65100;
     -fx-cursor: hand;
 }
+
 #logOut:hover {
-    -fx-background-color: #007A7A;
+    -fx-background-color: #E65100;
     -fx-cursor: hand;
 }
+
 #changeStatus:hover {
     -fx-cursor: hand;
 }
+
 #tasks {
-             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
-             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-             -fx-background-radius: 5, 5, 4, 3;
+    -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 5, 5, 4, 3;
 }
+
 #timesheets {
-             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
-             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-             -fx-background-radius: 5, 5, 4, 3;
+    -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 5, 5, 4, 3;
 }
+
 #screenShot {
-             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
-             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-             -fx-background-radius: 5, 5, 4, 3;
+    -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 5, 5, 4, 3;
 }
+
 #chat {
-             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
-             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-             -fx-background-radius: 5, 5, 4, 3;
+    -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 5, 5, 4, 3;
 }
+
 #logOut {
-             -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
-             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-             -fx-background-radius: 5, 5, 4, 3;
+    -fx-skin: "com.sun.javafx.scene.control.skin.ButtonSkin";
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 5, 5, 4, 3;
 }

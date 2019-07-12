@@ -29,7 +29,7 @@ public class BusinessValueHandler {
 
   public List<BusinessValue> getAll() {
     Request request = new Request.Builder()
-        .url("http://localhost:8080/api/businessValue")
+        .url(new HostConfig().getHost() + "/api/jobs/business")
         .addHeader("Accept", "application/json")
         .addHeader("Authorization", TokenRepository.getToken().getToken())
         .method("GET", null)

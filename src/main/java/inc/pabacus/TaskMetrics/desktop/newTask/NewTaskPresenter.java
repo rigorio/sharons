@@ -110,6 +110,7 @@ public class NewTaskPresenter implements Initializable {
     changeTask(project);
   }
 
+  @SuppressWarnings("all")
   private void changeTask(String project) {
     Optional<Job> any = jobTaskHandler.allJobs().stream()
         .filter(job -> job.getJob().equals(project))

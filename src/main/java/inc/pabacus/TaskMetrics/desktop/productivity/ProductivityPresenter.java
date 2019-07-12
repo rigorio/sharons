@@ -1,6 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.productivity;
 
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextArea;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.ActivityRecord;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
@@ -32,6 +33,10 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class ProductivityPresenter implements Initializable {
 
   @FXML
+  private JFXTextArea recommendation;
+  @FXML
+  private JFXComboBox pieCombobox;
+  @FXML
   private JFXComboBox<String> dayCombobox;
   @FXML
   private BarChart barChart;
@@ -58,18 +63,20 @@ public class ProductivityPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    recommendation.setEditable(false);
     dayCombobox.getItems().setAll(TODAY, L_7, L_30, L_90, ALL);
     dayCombobox.setValue(ALL);
     filterTasks();
 //    activityRecords = activityHandler.allRecords();
-    setupPieChart();
+//    setupPieChart();
 //    setupBarChart();
-
+    newPieChart();
   }
+
 
   @FXML
   public void filterTasks() {
-    List<ActivityRecord> records = activityHandler.allRecords();
+    List<ActivityRecord> records = allRecords();
     String value = dayCombobox.getValue();
     if (value.equals(ALL)) {
       activityRecords = records;
@@ -86,6 +93,122 @@ public class ProductivityPresenter implements Initializable {
       setRecords(records, 90);
     }
     setupBarChart();
+    newPieChart();
+  }
+
+  @FXML
+  public void filterRecords() {
+    List<ActivityRecord> activityRecords = allRecords();
+
+
+  }
+
+  private String colorHolder;
+
+  private void newPieChart() {
+
+    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+    Map<String, Double> valueMap = new HashMap<>();
+    for (ActivityRecord activityRecord : activityRecords) {
+      String activity = activityRecord.getType();
+      Double duration = Double.parseDouble(activityRecord.getDuration());
+      if (valueMap.containsKey(activity)) {
+        Double i1 = valueMap.get(activity);
+        duration += i1;
+      }
+      valueMap.put(activity, duration);
+    }
+    valueMap.forEach((k, v) -> {
+      PieChart.Data pieChart = new PieChart.Data(k, v);
+      pieChartData.add(pieChart);
+    });
+
+    taskPieChart.setData(pieChartData);
+    taskPieChart.setTitle("Performance Insights");
+    for (final PieChart.Data data : taskPieChart.getData()) {
+      setColors(data);
+
+      data.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED,
+                                     e -> {
+                                       resetColors();
+                                       data.getNode().setStyle(
+                                           "-fx-pie-color: #1DE9B6;"
+                                       );
+                                       changeRecommendation(data.getName(), data.getPieValue());
+                                     });
+    }
+
+  }
+
+  private void setColors(PieChart.Data data) {
+    String color = data.getName().equals("Task")
+        ? "#FF6F00"
+        : data.getName().equals("Meeting")
+        ? "#FF8F00"
+        : data.getName().equals("Break")
+        ? "#FFAB00"
+        : data.getName().equals("Training")
+        ? "#FFC400"
+        : data.getName().equals("Technical Issue")
+        ? "#FFD740"
+        : data.getName().equals("Field Work")
+        ? "#FFD54F"
+        : "#FFECB3";
+    data.getNode().setStyle("-fx-pie-color: " + color + ";");
+  }
+
+  private void changeRecommendation(String type, double pieValue) {
+    String accumulated = "You have accumulated " + pieValue + " hours " + type + " for this week.";
+    String limit = "";
+    if (type.equals("Break")) {
+      if (pieValue > 2.5)
+        limit = "It is recommended that you only take at most 2.5 hours of breaks per week (two 15-minute breaks each day) to maximize your Productivity.";
+      else if (pieValue < 2.5) {
+        limit = "Remember you can have two 15-minute breaks each day. Try to balance out work and rest in order to maximize your Productivity!";
+      } else
+        limit = "You seem to be on track. Nice work! Keep it up and you'll always be able to maximize you Productivity!";
+    } else if (type.equals("Meeting")) {
+      if (pieValue > 2.5)
+        limit = "It is recommended that you only spend at most 2.5 hours in meetings per week (at most 30 minutes each day) to maximize your Productivity.";
+      else if (pieValue < 2.5) {
+        limit = "Less meetings may mean more work, but remember that these may be vital to correct concerns and realign yourself with the project in order to maximize your Productivity!";
+      } else
+        limit = "You seem to be on track. Nice work! Keep it up and you'll always be able to maximize you Productivity!";
+    } else if (type.equals("Training")) {
+      if (pieValue > 2)
+        limit = "It is recommended that you only spend 2 hours of training per week to maximize your Productivity.";
+      else if (pieValue < 2) {
+        limit = "You can spend up to 2 hours training per week. Use this time well in order to maximize your Productivity!";
+      } else
+        limit = "You seem to be on track. Nice work! Keep it up and you'll always be able to maximize you Productivity!";
+    } else if (type.equals("Technical Issue")) {
+      limit = "We're sad you experienced some technical issues. Make sure to report them immediately in order to maximize your Productivity!";
+    } else if (type.equals("Field Work")) {
+      limit = "You spent " + pieValue + " hours out there. Nice work! Keep it up and you'll always be able to maximize you Productivity!";
+    } else if (type.equals("Task")) {
+      if (pieValue > 37.5)
+        limit = "Thank you for your hard work! Be careful to not overwork yourself and avoid a burnout in order to maximize your Productivity!";
+      else if (pieValue < 37.5) {
+        limit = "It seems you spent less time in productivity this week. bla bla in order to maximize your Productivity.";
+      } else
+        limit = "You seem to be on track. Nice work! Keep it up and you'll always be able to maximize you Productivity!";
+    }
+//    String conclusion = "It is recommended to only consume " + limit + " hours per week in order to maximize your Productivity.";
+
+
+        /*
+        Over - You have accumulated X Hrs Productivity for this Week.  Our recommendation is to have at most 2.5hrs (5 30-min in 5 days) meetings in a week to fully maximize your Productivity
+Under - You have accumulated X Hrs of Meeting for this Week.  We encourage you to consume the provided time and you'll be amazed by the Team Productivity result!
+         */
+
+    recommendation.setText(accumulated + "\n" + limit);
+  }
+
+  private void resetColors() {
+    for (final PieChart.Data data : taskPieChart.getData()) {
+      setColors(data);
+    }
   }
 
   private void setRecords(List<ActivityRecord> records, int i) {
@@ -156,6 +279,10 @@ public class ProductivityPresenter implements Initializable {
     }
     mainPane.getChildren().add(caption);
 
+  }
+
+  private List<ActivityRecord> allRecords() {
+    return activityHandler.allRecords();
   }
 
   private double percent(double value) {

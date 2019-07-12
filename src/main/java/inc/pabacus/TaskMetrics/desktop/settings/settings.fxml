@@ -8,12 +8,12 @@
             fx:controller="inc.pabacus.TaskMetrics.desktop.settings.SettingsPresenter">
   <JFXTextField fx:id="hostTextBox" layoutX="112.0" layoutY="110.0" prefHeight="31.0" prefWidth="372.0"/>
   <JFXButton onAction="#updateHost" layoutX="502.0" layoutY="110.0" mnemonicParsing="false"
-             style="-fx-background-color: #008080;"
+             style="-fx-background-color: #E65100;"
              text="Update Host" textFill="WHITE"/>
   <Label layoutX="112.0" layoutY="89.0" text="Web API Host"/>
   <JFXComboBox fx:id="managerBox" layoutX="110.0" layoutY="174.0" prefHeight="31.0" prefWidth="228.0"/>
   <JFXButton layoutX="287.0" layoutY="228.0" mnemonicParsing="false" onAction="#addManager"
-             style="-fx-background-color: #008080;" text="Add" textFill="WHITE"/>
+             style="-fx-background-color: #E65100;" text="Add" textFill="WHITE"/>
   <JFXCheckBox fx:id="alwaysOnTopCheckbox" layoutX="112.0" layoutY="288.0" mnemonicParsing="false"
                text="Keep Task Tracker always on top"/>
   <JFXCheckBox fx:id="countdownTimer" layoutX="112.0" layoutY="325.0" mnemonicParsing="false"
@@ -22,11 +22,11 @@
   <Label layoutX="112.0" layoutY="373.0" prefHeight="17.0" prefWidth="83.0" text="Default Extend"/>
   <Label layoutX="221.0" layoutY="397.0" prefHeight="17.0" prefWidth="57.0" text="minute(s)"/>
   <JFXButton fx:id="extendButton" layoutX="284.0" layoutY="393.0" mnemonicParsing="false" onAction="#extendButton"
-             prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: #008080;" text="Update Extend"
+             prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: #E65100;" text="Update Extend"
              textFill="WHITE"/>
   <TableView fx:id="managerTable" layoutX="354.0" layoutY="157.0" prefHeight="121.0" prefWidth="253.0"/>
   <JFXButton layoutX="204.0" layoutY="228.0" mnemonicParsing="false" onAction="#removeManager"
-             style="-fx-background-color: #008080;" text="Remove" textFill="WHITE"/>
+             style="-fx-background-color: #E65100;" text="Remove" textFill="WHITE"/>
   <JFXTreeTableView fx:id="softwareTable" layoutX="12.0" layoutY="446.0" prefHeight="260.0" prefWidth="458.0"/>
   <JFXTreeTableView fx:id="hardwareTable" layoutX="490.0" layoutY="446.0" prefHeight="260.0" prefWidth="403.0"/>
   <JFXComboBox fx:id="jobBox" layoutX="490.0" layoutY="320.0" onAction="#changeJob" prefHeight="31.0"

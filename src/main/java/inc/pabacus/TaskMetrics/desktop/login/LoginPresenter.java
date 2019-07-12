@@ -57,8 +57,8 @@ public class LoginPresenter implements Initializable {
 
   private void jwtLogin(String userNameText, String passWordText) {
 
-    Credentials credentials = service.generateToken(new Credentials(userNameText, passWordText));
-    System.out.println(credentials); // for checking
+    service.generateToken(new Credentials(userNameText, passWordText));
+//    System.out.println(credentials); // for checking
   }
 
   private boolean blankFields() {
@@ -84,36 +84,19 @@ public class LoginPresenter implements Initializable {
     if (blankFields()) return;
     //for smooth loading
     mainPane.getScene().setCursor(Cursor.WAIT);
-    PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
-    pause.setOnFinished(event -> {
+//    PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
+//    pause.setOnFinished(event -> {
 
       String userName = this.usernameField.getText();
       String passWord = passwordField.getText();
       jwtLogin(userName, passWord);
       createCredential();
-//      service.refreshToken(); turn off
-
-      // TODO extract this process to a method in KickerService
-//      KickStatus status = kickerService.login(userName);
-//      TokenHolder.setToken(status.getNewToken());
-//      if (status.getStatus().equals("Exists")) {
-//        kickerService.setUsername(userName);
-//        kickerService.setRunnable(() -> {
-//          BeanManager.deactivate();
-////          activityHandler.saveActivity(Activity.BUSY);
-//          GuiManager.getInstance().closeStageDisplayOnTop();
-//          GuiManager.getInstance().changeView(new LoginView());
-//        });
-//        kickerService.setOldToken(status.getOldToken());
-//        GuiManager.getInstance().displayView(new KickoutView());
-//        mainPane.getScene().setCursor(Cursor.DEFAULT);
-//      }
 //      kickerService.kicker();
       activityHandler.saveTimestamp(Activity.ONLINE);
       GuiManager.getInstance().changeView(new DashboardView());
 
-    });
-    pause.play();
+//    });
+//    pause.play();
   }
 
   @FXML

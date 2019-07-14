@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
@@ -11,7 +13,11 @@
       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
     </columnResizePolicy>
   </TableView>
-  <JFXButton layoutX="803.0" layoutY="21.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="102.0" text="View"
-             onAction="#modifyLeave"
-             style="-fx-background-color: #008080;" textFill="WHITE"/>
+  <JFXButton layoutX="803.0" layoutY="21.0" mnemonicParsing="false" onAction="#modifyLeave" prefHeight="31.0"
+             prefWidth="102.0" style="-fx-background-color: #008080;" text="View" textFill="WHITE"/>
+  <JFXComboBox fx:id="technicalBox" layoutX="21.0" layoutY="360.0" prefHeight="31.0" prefWidth="257.0"/>
+  <Label layoutX="21.0" layoutY="320.0" text="Technical Issues"/>
+  <JFXButton layoutX="294.0" layoutY="360.0" mnemonicParsing="false" onAction="#sendReport"
+             style="-fx-background-color: #E65100" prefHeight="31.0" prefWidth="124.0" text="Send Report"
+             textFill="white"/>
 </AnchorPane>

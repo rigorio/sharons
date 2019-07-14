@@ -25,10 +25,10 @@ public class ServiceManager {
 
 
   public void activate() {
-//    hardwareServiceAPI.sendHardwareData();
-//    standupService.runStandup();
-//    softwareServiceAPI.sendSoftwareData();
-//    screenshotService.enableScreenShot();
+    hardwareServiceAPI.sendHardwareData();
+    standupService.runStandup();
+    softwareServiceAPI.sendSoftwareData();
+    screenshotService.enableScreenShot();
     Runnable runnable = () -> {
       Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
       activityListener.unListen();
@@ -36,21 +36,21 @@ public class ServiceManager {
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
     activityListener.listen();
-//    dailyLogHandler.checkIfUserIsBreak();
+    dailyLogHandler.checkIfUserIsBreak();
   }
 
   public void deactivate() {
 
-//    kickerService.logout(TokenHolder.getToken());
-//    standupService.close();
-//    hardwareServiceAPI.cancel();
-//    softwareServiceAPI.cancel();
-//    screenshotService.disableScreenshot();
-//    screenshotService.shutdownScheduler();
-//    kickerService.stopKicker();
-//    tokenService.stopToken();
+    kickerService.logout(TokenHolder.getToken());
+    standupService.close();
+    hardwareServiceAPI.cancel();
+    softwareServiceAPI.cancel();
+    screenshotService.disableScreenshot();
+    screenshotService.shutdownScheduler();
+    kickerService.stopKicker();
+    tokenService.stopToken();
     activityListener.unListen();
-//    dailyLogHandler.close();
+    dailyLogHandler.close();
   }
 
 }

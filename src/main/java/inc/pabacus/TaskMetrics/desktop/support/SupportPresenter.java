@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 public class SupportPresenter implements Initializable {
 
   @FXML
+  private JFXComboBox technicalBox;
+  @FXML
   private JFXComboBox statusComboBox;
   @FXML
   private TableView<LeaveAdapter> leaveTable;
@@ -40,8 +42,14 @@ public class SupportPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-
+    technicalBox.getItems().addAll("Mouse not working", "Slow internet", "Problem with Display", "Faulty Keyboard");
     initTable();
+
+  }
+
+  @FXML
+  public void sendReport() {
+
 
   }
 

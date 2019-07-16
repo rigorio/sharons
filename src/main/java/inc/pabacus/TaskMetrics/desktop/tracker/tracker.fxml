@@ -13,7 +13,7 @@
     <Label fx:id="title" layoutX="14.0" layoutY="-1.0" prefHeight="21.0" prefWidth="162.0" text="task"
            textFill="#FFF"/>
   </AnchorPane>
-  <JFXButton id="cancel" fx:id="pauseButton" layoutX="405.0" layoutY="4.0" onAction="#pause" text="Pause"
+  <JFXButton id="cancel" fx:id="pauseButton" layoutX="405.0" layoutY="4.0" text="Pause"
              textFill="#FFF"/>
   <JFXButton fx:id="continueButton" layoutX="394.0" layoutY="4.0" onAction="#continueButton" text="Continue"
              textFill="#FFF"/>

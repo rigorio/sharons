@@ -484,10 +484,11 @@ public class TrackerPresenter implements Initializable {
         timerService.reRun();
         Stage stages = (Stage) continueButton.getScene().getWindow();
         stages.hide();
+        isPause = true;
       }
     });
 
-    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 500, TimeUnit.MILLISECONDS);
+    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1, TimeUnit.SECONDS);
   }
 
   private void notification(String notif) {

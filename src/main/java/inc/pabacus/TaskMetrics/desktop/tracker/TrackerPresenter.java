@@ -114,6 +114,7 @@ public class TrackerPresenter implements Initializable {
     windowIsOpen = true;
 
     popOverPause();
+    popOverComplete();
   }
 
   @FXML
@@ -144,32 +145,97 @@ public class TrackerPresenter implements Initializable {
 
   @FXML
   public void completeTask() {
+//
+//    List<String> choices = new ArrayList<>();
+//    choices.add("0%");
+//    choices.add("10%");
+//    choices.add("20%");
+//    choices.add("30%");
+//    choices.add("40%");
+//    choices.add("50%");
+//    choices.add("60%");
+//    choices.add("70%");
+//    choices.add("80%");
+//    choices.add("90%");
+//    choices.add("100%");
+//
+//    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a percentage", choices);
+//    dialog.initStyle(StageStyle.UNDECORATED);
+//    dialog.setHeaderText("Please select how many percentage this task has been completed");
+//    dialog.setContentText("Percentages");
+//    dialog.showAndWait().ifPresent(reason -> {
+//      if (reason.equals("100%")) {
+//        selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
+//        updateTask(Status.DONE.getStatus());
+//      } else
+//        updateTask(Status.IN_PROGRESS.getStatus());
+//      selectedTask.setPercentCompleted(new SimpleStringProperty(reason));
+//      saveAndClose();
+//    });
+  }
 
-    List<String> choices = new ArrayList<>();
-    choices.add("0%");
-    choices.add("10%");
-    choices.add("20%");
-    choices.add("30%");
-    choices.add("40%");
-    choices.add("50%");
-    choices.add("60%");
-    choices.add("70%");
-    choices.add("80%");
-    choices.add("90%");
-    choices.add("100%");
+  private void popOverComplete() {
 
-    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a percentage", choices);
-    dialog.initStyle(StageStyle.UNDECORATED);
-    dialog.setHeaderText("Please select how many percentage this task has been completed");
-    dialog.setContentText("Percentages");
-    dialog.showAndWait().ifPresent(reason -> {
-      if (reason.equals("100%")) {
-        selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
-        updateTask(Status.DONE.getStatus());
-      } else
-        updateTask(Status.IN_PROGRESS.getStatus());
-      selectedTask.setPercentCompleted(new SimpleStringProperty(reason));
+    JFXButton ten = new JFXButton("10%");
+    JFXButton thirty = new JFXButton("30%");
+    JFXButton fifty = new JFXButton("50%");
+    JFXButton seventy = new JFXButton("70%");
+    JFXButton eighty = new JFXButton("80%");
+    JFXButton ninety = new JFXButton("90%");
+    JFXButton onehundred = new JFXButton("100%");
+
+    VBox vBox = new VBox(ten, thirty, fifty, seventy, eighty, ninety, onehundred);
+    PopOver popOver = new PopOver(vBox);
+    popOver.isAnimated();
+
+    ten.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(ten.getText()));
       saveAndClose();
+    });
+
+    thirty.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(thirty.getText()));
+      saveAndClose();
+    });
+
+    fifty.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(fifty.getText()));
+      saveAndClose();
+    });
+
+    seventy.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(seventy.getText()));
+      saveAndClose();
+    });
+
+    eighty.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(eighty.getText()));
+      saveAndClose();
+    });
+
+    ninety.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(ninety.getText()));
+      saveAndClose();
+    });
+
+    onehundred.setOnAction(event -> {
+      selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
+      updateTask(Status.DONE.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(onehundred.getText()));
+      saveAndClose();
+    });
+
+    complete.setOnAction(e ->{
+      popOver.show(complete);
+      ((Parent)popOver.getSkin().getNode()).getStylesheets()
+          .add(getClass().getResource("tracker.css").toExternalForm());
+      vBox.requestFocus();
     });
   }
 
@@ -484,7 +550,7 @@ public class TrackerPresenter implements Initializable {
         timerService.reRun();
         Stage stages = (Stage) continueButton.getScene().getWindow();
         stages.hide();
-        isPause = true;
+        isPause = false;
       }
     });
 

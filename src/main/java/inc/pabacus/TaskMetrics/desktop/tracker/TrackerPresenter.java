@@ -16,16 +16,22 @@ import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import org.controlsfx.control.PopOver;
 
 import java.net.URL;
 import java.time.LocalTime;
@@ -106,6 +112,9 @@ public class TrackerPresenter implements Initializable {
     checkIfContinue();
     checkIfPause();
     windowIsOpen = true;
+
+    popOverPause();
+    popOverComplete();
   }
 
   @FXML
@@ -136,32 +145,97 @@ public class TrackerPresenter implements Initializable {
 
   @FXML
   public void completeTask() {
+//
+//    List<String> choices = new ArrayList<>();
+//    choices.add("0%");
+//    choices.add("10%");
+//    choices.add("20%");
+//    choices.add("30%");
+//    choices.add("40%");
+//    choices.add("50%");
+//    choices.add("60%");
+//    choices.add("70%");
+//    choices.add("80%");
+//    choices.add("90%");
+//    choices.add("100%");
+//
+//    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a percentage", choices);
+//    dialog.initStyle(StageStyle.UNDECORATED);
+//    dialog.setHeaderText("Please select how many percentage this task has been completed");
+//    dialog.setContentText("Percentages");
+//    dialog.showAndWait().ifPresent(reason -> {
+//      if (reason.equals("100%")) {
+//        selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
+//        updateTask(Status.DONE.getStatus());
+//      } else
+//        updateTask(Status.IN_PROGRESS.getStatus());
+//      selectedTask.setPercentCompleted(new SimpleStringProperty(reason));
+//      saveAndClose();
+//    });
+  }
 
-    List<String> choices = new ArrayList<>();
-    choices.add("0%");
-    choices.add("10%");
-    choices.add("20%");
-    choices.add("30%");
-    choices.add("40%");
-    choices.add("50%");
-    choices.add("60%");
-    choices.add("70%");
-    choices.add("80%");
-    choices.add("90%");
-    choices.add("100%");
+  private void popOverComplete() {
 
-    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a percentage", choices);
-    dialog.initStyle(StageStyle.UNDECORATED);
-    dialog.setHeaderText("Please select how many percentage this task has been completed");
-    dialog.setContentText("Percentages");
-    dialog.showAndWait().ifPresent(reason -> {
-      if (reason.equals("100%")) {
-        selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
-        updateTask(Status.DONE.getStatus());
-      } else
-        updateTask(Status.IN_PROGRESS.getStatus());
-      selectedTask.setPercentCompleted(new SimpleStringProperty(reason));
+    JFXButton ten = new JFXButton("10%");
+    JFXButton thirty = new JFXButton("30%");
+    JFXButton fifty = new JFXButton("50%");
+    JFXButton seventy = new JFXButton("70%");
+    JFXButton eighty = new JFXButton("80%");
+    JFXButton ninety = new JFXButton("90%");
+    JFXButton onehundred = new JFXButton("100%");
+
+    VBox vBox = new VBox(ten, thirty, fifty, seventy, eighty, ninety, onehundred);
+    PopOver popOver = new PopOver(vBox);
+    popOver.isAnimated();
+
+    ten.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(ten.getText()));
       saveAndClose();
+    });
+
+    thirty.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(thirty.getText()));
+      saveAndClose();
+    });
+
+    fifty.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(fifty.getText()));
+      saveAndClose();
+    });
+
+    seventy.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(seventy.getText()));
+      saveAndClose();
+    });
+
+    eighty.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(eighty.getText()));
+      saveAndClose();
+    });
+
+    ninety.setOnAction(event -> {
+      updateTask(Status.IN_PROGRESS.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(ninety.getText()));
+      saveAndClose();
+    });
+
+    onehundred.setOnAction(event -> {
+      selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
+      updateTask(Status.DONE.getStatus());
+      selectedTask.setPercentCompleted(new SimpleStringProperty(onehundred.getText()));
+      saveAndClose();
+    });
+
+    complete.setOnAction(e ->{
+      popOver.show(complete);
+      ((Parent)popOver.getSkin().getNode()).getStylesheets()
+          .add(getClass().getResource("tracker.css").toExternalForm());
+      vBox.requestFocus();
     });
   }
 
@@ -289,64 +363,149 @@ public class TrackerPresenter implements Initializable {
     return formatter.format(LocalTime.now());
   }
 
-  public void pause() {
-    String testing = "Testing a feature";
-    String development = "Development causes";
+//  public void pause() {
+//    String testing = "Testing a feature";
+//    String development = "Development causes";
+//
+//    List<String> choices = new ArrayList<>();
+//    choices.add("Break");
+//    choices.add("Lunch");
+//    choices.add("Will work on different task");
+//    choices.add(testing);
+//    choices.add(development);
+//    choices.add("Meeting"); // TODO turn off activity listening dailyLogHandler when on a break
+//
+//    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a reason", choices);
+//    dialog.initStyle(StageStyle.UNDECORATED);
+//    dialog.setHeaderText("Please select a reason for putting this task on pause");
+//    dialog.setContentText("Reasons");
+//    dialog.showAndWait().ifPresent(reason -> {
+//      Activity activity;
+//      switch (reason) {
+//        case "Break":
+//          activity = Activity.BREAK;
+//          activityHandler.saveTimestamp(activity);
+//          timerService.reRun(); // rerun services
+//
+////          checkIfContinue();
+//          continueButton.setVisible(true);
+//          pauseButton.setVisible(false);
+//          Stage stage = (Stage) continueButton.getScene().getWindow();
+//          stage.hide();
+////          isPause = true;
+//          break;
+//        case "Lunch":
+//          activity = Activity.LUNCH;
+//          activityHandler.saveTimestamp(activity);
+//          dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+//          timerService.reRun(); // rerun services
+//
+////          checkIfContinue();
+//          continueButton.setVisible(true);
+//          pauseButton.setVisible(false);
+//          Stage stages = (Stage) continueButton.getScene().getWindow();
+//          stages.hide();
+////          isPause = true;
+//          break;
+//        case "Meeting":
+//          activity = Activity.MEETING;
+//          activityHandler.saveTimestamp(activity);
+//          updateTask(Status.IN_PROGRESS.getStatus());
+//          saveAndClose();
+//          break;
+//        default:
+//          activity = Activity.BUSY;
+//          timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
+//          activityHandler.saveTimestamp(activity);
+//          updateTask(Status.IN_PROGRESS.getStatus());
+//          saveAndClose();
+//          break;
+//      }
+//    });
+//  }
 
-    List<String> choices = new ArrayList<>();
-    choices.add("Break");
-    choices.add("Lunch");
-    choices.add("Will work on different task");
-    choices.add(testing);
-    choices.add(development);
-    choices.add("Meeting"); // TODO turn off activity listening dailyLogHandler when on a break
+  private void popOverPause() {
 
-    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a reason", choices);
-    dialog.initStyle(StageStyle.UNDECORATED);
-    dialog.setHeaderText("Please select a reason for putting this task on pause");
-    dialog.setContentText("Reasons");
-    dialog.showAndWait().ifPresent(reason -> {
+    JFXButton breaks = new JFXButton("Break");
+    JFXButton lunch = new JFXButton("Lunch");
+    JFXButton willWorkOnDifferentTask = new JFXButton("Will work on different task");
+    JFXButton testingAFeature = new JFXButton("Testing a feature");
+    JFXButton developmentCauses = new JFXButton("Development causes");
+    JFXButton meeting = new JFXButton("Meeting");
+
+    breaks.setId("breaks");
+    lunch.setId("lunch");
+    willWorkOnDifferentTask.setId("willWorkOnDifferentTask");
+    testingAFeature.setId("testingAFeature");
+    developmentCauses.setId("developmentCauses");
+    meeting.setId("meeting");
+
+    VBox vBox = new VBox(breaks, lunch, willWorkOnDifferentTask, testingAFeature, developmentCauses, meeting);
+    PopOver popOver = new PopOver(vBox);
+    popOver.isAnimated();
+
+    breaks.setOnAction(event -> {
+      isPause = true;
       Activity activity;
-      switch (reason) {
-        case "Break":
-          activity = Activity.BREAK;
-          activityHandler.saveTimestamp(activity);
-          timerService.reRun(); // rerun services
+      activity = Activity.BREAK;
+      activityHandler.saveTimestamp(activity);
+      timerService.reRun(); // rerun services
 
-//          checkIfContinue();
-          continueButton.setVisible(true);
-          pauseButton.setVisible(false);
-          Stage stage = (Stage) continueButton.getScene().getWindow();
-          stage.hide();
-//          isPause = true;
-          break;
-        case "Lunch":
-          activity = Activity.LUNCH;
-          activityHandler.saveTimestamp(activity);
-          dailyLogHandler.changeLog(LogStatus.LB.getStatus());
-          timerService.reRun(); // rerun services
+//      continueButton.setVisible(true); incase we need to show the continue button
+//      pauseButton.setVisible(false);
 
-//          checkIfContinue();
-          continueButton.setVisible(true);
-          pauseButton.setVisible(false);
-          Stage stages = (Stage) continueButton.getScene().getWindow();
-          stages.hide();
-//          isPause = true;
-          break;
-        case "Meeting":
-          activity = Activity.MEETING;
-          activityHandler.saveTimestamp(activity);
-          updateTask(Status.IN_PROGRESS.getStatus());
-          saveAndClose();
-          break;
-        default:
-          activity = Activity.BUSY;
-          timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
-          activityHandler.saveTimestamp(activity);
-          updateTask(Status.IN_PROGRESS.getStatus());
-          saveAndClose();
-          break;
-      }
+    });
+
+    lunch.setOnAction(event -> {
+      isPause = true;
+      Activity activity;
+      activity = Activity.LUNCH;
+      activityHandler.saveTimestamp(activity);
+      dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+      timerService.reRun(); // rerun services
+
+//      continueButton.setVisible(true);
+//      pauseButton.setVisible(false);
+
+    });
+
+    meeting.setOnAction(event -> {
+      Activity activity;
+      activity = Activity.MEETING;
+      activityHandler.saveTimestamp(activity);
+      updateTask(Status.IN_PROGRESS.getStatus());
+      saveAndClose();
+    });
+
+    willWorkOnDifferentTask.setOnAction(event -> {
+      Activity activity;
+      activity = Activity.BUSY;
+      activityHandler.saveTimestamp(activity);
+      updateTask(Status.IN_PROGRESS.getStatus());
+      saveAndClose();
+    });
+
+    testingAFeature.setOnAction(event -> {
+      Activity activity;
+      activity = Activity.BUSY;
+      activityHandler.saveTimestamp(activity);
+      updateTask(Status.IN_PROGRESS.getStatus());
+      saveAndClose();
+    });
+
+    developmentCauses.setOnAction(event -> {
+      Activity activity;
+      activity = Activity.BUSY;
+      activityHandler.saveTimestamp(activity);
+      updateTask(Status.IN_PROGRESS.getStatus());
+      saveAndClose();
+    });
+
+    pauseButton.setOnAction(e ->{
+      popOver.show(pauseButton);
+      ((Parent)popOver.getSkin().getNode()).getStylesheets()
+          .add(getClass().getResource("tracker.css").toExternalForm());
+      vBox.requestFocus();
     });
   }
 
@@ -391,6 +550,7 @@ public class TrackerPresenter implements Initializable {
         timerService.reRun();
         Stage stages = (Stage) continueButton.getScene().getWindow();
         stages.hide();
+        isPause = false;
       }
     });
 

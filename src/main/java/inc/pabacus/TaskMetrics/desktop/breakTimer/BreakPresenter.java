@@ -3,6 +3,8 @@ package inc.pabacus.TaskMetrics.desktop.breakTimer;
 import com.jfoenix.controls.JFXButton;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.activity.Record;
+import inc.pabacus.TaskMetrics.api.activity.RecordType;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
@@ -23,7 +25,6 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;
-import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 public class BreakPresenter implements Initializable {
@@ -89,14 +90,23 @@ public class BreakPresenter implements Initializable {
 
   @FXML
   private void backOnline() {
+    String recordActivity = "Break";
     if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
       activityHandler.saveTimestamp(Activity.ONLINE);
+      recordActivity = "Break";
       notification("Online");
     } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
       activityHandler.saveTimestamp(Activity.BFB);
+      recordActivity = "Lunch Break";
       dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
       notification("Back From Lunch");
     }
+    double totalTimeSpent = timerService.getTime() / 3600.0;
+    activityHandler.saveRecord(Record.builder()
+                                   .recordType(RecordType.BREAK)
+                                   .duration(roundOffDecimal(totalTimeSpent))
+                                   .activity(recordActivity)
+                                   .build());
 
     timerService.pause();
     dailyLogHandler.checkIfUserIsBreak();
@@ -115,6 +125,13 @@ public class BreakPresenter implements Initializable {
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
     activityListener.listen();
+  }
+
+  private String roundOffDecimal(double totalTimeSpent) {
+    // DecimalFormat df = new DecimalFormat("0.00");
+    // double t = Double.parseDouble(df.format(totalTimeSpent));
+    // This method is faster than using DecimalFormat and parseDouble
+    return String.format("%.2f", totalTimeSpent);
   }
 
   private void notification(String notif) {

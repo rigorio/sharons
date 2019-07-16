@@ -363,7 +363,7 @@ public class TrackerPresenter implements Initializable {
     return formatter.format(LocalTime.now());
   }
 
-  public void pause() {
+//  public void pause() {
 //    String testing = "Testing a feature";
 //    String development = "Development causes";
 //
@@ -422,7 +422,7 @@ public class TrackerPresenter implements Initializable {
 //          break;
 //      }
 //    });
-  }
+//  }
 
   private void popOverPause() {
 

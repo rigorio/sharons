@@ -10,3 +10,14 @@
     -fx-background-color: #81858C;
     -fx-cursor: hand;
 }
+
+/* PopOver css */
+.popover VBox .button {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.popover VBox .button:hover {
+    -fx-background-color: #CCD0D0;
+    -fx-cursor: hand;
+}

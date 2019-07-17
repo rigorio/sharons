@@ -11,6 +11,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
+import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
@@ -61,6 +62,7 @@ public class TimesheetPresenter implements Initializable {
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
   private HostConfig hostConfig = new HostConfig();
+  private TimeLogHandler timeLogHandler;
 
   private static String HOST;
 
@@ -69,6 +71,7 @@ public class TimesheetPresenter implements Initializable {
     dailyLogHandler = BeanManager.dailyLogService();
     userHandler = BeanManager.userHandler();
     activityHandler = BeanManager.activityHandler();
+    timeLogHandler = BeanManager.timeLogHandler(); // TODO if to be using the new api, use this handler instead
   }
 
   @Override

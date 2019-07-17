@@ -69,6 +69,7 @@ public class TimesheetPresenter implements Initializable {
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
   private HostConfig hostConfig = new HostConfig();
+  private TimeLogHandler timeLogHandler;
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private TimeLogHandler timeLogHandler;
 

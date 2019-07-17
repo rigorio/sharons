@@ -15,6 +15,7 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.status.StatusUpdateHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 
 public class BeanManager {
@@ -33,6 +34,7 @@ public class BeanManager {
   private static LeaveService leaveService = new LeaveService();
   private static StatusUpdateHandler statusUpdateHandler = new StatusUpdateHandler();
   private static ValidationHandler validationHandler = new ValidationHandler();
+  private static TimeLogHandler timeLogHandler = new TimeLogHandler();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -88,6 +90,10 @@ public class BeanManager {
 
   public static StatusUpdateHandler statusUpdateHandler() {
     return statusUpdateHandler;
+  }
+
+  public static TimeLogHandler timeLogHandler() {
+    return timeLogHandler;
   }
 
   // I am too lazy to provide an explanation as to why

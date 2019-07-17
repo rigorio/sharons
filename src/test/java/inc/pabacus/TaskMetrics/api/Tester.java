@@ -1,12 +1,68 @@
 package inc.pabacus.TaskMetrics.api;
 
+import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
+import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLog;
+import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogHandler;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class Tester {
+
+
+  @Test
+  @Ignore
+  public void valueTester() {
+    TimeLogHandler timeLogHandler = new TimeLogHandler();
+    List<TimeLog> timeLogs = timeLogHandler.all();
+    List<DailyLog> dailyLogs = new ArrayList<>();
+    for (TimeLog timeLog : timeLogs) {
+      Optional<DailyLog> anyLog = findDailyLog(dailyLogs, timeLog.getDate());
+      if (anyLog.isPresent()) {
+        DailyLog dailyLog = anyLog.get();
+        int i = dailyLogs.indexOf(dailyLog);
+        switcharoonie(dailyLog, timeLog);
+        dailyLogs.set(i, dailyLog);
+      } else {
+        DailyLog dailyLog = new DailyLog();
+        dailyLog.setDate(timeLog.getDate());
+        dailyLog.setId(timeLog.getId());
+        dailyLog.setUserId(timeLog.getUserId());
+        dailyLogs.add(switcharoonie(dailyLog, timeLog));
+      }
+    }
+    dailyLogs.forEach(System.out::println);
+  }
+
+  public Optional<DailyLog> findDailyLog(List<DailyLog> dailyLogs, String date) {
+    return dailyLogs.stream()
+        .filter(dailyLog -> (dailyLog.getDate() != null ? dailyLog.getDate() : "").equals(date)).findAny();
+  }
+
+  public DailyLog switcharoonie(DailyLog dailyLog, TimeLog timeLog) {
+    String status = timeLog.getStatus();
+    String time = timeLog.getTime();
+    switch (status) {
+      case "Logged In":
+        dailyLog.setIn(time);
+        break;
+      case "Lunch Break":
+        dailyLog.setOtl(time);
+        break;
+      case "Back From Lunch":
+        dailyLog.setBfl(time);
+        break;
+      case "Logged Out":
+        dailyLog.setOut(time);
+        break;
+    }
+    return dailyLog;
+  }
 
   @Test
   @Ignore

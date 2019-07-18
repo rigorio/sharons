@@ -99,8 +99,42 @@ public class ProductivityPresenter implements Initializable {
   @FXML
   public void filterRecords() {
     List<ActivityRecord> activityRecords = allRecords();
+  }
 
+  private double totalDuration;
 
+  /**
+   * feature for decreasing capacity, algorithm is okay. just need to fill in the blanks
+   */
+  public void decreasingCapacity() {
+    List<ActivityRecord> activityRecords = allRecords();
+    for (ActivityRecord activityRecord : activityRecords) {
+      if (withinWeek(activityRecord.getDate())) {
+        String d = activityRecord.getDuration();
+        double duration = Double.parseDouble(d);
+        totalDuration += duration;
+      }
+    }
+    double duration = round(totalDuration);
+    double percentage = round((duration / availableHours()) / 100.0);
+    System.out.println(percentage);
+  }
+
+  /*
+  Get dates (start, end) from datetime pickers
+   */
+  private boolean withinWeek(String date) {
+    LocalDate recordDate = LocalDate.parse(date);
+    LocalDate startDate = recordDate.minus(1, DAYS); // TODO should not be using recordDate
+    LocalDate endDate = recordDate.plus(1, DAYS);
+    return recordDate.isAfter(startDate) && recordDate.isBefore(endDate);
+  }
+
+  /*
+  Find out whether or not on leave, and total supposed number of hours
+   */
+  private double availableHours() {
+    return 0.0;
   }
 
   private String colorHolder;

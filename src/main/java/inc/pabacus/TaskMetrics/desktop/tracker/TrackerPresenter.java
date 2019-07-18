@@ -111,13 +111,7 @@ public class TrackerPresenter implements Initializable {
     windowIsOpen = true;
     isPause = false;
 
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        popOverComplete();
-      }
-    });
-
+    addCompleteContextMenu();
     addPauseContextMenu();
 
   }
@@ -218,8 +212,8 @@ public class TrackerPresenter implements Initializable {
     twoMinutes = 0;
   }
 
-  @FXML
-  public void completeTask() {
+//  @FXML
+//  public void completeTask() {
 //
 //    List<String> choices = new ArrayList<>();
 //    choices.add("0%");
@@ -247,21 +241,19 @@ public class TrackerPresenter implements Initializable {
 //      selectedTask.setPercentCompleted(new SimpleStringProperty(reason));
 //      saveAndClose();
 //    });
-  }
+//  }
 
-  private void popOverComplete() {
+  private void addCompleteContextMenu() {
 
-    JFXButton ten = new JFXButton("10%");
-    JFXButton thirty = new JFXButton("30%");
-    JFXButton fifty = new JFXButton("50%");
-    JFXButton seventy = new JFXButton("70%");
-    JFXButton eighty = new JFXButton("80%");
-    JFXButton ninety = new JFXButton("90%");
-    JFXButton onehundred = new JFXButton("100%");
+    ContextMenu contextMenu = new ContextMenu();
 
-    VBox vBox = new VBox(ten, thirty, fifty, seventy, eighty, ninety, onehundred);
-    PopOver popOver = new PopOver(vBox);
-    popOver.isAnimated();
+    MenuItem ten = new MenuItem("10%");
+    MenuItem thirty = new MenuItem("30%");
+    MenuItem fifty = new MenuItem("50%");
+    MenuItem seventy = new MenuItem("70%");
+    MenuItem eighty = new MenuItem("80%");
+    MenuItem ninety = new MenuItem("90%");
+    MenuItem onehundred = new MenuItem("100%");
 
     ten.setOnAction(event -> {
       updateTask(Status.IN_PROGRESS.getStatus());
@@ -306,12 +298,15 @@ public class TrackerPresenter implements Initializable {
       saveAndClose();
     });
 
-    complete.setOnAction(e -> {
-      popOver.show(complete);
-      ((Parent) popOver.getSkin().getNode()).getStylesheets()
-          .add(getClass().getResource("tracker.css").toExternalForm());
-      vBox.requestFocus();
+    contextMenu.getItems().addAll(ten, thirty, fifty, seventy, eighty, ninety, onehundred);
+
+    complete.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        contextMenu.show(complete, event.getScreenX(), event.getScreenY());
+      }
     });
+
   }
 
   @FXML
@@ -364,7 +359,6 @@ public class TrackerPresenter implements Initializable {
         twoMinutes += 1;
         timer.setStyle("-fx-text-fill: red");
       } else if (duration == 0) { //0 timer will stop and then
-        completeTask();
         Thread.currentThread().interrupt();
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Timer Stopped");
@@ -372,6 +366,11 @@ public class TrackerPresenter implements Initializable {
         alert.showAndWait();
         timer.setText(STARTING_TIME);
 
+        //complete the task
+        selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
+        updateTask(Status.DONE.getStatus());
+        selectedTask.setPercentCompleted(new SimpleStringProperty("100%"));
+        saveAndClose();
       } else {
         timer.setText(STARTING_TIME);
       }

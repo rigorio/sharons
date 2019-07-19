@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -52,7 +53,6 @@ public class BreakPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-
     if (TrackerPresenter.windowIsOpen) {
       TrackerPresenter.isPause = true;
     }
@@ -67,6 +67,13 @@ public class BreakPresenter implements Initializable {
     timerService.setFxProcess(process);
     timerService.start();
     windowIsOpen = true;
+
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        onCloseRequest();
+      }
+    });
 
   }
 
@@ -142,5 +149,16 @@ public class BreakPresenter implements Initializable {
         .hideAfter(Duration.seconds(5));
     notifications.darkStyle();
     notifications.showWarning();
+  }
+
+  private void onCloseRequest() {
+    Stage stage = (Stage) backOnline.getScene().getWindow();
+    stage.setOnCloseRequest(evt -> {
+      evt.consume();
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("Not allowed");
+      alert.setContentText("You're not allowed to close this window. Please back online!");
+      alert.showAndWait();
+    });
   }
 }

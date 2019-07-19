@@ -68,12 +68,7 @@ public class BreakPresenter implements Initializable {
     timerService.start();
     windowIsOpen = true;
 
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        onCloseRequest();
-      }
-    });
+    Platform.runLater(this::onCloseRequest);
 
   }
 

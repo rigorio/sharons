@@ -221,6 +221,7 @@ public class TimesheetPresenter implements Initializable {
     try {
       LocalDate dateNow = LocalDate.now();
 
+      OkHttpClient client = new OkHttpClient();
       // code request code here
       Request request = new Request.Builder()
           .url(HOST + "/api/logs")

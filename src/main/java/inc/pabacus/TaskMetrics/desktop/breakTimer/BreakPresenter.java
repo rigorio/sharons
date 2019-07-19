@@ -56,7 +56,6 @@ public class BreakPresenter implements Initializable {
     if (TrackerPresenter.windowIsOpen) {
       TrackerPresenter.isPause = true;
     }
-    dailyLogHandler.close(); // turn Off
     activityListener.unListen(); //unlisten idle
 
     Image imageView = new Image("/img/break.png");
@@ -81,7 +80,7 @@ public class BreakPresenter implements Initializable {
       if (duration == 780) {
         timerText.setStyle("-fx-text-fill: red");
       }
-    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch")) {
+    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
       if (duration == 3300) { // 55 minutes
         timerText.setStyle("-fx-text-fill: red");
       }
@@ -109,7 +108,7 @@ public class BreakPresenter implements Initializable {
                                    .build());
 
     timerService.pause();
-    dailyLogHandler.checkIfUserIsBreak();
+
     if (TrackerPresenter.windowIsOpen) {
       TrackerPresenter.isContinue = true;
     }

@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.desktop.newTask;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import inc.pabacus.TaskMetrics.api.tasks.Assignee;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
@@ -19,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -112,19 +114,28 @@ public class NewTaskPresenter implements Initializable {
 
   @SuppressWarnings("all")
   private void changeTask(String project) {
-    Optional<Job> any = jobTaskHandler.allJobs().stream()
-        .filter(job -> job.getJob().equals(project))
-        .findAny();
-    if (!any.isPresent())
-      System.out.println("log this");
-    Job job = any.get();
-    List<Task> tasks = jobTaskHandler.allTasks();
+    Job job = getSelectedJob(project);
+    List<Task> tasks = getTasks();
     List<String> filteredTasks = tasks.stream()
         .filter(task -> task.getJobId().equals(job.getId()))
         .map(Task::getTask)
         .collect(Collectors.toList());
     taskCombobox.setItems(FXCollections.observableArrayList(filteredTasks));
     taskCombobox.getItems().add("Custom Task");
+  }
+
+  private List<Task> getTasks() {
+    return jobTaskHandler.allTasks();
+  }
+
+  @NotNull
+  private Job getSelectedJob(String project) {
+    Optional<Job> any = jobTaskHandler.allJobs().stream()
+        .filter(job -> job.getJob().equals(project))
+        .findAny();
+    if (!any.isPresent())
+      System.out.println("log this");
+    return any.get();
   }
 
   @FXML
@@ -153,13 +164,43 @@ public class NewTaskPresenter implements Initializable {
 
     String description = descriptionField.getText(); // actually task of task
     Boolean billable = Boolean.valueOf(taskCombobox.getValue());
-    String taskValue = taskCombobox.getValue();
     String estimateFields = estimateField.getText();
-    String taskTitle = taskValue.equalsIgnoreCase("Custom Task")
-        ? customTaskField.getText()
-        : taskValue;
+    String taskTitle = taskCombobox.getValue();
+
+
+    Job job = getSelectedJob(jobComboBox.getValue());
+    Optional<Task> any = getTasks().stream()
+        .filter(task -> {
+          return task.getTask().equalsIgnoreCase(taskTitle) &&
+              task.getJobId() == job.getId();
+        })
+        .findAny();
+
+    if (!any.isPresent()) {
+      System.out.println("bakana log this");
+    }
+
+    Task task = any.get();
+
 //    BusinessValue businessValue = getBusinessValue();
 //    Project project = getProject();
+
+    XpmTaskWebHandler.XpmTaskDto_Save xpmItem = new XpmTaskWebHandler.XpmTaskDto_Save();
+    Assignee assignee = xpmTaskHandler.getAssignee();
+    XpmTaskWebHandler.XpmTaskDto_Save.builder()
+        .clientId(job.getClientId())
+        .jobId(job.getId())
+        .description(description)
+        .taskId(task.getId())
+        .status(Status.PENDING.getStatus())
+        .dateCreated(LocalDate.now().toString())
+        .billable(true)
+        .estimateTime(estimateFields)
+        .percentCompleted("0%")
+        .businessValueId(4L)
+        .invoiceTypeId(1L)
+        .assigneeId(assignee.getId())
+        .build();
 
     XpmTask xpmTask = XpmTask.builder()
         .id(3L)

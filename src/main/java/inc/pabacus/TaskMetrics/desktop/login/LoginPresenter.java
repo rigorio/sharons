@@ -48,6 +48,9 @@ public class LoginPresenter implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+//    usernameField.setText("username");
+//    passwordField.setText("password");
+//    login();
   }
 
   @FXML

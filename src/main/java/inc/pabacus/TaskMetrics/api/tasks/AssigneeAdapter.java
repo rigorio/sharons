@@ -16,7 +16,7 @@ public class AssigneeAdapter {
   private StringProperty assignee;
 
   public AssigneeAdapter(Assignee assignee) {
-    this.id = new SimpleLongProperty(assignee.getAssigneeId());
-    this.assignee = new SimpleStringProperty(assignee.getAssignee());
+    this.id = new SimpleLongProperty(assignee.getId());
+    this.assignee = new SimpleStringProperty(assignee.getUserName());
   }
 }

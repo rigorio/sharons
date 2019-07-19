@@ -36,7 +36,6 @@ public class ServiceManager {
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
     activityListener.listen();
-    dailyLogHandler.checkIfUserIsBreak();
   }
 
   public void deactivate() {
@@ -50,7 +49,6 @@ public class ServiceManager {
     kickerService.stopKicker();
     tokenService.stopToken();
     activityListener.unListen();
-    dailyLogHandler.close();
   }
 
 }

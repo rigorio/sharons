@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.desktop.standuply.StanduplyView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
@@ -55,7 +56,7 @@ public class StandupService {
 
   public StandupAnswer sendAnswer(StandupAnswer answer) {
     try {
-      OkHttpClient client = new OkHttpClient();
+      OkHttpClient client = SslUtil.getSslOkHttpClient();
       ObjectMapper mapper = new ObjectMapper();
 
       String jsonString = mapper.writeValueAsString(answer);
@@ -78,7 +79,7 @@ public class StandupService {
   }
 
   private boolean isStandupTime() {
-    OkHttpClient client = new OkHttpClient();
+    OkHttpClient client = SslUtil.getSslOkHttpClient();
     // code request code here
     Request request = new Request.Builder()
         .url(HOST + "/api/concierge/schedule")

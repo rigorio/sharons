@@ -8,6 +8,7 @@ import inc.pabacus.TaskMetrics.api.leave.Approver;
 import inc.pabacus.TaskMetrics.api.leave.Leave;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -129,7 +130,7 @@ public class LeavePresenter implements Initializable {
   }
 
   private void getTypesOfRequestLeave() {
-    OkHttpClient client = new OkHttpClient();
+    OkHttpClient client = SslUtil.getSslOkHttpClient();
     // code request code here
     Request request = new Request.Builder()
         .url(HOST + "/api/typesOfLeaves")

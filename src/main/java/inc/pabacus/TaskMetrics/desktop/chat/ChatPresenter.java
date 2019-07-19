@@ -12,6 +12,7 @@ import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -58,7 +59,7 @@ public class ChatPresenter implements Initializable {
   private HostConfig hostConfig = new HostConfig();
   private ActivityHandler activityHandler;
   private DailyLogService dailyLogHandler;
-  private OkHttpClient client = new OkHttpClient();
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
 
   public ChatPresenter() {
     HOST = hostConfig.getHost();

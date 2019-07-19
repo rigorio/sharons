@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class KickerService {
 
   private static final Logger logger = Logger.getLogger(KickerService.class);
-  private OkHttpClient client = new OkHttpClient();
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static String HOST;
   private HostConfig hostConfig = new HostConfig();

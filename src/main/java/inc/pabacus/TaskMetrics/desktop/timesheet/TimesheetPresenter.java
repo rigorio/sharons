@@ -19,6 +19,7 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -68,6 +69,7 @@ public class TimesheetPresenter implements Initializable {
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
   private HostConfig hostConfig = new HostConfig();
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private TimeLogHandler timeLogHandler;
 
   private static String HOST;
@@ -219,7 +221,6 @@ public class TimesheetPresenter implements Initializable {
     try {
       LocalDate dateNow = LocalDate.now();
 
-      OkHttpClient client = new OkHttpClient();
       // code request code here
       Request request = new Request.Builder()
           .url(HOST + "/api/logs")

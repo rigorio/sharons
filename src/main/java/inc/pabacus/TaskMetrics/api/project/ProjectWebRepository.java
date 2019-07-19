@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Example;
@@ -19,7 +20,7 @@ import java.util.Optional;
 public class ProjectWebRepository implements ProjectRepository {
 
   private static final Logger logger = Logger.getLogger(ProjectWebRepository.class);
-  private OkHttpClient client = new OkHttpClient();
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static String HOST;
   private HostConfig hostConfig = new HostConfig();

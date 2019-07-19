@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import okhttp3.*;
@@ -26,6 +27,7 @@ public class TokenService {
   private static String HOST;
   private ScheduledFuture<?> scheduledFuture;
   private static final long DEFAULT_INTERVAL = 3000000; // 55 minutes
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
 
   private UserHandler userHandler;
 
@@ -36,7 +38,7 @@ public class TokenService {
 
   public void generateToken(Credentials credentials) {
     try {
-      OkHttpClient client = new OkHttpClient();
+
       ObjectMapper mapper = new ObjectMapper();
 
       String jsonString = mapper.writeValueAsString(credentials);

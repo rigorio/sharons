@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.api.standuply.Answers;
 import inc.pabacus.TaskMetrics.api.standuply.StandupAnswer;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -79,7 +80,7 @@ public class StandupPresenter implements Initializable {
   }
 
   public void getQuestions(){
-    OkHttpClient client = new OkHttpClient();
+    OkHttpClient client = SslUtil.getSslOkHttpClient();
     // code request code here
     Request request = new Request.Builder()
         .url(HOST + "/api/concierge/questions")

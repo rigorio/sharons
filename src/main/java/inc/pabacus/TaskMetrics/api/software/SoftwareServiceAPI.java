@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.software;
 import com.google.gson.Gson;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.json.JSONException;
@@ -47,7 +48,7 @@ public class SoftwareServiceAPI {
 
         String json = new Gson().toJson(allSoftware);
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = SslUtil.getSslOkHttpClient();
         System.out.println(json);
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"runningSoftwares\":" + json + "}]");
@@ -76,7 +77,7 @@ public class SoftwareServiceAPI {
   }
 
   public String getSoftwareMonitoringMinutes() {
-    OkHttpClient client = new OkHttpClient();
+    OkHttpClient client = SslUtil.getSslOkHttpClient();
     // code request code here
     Request request = new Request.Builder()
         .url(HOST + "/api/monitorSoftware")

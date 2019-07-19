@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogItem;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class DailyLogHandler implements DailyLogService {
   private DailyLogRepository repository;
   private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
   private List<DailyLog> dailyLogs = new ArrayList<>();
-  private OkHttpClient client = new OkHttpClient();
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static String HOST;
   private static final MediaType JSON

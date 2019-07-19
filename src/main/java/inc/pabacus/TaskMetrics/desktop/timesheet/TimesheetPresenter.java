@@ -88,7 +88,7 @@ public class TimesheetPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
 
     mockUser = new MockUser("Rigo", "Logged Out");
-    userName.setText(userHandler.getUsername()); //set username
+    userName.setText(userHandler.getUsername()); //set userName
 
     String status = getStatus();
     comboBox.setValue(status);

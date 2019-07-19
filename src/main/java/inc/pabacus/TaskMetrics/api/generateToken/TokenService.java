@@ -1,6 +1,5 @@
 package inc.pabacus.TaskMetrics.api.generateToken;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
@@ -13,7 +12,6 @@ import okhttp3.*;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -43,16 +41,15 @@ public class TokenService {
 
       String jsonString = mapper.writeValueAsString(credentials);
       RequestBody body = RequestBody.create(JSON, jsonString);
-      System.out.println(HOST);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/token")
+                                     .url(HOST + "/api/token")
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
       String responseString = responseBody.string();
       System.out.println(responseString);
 //      Object object = mapper.readValue(responseString, new TypeReference<Object>() {});
-      if (responseString.contains("Bad Request")) {
+      if (responseString.contains("Bad Request") || responseString.length() < 10) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error");
         alert.setHeaderText(null);

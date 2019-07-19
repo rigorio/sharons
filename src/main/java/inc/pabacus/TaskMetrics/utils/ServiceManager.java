@@ -25,17 +25,18 @@ public class ServiceManager {
 
 
   public void activate() {
-    hardwareServiceAPI.sendHardwareData();
-    standupService.runStandup();
-    softwareServiceAPI.sendSoftwareData();
-    screenshotService.enableScreenShot();
+//    hardwareServiceAPI.sendHardwareData();
+//    standupService.runStandup();
+//    softwareServiceAPI.sendSoftwareData();
+//    screenshotService.enableScreenShot();
     Runnable runnable = () -> {
       Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
       activityListener.unListen();
     };
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
-    activityListener.listen();
+//    activityListener.listen();
+//    dailyLogHandler.checkIfUserIsBreak();
   }
 
   public void deactivate() {

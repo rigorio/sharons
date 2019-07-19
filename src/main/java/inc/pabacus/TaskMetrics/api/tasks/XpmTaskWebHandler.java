@@ -32,7 +32,7 @@ public class XpmTaskWebHandler {
       String jsonString = mapper.writeValueAsString(task);
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/task")
+                                     .url(HOST + "/api/user/timesheet")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .post(body)
                                      .build());
@@ -55,7 +55,7 @@ public class XpmTaskWebHandler {
   public void deleteById(Long id) {
     try {
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/task/" + id)
+                                     .url(HOST + "/api/user/timesheet/" + id)
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .delete()
                                      .build());
@@ -70,25 +70,7 @@ public class XpmTaskWebHandler {
     try {
 
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/tasks")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
-                                     .build());
-      ResponseBody body = call.execute().body();
-      String jsonString = body.string();
-      tasks = mapper.readValue(jsonString, new TypeReference<List<XpmTask>>() {});
-
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-    }
-    return tasks;
-  }
-
-  public List<XpmTask> findAllDefaults() {
-    List<XpmTask> tasks = new ArrayList<>();
-    try {
-
-      Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/tasks/defaults")
+                                     .url(HOST + "/api/user/timesheet")
                                      .addHeader("Authorization", TokenRepository.getToken().getToken())
                                      .build());
       ResponseBody body = call.execute().body();

@@ -220,6 +220,7 @@ public class EditPresenter implements Initializable {
         .totalTimeSpent(totalTimeField.getText())
         .businessValueId(1L)
         .dateCreated(dateCreatedField.getText())
+        .percentCompleted("100%")
         .estimateTime(estimateTimeField.getText())
         .startTime(startTimeField.getText())
         .endTime(endTimeField.getText())

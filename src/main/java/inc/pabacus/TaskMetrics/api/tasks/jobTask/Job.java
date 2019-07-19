@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Job {
-  private long id;
+  private Long id;
   private String job;
+  private Long clientId;
 }

@@ -367,7 +367,7 @@ public class TrackerPresenter implements Initializable {
   private void closeWindow() {
     TrackHandler.setSelectedTask(null);
     selectedTask = null;
-    close();
+    closeCheckIfPauseOrContinue();
     timerService.pause();
     windowIsOpen = false;
     isPause = false;
@@ -419,7 +419,6 @@ public class TrackerPresenter implements Initializable {
 
   @FXML
   public void continueButton() {
-    scheduledFuture.cancel(true);
     Stage stage = (Stage) continueButton.getScene().getWindow();
     stage.show();
     long getTime = timerService.getTime();
@@ -434,7 +433,6 @@ public class TrackerPresenter implements Initializable {
     pauseButton.setVisible(true);
     isPause = false;
     isContinue = false;
-    checkIfPauseOrContinue();
   }
 
   private void checkIfPauseOrContinue() {
@@ -453,7 +451,7 @@ public class TrackerPresenter implements Initializable {
     scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1, TimeUnit.SECONDS);
   }
 
-  private void close() {
+  private void closeCheckIfPauseOrContinue() {
     scheduledFuture.cancel(true);
   }
 

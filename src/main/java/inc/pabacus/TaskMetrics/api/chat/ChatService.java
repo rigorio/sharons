@@ -11,6 +11,7 @@ import inc.pabacus.TaskMetrics.desktop.leave.LeaveView;
 import inc.pabacus.TaskMetrics.desktop.status.StatusView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
@@ -161,7 +162,7 @@ public class ChatService {
 
   public Chat sendChat(Chat chat) {
     try {
-      OkHttpClient client = new OkHttpClient();
+      OkHttpClient client = SslUtil.getSslOkHttpClient();
       ObjectMapper mapper = new ObjectMapper();
 
       String jsonString = mapper.writeValueAsString(chat);

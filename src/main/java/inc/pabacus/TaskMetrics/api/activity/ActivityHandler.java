@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -26,7 +27,7 @@ public class ActivityHandler {
   private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
   private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-  private OkHttpClient client = new OkHttpClient();
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
 
   public ActivityHandler() {
@@ -129,7 +130,7 @@ public class ActivityHandler {
 
   public String getLastLog() {
     String activity = null;
-    OkHttpClient client = new OkHttpClient();
+    OkHttpClient client = SslUtil.getSslOkHttpClient();
     // code request code here
     Request request = new Request.Builder()
         .url(HOST + "/api/activities?date=" + LocalDate.now())

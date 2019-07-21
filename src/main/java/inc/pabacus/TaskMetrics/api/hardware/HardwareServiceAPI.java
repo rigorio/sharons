@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.hardware;
 import com.google.gson.Gson;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
 import okhttp3.*;
 import org.apache.log4j.Logger;
@@ -48,7 +49,7 @@ public class HardwareServiceAPI {
         String JsonDisplays = new Gson().toJson(displays);
         String JsonUsbDevices = new Gson().toJson(usbDevices);
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = SslUtil.getSslOkHttpClient();
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"disks\":" + JsonDisks + ",\n\t\"displays\":" + JsonDisplays + ",\n\t\"usbDevices\":" + JsonUsbDevices + "}]");
         Request request = new Request.Builder()

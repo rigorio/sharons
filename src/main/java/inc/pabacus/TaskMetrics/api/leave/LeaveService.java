@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
@@ -17,7 +18,7 @@ public class LeaveService {
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   private static String HOST;
-  private OkHttpClient client = new OkHttpClient();
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
 
   public LeaveService() {

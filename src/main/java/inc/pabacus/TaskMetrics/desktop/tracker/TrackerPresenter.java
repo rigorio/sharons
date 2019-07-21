@@ -11,8 +11,10 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
+import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.desktop.settings.ExtendConfiguration;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -106,8 +108,7 @@ public class TrackerPresenter implements Initializable {
     startTime = getCurrentTime();
     extend.setVisible(false);
     continueButton.setVisible(false);
-    checkIfContinue();
-    checkIfPause();
+    checkIfPauseOrContinue();
     windowIsOpen = true;
     isPause = false;
 
@@ -132,6 +133,9 @@ public class TrackerPresenter implements Initializable {
       activity = Activity.BREAK;
       activityHandler.saveTimestamp(activity);
       timerService.reRun(); // rerun services
+      GuiManager.getInstance().displayView(new BreakView());
+      notification("Status changed to Break");
+      title.getScene().getWindow().hide();
     });
 
     lunch.setOnAction(event -> {
@@ -141,6 +145,9 @@ public class TrackerPresenter implements Initializable {
       activityHandler.saveTimestamp(activity);
       dailyLogHandler.changeLog(LogStatus.LB.getStatus());
       timerService.reRun(); // rerun services
+      GuiManager.getInstance().displayView(new BreakView());
+      notification("Status changed to Lunch");
+      title.getScene().getWindow().hide();
     });
 
     willWorkOnDifferentTask.setOnAction(event -> {
@@ -211,37 +218,6 @@ public class TrackerPresenter implements Initializable {
     tenMinutes = 0;
     twoMinutes = 0;
   }
-
-//  @FXML
-//  public void completeTask() {
-//
-//    List<String> choices = new ArrayList<>();
-//    choices.add("0%");
-//    choices.add("10%");
-//    choices.add("20%");
-//    choices.add("30%");
-//    choices.add("40%");
-//    choices.add("50%");
-//    choices.add("60%");
-//    choices.add("70%");
-//    choices.add("80%");
-//    choices.add("90%");
-//    choices.add("100%");
-//
-//    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a percentage", choices);
-//    dialog.initStyle(StageStyle.UNDECORATED);
-//    dialog.setHeaderText("Please select how many percentage this task has been completed");
-//    dialog.setContentText("Percentages");
-//    dialog.showAndWait().ifPresent(reason -> {
-//      if (reason.equals("100%")) {
-//        selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
-//        updateTask(Status.DONE.getStatus());
-//      } else
-//        updateTask(Status.IN_PROGRESS.getStatus());
-//      selectedTask.setPercentCompleted(new SimpleStringProperty(reason));
-//      saveAndClose();
-//    });
-//  }
 
   private void addCompleteContextMenu() {
 
@@ -345,7 +321,7 @@ public class TrackerPresenter implements Initializable {
       } else if (duration <= 600 && duration > 120) { //10 minutes in seconds
         timer.setText(time);
         if (tenMinutes == 1)
-          notification("10 minutes");
+          notification("You only have 10 minutes");
         extend.setVisible(true);
         cancel.setVisible(false);
         tenMinutes += 1;
@@ -353,7 +329,7 @@ public class TrackerPresenter implements Initializable {
       } else if (duration <= 120 && duration >= 1) { //2 minutes in seconds
         timer.setText(time);
         if (twoMinutes == 1)
-          notification("2 minutes");
+          notification("You only have 2 minutes");
         extend.setVisible(true);
         cancel.setVisible(false);
         twoMinutes += 1;
@@ -390,6 +366,8 @@ public class TrackerPresenter implements Initializable {
 
   private void closeWindow() {
     TrackHandler.setSelectedTask(null);
+    selectedTask = null;
+    closeCheckIfPauseOrContinue();
     timerService.pause();
     windowIsOpen = false;
     isPause = false;
@@ -439,70 +417,8 @@ public class TrackerPresenter implements Initializable {
     return formatter.format(LocalTime.now());
   }
 
-//  public void pause() {
-//    String testing = "Testing a feature";
-//    String development = "Development causes";
-//
-//    List<String> choices = new ArrayList<>();
-//    choices.add("Break");
-//    choices.add("Lunch");
-//    choices.add("Will work on different task");
-//    choices.add(testing);
-//    choices.add(development);
-//    choices.add("Meeting"); // TODO turn off activity listening dailyLogHandler when on a break
-//
-//    ChoiceDialog<String> dialog = new ChoiceDialog<>("Select a reason", choices);
-//    dialog.initStyle(StageStyle.UNDECORATED);
-//    dialog.setHeaderText("Please select a reason for putting this task on pause");
-//    dialog.setContentText("Reasons");
-//    dialog.showAndWait().ifPresent(reason -> {
-//      Activity activity;
-//      switch (reason) {
-//        case "Break":
-//          activity = Activity.BREAK;
-//          activityHandler.saveTimestamp(activity);
-//          timerService.reRun(); // rerun services
-//
-////          checkIfContinue();
-//          continueButton.setVisible(true);
-//          pauseButton.setVisible(false);
-//          Stage stage = (Stage) continueButton.getScene().getWindow();
-//          stage.hide();
-////          isPause = true;
-//          break;
-//        case "Lunch":
-//          activity = Activity.LUNCH;
-//          activityHandler.saveTimestamp(activity);
-//          dailyLogHandler.changeLog(LogStatus.LB.getStatus());
-//          timerService.reRun(); // rerun services
-//
-////          checkIfContinue();
-//          continueButton.setVisible(true);
-//          pauseButton.setVisible(false);
-//          Stage stages = (Stage) continueButton.getScene().getWindow();
-//          stages.hide();
-////          isPause = true;
-//          break;
-//        case "Meeting":
-//          activity = Activity.MEETING;
-//          activityHandler.saveTimestamp(activity);
-//          updateTask(Status.IN_PROGRESS.getStatus());
-//          saveAndClose();
-//          break;
-//        default:
-//          activity = Activity.BUSY;
-//          timeCompensation = reason.equals(testing) ? 0.3 : reason.equals(development) ? 0.5 : 0.0;
-//          activityHandler.saveTimestamp(activity);
-//          updateTask(Status.IN_PROGRESS.getStatus());
-//          saveAndClose();
-//          break;
-//      }
-//    });
-//  }
-
   @FXML
   public void continueButton() {
-    scheduledFuture.cancel(true);
     Stage stage = (Stage) continueButton.getScene().getWindow();
     stage.show();
     long getTime = timerService.getTime();
@@ -517,40 +433,32 @@ public class TrackerPresenter implements Initializable {
     pauseButton.setVisible(true);
     isPause = false;
     isContinue = false;
-    checkIfContinue();
-    checkIfPause();
   }
 
-  private void checkIfContinue() {
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    Runnable command = () -> Platform.runLater(() -> {
-
-      if (isContinue) {
-        continueButton();
-      }
-    });
-
-    scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1, TimeUnit.SECONDS);
-  }
-
-  private void checkIfPause() {
+  private void checkIfPauseOrContinue() {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable command = () -> Platform.runLater(() -> {
 
       if (isPause) {
         isPause = false;
         timerService.reRun();
-        ((Stage) title.getScene().getWindow()).close();
+        title.getScene().getWindow().hide();
+      }
+      else if (isContinue) {
+        continueButton();
       }
     });
-
     scheduledFuture = executor.scheduleAtFixedRate(command, 0, 1, TimeUnit.SECONDS);
+  }
+
+  private void closeCheckIfPauseOrContinue() {
+    scheduledFuture.cancel(true);
   }
 
   private void notification(String notif) {
     Notifications notifications = Notifications.create()
         .title("TRIBELY")
-        .text("You only have " + notif)
+        .text(notif)
         .position(Pos.BOTTOM_RIGHT)
         .hideAfter(Duration.seconds(5));
     notifications.darkStyle();

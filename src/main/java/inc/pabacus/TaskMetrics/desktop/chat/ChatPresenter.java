@@ -8,11 +8,15 @@ import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
+import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -22,9 +26,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.controlsfx.control.Notifications;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +59,7 @@ public class ChatPresenter implements Initializable {
   private HostConfig hostConfig = new HostConfig();
   private ActivityHandler activityHandler;
   private DailyLogService dailyLogHandler;
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
 
   public ChatPresenter() {
     HOST = hostConfig.getHost();
@@ -134,7 +141,7 @@ public class ChatPresenter implements Initializable {
       addItem(listView, commands);
       checking = 2;
       listView.getItems().add("TRIBELY: Type:" + ChatService.typeOfRequest + ", Date: " + ChatService.leaveDate + ", Status:" + ChatService.status);
-    }  else if (commands != null) {
+    } else if (commands != null) {
       addItem(listView, commands);
 
       ChatService service = new ChatService();
@@ -149,27 +156,34 @@ public class ChatPresenter implements Initializable {
         case "log in":
           activityHandler.saveTimestamp(Activity.ONLINE);
           dailyLogHandler.changeLog(LogStatus.IN.getStatus());
+          notification("Log in");
           break;
         case "lb":
         case "lunch":
         case "lunch break":
           activityHandler.saveTimestamp(Activity.LB);
           dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+          notification("Lunch Break");
+          GuiManager.getInstance().displayView(new BreakView());
           break;
         case "bfb":
         case "back from lunch":
         case "back from break":
           activityHandler.saveTimestamp(Activity.BFB);
           dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
+          notification("Back From Break");
           break;
         case "out":
         case "logout":
         case "log out":
           activityHandler.saveTimestamp(Activity.OFFLINE);
           dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
+          notification("Log out");
           break;
         case "break":
           activityHandler.saveTimestamp(Activity.BREAK);
+          notification("Break");
+          GuiManager.getInstance().displayView(new BreakView());
           break;
       }
     }
@@ -189,7 +203,7 @@ public class ChatPresenter implements Initializable {
   }
 
   private void getChatData() {
-    OkHttpClient client = new OkHttpClient();
+
     // code request code here
     Request request = new Request.Builder()
         .url(HOST + "/api/chats")
@@ -240,6 +254,16 @@ public class ChatPresenter implements Initializable {
       }
 
     });
+  }
+
+  private void notification(String notif) {
+    Notifications notifications = Notifications.create()
+        .title("TRIBELY")
+        .text("Status changed to " +notif)
+        .position(Pos.BOTTOM_RIGHT)
+        .hideAfter(Duration.seconds(5));
+    notifications.darkStyle();
+    notifications.showWarning();
   }
 
 }

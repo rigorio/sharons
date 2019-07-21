@@ -13,21 +13,28 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
+import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
+import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 import java.net.URL;
@@ -62,6 +69,7 @@ public class TimesheetPresenter implements Initializable {
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
   private HostConfig hostConfig = new HostConfig();
+  private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private TimeLogHandler timeLogHandler;
 
   private static String HOST;
@@ -119,15 +127,27 @@ public class TimesheetPresenter implements Initializable {
           activity = Activity.ONLINE;
           break;
         case "Lunch Break":
-          status = "Lunch Break";
-          dailyLogHandler.changeLog(LogStatus.LB.getStatus());
-          activity = Activity.LUNCH;
-          break;
+          if (BreakPresenter.windowIsOpen) {
+            notification("Break Timer is currently on!");
+            break;
+          } else {
+            status = "Lunch Break";
+            dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+            activity = Activity.LUNCH;
+            GuiManager.getInstance().displayView(new BreakView());
+            notification("Status changed to Break");
+            break;
+          }
         case "Back From Break":
-          status = "Back From Break";
-          dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
-          activity = Activity.BUSY;
-          break;
+          if (BreakPresenter.windowIsOpen) {
+            notification("Break Timer is currently on, please Back Online!");
+            break;
+          } else {
+            status = "Back From Break";
+            dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
+            activity = Activity.BUSY;
+            break;
+          }
       }
       mockUser.setStatus(status);
       comboBox.setValue(status);
@@ -201,7 +221,6 @@ public class TimesheetPresenter implements Initializable {
     try {
       LocalDate dateNow = LocalDate.now();
 
-      OkHttpClient client = new OkHttpClient();
       // code request code here
       Request request = new Request.Builder()
           .url(HOST + "/api/logs")
@@ -272,5 +291,15 @@ public class TimesheetPresenter implements Initializable {
     }
     */
 
+  }
+
+  private void notification(String notif) {
+    Notifications notifications = Notifications.create()
+        .title("TRIBELY")
+        .text(notif)
+        .position(Pos.BOTTOM_RIGHT)
+        .hideAfter(Duration.seconds(5));
+    notifications.darkStyle();
+    notifications.showWarning();
   }
 }

@@ -4,6 +4,7 @@ import com.airhacks.afterburner.views.FXMLView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -34,12 +35,14 @@ public class GuiManager {
   public void displayView(FXMLView view) {
     closeWindowDisplayView = view;
     Stage stage = new Stage();
+    if (view.toString().contains("IdleView"))
+      stage.initModality(Modality.APPLICATION_MODAL);
     stage.setScene(new Scene(view.getView()));
     stage.show();
   }
 
   private void closeStageDisplayView() {
-    if (closeWindowDisplayView != null){
+    if (closeWindowDisplayView != null) {
       TrackHandler.setSelectedTask(null);
       Stage stage = (Stage) closeWindowDisplayView.getView().getScene().getWindow();
       stage.close();
@@ -90,14 +93,14 @@ public class GuiManager {
   }
 
   private void closeStageDisplayOnTop() {
-    if (closeWindowDisplayWindow != null){
+    if (closeWindowDisplayWindow != null) {
       TrackHandler.setSelectedTask(null);
       Stage stage = (Stage) closeWindowDisplayWindow.getView().getScene().getWindow();
       stage.close();
     }
   }
 
-  public void closeAllStages(){
+  public void closeAllStages() {
     closeStageDisplayView();
     closeStageDisplayOnTop();
   }

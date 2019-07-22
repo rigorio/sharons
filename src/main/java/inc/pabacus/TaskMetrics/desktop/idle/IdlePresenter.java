@@ -6,9 +6,12 @@ import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.ActivityTimestamp;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -44,16 +47,17 @@ public class IdlePresenter implements Initializable {
     options.add(TECHNICAL_ISSUE);
     actionsBox.setItems(FXCollections.observableArrayList(options));
 
+    Platform.runLater(this::onCloseRequest);
+
   }
 
   @FXML
   public void submitActivity() {
-
-    ActivityListener activityListener = BeanManager.activityListener();
-    activityListener.listen();
-
     String action = actionsBox.getValue();
-    if (!action.equals(TECHNICAL_ISSUE)) {
+    if (action == null) {
+      onNull();
+      return;
+    } else if (!action.equals(TECHNICAL_ISSUE)) {
 
       ActivityTimestamp startActivity = ActivityTimestamp.builder()
           .time(startTime)
@@ -67,8 +71,29 @@ public class IdlePresenter implements Initializable {
       // show a dialogue that let's staff report technical issue
     }
 
+    ActivityListener activityListener = BeanManager.activityListener();
+    activityListener.listen();
+
     Stage stage = (Stage) actionsBox.getScene().getWindow();
     stage.close();
+  }
+
+  private void onCloseRequest() {
+    Stage stage = (Stage) actionsBox.getScene().getWindow();
+    stage.setOnCloseRequest(evt -> {
+      evt.consume();
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setTitle("Not allowed");
+      alert.setContentText("You're not allowed to close this window. Please update your status!");
+      alert.showAndWait();
+    });
+  }
+
+  private void onNull() {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Not allowed");
+    alert.setContentText("Please submit your status");
+    alert.showAndWait();
   }
 
 }

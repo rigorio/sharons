@@ -1,6 +1,10 @@
 package inc.pabacus.TaskMetrics.api.generateToken;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
@@ -8,10 +12,15 @@ import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -23,18 +32,27 @@ public class TokenService {
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   private static String HOST;
+  private final HostConfig hostConfig;
   private ScheduledFuture<?> scheduledFuture;
   private static final long DEFAULT_INTERVAL = 3000000; // 55 minutes
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
 
   private UserHandler userHandler;
+  private CacheService<CacheKey, String> cacheService;
 
   public TokenService() {
-    HOST = new HostConfig().getHost();
+    hostConfig = new HostConfig();
+    HOST = hostConfig.getHost();
     userHandler = BeanManager.userHandler();
+    cacheService = new StringCacheService();
   }
 
   public void generateToken(Credentials credentials) {
+    boolean b = retrieveHRISAuthToken(credentials);
+    if (!b) {
+      invalidAlert();
+      return;
+    }
     try {
 
       ObjectMapper mapper = new ObjectMapper();
@@ -50,19 +68,73 @@ public class TokenService {
       System.out.println(responseString);
 //      Object object = mapper.readValue(responseString, new TypeReference<Object>() {});
       if (responseString.contains("Bad Request") || responseString.length() < 10) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText("Invalid username or password");
-        alert.showAndWait();
+        invalidAlert();
         return;
       }
+      cacheService.put(CacheKey.TRIBELY_TOKEN, responseString);
       TokenRepository.setToken(new Token(responseString));
 //      return credentials;
     } catch (IOException e) {
       e.printStackTrace();
       logger.warn(e.getMessage());
 //      return credentials;
+    }
+  }
+
+  private void invalidAlert() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Invalid username or password");
+    alert.showAndWait();
+  }
+
+  ObjectMapper mapper = new ObjectMapper();
+
+  private boolean retrieveHRISAuthToken(Credentials credentials) {
+    try {
+      AuthenticateEntity authenticateEntity = AuthenticateEntity.builder()
+          .userNameOrEmailAddress(credentials.getUsername())
+          .password(credentials.getPassword())
+          .rememberClient(true)
+          .build();
+      String s = mapper.writeValueAsString(authenticateEntity);
+      RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), s);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(hostConfig.getHris() + "/api/tokenauth/authenticate")
+                                     .post(requestBody)
+                                     .build());
+      String string = call.execute().body().string();
+      Map<String, Object> map = mapper.readValue(string,
+                                                 new TypeReference<Map<String, Object>>() {});
+      boolean success = (boolean) map.get("success");
+      if (!success)
+        return false;
+      Map<String, String> result = (Map<String, String>) map.get("result");
+      String accessToken = result.get("accessToken");
+      cacheService.put(CacheKey.SHRIS_TOKEN, "bearer " + accessToken);
+      retrieveEmployeeId();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+
+  private void retrieveEmployeeId() {
+    try {
+      String accessToken = cacheService.get(CacheKey.SHRIS_TOKEN);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(hostConfig.getHost() + "/api/services/app/User/GetCurrentUserEmployeeId")
+                                     .addHeader("Authorization", cacheService.get(CacheKey.SHRIS_TOKEN))
+                                     .build());
+      String responseString = call.execute().body().string();
+      Map<String, Object> response = mapper.readValue(responseString,
+                                                      new TypeReference<Map<String, Object>>() {});
+      String employeeId = response.get("result").toString();
+      cacheService.put(CacheKey.EMPLOYEE_ID, employeeId);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
@@ -80,5 +152,15 @@ public class TokenService {
 
   public void stopToken() {
     scheduledFuture.cancel(true);
+  }
+
+  @Data
+  @Builder
+  @AllArgsConstructor
+  @NoArgsConstructor
+  private static class AuthenticateEntity {
+    private String userNameOrEmailAddress;
+    private String password;
+    private Boolean rememberClient;
   }
 }

@@ -1,6 +1,8 @@
 package inc.pabacus.TaskMetrics.utils;
 
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
@@ -35,6 +37,7 @@ public class BeanManager {
   private static StatusUpdateHandler statusUpdateHandler = new StatusUpdateHandler();
   private static ValidationHandler validationHandler = new ValidationHandler();
   private static TimeLogConnector timeLogConnector = new TimeLogConnector();
+  private static CacheService cacheService = new StringCacheService();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -94,6 +97,10 @@ public class BeanManager {
 
   public static TimeLogConnector timeLogConnector() {
     return timeLogConnector;
+  }
+
+  public static CacheService cacheService() {
+    return cacheService;
   }
 
   // I am too lazy to provide an explanation as to why

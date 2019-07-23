@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
@@ -13,6 +14,7 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.utils.XpmHelper;
 import javafx.application.Platform;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.StringProperty;
@@ -210,27 +212,35 @@ public class EditPresenter implements Initializable {
 //    BusinessValue businessValue = getBusinessValue();
 //    Project project = getProject();
 
-    XpmTask xpmTask = XpmTask.builder()
 
-        .job(jobComboBox.getValue())
+    XpmTask xpmTask = XpmTask.builder()
         .task(taskTitle)
-        .description(description)
-        .status(Status.convert(statusComboBox.getValue().toString()).getStatus())
+        .job(jobComboBox.getValue())
         .billable(true)
-        .totalTimeSpent(totalTimeField.getText())
-        .businessValueId(1L)
-        .dateCreated(dateCreatedField.getText())
-        .percentCompleted("100%")
         .estimateTime(estimateTimeField.getText())
+        .invoiceTypeId(taskBeingEdited.getInvoiceTypeAdapter().get())
+        .assigneeId(taskBeingEdited.getAssigneeAdapter().get())
+        .totalTimeSpent(totalTimeField.getText())
+        .businessValueId(taskBeingEdited.getBusinessValueId().get())
+        .status(Status.convert(statusComboBox.getValue().toString()).getStatus())
+        .description(description)
+        .percentCompleted(taskBeingEdited.getPercentCompleted().get())
+        .dateCreated(dateCreatedField.getText())
         .startTime(startTimeField.getText())
         .endTime(endTimeField.getText())
         .build();
-    LongProperty id1 = taskBeingEdited.getId();
 
+    StringProperty df = taskBeingEdited.getDateFinished();
+    if (df != null)
+      xpmTask.setDateFinished(df.get());
+
+    LongProperty id1 = taskBeingEdited.getId();
     if (id1 != null)
       xpmTask.setId(id1.get());
 
-    xpmTaskHandler.save(xpmTask);
+    XpmTaskPostEntity xpmTaskPostEntity = new XpmHelper().helpMe(xpmTask);
+    xpmTaskHandler.edit(xpmTaskPostEntity);
+//    xpmTaskHandler.save(xpmTask);
 
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Task saved!");

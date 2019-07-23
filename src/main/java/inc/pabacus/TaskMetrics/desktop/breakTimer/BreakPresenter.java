@@ -6,7 +6,8 @@ import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.Record;
 import inc.pabacus.TaskMetrics.api.activity.RecordType;
 import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
-import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.LogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter;
@@ -40,13 +41,13 @@ public class BreakPresenter implements Initializable {
   private final Runnable process;
   private TimerService timerService;
   private ActivityHandler activityHandler;
-  private DailyLogHandler dailyLogHandler;
+  private LogService logService;
   private ActivityListener activityListener = BeanManager.activityListener();
   public static boolean windowIsOpen = false;
 
   public BreakPresenter() {
     activityHandler = BeanManager.activityHandler();
-    dailyLogHandler = BeanManager.dailyLogService();
+    logService = new HRISLogHandler();
     timerService = new TimerService();
     process = this::tickTime;
   }
@@ -99,7 +100,7 @@ public class BreakPresenter implements Initializable {
     } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
       activityHandler.saveTimestamp(Activity.BFB);
       recordActivity = "Lunch Break";
-      dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
+      logService.changeLog(LogStatus.BFB.getStatus());
       notification("Back From Lunch");
     }
     double totalTimeSpent = timerService.getTime() / 3600.0;

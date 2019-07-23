@@ -193,6 +193,7 @@ public class NewTaskPresenter implements Initializable {
         .estimateTime(estimateFields)
         .invoiceTypeId(new InvoiceType(1L, "Staff"))
         .assigneeId(new Assignee(1L, UsernameHolder.username))
+        .percentCompleted("0%")
         .totalTimeSpent("0.0")
         .businessValueId(1L)
         .status(Status.PENDING.getStatus())

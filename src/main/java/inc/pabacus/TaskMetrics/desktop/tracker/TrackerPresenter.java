@@ -7,6 +7,7 @@ import inc.pabacus.TaskMetrics.api.activity.Record;
 import inc.pabacus.TaskMetrics.api.activity.RecordType;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
@@ -16,20 +17,21 @@ import inc.pabacus.TaskMetrics.desktop.settings.ExtendConfiguration;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
+import inc.pabacus.TaskMetrics.utils.XpmHelper;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-import org.controlsfx.control.PopOver;
 
 import java.net.URL;
 import java.time.LocalTime;
@@ -162,6 +164,7 @@ public class TrackerPresenter implements Initializable {
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
+      timeCompensation = 0.25;
       updateTask(Status.IN_PROGRESS.getStatus());
       saveAndClose();
     });
@@ -170,6 +173,7 @@ public class TrackerPresenter implements Initializable {
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
+      timeCompensation = 0.5;
       updateTask(Status.IN_PROGRESS.getStatus());
       saveAndClose();
     });
@@ -271,6 +275,7 @@ public class TrackerPresenter implements Initializable {
       selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
       updateTask(Status.DONE.getStatus());
       selectedTask.setPercentCompleted(new SimpleStringProperty(onehundred.getText()));
+      selectedTask.setDateFinished(new SimpleStringProperty(LocalTime.now().toString()));
       saveAndClose();
     });
 
@@ -294,7 +299,9 @@ public class TrackerPresenter implements Initializable {
     XpmTask xpmTask = new XpmTask(selectedTask);
     if (xpmTask.getStartTime() == null)
       xpmTask.setStartTime(startTime);
-    xpmTaskWebHandler.save(xpmTask);
+    XpmTaskPostEntity helpMe = new XpmHelper().helpMe(xpmTask);
+    xpmTaskWebHandler.edit(helpMe);
+//    xpmTaskWebHandler.save(xpmTask);
     activityHandler.saveRecord(Record.builder()
                                    .recordType(RecordType.TASK)
                                    .duration("" + roundOffDecimal(getRawComputedTime()))
@@ -443,8 +450,7 @@ public class TrackerPresenter implements Initializable {
         isPause = false;
         timerService.reRun();
         title.getScene().getWindow().hide();
-      }
-      else if (isContinue) {
+      } else if (isContinue) {
         continueButton();
       }
     });

@@ -6,10 +6,6 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
@@ -34,7 +30,7 @@ public class XpmTaskWebHandler {
   @SuppressWarnings("all")
   public XpmTask save(XpmTask task) {
     try {
-      XpmTaskDto_Save xpmDto = new XpmTaskDto_Save();
+      XpmTaskPostEntity xpmDto = new XpmTaskPostEntity();
       xpmDto.setInvoiceTypeId(1L);
       xpmDto.setAssigneeId(1L);
       String jsonString = mapper.writeValueAsString(xpmDto);
@@ -52,6 +48,24 @@ public class XpmTaskWebHandler {
       logger.warn(e.getMessage());
     }
     return task;
+  }
+
+  public void save(XpmTaskPostEntity dto_save) {
+    try {
+      String jsonString = mapper.writeValueAsString(dto_save);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/timesheet")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .post(body)
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      XpmTask xpmTask;
+      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+      xpmTask.setId(xpmTask.getId());
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
   }
 
   public Optional<XpmTask> findById(Long id) {
@@ -84,8 +98,6 @@ public class XpmTaskWebHandler {
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
       tasks = mapper.readValue(jsonString, new TypeReference<List<XpmTask>>() {});
-      System.out.println(tasks);
-
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
@@ -103,7 +115,6 @@ public class XpmTaskWebHandler {
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
       assignees = mapper.readValue(jsonString, new TypeReference<List<Assignee>>() {});
-      System.out.println(assignees);
 
     } catch (IOException e) {
       logger.warn(e.getMessage());
@@ -111,33 +122,26 @@ public class XpmTaskWebHandler {
 
     Optional<Assignee> any = assignees.stream().filter(assignee -> assignee.getUserName().equals(UsernameHolder.username))
         .findAny();
-    Assignee assignee = any.get();
+    Assignee assignee;
+    assignee = any.orElseGet(() -> new Assignee(1L, UsernameHolder.username));
     return assignee;
   }
 
-  @Data
-  @Builder
-  @AllArgsConstructor
-  @NoArgsConstructor
-  public static class XpmTaskDto_Save {
-    private Long clientId;
-    private Long jobId;
-    private String description;
-    private Long taskId;
-    private String status;
-    private String dateCreated;
-    private Boolean billable;
-    private String startTime;
-    private String endTime;
-    private String estimateTime;
-    private String extendCounter;
-    private String totalTimeSpent;
-    private String percentCompleted;
-    private Long businessValueId;
-    private Long invoiceTypeId;
-    private Long assigneeId;
-
-
+  public void edit(XpmTaskPostEntity helpMe) {
+    try {
+      String jsonString = mapper.writeValueAsString(helpMe);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/timesheet/" + helpMe.getId())
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .put(body)
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      XpmTask xpmTask;
+      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+      xpmTask.setId(xpmTask.getId());
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
   }
-
 }

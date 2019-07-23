@@ -19,4 +19,8 @@ public class AssigneeAdapter {
     this.id = new SimpleLongProperty(assignee.getId());
     this.assignee = new SimpleStringProperty(assignee.getUserName());
   }
+
+  public Assignee get() {
+    return new Assignee(this);
+  }
 }

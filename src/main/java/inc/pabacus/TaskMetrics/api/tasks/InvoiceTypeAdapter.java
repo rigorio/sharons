@@ -19,4 +19,8 @@ public class InvoiceTypeAdapter {
     this.id = new SimpleLongProperty(invoiceType.getId());
     this.type = new SimpleStringProperty(invoiceType.getType());
   }
+
+  public InvoiceType get() {
+    return new InvoiceType(this);
+  }
 }

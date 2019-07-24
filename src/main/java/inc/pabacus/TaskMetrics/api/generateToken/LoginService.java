@@ -26,7 +26,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class TokenService {
+public class LoginService {
 
   private static final Logger logger = Logger.getLogger(StandupService.class);
   private static final MediaType JSON
@@ -40,7 +40,7 @@ public class TokenService {
   private UserHandler userHandler;
   private CacheService<CacheKey, String> cacheService;
 
-  public TokenService() {
+  public LoginService() {
     hostConfig = new HostConfig();
     HOST = hostConfig.getHost();
     userHandler = BeanManager.userHandler();
@@ -143,7 +143,7 @@ public class TokenService {
     Runnable command = () -> Platform.runLater(() -> {
       String username = userHandler.getUsername();
       String password = userHandler.getPassword();
-      TokenService service = new TokenService();
+      LoginService service = new LoginService();
       service.generateToken(new Credentials(username, password));
     });
 

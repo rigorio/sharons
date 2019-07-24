@@ -5,22 +5,17 @@ import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.Credentials;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
-import inc.pabacus.TaskMetrics.api.kicker.KickStatus;
+import inc.pabacus.TaskMetrics.api.generateToken.LoginService;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
-import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
-import inc.pabacus.TaskMetrics.desktop.kickout.KickoutView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,7 +30,7 @@ public class LoginPresenter implements Initializable {
   private JFXPasswordField passwordField;
 
   private KickerService kickerService;
-  private TokenService service;
+  private LoginService service;
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
 

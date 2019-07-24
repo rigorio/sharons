@@ -184,7 +184,7 @@ public class TimesheetPresenter implements Initializable {
     otl.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
     bfl.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
     out.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
-    getLogs();
+//    getLogs();
     timeSheet.getColumns().addAll(date, in, otl, bfl, out);
 
     refreshTimesheetTable();

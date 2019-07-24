@@ -4,8 +4,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.timesheet.handlers.LogService;
 import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.LogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
@@ -108,11 +108,11 @@ public class TimesheetPresenter implements Initializable {
       Activity activity = Activity.BUSY; // default ?
       LogStatus status = null;
       switch (chosenStatus) {
-        case "Logged Out":
+        case "Time Out":
           status = LogStatus.OUT;
           activity = Activity.OFFLINE;
           break;
-        case "Logged In":
+        case "Time In":
           status = LogStatus.IN;
           activity = Activity.ONLINE;
           break;

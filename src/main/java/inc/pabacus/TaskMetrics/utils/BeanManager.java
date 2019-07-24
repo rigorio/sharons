@@ -4,7 +4,7 @@ import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
 import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
-import inc.pabacus.TaskMetrics.api.generateToken.LoginService;
+import inc.pabacus.TaskMetrics.api.generateToken.AuthenticatorService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
@@ -32,7 +32,7 @@ public class BeanManager {
   private static DailyLogHandler dailyLogService = new DailyLogHandler();
   private static XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
   private static ActivityHandler activityHandler = new ActivityHandler();
-  private static LoginService loginService = new LoginService();
+  private static AuthenticatorService authenticatorService = new AuthenticatorService();
   private static LeaveService leaveService = new LeaveService();
   private static StatusUpdateHandler statusUpdateHandler = new StatusUpdateHandler();
   private static ValidationHandler validationHandler = new ValidationHandler();
@@ -83,8 +83,8 @@ public class BeanManager {
     return activityHandler;
   }
 
-  public static LoginService tokenService() {
-    return loginService;
+  public static AuthenticatorService tokenService() {
+    return authenticatorService;
   }
 
   public static LeaveService leaveService() {

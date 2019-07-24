@@ -1,6 +1,6 @@
 package inc.pabacus.TaskMetrics.utils;
 
-import inc.pabacus.TaskMetrics.api.generateToken.LoginService;
+import inc.pabacus.TaskMetrics.api.generateToken.AuthenticatorService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
@@ -19,7 +19,7 @@ public class ServiceManager {
   private HardwareServiceAPI hardwareServiceAPI = BeanManager.hardwareServiceAPI();
   private SoftwareServiceAPI softwareServiceAPI = BeanManager.softwareServiceAPI();
   private ScreenshotServiceImpl screenshotService = BeanManager.screenshotService();
-  private LoginService loginService = BeanManager.tokenService();
+  private AuthenticatorService authenticatorService = BeanManager.tokenService();
   private ActivityListener activityListener = BeanManager.activityListener();
   private DailyLogHandler dailyLogHandler = BeanManager.dailyLogService();
 
@@ -48,7 +48,7 @@ public class ServiceManager {
     screenshotService.disableScreenshot();
     screenshotService.shutdownScheduler();
     kickerService.stopKicker();
-    loginService.stopToken();
+    authenticatorService.stopToken();
     activityListener.unListen();
   }
 

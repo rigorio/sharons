@@ -3,6 +3,9 @@ package inc.pabacus.TaskMetrics.desktop.timesheet.hris;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
 import lombok.AllArgsConstructor;
@@ -26,14 +29,22 @@ public class HRISConnector {
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private String HOST = "https://hureyweb-staging.azurewebsites.net";
-  private String bearer = "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoicmlnb3JpbyIsIkFzcE5ldC5JZGVudGl0eS5TZWN1cml0eVN0YW1wIjoiR1dSU1k1T0lINVhNSkZJVkxGNTNFRlZBNVFFS09BWTMiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJFbXBsb3llZSIsImh0dHA6Ly93d3cuYXNwbmV0Ym9pbGVycGxhdGUuY29tL2lkZW50aXR5L2NsYWltcy90ZW5hbnRJZCI6IjEiLCJzdWIiOiI0IiwianRpIjoiNjE4NGVhZjgtNGU3OS00MGViLWE2MTQtYzE2YThjZTQ2NjE2IiwiaWF0IjoxNTYzODQwMDA4LCJuYmYiOjE1NjM4NDAwMDgsImV4cCI6MTU2MzkyNjQwOCwiaXNzIjoiSFVSRVlfU1RBR0lORyIsImF1ZCI6IkhVUkVZX1NUQUdJTkcifQ.lUz1K-wf50WvXHp-Pgf7bZ_Pk2K_05uxmW-L6jVf-ZE";
+  private String bearer;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
+  private CacheService<CacheKey, String> cacheService;
+  private final String employeeId;
+  private String logDate;
+
+  public HRISConnector() {
+    cacheService = new StringCacheService();
+    employeeId = cacheService.get(CacheKey.EMPLOYEE_ID);
+    bearer = cacheService.get(CacheKey.SHRIS_TOKEN);
+    logDate = LocalDate.now().toString();
+  }
 
   public List<HRISTimeLog> hrisLogs() {
     try {
-      String employeeId = "f6befdfe-8876-4b6a-f503-08d704e3effb";
-      String logDate = "2019-07-23";
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + logDate)
                                      .addHeader("Authorization", bearer)
@@ -80,11 +91,11 @@ public class HRISConnector {
     try {
       localHost = InetAddress.getLocalHost();
       CrazyHrisEntity crazyHrisEntity = CrazyHrisEntity.builder()
-          .employeeId("f6befdfe-8876-4b6a-f503-08d704e3effb")
+          .employeeId(employeeId)
           .timeLog(timeLog)
           .timeLogTypeId(timeLogTypeId)
           .ipAddress(localHost.getHostAddress())
-          .shiftDate("2019-07-23T00:00:00+00:00")
+          .shiftDate(logDate + "T00:00:00+00:00")
           .id(0)
           .build();
       String requestString = mapper.writeValueAsString(crazyHrisEntity);

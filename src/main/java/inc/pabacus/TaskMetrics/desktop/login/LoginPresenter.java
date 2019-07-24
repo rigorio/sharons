@@ -5,19 +5,25 @@ import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.Credentials;
-import inc.pabacus.TaskMetrics.api.generateToken.LoginService;
+import inc.pabacus.TaskMetrics.api.generateToken.AuthenticatorService;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.control.Alert;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class LoginPresenter implements Initializable {
@@ -30,7 +36,7 @@ public class LoginPresenter implements Initializable {
   private JFXPasswordField passwordField;
 
   private KickerService kickerService;
-  private LoginService service;
+  private AuthenticatorService service;
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
 
@@ -53,10 +59,24 @@ public class LoginPresenter implements Initializable {
     loginUser();
   }
 
-  private void jwtLogin(String userNameText, String passWordText) {
+  private boolean checkCredentials(String userNameText, String passWordText) {
 
-    service.generateToken(new Credentials(userNameText, passWordText));
-//    System.out.println(credentials); // for checking
+    Credentials credentials = new Credentials(userNameText, passWordText);
+    boolean isHrisAuthenticated = service.authenticateHrisAccount(credentials);
+    if (!isHrisAuthenticated) {
+      service.invalidCredentials();
+      return false;
+    }
+    Pair<String, String> pairValues = showTribelyLogin();
+    Credentials tribelyCredentials = new Credentials(pairValues.getKey(),
+                                                     pairValues.getValue());
+    boolean isTribelyAuthenticated = service.authenticateTribelyAccount(tribelyCredentials);
+    if (!isTribelyAuthenticated) {
+      service.invalidCredentials();
+      return false;
+    }
+    service.retrieveEmployeeId();
+    return true;
   }
 
   private boolean blankFields() {
@@ -71,7 +91,7 @@ public class LoginPresenter implements Initializable {
     return false;
   }
 
-  private void createCredential() {
+  private void saveCredentials() {
     String username = usernameField.getText();
     String password = passwordField.getText();
     userHandler.setUsername(username);
@@ -85,16 +105,17 @@ public class LoginPresenter implements Initializable {
 //    PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
 //    pause.setOnFinished(event -> {
 
-      String userName = this.usernameField.getText();
-      String passWord = passwordField.getText();
-      jwtLogin(userName, passWord);
-      createCredential();
+    String userName = this.usernameField.getText();
+    String passWord = passwordField.getText();
+    boolean isSuccessfullyAuthenticated = checkCredentials(userName, passWord);
+    if (isSuccessfullyAuthenticated) {
+      saveCredentials();
 //      kickerService.kicker();
       activityHandler.saveTimestamp(Activity.ONLINE);
       GuiManager.getInstance().changeView(new DashboardView());
-
 //    });
 //    pause.play();
+    }
   }
 
   @FXML
@@ -105,5 +126,58 @@ public class LoginPresenter implements Initializable {
   @FXML
   void onLoginPassword() {
     loginUser();
+  }
+
+  private Pair<String, String> showTribelyLogin() {
+    // Create the custom dialog.
+    Dialog<Pair<String, String>> dialog = new Dialog<>();
+    dialog.setTitle("Login");
+    dialog.setHeaderText("Please Login with your Tribely Account");
+
+// Set the button types.
+    ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+    dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+// Create the username and password labels and fields.
+
+    GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(10);
+    grid.setPadding(new Insets(20, 150, 10, 10));
+
+    TextField username = new TextField();
+    username.setPromptText("Username");
+    PasswordField password = new PasswordField();
+    password.setPromptText("Password");
+
+    grid.add(new Label("Username:"), 0, 0);
+    grid.add(username, 1, 0);
+    grid.add(new Label("Password:"), 0, 1);
+    grid.add(password, 1, 1);
+
+// Enable/Disable login button depending on whether a username was entered.
+    Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+    loginButton.setDisable(true);
+
+// Do some validation (using the Java 8 lambda syntax).
+    username.textProperty().addListener((observable, oldValue, newValue) -> {
+      loginButton.setDisable(newValue.trim().isEmpty());
+    });
+
+    dialog.getDialogPane().setContent(grid);
+
+// Request focus on the username field by default.
+    Platform.runLater(username::requestFocus);
+
+// Convert the result to a username-password-pair when the login button is clicked.
+    dialog.setResultConverter(dialogButton -> {
+      if (dialogButton == loginButtonType) {
+        return new Pair<>(username.getText(), password.getText());
+      }
+      return null;
+    });
+
+    Optional<Pair<String, String>> result = dialog.showAndWait();
+    return result.get();
   }
 }

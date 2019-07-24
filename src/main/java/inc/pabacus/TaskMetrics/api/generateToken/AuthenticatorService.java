@@ -26,7 +26,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class LoginService {
+public class AuthenticatorService {
 
   private static final Logger logger = Logger.getLogger(StandupService.class);
   private static final MediaType JSON
@@ -36,62 +36,19 @@ public class LoginService {
   private ScheduledFuture<?> scheduledFuture;
   private static final long DEFAULT_INTERVAL = 3000000; // 55 minutes
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
+  private ObjectMapper mapper = new ObjectMapper();
 
   private UserHandler userHandler;
   private CacheService<CacheKey, String> cacheService;
 
-  public LoginService() {
+  public AuthenticatorService() {
     hostConfig = new HostConfig();
     HOST = hostConfig.getHost();
     userHandler = BeanManager.userHandler();
     cacheService = new StringCacheService();
   }
 
-  public void generateToken(Credentials credentials) {
-    boolean b = retrieveHRISAuthToken(credentials);
-    if (!b) {
-      invalidAlert();
-      return;
-    }
-    try {
-
-      ObjectMapper mapper = new ObjectMapper();
-
-      String jsonString = mapper.writeValueAsString(credentials);
-      RequestBody body = RequestBody.create(JSON, jsonString);
-      Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/token")
-                                     .post(body)
-                                     .build());
-      ResponseBody responseBody = call.execute().body();
-      String responseString = responseBody.string();
-      System.out.println(responseString);
-//      Object object = mapper.readValue(responseString, new TypeReference<Object>() {});
-      if (responseString.contains("Bad Request") || responseString.length() < 10) {
-        invalidAlert();
-        return;
-      }
-      cacheService.put(CacheKey.TRIBELY_TOKEN, responseString);
-      TokenRepository.setToken(new Token(responseString));
-//      return credentials;
-    } catch (IOException e) {
-      e.printStackTrace();
-      logger.warn(e.getMessage());
-//      return credentials;
-    }
-  }
-
-  private void invalidAlert() {
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setTitle("Error");
-    alert.setHeaderText(null);
-    alert.setContentText("Invalid username or password");
-    alert.showAndWait();
-  }
-
-  ObjectMapper mapper = new ObjectMapper();
-
-  private boolean retrieveHRISAuthToken(Credentials credentials) {
+  public boolean authenticateHrisAccount(Credentials credentials) {
     try {
       AuthenticateEntity authenticateEntity = AuthenticateEntity.builder()
           .userNameOrEmailAddress(credentials.getUsername())
@@ -121,12 +78,47 @@ public class LoginService {
     return true;
   }
 
-  private void retrieveEmployeeId() {
+  public boolean authenticateTribelyAccount(Credentials credentials) {
+    try {
+
+      String jsonString = mapper.writeValueAsString(credentials);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/token")
+                                     .post(body)
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      String responseString = responseBody.string();
+      System.out.println(responseString);
+//      Object object = mapper.readValue(responseString, new TypeReference<Object>() {});
+      if (responseString.contains("Bad Request") || responseString.length() < 10) {
+        return false;
+      }
+      cacheService.put(CacheKey.TRIBELY_TOKEN, responseString);
+      TokenRepository.setToken(new Token(responseString));
+//      return credentials;
+    } catch (IOException e) {
+      e.printStackTrace();
+      logger.warn(e.getMessage());
+//      return credentials;
+    }
+    return true;
+  }
+
+  public void invalidCredentials() {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Error");
+    alert.setHeaderText(null);
+    alert.setContentText("Invalid username or password");
+    alert.showAndWait();
+  }
+
+  public void retrieveEmployeeId() {
     try {
       String accessToken = cacheService.get(CacheKey.SHRIS_TOKEN);
       Call call = client.newCall(new Request.Builder()
                                      .url(hostConfig.getHost() + "/api/services/app/User/GetCurrentUserEmployeeId")
-                                     .addHeader("Authorization", cacheService.get(CacheKey.SHRIS_TOKEN))
+                                     .addHeader("Authorization", accessToken)
                                      .build());
       String responseString = call.execute().body().string();
       Map<String, Object> response = mapper.readValue(responseString,
@@ -143,8 +135,7 @@ public class LoginService {
     Runnable command = () -> Platform.runLater(() -> {
       String username = userHandler.getUsername();
       String password = userHandler.getPassword();
-      LoginService service = new LoginService();
-      service.generateToken(new Credentials(username, password));
+      authenticateTribelyAccount(new Credentials(username, password));
     });
 
     scheduledFuture = executor.scheduleAtFixedRate(command, 0, DEFAULT_INTERVAL, TimeUnit.MILLISECONDS);

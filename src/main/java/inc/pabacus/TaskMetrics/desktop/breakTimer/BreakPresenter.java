@@ -57,7 +57,7 @@ public class BreakPresenter implements Initializable {
     if (TrackerPresenter.windowIsOpen) {
       TrackerPresenter.isPause = true;
     }
-    activityListener.unListen(); //unlisten idle
+//    activityListener.unListen(); //unlisten idle
 
     Image imageView = new Image("/img/break.png");
     image.setImage(imageView);
@@ -93,6 +93,7 @@ public class BreakPresenter implements Initializable {
   @FXML
   private void backOnline() {
     String recordActivity = "Break";
+    logService.changeLog(LogStatus.BFB.getStatus());
     if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
       activityHandler.saveTimestamp(Activity.ONLINE);
       recordActivity = "Break";
@@ -100,7 +101,6 @@ public class BreakPresenter implements Initializable {
     } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
       activityHandler.saveTimestamp(Activity.BFB);
       recordActivity = "Lunch Break";
-      logService.changeLog(LogStatus.BFB.getStatus());
       notification("Back From Lunch");
     }
     double totalTimeSpent = timerService.getTime() / 3600.0;

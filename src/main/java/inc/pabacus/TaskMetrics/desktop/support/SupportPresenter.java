@@ -145,7 +145,8 @@ public class SupportPresenter implements Initializable {
           basicPay.setHorizontalAlignment(Element.ALIGN_LEFT);
           basicPay.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getBasicPay = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getBasicPay().toString()));
+          String getBasicPayValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getBasicPay());
+          PdfPCell getBasicPay = new PdfPCell(new Paragraph(getBasicPayValue));
           getBasicPay.setBorderColor(BaseColor.WHITE);
           getBasicPay.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getBasicPay.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -155,7 +156,8 @@ public class SupportPresenter implements Initializable {
           regularHoliday.setHorizontalAlignment(Element.ALIGN_LEFT);
           regularHoliday.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getregularHoliday = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getRegularHoliday().toString()));
+          String getregularHolidayValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getRegularHoliday());
+          PdfPCell getregularHoliday = new PdfPCell(new Paragraph(getregularHolidayValue));
           getregularHoliday.setBorderColor(BaseColor.WHITE);
           getregularHoliday.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getregularHoliday.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -165,7 +167,8 @@ public class SupportPresenter implements Initializable {
           absences.setHorizontalAlignment(Element.ALIGN_LEFT);
           absences.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getAbsences = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getAbsences().toString()));
+          String getAbsencesValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getAbsences());
+          PdfPCell getAbsences = new PdfPCell(new Paragraph(getAbsencesValue));
           getAbsences.setBorderColor(BaseColor.WHITE);
           getAbsences.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getAbsences.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -175,7 +178,8 @@ public class SupportPresenter implements Initializable {
           tardiness.setHorizontalAlignment(Element.ALIGN_LEFT);
           tardiness.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getTardiness = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getTardiness().toString()));
+          String getTardinessValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getTardiness());
+          PdfPCell getTardiness = new PdfPCell(new Paragraph(getTardinessValue));
           getTardiness.setBorderColor(BaseColor.WHITE);
           getTardiness.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getTardiness.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -195,7 +199,8 @@ public class SupportPresenter implements Initializable {
           totalEarnings.setHorizontalAlignment(Element.ALIGN_LEFT);
           totalEarnings.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getTotalEarnings = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getTotalEarnings().toString()));
+          String getTotalEarningsValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getTotalEarnings());
+          PdfPCell getTotalEarnings = new PdfPCell(new Paragraph(getTotalEarningsValue));
           getTotalEarnings.setBorderColor(BaseColor.WHITE);
           getTotalEarnings.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getTotalEarnings.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -215,7 +220,8 @@ public class SupportPresenter implements Initializable {
           hdmf.setHorizontalAlignment(Element.ALIGN_LEFT);
           hdmf.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getHdmf = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getHdmf().toString()));
+          String getHdmfValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getHdmf());
+          PdfPCell getHdmf = new PdfPCell(new Paragraph(getHdmfValue));
           getHdmf.setBorderColor(BaseColor.WHITE);
           getHdmf.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getHdmf.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -225,7 +231,8 @@ public class SupportPresenter implements Initializable {
           sss.setHorizontalAlignment(Element.ALIGN_LEFT);
           sss.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getSss = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getSss().toString()));
+          String getSssValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getSss());
+          PdfPCell getSss = new PdfPCell(new Paragraph(getSssValue));
           getSss.setBorderColor(BaseColor.WHITE);
           getSss.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getSss.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -235,7 +242,8 @@ public class SupportPresenter implements Initializable {
           wtax.setHorizontalAlignment(Element.ALIGN_LEFT);
           wtax.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getWtax = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getWtax().toString()));
+          String getWtaxValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getWtax());
+          PdfPCell getWtax = new PdfPCell(new Paragraph(getWtaxValue));
           getWtax.setBorderColor(BaseColor.WHITE);
           getWtax.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getWtax.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -255,7 +263,8 @@ public class SupportPresenter implements Initializable {
           totalDeduction.setHorizontalAlignment(Element.ALIGN_LEFT);
           totalDeduction.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getTotalDeduction = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getTotalDeductions().toString()));
+          String getTotalDeductionValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getTotalDeductions());
+          PdfPCell getTotalDeduction = new PdfPCell(new Paragraph(getTotalDeductionValue));
           getTotalDeduction.setBorderColor(BaseColor.WHITE);
           getTotalDeduction.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getTotalDeduction.setVerticalAlignment(Element.ALIGN_RIGHT);
@@ -265,7 +274,8 @@ public class SupportPresenter implements Initializable {
           netPay.setHorizontalAlignment(Element.ALIGN_LEFT);
           netPay.setVerticalAlignment(Element.ALIGN_LEFT);
 
-          PdfPCell getNetPay = new PdfPCell(new Paragraph(PayslipHandler.getSelectedPayslip().getNetPay().toString()));
+          String getNetPayValue = String.format("%,.2f", PayslipHandler.getSelectedPayslip().getNetPay());
+          PdfPCell getNetPay = new PdfPCell(new Paragraph(getNetPayValue));
           getNetPay.setBorderColor(BaseColor.WHITE);
           getNetPay.setHorizontalAlignment(Element.ALIGN_RIGHT);
           getNetPay.setVerticalAlignment(Element.ALIGN_RIGHT);

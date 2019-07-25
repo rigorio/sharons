@@ -5,7 +5,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.141"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.support.SupportPresenter">
   <TableView fx:id="leaveTable" layoutX="21.0" layoutY="59.0" prefHeight="233.0" prefWidth="884.0">
@@ -17,7 +19,15 @@
              prefWidth="102.0" style="-fx-background-color: #008080;" text="View" textFill="WHITE"/>
   <JFXComboBox fx:id="technicalBox" layoutX="21.0" layoutY="360.0" prefHeight="31.0" prefWidth="257.0"/>
   <Label layoutX="21.0" layoutY="320.0" text="Technical Issues"/>
-  <JFXButton layoutX="294.0" layoutY="360.0" mnemonicParsing="false" onAction="#sendReport"
-             style="-fx-background-color: #E65100" prefHeight="31.0" prefWidth="124.0" text="Send Report"
-             textFill="white"/>
+  <JFXButton layoutX="294.0" layoutY="360.0" mnemonicParsing="false" onAction="#sendReport" prefHeight="31.0"
+             prefWidth="124.0" style="-fx-background-color: #E65100" text="Send Report" textFill="white"/>
+  <Pane layoutX="14.0" layoutY="432.0" prefHeight="260.0" prefWidth="402.0" style="-fx-border-color: #111;">
+    <children>
+      <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="102.0" text="Payslip"/>
+      <Label layoutX="14.0" layoutY="61.0" prefHeight="17.0" prefWidth="102.0" text="Select Date"/>
+      <JFXComboBox fx:id="payslipComboBox" layoutX="14.0" layoutY="78.0" prefHeight="25.0" prefWidth="191.0"/>
+      <JFXButton layoutX="247.0" layoutY="78.0" onAction="#payslipView" prefHeight="25.0" prefWidth="77.0"
+                 style="-fx-background-color: #E65100;" text="View" textFill="WHITE"/>
+    </children>
+  </Pane>
 </AnchorPane>

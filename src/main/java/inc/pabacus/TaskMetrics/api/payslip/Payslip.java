@@ -14,16 +14,16 @@ public class Payslip {
   private Long id;
 //  private String employeeName;
   private String payRunCoverage;
-  private Long basicPay;
-  private Long regularHoliday;
-  private Long absences;
-  private Long tardiness;
-  private Long totalEarnings;
-  private Long hdmf;
-  private Long sss;
-  private Long wtax;
-  private Long totalDeductions;
-  private Long netPay;
+  private Double basicPay;
+  private Double regularHoliday;
+  private Double absences;
+  private Double tardiness;
+  private Double totalEarnings;
+  private Double hdmf;
+  private Double sss;
+  private Double wtax;
+  private Double totalDeductions;
+  private Double netPay;
 
 //  public Payslip(PayslipAdapter payslip) {
 //    LongProperty id = payslip.getId();
@@ -64,7 +64,7 @@ public class Payslip {
 //
 //  }
 
-  public Payslip(Long id, String payRunCoverage, Long basicPay, Long regularHoliday, Long absences, Long totalEarnings, Long hdmf, Long sss, Long wtax, Long totalDeductions, Long netPay) {
+  public Payslip(Long id, String payRunCoverage, Double basicPay, Double regularHoliday, Double absences, Double totalEarnings, Double hdmf, Double sss, Double wtax, Double totalDeductions, Double netPay) {
     this.id = id;
     this.payRunCoverage = payRunCoverage;
     this.basicPay = basicPay;

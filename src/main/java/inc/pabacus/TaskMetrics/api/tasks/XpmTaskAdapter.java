@@ -35,10 +35,10 @@ public class XpmTaskAdapter {
   private StringProperty extendCounter;
   private StringProperty totalTimeSpent;
   private StringProperty percentCompleted;
-  private LongProperty businessValueId;
-  private InvoiceTypeAdapter invoiceTypeAdapter;
-  private AssigneeAdapter assigneeAdapter;
-  private StringProperty assignee;
+//  private LongProperty businessValueId;
+//  private InvoiceTypeAdapter invoiceTypeAdapter;
+//  private AssigneeAdapter assigneeAdapter;
+//  private StringProperty assignee;
 
   public XpmTaskAdapter(XpmTask xpmTask) {
 
@@ -87,16 +87,5 @@ public class XpmTaskAdapter {
     String percentCompleted = xpmTask.getPercentCompleted();
     this.percentCompleted = percentCompleted != null ? new SimpleStringProperty(percentCompleted) : null;
 
-    Long businessValueId = xpmTask.getBusinessValueId();
-    this.businessValueId = businessValueId != null ? new SimpleLongProperty(businessValueId) : null;
-
-    InvoiceType invoiceType = xpmTask.getInvoiceTypeId();
-    this.invoiceTypeAdapter = invoiceType != null ? new InvoiceTypeAdapter(invoiceType) : null;
-
-    Assignee assigneeId = xpmTask.getAssigneeId();
-    this.assigneeAdapter = assigneeId != null ? new AssigneeAdapter(assigneeId) : null;
-
-    String assignee = xpmTask.getAssignee();
-    this.assignee = assignee != null ? new SimpleStringProperty(assignee) : null;
   }
 }

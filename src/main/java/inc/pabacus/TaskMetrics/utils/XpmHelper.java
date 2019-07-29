@@ -43,9 +43,9 @@ public class XpmHelper {
         .billable(xpmTask.getBillable())
         .estimateTime(xpmTask.getEstimateTime())
         .percentCompleted(xpmTask.getPercentCompleted())
-        .businessValueId(xpmTask.getBusinessValueId())
-        .invoiceTypeId(xpmTask.getInvoiceTypeId().getId())
-        .assigneeId(xpmTask.getAssigneeId().getId())
+//        .businessValueId(xpmTask.getBusinessValueId())
+//        .invoiceTypeId(xpmTask.getInvoiceTypeId().getId())
+//        .assigneeId(xpmTask.getAssigneeId().getId())
         .build();
   }
 }

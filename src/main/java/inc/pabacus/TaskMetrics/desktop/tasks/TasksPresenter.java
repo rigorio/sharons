@@ -16,6 +16,7 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -288,9 +289,14 @@ public class TasksPresenter implements Initializable {
   }
 
   private void refreshTasks() {
+    List<TableColumn<XpmTaskAdapter, ?>> sortOrder = new ArrayList<>(tasksTable.getSortOrder());
     int i = tasksTable.getSelectionModel().getSelectedIndex();
-    refreshTables();
-    tasksTable.getSelectionModel().select(i);
+    Platform.runLater(() -> {
+      refreshTables();
+      tasksTable.getSortOrder().clear();
+      tasksTable.getSortOrder().addAll(sortOrder);
+      tasksTable.getSelectionModel().select(i);
+    });
   }
 
   private void refreshTables() {

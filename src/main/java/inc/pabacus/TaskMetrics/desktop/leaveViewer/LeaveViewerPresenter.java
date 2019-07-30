@@ -96,7 +96,7 @@ public class LeaveViewerPresenter implements Initializable {
   }
 
   private void updateLeave() {
-    leaveService.saveLeave(leave.getId());
+    leaveService.updateLeave(leave.getId());
   }
 
   private void close() {

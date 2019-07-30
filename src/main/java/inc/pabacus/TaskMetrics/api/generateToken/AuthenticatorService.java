@@ -117,7 +117,7 @@ public class AuthenticatorService {
     try {
       String accessToken = cacheService.get(CacheKey.SHRIS_TOKEN);
       Call call = client.newCall(new Request.Builder()
-                                     .url(hostConfig.getHost() + "/api/services/app/User/GetCurrentUserEmployeeId")
+                                     .url(hostConfig.getHris() + "/api/services/app/User/GetCurrentUserEmployeeId")
                                      .addHeader("Authorization", accessToken)
                                      .build());
       String responseString = call.execute().body().string();

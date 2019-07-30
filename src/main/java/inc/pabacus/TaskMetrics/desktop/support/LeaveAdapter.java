@@ -18,6 +18,7 @@ public class LeaveAdapter {
 
   private LongProperty id;
   private StringProperty employeeId;
+  private StringProperty managerEmployeeId;
   private StringProperty status;
   private StringProperty reason;
   private LongProperty amount;
@@ -32,6 +33,9 @@ public class LeaveAdapter {
 
     String employeeId = leave.getEmployeeId();
     this.employeeId = employeeId != null ? new SimpleStringProperty(employeeId) : null;
+
+    String managerEmployeeId = leave.getManagerEmployeeId();
+    this.managerEmployeeId = managerEmployeeId != null ? new SimpleStringProperty(managerEmployeeId) : null;
 
     String status = leave.getStatus();
     this.status = status != null ? new SimpleStringProperty(status) : null;

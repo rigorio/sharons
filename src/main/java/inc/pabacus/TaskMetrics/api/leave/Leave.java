@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class Leave {
   private Long id;
   private String employeeId;
+  private String managerEmployeeId;
   private String status;
   private String reason;
   private Long amount;
@@ -28,6 +29,9 @@ public class Leave {
 
     StringProperty employeeId = leaveAdapter.getEmployeeId();
     this.employeeId = employeeId != null ? employeeId.getValue() : null;
+
+    StringProperty managerEmployeeId = leaveAdapter.getManagerEmployeeId();
+    this.managerEmployeeId = managerEmployeeId != null ? managerEmployeeId.getValue() : null;
 
     StringProperty status = leaveAdapter.getStatus();
     this.status = status != null ? status.get() : null;

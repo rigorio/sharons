@@ -22,7 +22,7 @@ public class HostConfig {
 
   public HostConfig() {
     FlatFileSettings flatFileSettings = new DefaultSettings();
-    flatFileSettings.setFileName("host.json");
+    flatFileSettings.setFileName("DevHost.json"); // so we can run two tribely apps at the same time
     hostRepository = new FlatFileRepository(flatFileSettings);
   }
 

@@ -22,6 +22,8 @@ public class LeaveViewerPresenter implements Initializable {
   @FXML
   private Label statusLabel;
   @FXML
+  private JFXTextField employeeField;
+  @FXML
   private JFXTextField requestTypeField;
   @FXML
   private JFXTextField startDateField;
@@ -55,7 +57,10 @@ public class LeaveViewerPresenter implements Initializable {
     Color color = status.equals("Approved") ? Color.GREEN : status.equals("Denied") ? Color.RED : Color.MEDIUMPURPLE;
     statusLabel.setTextFill(color);
 
-    requestTypeField.setText(leave.getTypeOfRequest());
+    employeeField.setText(leave.getEmployeeId());
+    setEditable(employeeField);
+
+    requestTypeField.setText(leave.getLeaveTypeId());
     setEditable(requestTypeField);
 
     startDateField.setText(leave.getStartDate());
@@ -91,7 +96,7 @@ public class LeaveViewerPresenter implements Initializable {
   }
 
   private void updateLeave() {
-    leaveService.saveLeave(leave);
+    leaveService.saveLeave(leave.getId());
   }
 
   private void close() {

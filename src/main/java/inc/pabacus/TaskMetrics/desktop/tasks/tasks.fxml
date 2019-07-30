@@ -20,6 +20,8 @@
   <Hyperlink fx:id="startLink" layoutX="680.0" layoutY="14.0" onAction="#startTask" text="Start" />
   <Hyperlink fx:id="refreshButton" layoutX="734.0" layoutY="14.0" onAction="#refreshTask" text="Refresh" />
   <Hyperlink layoutX="801.0" layoutY="14.0" onAction="#viewWorkSummary" text="Work Summary" />
-   <Label layoutX="730.0" layoutY="18.0" text="|" textFill="#aeaead" />
+  <Hyperlink layoutX="579.0" layoutY="14.0" onAction="#newTask" text="+ New Task" />
+  <Label layoutX="730.0" layoutY="18.0" text="|" textFill="#aeaead" />
    <Label layoutX="799.0" layoutY="18.0" text="|" textFill="#aeaead" />
+   <Label layoutX="676.0" layoutY="18.0" text="|" textFill="#aeaead" />
 </AnchorPane>

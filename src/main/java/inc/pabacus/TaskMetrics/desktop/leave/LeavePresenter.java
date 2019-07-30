@@ -3,12 +3,13 @@ package inc.pabacus.TaskMetrics.desktop.leave;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.api.leave.Approver;
-import inc.pabacus.TaskMetrics.api.leave.Leave;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,8 +28,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class LeavePresenter implements Initializable {
@@ -50,9 +49,13 @@ public class LeavePresenter implements Initializable {
   private JFXComboBox<String> managerDropdown;
 
   private static String HOST;
+  private CacheService<CacheKey, String> cacheService;
+  private final HostConfig hostConfig;
 
   public LeavePresenter() {
+    hostConfig = new HostConfig();
     HOST = new HostConfig().getHost();
+    cacheService = new StringCacheService();
   }
 
   @Override
@@ -60,7 +63,8 @@ public class LeavePresenter implements Initializable {
     supervisorDropdown.getItems().addAll("Rose Cayabyab", "Rufino Quimen");
     managerDropdown.getItems().addAll("Joy Cuison", "Rodel Caras");
 
-    getTypesOfRequestLeave();
+    Platform.runLater(this::getTypesOfRequestLeave);
+
     dates();
   }
 
@@ -97,18 +101,13 @@ public class LeavePresenter implements Initializable {
 
   private void submitRequest() {
     String requestString = this.requestDropdown.getValue();
-    String supervisorString = this.supervisorDropdown.getValue();
-    String managerString = this.managerDropdown.getValue();
     String startDateString = String.valueOf(this.startDate.getValue());
     String endDateString = String.valueOf(this.endDate.getValue());
     String reason = this.reason.getText();
-    String status = "Pending";
+    Long status = 0L;
 
-    List<Approver> getApprovers = Arrays.asList(new Approver(3L, supervisorString, status),
-                                                new Approver(4L, managerString, status));
-
-    LeaveService service = new LeaveService();
-    Leave leave = service.saveLeave(new Leave(2L, 3L, getApprovers, startDateString, endDateString, reason, status, requestString));
+    LeaveService leaveService = new LeaveService();
+    leaveService.sendLeave(new SendLeave(cacheService.get(CacheKey.EMPLOYEE_ID),cacheService.get(CacheKey.MANAGER_ID),reason,0L,1L,startDateString,endDateString,null,null));
     // maybe log this (MAYBE)
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Request submitted!");
@@ -130,22 +129,30 @@ public class LeavePresenter implements Initializable {
   }
 
   private void getTypesOfRequestLeave() {
+
+    String accessToken = cacheService.get(CacheKey.SHRIS_TOKEN);
+
     OkHttpClient client = SslUtil.getSslOkHttpClient();
     // code request code here
     Request request = new Request.Builder()
-        .url(HOST + "/api/typesOfLeaves")
+        .url(hostConfig.getHris() + "/api/services/app/LeaveType/GetAll")
         .addHeader("Content-Type", "application/json")
-        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .addHeader("Authorization", accessToken)
         .method("GET", null)
         .build();
 
     try {
       Response response = client.newCall(request).execute();
       String getTypesOfLeaves = response.body().string();
-      JSONArray jsonarray = new JSONArray(getTypesOfLeaves);
+      System.out.println(getTypesOfLeaves);
+
+      JSONObject jsonObject = new JSONObject(getTypesOfLeaves);
+      JSONObject object = jsonObject.getJSONObject("result");
+
+      JSONArray jsonarray = object.getJSONArray("items");
       for (int i = 0; i < jsonarray.length(); ++i) {
         JSONObject jsonobject = jsonarray.getJSONObject(i);
-        requestDropdown.getItems().addAll(jsonobject.getString("leave"));
+        requestDropdown.getItems().addAll(jsonobject.getString("name"));
       }
     } catch (IOException | JSONException e) {
       e.printStackTrace();

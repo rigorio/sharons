@@ -10,6 +10,7 @@ import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
+import inc.pabacus.TaskMetrics.desktop.jobs.JobTaskIdHolder;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
@@ -26,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
@@ -53,9 +55,9 @@ public class TasksPresenter implements Initializable {
   @FXML
   private JFXComboBox<String> statusBox;
   @FXML
-  private JFXButton refreshButton;
+  private Hyperlink refreshButton;
   @FXML
-  private JFXButton startButton;
+  private Hyperlink startLink;
   @FXML
   private TableView<XpmTaskAdapter> tasksTable;
 //  @FXML
@@ -73,11 +75,13 @@ public class TasksPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+
     //Start button will be disable when you click it without choosing a task
-    startButton.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()));
+    startLink.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()));
 
     statusBox.setValue("All");
-    timeBox.setValue("All");
+    timeBox.setValue("Today");
 
     TableColumn<XpmTaskAdapter, String> dateCreated = new TableColumn<>("Date Created");
     dateCreated.setCellValueFactory(param -> param.getValue().getDateCreated());
@@ -151,12 +155,12 @@ public class TasksPresenter implements Initializable {
 //
 //    });
 //
-//  }
 
+//  }
   @FXML
   void tableClicked(MouseEvent event) {
     event.consume();
-    startButton.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()).or(Bindings.when(new SimpleBooleanProperty(BreakPresenter.windowIsOpen)).then(true).otherwise(false)));
+    startLink.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()).or(Bindings.when(new SimpleBooleanProperty(BreakPresenter.windowIsOpen)).then(true).otherwise(false)));
   }
 
   @FXML
@@ -189,7 +193,7 @@ public class TasksPresenter implements Initializable {
     }
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
-    ((Stage) startButton.getScene().getWindow()).setIconified(true);
+    ((Stage) startLink.getScene().getWindow()).setIconified(true);
   }
 
   @FXML
@@ -206,6 +210,11 @@ public class TasksPresenter implements Initializable {
   public void editTask() {
     EditableTaskHolder.setTask(tasksTable.getSelectionModel().getSelectedItem());
     GuiManager.getInstance().displayView(new EditView());
+  }
+
+  @FXML
+  public void viewJobsPage() {
+
   }
 
   private void initTasksTable() {
@@ -312,11 +321,12 @@ public class TasksPresenter implements Initializable {
    */
   private void refreshingService() {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(this::refreshTasks, 5L, 5L, TimeUnit.SECONDS);
+    ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(this::refreshTasks, 60L, 60L, TimeUnit.SECONDS);
   }
 
   private List<XpmTaskAdapter> getAllTasks() {
-    List<XpmTask> allTasks = xpmTaskHandler.findAll();
+    Long id = JobTaskIdHolder.getId();
+    List<XpmTask> allTasks = xpmTaskHandler.findByJobTask(id);
     return FXCollections
         .observableArrayList(allTasks.stream()
                                  .map(XpmTaskAdapter::new)

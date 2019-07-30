@@ -104,6 +104,23 @@ public class XpmTaskWebHandler {
     return tasks;
   }
 
+  public List<XpmTask> findByJobTask(Long jobTaskId) {
+    List<XpmTask> tasks = new ArrayList<>();
+    try {
+
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/timesheet/" + jobTaskId)
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .build());
+      ResponseBody body = call.execute().body();
+      String jsonString = body.string();
+      tasks = mapper.readValue(jsonString, new TypeReference<List<XpmTask>>() {});
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+    return tasks;
+  }
+
   public Assignee getAssignee() {
     List<Assignee> assignees = new ArrayList<>();
     try {

@@ -1,13 +1,13 @@
 package inc.pabacus.TaskMetrics.desktop.jobs;
 
 public class JobTaskIdHolder {
-  private static Integer id;
+  private static Long id;
 
-  public static Integer getId() {
+  public static Long getId() {
     return id;
   }
 
-  public static void setId(Integer id) {
+  public static void setId(Long id) {
     JobTaskIdHolder.id = id;
   }
 }

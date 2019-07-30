@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
 import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
+import inc.pabacus.TaskMetrics.desktop.leave.SendLeave;
 import inc.pabacus.TaskMetrics.desktop.leaveViewer.LeaveHolder;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
@@ -105,7 +106,7 @@ public class LeaveService {
     return null;
   }
 
-  public String saveLeave(Long leaveId) {
+  public String updateLeave(Long leaveId) {
     String accessToken = cacheService.get(CacheKey.SHRIS_TOKEN);
     Leave leave = LeaveHolder.getLeave();
     String request = null;
@@ -133,6 +134,32 @@ public class LeaveService {
       return "error";
     }
   }
+
+  public SendLeave sendLeave(SendLeave leave) {
+    String accessToken = cacheService.get(CacheKey.SHRIS_TOKEN);
+
+    try {
+
+      String jsonString = mapper.writeValueAsString(leave);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(hostConfig.getHris() + "/api/services/app/LeaveRequest/Create")
+                                     .addHeader("Authorization", accessToken)
+                                     .post(body)
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      String responseString = responseBody.string();
+      System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+      System.out.println(responseString);
+      return leave;
+
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+      return leave;
+    }
+  }
+
+
 
 //  public List<Leave> getAll() {
 //    List<Leave> leaves = new ArrayList<>();

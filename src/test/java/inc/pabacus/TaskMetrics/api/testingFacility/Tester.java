@@ -1,8 +1,8 @@
-package inc.pabacus.TaskMetrics.api;
+package inc.pabacus.TaskMetrics.api.testingFacility;
 
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLog;
-import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogConnector;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -18,8 +18,8 @@ public class Tester {
   @Test
   @Ignore
   public void valueTester() {
-    TimeLogHandler timeLogHandler = new TimeLogHandler();
-    List<TimeLog> timeLogs = timeLogHandler.all();
+    TimeLogConnector timeLogConnector = new TimeLogConnector();
+    List<TimeLog> timeLogs = timeLogConnector.all();
     List<DailyLog> dailyLogs = new ArrayList<>();
     for (TimeLog timeLog : timeLogs) {
       Optional<DailyLog> anyLog = findDailyLog(dailyLogs, timeLog.getDate());

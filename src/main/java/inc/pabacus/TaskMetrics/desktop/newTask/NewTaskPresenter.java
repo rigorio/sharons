@@ -3,14 +3,15 @@ package inc.pabacus.TaskMetrics.desktop.newTask;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
+import inc.pabacus.TaskMetrics.api.tasks.*;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.utils.XpmHelper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -112,19 +114,28 @@ public class NewTaskPresenter implements Initializable {
 
   @SuppressWarnings("all")
   private void changeTask(String project) {
-    Optional<Job> any = jobTaskHandler.allJobs().stream()
-        .filter(job -> job.getJob().equals(project))
-        .findAny();
-    if (!any.isPresent())
-      System.out.println("log this");
-    Job job = any.get();
-    List<Task> tasks = jobTaskHandler.allTasks();
+    Job job = getSelectedJob(project);
+    List<Task> tasks = getTasks();
     List<String> filteredTasks = tasks.stream()
         .filter(task -> task.getJobId().equals(job.getId()))
         .map(Task::getTask)
         .collect(Collectors.toList());
     taskCombobox.setItems(FXCollections.observableArrayList(filteredTasks));
     taskCombobox.getItems().add("Custom Task");
+  }
+
+  private List<Task> getTasks() {
+    return jobTaskHandler.allTasks();
+  }
+
+  @NotNull
+  private Job getSelectedJob(String project) {
+    Optional<Job> any = jobTaskHandler.allJobs().stream()
+        .filter(job -> job.getJob().equals(project))
+        .findAny();
+    if (!any.isPresent())
+      System.out.println("new task presenter line 137");
+    return any.get();
   }
 
   @FXML
@@ -153,27 +164,46 @@ public class NewTaskPresenter implements Initializable {
 
     String description = descriptionField.getText(); // actually task of task
     Boolean billable = Boolean.valueOf(taskCombobox.getValue());
-    String taskValue = taskCombobox.getValue();
     String estimateFields = estimateField.getText();
-    String taskTitle = taskValue.equalsIgnoreCase("Custom Task")
-        ? customTaskField.getText()
-        : taskValue;
+    String taskTitle = taskCombobox.getValue();
+
+
+    Job job = getSelectedJob(jobComboBox.getValue());
+    Optional<Task> any = getTasks().stream()
+        .filter(task -> {
+          return task.getTask().equalsIgnoreCase(taskTitle) &&
+              task.getJobId().equals(job.getId());
+        })
+        .findAny();
+
+    if (!any.isPresent()) {
+      System.out.println("new task presenter line 180");
+    }
+
+    Task task = any.get();
+
 //    BusinessValue businessValue = getBusinessValue();
 //    Project project = getProject();
 
     XpmTask xpmTask = XpmTask.builder()
-        .id(3L)
+        .id(0L)
         .task(taskTitle)
         .job(jobComboBox.getValue())
         .billable(true)
         .estimateTime(estimateFields)
+//        .invoiceTypeId(new InvoiceType(1L, "Staff"))
+//        .assigneeId(new Assignee(1L, UsernameHolder.username))
+        .percentCompleted("0%")
         .totalTimeSpent("0.0")
+//        .businessValueId(1L)
         .status(Status.PENDING.getStatus())
         .description(description)
         .dateCreated(LocalDate.now().toString())
         .build();
+    XpmTaskPostEntity xpmTaskPostEntity = new XpmHelper().helpMe(xpmTask);
+    xpmTaskHandler.save(xpmTaskPostEntity);
 
-    xpmTaskHandler.save(xpmTask);
+//    xpmTaskHandler.save(xpmTask);
 
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Task saved!");

@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Assignee {
-  private Long assigneeId;
-  private String assignee;
+  private Long id;
+  private String userName;
 
   public Assignee(AssigneeAdapter assigneeAdapter) {
-    this.assigneeId = assigneeAdapter.getId().get();
-    this.assignee = assigneeAdapter.getAssignee().get();
+    this.id = assigneeAdapter.getId().get();
+    this.userName = assigneeAdapter.getAssignee().get();
   }
 }

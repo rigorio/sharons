@@ -34,8 +34,8 @@ public class JobTaskHandler {
                                      .build());
       ResponseBody responseBody = call.execute().body();
       jobs = mapper.readValue(responseBody.string(), new TypeReference<List<Job>>() {});
-    } catch (
-        IOException e) {
+    } catch (IOException e) {
+      e.printStackTrace();
       logger.warn(e.getMessage());
     }
     return jobs;

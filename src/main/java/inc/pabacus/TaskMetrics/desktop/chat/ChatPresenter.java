@@ -6,7 +6,8 @@ import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.chat.Chat;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.LogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
@@ -58,13 +59,13 @@ public class ChatPresenter implements Initializable {
   private static String HOST;
   private HostConfig hostConfig = new HostConfig();
   private ActivityHandler activityHandler;
-  private DailyLogService dailyLogHandler;
+  private LogService logService;
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
 
   public ChatPresenter() {
     HOST = hostConfig.getHost();
     activityHandler = BeanManager.activityHandler();
-    dailyLogHandler = BeanManager.dailyLogService();
+    logService = new HRISLogHandler();
   }
 
   @Override
@@ -150,19 +151,20 @@ public class ChatPresenter implements Initializable {
       System.out.println(answers);
       listView.getItems().add(chatService.pushCommand(commands));
       //switch breaks
+      LogStatus status = null;
       switch (commands.toLowerCase()) {
         case "in":
         case "login":
         case "log in":
           activityHandler.saveTimestamp(Activity.ONLINE);
-          dailyLogHandler.changeLog(LogStatus.IN.getStatus());
+          status = LogStatus.IN;
           notification("Log in");
           break;
         case "lb":
         case "lunch":
         case "lunch break":
           activityHandler.saveTimestamp(Activity.LB);
-          dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+          status = LogStatus.LB;
           notification("Lunch Break");
           GuiManager.getInstance().displayView(new BreakView());
           break;
@@ -170,14 +172,14 @@ public class ChatPresenter implements Initializable {
         case "back from lunch":
         case "back from break":
           activityHandler.saveTimestamp(Activity.BFB);
-          dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
+          status = LogStatus.BFB;
           notification("Back From Break");
           break;
         case "out":
         case "logout":
         case "log out":
           activityHandler.saveTimestamp(Activity.OFFLINE);
-          dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
+          status = LogStatus.OUT;
           notification("Log out");
           break;
         case "break":
@@ -186,8 +188,8 @@ public class ChatPresenter implements Initializable {
           GuiManager.getInstance().displayView(new BreakView());
           break;
       }
+      logService.changeLog(status.getStatus());
     }
-
     setListView();
     command.setText(null);
     command.requestFocus();
@@ -259,7 +261,7 @@ public class ChatPresenter implements Initializable {
   private void notification(String notif) {
     Notifications notifications = Notifications.create()
         .title("TRIBELY")
-        .text("Status changed to " +notif)
+        .text("Status changed to " + notif)
         .position(Pos.BOTTOM_RIGHT)
         .hideAfter(Duration.seconds(5));
     notifications.darkStyle();

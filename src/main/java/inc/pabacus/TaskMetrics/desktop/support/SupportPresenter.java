@@ -3,6 +3,9 @@ package inc.pabacus.TaskMetrics.desktop.support;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.leave.Leave;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.leaveViewer.LeaveHolder;
 import inc.pabacus.TaskMetrics.desktop.leaveViewer.LeaveViewerView;
@@ -13,8 +16,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
 import java.util.List;
@@ -24,7 +29,7 @@ import java.util.stream.Collectors;
 public class SupportPresenter implements Initializable {
 
   @FXML
-  private JFXComboBox technicalBox;
+  private JFXComboBox<String> technicalBox;
   @FXML
   private JFXComboBox statusComboBox;
   @FXML
@@ -33,6 +38,7 @@ public class SupportPresenter implements Initializable {
   private LeaveService leaveService;
   private UserHandler userHandler;
   private TemporaryStaffHolder staffHolder;
+  private JobTaskHandler jobTaskHandler = new JobTaskHandler();
 
   public SupportPresenter() {
     leaveService = BeanManager.leaveService();
@@ -42,15 +48,40 @@ public class SupportPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+//    Job action_center = getAction_center();
+
+//    List<Task> tasks = jobTaskHandler.allTasks().stream()
+//        .filter(task -> task.getJobId().equals(action_center.getId()))
+//        .collect(Collectors.toList());
+//    tasks.forEach(task -> technicalBox.getItems().add(task.getTask()));
+
     technicalBox.getItems().addAll("Mouse not working", "Slow internet", "Problem with Display", "Faulty Keyboard");
     initTable();
 
   }
 
+  @NotNull
+  private Job getAction_center() {
+    return jobTaskHandler.allJobs().stream()
+        .filter(job -> job.getJob().equals("Action Center"))
+        .findFirst().get();
+  }
+
   @FXML
   public void sendReport() {
-
-
+    String taskName = technicalBox.getValue();
+    Job job = getAction_center();
+    Task task = jobTaskHandler.allTasks().stream()
+        .filter(t -> t.getJobId().equals(job.getId()) && t.getTask().equals("Technical Issue"))
+        .findFirst()
+        .get();
+    jobTaskHandler.createJobTask(job.getId(), task.getId(), taskName);
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Success");
+    alert.setHeaderText(null);
+    alert.setContentText("Report has been sent");
+    alert.showAndWait();
   }
 
   private void initTable() {

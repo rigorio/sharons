@@ -1,39 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane prefHeight="340.0" prefWidth="468.0" xmlns="http://javafx.com/javafx/8.0.141"
+<AnchorPane prefHeight="238.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.newTask.NewTaskPresenter">
-  <Label layoutX="13.0" layoutY="2.0" prefHeight="40.0" prefWidth="172.0" text="Insert a new Task">
+  <Label layoutX="7.0" layoutY="7.0" prefHeight="40.0" prefWidth="172.0" text="Insert a new Task">
     <font>
       <Font size="14.0"/>
     </font>
   </Label>
-  <HBox layoutX="-1.0" layoutY="37.0" prefHeight="11.0" prefWidth="506.0" style="-fx-background-color: #E65100;"/>
-  <Label layoutX="87.0" layoutY="72.0" prefHeight="25.0" prefWidth="98.0" text="Job"/>
-  <Label fx:id="descriptionLabel" layoutX="87.0" layoutY="246.0" prefHeight="25.0" prefWidth="98.0"
+  <HBox layoutY="44.0" prefHeight="11.0" prefWidth="359.0" style="-fx-background-color: #E65100;"/>
+  <!--  <Label layoutX="87.0" layoutY="72.0" prefHeight="25.0" prefWidth="98.0" text="Job"/>-->
+  <Label fx:id="descriptionLabel" layoutX="26.0" layoutY="159.0" prefHeight="25.0" prefWidth="98.0"
          text="Description:"/>
-  <Label layoutX="87.0" layoutY="119.0" prefHeight="25.0" prefWidth="98.0" text="Task"/>
-  <JFXTextField fx:id="descriptionField" layoutX="190.0" layoutY="244.0" prefHeight="25.0" prefWidth="202.0"/>
-  <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="218.0" layoutY="286.0" onAction="#save" prefHeight="32.0"
+  <Label layoutX="26.0" layoutY="71.0" prefHeight="25.0" prefWidth="98.0" text="Task"/>
+  <JFXTextField fx:id="descriptionField" layoutX="129.0" layoutY="157.0" prefHeight="25.0" prefWidth="202.0"/>
+  <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="157.0" layoutY="199.0" onAction="#save" prefHeight="32.0"
              prefWidth="82.0" style="-fx-background-color: #E65100;" text="Save" textFill="WHITE"/>
-  <JFXButton fx:id="closeButton" layoutX="310.0" layoutY="286.0" onAction="#close" prefHeight="32.0" prefWidth="82.0"
+  <JFXButton fx:id="closeButton" layoutX="249.0" layoutY="199.0" onAction="#close" prefHeight="32.0" prefWidth="82.0"
              style="-fx-background-color: #D2D2D2;" text="Close" textFill="WHITE"/>
-  <!--  <JFXComboBox fx:id="businessComboBox" layoutX="192.0" layoutY="202.0" prefHeight="25.0" prefWidth="199.0"/>-->
-  <!--  <Label fx:id="businessLabel" layoutX="87.0" layoutY="203.0" prefHeight="25.0" prefWidth="98.0" text="Business Value"/>-->
-  <JFXComboBox fx:id="jobComboBox" layoutX="190.0" layoutY="71.0" onAction="#changeTasks" prefHeight="25.0"
+  <JFXComboBox fx:id="taskCombobox" layoutX="129.0" layoutY="70.0" onAction="#selectTask" prefHeight="25.0"
                prefWidth="202.0"/>
-  <JFXComboBox fx:id="taskCombobox" layoutX="190.0" layoutY="118.0" onAction="#selectTask" prefHeight="25.0"
-               prefWidth="202.0"/>
-  <JFXTextField fx:id="customTaskField" layoutX="190.0" layoutY="157.0" prefHeight="31.0" prefWidth="202.0"/>
-  <Label fx:id="customTaskLabel" layoutX="87.0" layoutY="170.0" text="Custom Task"/>
-  <Label fx:id="estimateLabel" layoutX="87.0" layoutY="205.0" prefHeight="17.0" prefWidth="82.0" text="Estimate Time:"/>
-  <JFXTextField fx:id="estimateField" layoutX="190.0" layoutY="201.0" prefHeight="25.0" prefWidth="202.0"/>
+  <Label fx:id="estimateLabel" layoutX="26.0" layoutY="118.0" prefHeight="17.0" prefWidth="82.0" text="Estimate Time:"/>
+  <JFXTextField fx:id="estimateField" layoutX="129.0" layoutY="114.0" prefHeight="25.0" prefWidth="202.0"/>
 </AnchorPane>

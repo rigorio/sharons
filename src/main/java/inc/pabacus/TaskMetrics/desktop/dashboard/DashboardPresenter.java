@@ -9,6 +9,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
+import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.productivity.ProductivityView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
@@ -219,7 +220,7 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void viewTasks() {
-    updateDynamicPaneContent(new TasksView().getView());
+    updateDynamicPaneContent(new JobsView().getView());
   }
 
   @FXML

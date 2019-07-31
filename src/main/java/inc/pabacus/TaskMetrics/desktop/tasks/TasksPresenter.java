@@ -11,6 +11,7 @@ import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.jobs.JobTaskIdHolder;
+import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
@@ -26,6 +27,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
@@ -60,7 +62,7 @@ public class TasksPresenter implements Initializable {
   private Hyperlink startLink;
   @FXML
   private TableView<XpmTaskAdapter> tasksTable;
-//  @FXML
+  //  @FXML
 //  private JFXTextField sortTask;
   @FXML
   private JFXComboBox<String> timeBox;
@@ -70,7 +72,7 @@ public class TasksPresenter implements Initializable {
 
   public TasksPresenter() {
     activityHandler = BeanManager.activityHandler();
-    xpmTaskHandler = BeanManager.xpmTaskHandler();
+    xpmTaskHandler = new XpmTaskWebHandler();
   }
 
   @Override
@@ -156,7 +158,7 @@ public class TasksPresenter implements Initializable {
 //    });
 //
 
-//  }
+  //  }
   @FXML
   void tableClicked(MouseEvent event) {
     event.consume();
@@ -214,7 +216,7 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void viewJobsPage() {
-
+    updateDynamicPaneContent(new JobsView().getView());
   }
 
   private void initTasksTable() {
@@ -230,28 +232,14 @@ public class TasksPresenter implements Initializable {
       case "Last Week":
         backLogs = getAllTasks().stream()
             .filter(backLog -> {
-              StringProperty currentSTatus = backLog.getStatus();
-              if (currentSTatus == null)
-                currentSTatus = new SimpleStringProperty("");
-              LocalDate date = LocalDate.now().minusDays(7);
-              LocalDate getDate = LocalDate.parse(backLog.getDateCreated().get());
-              if (status.equalsIgnoreCase("all"))
-                return getDate.isAfter(date);
-              return getDate.isAfter(date) && currentSTatus.get().equalsIgnoreCase(status);
+              return lovelyDay(status, backLog, 7);
             })
             .collect(Collectors.toList());
         break;
       case "Last Month":
         backLogs = getAllTasks().stream()
             .filter(backLog -> {
-              StringProperty currentSTatus = backLog.getStatus();
-              if (currentSTatus == null)
-                currentSTatus = new SimpleStringProperty("");
-              LocalDate date = LocalDate.now().minusDays(30);
-              LocalDate getDate = LocalDate.parse(backLog.getDateCreated().get());
-              if (status.equalsIgnoreCase("all"))
-                return getDate.isAfter(date);
-              return getDate.isAfter(date) && currentSTatus.get().equalsIgnoreCase(status);
+              return lovelyDay(status, backLog, 30);
             })
             .collect(Collectors.toList());
         break;
@@ -297,11 +285,23 @@ public class TasksPresenter implements Initializable {
     return FXCollections.observableArrayList(backLogs);
   }
 
+  private boolean lovelyDay(String status, XpmTaskAdapter backLog, int i) {
+    StringProperty currentSTatus = backLog.getStatus();
+    if (currentSTatus == null)
+      currentSTatus = new SimpleStringProperty("");
+    LocalDate date = LocalDate.now().minusDays(i);
+    LocalDate getDate = LocalDate.parse(backLog.getDateCreated().get());
+    if (status.equalsIgnoreCase("all"))
+      return getDate.isAfter(date);
+    return getDate.isAfter(date) && currentSTatus.get().equalsIgnoreCase(status);
+  }
+
   private void refreshTasks() {
     List<TableColumn<XpmTaskAdapter, ?>> sortOrder = new ArrayList<>(tasksTable.getSortOrder());
     int i = tasksTable.getSelectionModel().getSelectedIndex();
     Platform.runLater(() -> {
-      refreshTables();
+      initTasksTable();
+//      refreshTables();
       tasksTable.getSortOrder().clear();
       tasksTable.getSortOrder().addAll(sortOrder);
       tasksTable.getSelectionModel().select(i);
@@ -331,5 +331,15 @@ public class TasksPresenter implements Initializable {
         .observableArrayList(allTasks.stream()
                                  .map(XpmTaskAdapter::new)
                                  .collect(Collectors.toList()));
+  }
+
+  private void updateDynamicPaneContent(Parent parent) {
+    AnchorPane.setTopAnchor(parent, 0.0);
+    AnchorPane.setLeftAnchor(parent, 0.0);
+    AnchorPane.setBottomAnchor(parent, 0.0);
+    AnchorPane.setRightAnchor(parent, 0.0);
+
+    mainPane.getChildren().clear();
+    mainPane.getChildren().add(parent);
   }
 }

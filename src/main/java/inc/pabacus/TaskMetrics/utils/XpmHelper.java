@@ -5,6 +5,7 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
+import inc.pabacus.TaskMetrics.desktop.jobs.JobTaskIdHolder;
 
 import java.util.Optional;
 
@@ -43,6 +44,7 @@ public class XpmHelper {
         .billable(xpmTask.getBillable())
         .estimateTime(xpmTask.getEstimateTime())
         .percentCompleted(xpmTask.getPercentCompleted())
+        .jobTasksId(JobTaskIdHolder.getId())
 //        .businessValueId(xpmTask.getBusinessValueId())
 //        .invoiceTypeId(xpmTask.getInvoiceTypeId().getId())
 //        .assigneeId(xpmTask.getAssigneeId().getId())

@@ -11,23 +11,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class XpmTaskPostEntity {
   private Long id;
-  private Long clientId;
-  private Long jobId;
-  private String description;
-  private Long taskId;
-  private String status;
   private String dateCreated;
-  private String dateFinished;
+  private String status;
+  private String description;
+  private String totalTimeSpent;
   private Boolean billable;
   private String startTime;
   private String endTime;
   private String estimateTime;
   private String extendCounter;
-  private String totalTimeSpent;
   private String percentCompleted;
-  private Long businessValueId;
-  private Long invoiceTypeId;
-  private Long assigneeId;
+  private String dateFinished;
+  private Long taskId;
+  private Long jobId;
+  private Long clientId;
+  private Long jobTasksId;
 
 
 }

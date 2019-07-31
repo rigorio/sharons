@@ -3,8 +3,9 @@ package inc.pabacus.TaskMetrics.desktop.newTask;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
-import inc.pabacus.TaskMetrics.api.tasks.*;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
@@ -47,8 +48,8 @@ public class NewTaskPresenter implements Initializable {
   private JFXButton saveButton;
   @FXML
   private JFXButton closeButton;
-  @FXML
-  private JFXComboBox<String> jobComboBox;
+  //  @FXML
+//  private JFXComboBox<String> jobComboBox;
   @FXML
   private Label estimateLabel;
 
@@ -58,6 +59,7 @@ public class NewTaskPresenter implements Initializable {
   private BusinessValueHandler businessValueHandler = new BusinessValueHandler();
   private XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
   private JobTaskHandler jobTaskHandler;
+  private String job = JobHolder.getJob();
 
   public NewTaskPresenter() {
     jobTaskHandler = new JobTaskHandler();
@@ -72,23 +74,23 @@ public class NewTaskPresenter implements Initializable {
     List<String> businesses = getAllBusinessValues().stream()
         .map(BusinessValue::getBusiness)
         .collect(Collectors.toList());
-    jobComboBox.setPromptText("Select a job");
-    if (DefaultTaskHolder.getDefaultJob() != null) {
-      jobComboBox.setValue(DefaultTaskHolder.getDefaultJob());
-      changeTask(DefaultTaskHolder.getDefaultJob());
-    }
+//    jobComboBox.setPromptText("Select a job");
+//    if (DefaultTaskHolder.getDefaultJob() != null) {
+//      jobComboBox.setValue(DefaultTaskHolder.getDefaultJob());
+//      changeTask(DefaultTaskHolder.getDefaultJob());
+//    }
     taskCombobox.setPromptText("Select a task");
     if (DefaultTaskHolder.getDefaultTask() != null)
       taskCombobox.setValue(DefaultTaskHolder.getDefaultTask());
-    jobComboBox.setItems(FXCollections.observableArrayList(getJobs()));
+//    jobComboBox.setItems(FXCollections.observableArrayList(getJobs()));
     customTaskField.setVisible(false);
     customTaskLabel.setVisible(false);
     descriptionLabel.setLayoutY(205);
     descriptionField.setLayoutY(201);
     estimateLabel.setLayoutY(170);
     estimateField.setLayoutY(165);
-
     estimateFieldTextProperty();
+    changeTask(job);
   }
 
   private void estimateFieldTextProperty() {
@@ -108,8 +110,8 @@ public class NewTaskPresenter implements Initializable {
 
   @FXML
   public void changeTasks() {
-    String project = jobComboBox.getValue();
-    changeTask(project);
+//    String project = jobComboBox.getValue();
+    changeTask(job);
   }
 
   @SuppressWarnings("all")
@@ -142,25 +144,24 @@ public class NewTaskPresenter implements Initializable {
   public void selectTask() {
     String task = taskCombobox.getValue();
     boolean status = !task.equalsIgnoreCase("Custom Task");
-    mutateFields(status);
   }
 
   @FXML
   public void close() {
-    Stage stage = (Stage) jobComboBox.getScene().getWindow();
+    Stage stage = (Stage) saveButton.getScene().getWindow();
     stage.close();
   }
 
   @FXML
   public void save() {
 
-    if (isAlrightAlrightAlright() || isCustomTaskEmpty()) {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setTitle("Error");
-      alert.setContentText("Please fill out all the fields");
-      alert.showAndWait();
-      return;
-    }
+//    if (isAlrightAlrightAlright() || isCustomTaskEmpty()) {
+//      Alert alert = new Alert(Alert.AlertType.WARNING);
+//      alert.setTitle("Error");
+//      alert.setContentText("Please fill out all the fields");
+//      alert.showAndWait();
+//      return;
+//    }
 
     String description = descriptionField.getText(); // actually task of task
     Boolean billable = Boolean.valueOf(taskCombobox.getValue());
@@ -168,19 +169,19 @@ public class NewTaskPresenter implements Initializable {
     String taskTitle = taskCombobox.getValue();
 
 
-    Job job = getSelectedJob(jobComboBox.getValue());
-    Optional<Task> any = getTasks().stream()
-        .filter(task -> {
-          return task.getTask().equalsIgnoreCase(taskTitle) &&
-              task.getJobId().equals(job.getId());
-        })
-        .findAny();
+//    Job job = getSelectedJob(jobComboBox.getValue());
+//    Optional<Task> any = getTasks().stream()
+//        .filter(task -> {
+//          return task.getTask().equalsIgnoreCase(taskTitle) &&
+//              task.getJobId().equals(job.getId());
+//        })
+//        .findAny();
+//
+//    if (!any.isPresent()) {
+//      System.out.println("new task presenter line 180");
+//    }
 
-    if (!any.isPresent()) {
-      System.out.println("new task presenter line 180");
-    }
-
-    Task task = any.get();
+//    Task task = any.get();
 
 //    BusinessValue businessValue = getBusinessValue();
 //    Project project = getProject();
@@ -188,7 +189,7 @@ public class NewTaskPresenter implements Initializable {
     XpmTask xpmTask = XpmTask.builder()
         .id(0L)
         .task(taskTitle)
-        .job(jobComboBox.getValue())
+        .job(this.job)
         .billable(true)
         .estimateTime(estimateFields)
 //        .invoiceTypeId(new InvoiceType(1L, "Staff"))
@@ -208,7 +209,7 @@ public class NewTaskPresenter implements Initializable {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Task saved!");
     alert.showAndWait();
-    Stage stage = (Stage) jobComboBox.getScene().getWindow();
+    Stage stage = (Stage) saveButton.getScene().getWindow();
     stage.close();
 
   }
@@ -218,9 +219,9 @@ public class NewTaskPresenter implements Initializable {
     return businessValueHandler.getAll();
   }
 
-  private boolean isAlrightAlrightAlright() {
-    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() || estimateField.getText().isEmpty();
-  }
+//  private boolean isAlrightAlrightAlright() {
+//    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() || estimateField.getText().isEmpty();
+//  }
 
   private boolean isCustomTaskEmpty() {
     String task = taskCombobox.getValue();
@@ -231,22 +232,5 @@ public class NewTaskPresenter implements Initializable {
     return false;
   }
 
-  private void mutateFields(boolean status) {
-    if (status) {
-      customTaskField.setVisible(false);
-      customTaskLabel.setVisible(false);
-      descriptionLabel.setLayoutY(205);
-      descriptionField.setLayoutY(201);
-      estimateLabel.setLayoutY(170);
-      estimateField.setLayoutY(165);
-    } else {
 
-      customTaskField.setVisible(true);
-      customTaskLabel.setVisible(true);
-      descriptionLabel.setLayoutY(246);
-      descriptionField.setLayoutY(244);
-      estimateLabel.setLayoutY(205);
-      estimateField.setLayoutY(201);
-    }
-  }
 }

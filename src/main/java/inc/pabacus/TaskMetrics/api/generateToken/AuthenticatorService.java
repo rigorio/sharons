@@ -89,12 +89,12 @@ public class AuthenticatorService {
                                      .build());
       ResponseBody responseBody = call.execute().body();
       String responseString = responseBody.string();
-      System.out.println(responseString);
+//      System.out.println(responseString);
 //      Object object = mapper.readValue(responseString, new TypeReference<Object>() {});
       if (responseString.contains("Bad Request") || responseString.length() < 10) {
         return false;
       }
-      cacheService.put(CacheKey.TRIBELY_TOKEN, responseString);
+      cacheService.put(CacheKey.TRIBELY_TOKEN, "bearer " + responseString);
       TokenRepository.setToken(new Token(responseString));
 //      return credentials;
     } catch (IOException e) {
@@ -117,7 +117,7 @@ public class AuthenticatorService {
     try {
       String accessToken = cacheService.get(CacheKey.SHRIS_TOKEN);
       Call call = client.newCall(new Request.Builder()
-                                     .url(hostConfig.getHost() + "/api/services/app/User/GetCurrentUserEmployeeId")
+                                     .url(hostConfig.getHris() + "/api/services/app/User/GetCurrentUserEmployeeId")
                                      .addHeader("Authorization", accessToken)
                                      .build());
       String responseString = call.execute().body().string();

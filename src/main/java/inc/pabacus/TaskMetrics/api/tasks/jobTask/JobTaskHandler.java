@@ -48,7 +48,7 @@ public class JobTaskHandler {
     return jobTasks;
   }
 
-  public void createJobTask(Long jobId, Integer taskId, String description) { // idk why not workign yet
+  public void createJobTask(Long jobId, Long taskId, String description) { // idk why not workign yet
     try {
 
       JobTaskCreationEntity jtce = new JobTaskCreationEntity(taskId, description);
@@ -107,19 +107,19 @@ public class JobTaskHandler {
   }
 
   private class JobTaskCreationEntity {
-    private Integer taskId;
+    private Long taskId;
     private String description;
 
-    public JobTaskCreationEntity(Integer taskId, String description) {
+    public JobTaskCreationEntity(Long taskId, String description) {
       this.taskId = taskId;
       this.description = description;
     }
 
-    public Integer getTaskId() {
+    public Long getTaskId() {
       return taskId;
     }
 
-    public void setTaskId(Integer taskId) {
+    public void setTaskId(Long taskId) {
       this.taskId = taskId;
     }
 

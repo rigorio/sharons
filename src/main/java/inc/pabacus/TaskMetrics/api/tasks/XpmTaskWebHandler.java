@@ -2,7 +2,8 @@ package inc.pabacus.TaskMetrics.api.tasks;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
@@ -22,22 +23,23 @@ public class XpmTaskWebHandler {
   private static String HOST;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
+  private StringCacheService stringCacheService = new StringCacheService();
+  private String tribelyToken;
 
   public XpmTaskWebHandler() {
     HOST = new HostConfig().getHost();
+    tribelyToken = stringCacheService.get(CacheKey.TRIBELY_TOKEN);
   }
 
   @SuppressWarnings("all")
   public XpmTask save(XpmTask task) {
     try {
       XpmTaskPostEntity xpmDto = new XpmTaskPostEntity();
-      xpmDto.setInvoiceTypeId(1L);
-      xpmDto.setAssigneeId(1L);
       String jsonString = mapper.writeValueAsString(xpmDto);
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", tribelyToken)
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
@@ -56,7 +58,7 @@ public class XpmTaskWebHandler {
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", tribelyToken)
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
@@ -78,7 +80,7 @@ public class XpmTaskWebHandler {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet/" + id)
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", tribelyToken)
                                      .delete()
                                      .build());
       call.execute();
@@ -93,7 +95,7 @@ public class XpmTaskWebHandler {
 
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", tribelyToken)
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -107,10 +109,10 @@ public class XpmTaskWebHandler {
   public List<XpmTask> findByJobTask(Long jobTaskId) {
     List<XpmTask> tasks = new ArrayList<>();
     try {
-
+//      System.out.println("token " + tribelyToken);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/user/timesheet/" + jobTaskId)
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .url(HOST + "/api/user/timesheet/jobtask/" + jobTaskId)
+                                     .addHeader("Authorization", tribelyToken)
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -127,7 +129,7 @@ public class XpmTaskWebHandler {
 
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/jobs/assignees")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", tribelyToken)
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -150,7 +152,7 @@ public class XpmTaskWebHandler {
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet/" + helpMe.getId())
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", tribelyToken)
                                      .put(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();

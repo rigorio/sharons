@@ -24,8 +24,7 @@ public class JobTaskHandler {
   private static String HOST;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
-  private StringCacheService cacheService = new StringCacheService();
-  private String tribelyToken = cacheService.get(CacheKey.TRIBELY_TOKEN);
+  private StringCacheService stringCacheService = new StringCacheService();
 
   public JobTaskHandler() {
     HOST = new HostConfig().getHost();
@@ -36,7 +35,7 @@ public class JobTaskHandler {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/job/tasks")
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       String jsonString = call.execute().body().string();
       mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, FALSE);
@@ -63,10 +62,12 @@ public class JobTaskHandler {
       Request.Builder request = new Request.Builder()
           .url(HOST + "/api/job/tasks/create/" + jobId)
           .post(requestBody)
-          .addHeader("Authorization", tribelyToken);
+          .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN));
 
       Call call = client.newCall(request.build());
       String string = call.execute().body().string();
+      System.out.println("Job answer ");
+      System.out.println(string);
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -79,7 +80,7 @@ public class JobTaskHandler {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/jobs")
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody responseBody = call.execute().body();
       jobs = mapper.readValue(responseBody.string(), new TypeReference<List<Job>>() {});
@@ -95,7 +96,7 @@ public class JobTaskHandler {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/jobs/tasks")
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody responseBody = call.execute().body();
       tasks = mapper.readValue(responseBody.string(), new TypeReference<List<Task>>() {});

@@ -2,6 +2,8 @@ package inc.pabacus.TaskMetrics.api.activity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
@@ -22,16 +24,18 @@ import java.util.Locale;
 public class ActivityHandler {
 
   private static final Logger logger = Logger.getLogger(ActivityHandler.class);
-  private static String HOST ;
+  private static String HOST;
   private HostConfig hostConfig = new HostConfig();
   private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
   private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
+    private StringCacheService stringCacheService = new StringCacheService();
 
   public ActivityHandler() {
     HOST = hostConfig.getHost();
+    
   }
 
 
@@ -40,7 +44,7 @@ public class ActivityHandler {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/activities")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -57,7 +61,7 @@ public class ActivityHandler {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/activity/records")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -87,7 +91,7 @@ public class ActivityHandler {
 
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/activity/record")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .post(requestBody)
                                      .build());
       ResponseBody body = call.execute().body();
@@ -117,7 +121,7 @@ public class ActivityHandler {
 
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/activities")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .post(requestBody)
                                      .build());
       ResponseBody body = call.execute().body();
@@ -135,7 +139,7 @@ public class ActivityHandler {
     Request request = new Request.Builder()
         .url(HOST + "/api/activities?date=" + LocalDate.now())
         .addHeader("Content-Type", "application/json")
-        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
         .method("GET", null)
         .build();
 

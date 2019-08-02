@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvoiceType {
-  private Long invoiceTypeId;
+  private Long id;
   private String type;
 
   public InvoiceType(InvoiceTypeAdapter invoiceTypeAdaptern) {
-    this.invoiceTypeId = invoiceTypeAdaptern.getId().get();
+    this.id = invoiceTypeAdaptern.getId().get();
     this.type = invoiceTypeAdaptern.getType().getValue();
   }
 }

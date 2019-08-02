@@ -19,9 +19,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-public class TimeLogHandler {
+public class TimeLogConnector {
 
 
+  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
   private static final Logger logger = Logger.getLogger(DailyLogWebRepository.class);
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
@@ -29,7 +30,7 @@ public class TimeLogHandler {
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
 
-  public TimeLogHandler() {
+  public TimeLogConnector() {
     HOST = new HostConfig().getHost();
   }
 
@@ -54,6 +55,30 @@ public class TimeLogHandler {
     return dailyLogs;
   }
 
+  public void saveTimeLog(String status) {
+    try {
+      TimeLog timeLog = TimeLog.builder()
+          .id(0L)
+          .userId(1L)
+          .date(LocalDate.now().toString())
+          .time(formatter.format(LocalTime.now()))
+          .status(status)
+          .build();
+      String string = mapper.writeValueAsString(timeLog);
+      RequestBody requestBody = RequestBody.create(JSON, string);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/timelogs")
+                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .post(requestBody)
+                                     .build());
+      String jsonString = call.execute().body().string();
+      System.out.println("response");
+      System.out.println(jsonString);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   public List<TimeLog> all() {
 
     List<TimeLog> timeLogs = new ArrayList<>();
@@ -70,24 +95,6 @@ public class TimeLogHandler {
     }
     return timeLogs;
 
-  }
-
-  public TimeLog changeLog(String status) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
-    try {
-      TimeLog build = TimeLog.builder()
-          .userId(1L)
-          .status(status)
-          .date(LocalDate.now().toString())
-          .time(formatter.format(LocalTime.now()))
-          .build();
-      String jsonString = mapper.writeValueAsString(build);
-      RequestBody body = RequestBody.create(JSON, jsonString);
-      client.newCall(new Request.Builder().build());
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
-    }
-    return null;
   }
 
   public String lastLog() {

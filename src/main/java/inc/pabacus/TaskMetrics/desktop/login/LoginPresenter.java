@@ -4,23 +4,21 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
+import inc.pabacus.TaskMetrics.api.generateToken.AuthenticatorService;
 import inc.pabacus.TaskMetrics.api.generateToken.Credentials;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
-import inc.pabacus.TaskMetrics.api.kicker.KickStatus;
+import inc.pabacus.TaskMetrics.api.generateToken.ReqEnt;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
-import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.dashboard.DashboardView;
-import inc.pabacus.TaskMetrics.desktop.kickout.KickoutView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
-import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,77 +33,81 @@ public class LoginPresenter implements Initializable {
   private JFXPasswordField passwordField;
 
   private KickerService kickerService;
-  private TokenService service;
+  private AuthenticatorService service;
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
+  private StringCacheService cacheService;
 
   public LoginPresenter() {
     kickerService = BeanManager.kickerService();
     service = BeanManager.tokenService();
     userHandler = BeanManager.userHandler();
-    activityHandler = BeanManager.activityHandler();
+    activityHandler = new ActivityHandler();
+    cacheService = new StringCacheService();
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+//    usernameField.setText("userName");
+//    passwordField.setText("password");
+//    login();
   }
 
   @FXML
   public void login() {
-    loginUser();
-  }
-
-  private void jwtLogin(String userNameText, String passWordText) {
-
-    service.generateToken(new Credentials(userNameText, passWordText));
-//    System.out.println(credentials); // for checking
-  }
-
-  private boolean blankFields() {
-    if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
-      Alert alert = new Alert(Alert.AlertType.WARNING);
-      alert.setTitle("Invalid");
-      alert.setHeaderText(null);
-      alert.setContentText("Please fill out all the fields");
-      alert.showAndWait();
-      return true;
-    }
-    return false;
-  }
-
-  private void createCredential() {
-    String username = usernameField.getText();
-    String password = passwordField.getText();
-    userHandler.setUsername(username);
-    userHandler.setPassword(password);
-  }
-
-  private void loginUser() {
     if (blankFields()) return;
     //for smooth loading
     mainPane.getScene().setCursor(Cursor.WAIT);
 //    PauseTransition pause = new PauseTransition(Duration.millis(500)); //half second
 //    pause.setOnFinished(event -> {
 
-      String userName = this.usernameField.getText();
-      String passWord = passwordField.getText();
-      jwtLogin(userName, passWord);
-      createCredential();
+    String userName = this.usernameField.getText();
+    String passWord = passwordField.getText();
+    boolean isSuccessfullyAuthenticated = checkCredentials(userName, passWord);
+    if (isSuccessfullyAuthenticated) {
+      saveCredentials();
 //      kickerService.kicker();
       activityHandler.saveTimestamp(Activity.ONLINE);
       GuiManager.getInstance().changeView(new DashboardView());
-
 //    });
 //    pause.play();
+    }
   }
 
-  @FXML
-  void onLoginUser() {
-    loginUser();
+  private boolean blankFields() {
+    if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+      alertError("Invalid", "Please fill out all the fields");
+      return true;
+    }
+    return false;
   }
 
-  @FXML
-  void onLoginPassword() {
-    loginUser();
+  private boolean checkCredentials(String userNameText, String passWordText) {
+    Credentials credentials = new Credentials(userNameText, passWordText);
+    ReqEnt reqEnt = service.retrieveRequestItems(credentials);
+    if (!reqEnt.isSuccessful()) {
+      alertError("Unsuccessful attempt", reqEnt.getError());
+      return false;
+    }
+    cacheService.put(CacheKey.TRIBELY_TOKEN, reqEnt.getTribelyToken());
+    cacheService.put(CacheKey.SHRIS_TOKEN, reqEnt.getHureyToken());
+    cacheService.put(CacheKey.EMPLOYEE_ID, reqEnt.getEmployeeId());
+    return true;
   }
+
+  private void alertError(String s, String error) {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle(s);
+    alert.setHeaderText(null);
+    alert.setContentText(error);
+    alert.showAndWait();
+  }
+
+  private void saveCredentials() {
+    String username = usernameField.getText();
+    String password = passwordField.getText();
+    userHandler.setUsername(username);
+    userHandler.setPassword(password);
+  }
+
 }

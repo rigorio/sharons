@@ -27,6 +27,7 @@ public class XpmTaskAdapter {
   private StringProperty task;
   private StringProperty status;
   private StringProperty dateCreated;
+  private StringProperty dateFinished;
   private BooleanProperty billable;
   private StringProperty startTime;
   private StringProperty endTime;
@@ -34,9 +35,10 @@ public class XpmTaskAdapter {
   private StringProperty extendCounter;
   private StringProperty totalTimeSpent;
   private StringProperty percentCompleted;
-  private LongProperty businessValueId;
-  private InvoiceTypeAdapter invoiceTypeAdapter;
-  private AssigneeAdapter assigneeAdapter;
+//  private LongProperty businessValueId;
+//  private InvoiceTypeAdapter invoiceTypeAdapter;
+//  private AssigneeAdapter assigneeAdapter;
+//  private StringProperty assignee;
 
   public XpmTaskAdapter(XpmTask xpmTask) {
 
@@ -61,6 +63,9 @@ public class XpmTaskAdapter {
     String dateCreated = xpmTask.getDateCreated();
     this.dateCreated = dateCreated != null ? new SimpleStringProperty(dateCreated) : null;
 
+    String dateFinished = xpmTask.getDateFinished();
+    this.dateFinished = dateFinished != null ? new SimpleStringProperty(dateFinished) : null;
+
     Boolean billable = xpmTask.getBillable();
     this.billable = billable != null ? new SimpleBooleanProperty(billable) : null;
 
@@ -82,13 +87,5 @@ public class XpmTaskAdapter {
     String percentCompleted = xpmTask.getPercentCompleted();
     this.percentCompleted = percentCompleted != null ? new SimpleStringProperty(percentCompleted) : null;
 
-    Long businessValueId = xpmTask.getBusinessValueId();
-    this.businessValueId = businessValueId != null ? new SimpleLongProperty(businessValueId) : null;
-
-    InvoiceType invoiceType = xpmTask.getInvoiceType();
-    this.invoiceTypeAdapter = invoiceType != null ? new InvoiceTypeAdapter(invoiceType) : null;
-
-    Assignee assignee = xpmTask.getAssignee();
-    this.assigneeAdapter = assignee != null ? new AssigneeAdapter(assignee) : null;
   }
 }

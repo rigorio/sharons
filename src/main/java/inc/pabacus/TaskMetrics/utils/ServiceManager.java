@@ -1,6 +1,6 @@
 package inc.pabacus.TaskMetrics.utils;
 
-import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
+import inc.pabacus.TaskMetrics.api.generateToken.AuthenticatorService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.kicker.TokenHolder;
@@ -19,23 +19,24 @@ public class ServiceManager {
   private HardwareServiceAPI hardwareServiceAPI = BeanManager.hardwareServiceAPI();
   private SoftwareServiceAPI softwareServiceAPI = BeanManager.softwareServiceAPI();
   private ScreenshotServiceImpl screenshotService = BeanManager.screenshotService();
-  private TokenService tokenService = BeanManager.tokenService();
+  private AuthenticatorService authenticatorService = BeanManager.tokenService();
   private ActivityListener activityListener = BeanManager.activityListener();
   private DailyLogHandler dailyLogHandler = BeanManager.dailyLogService();
 
 
   public void activate() {
-    hardwareServiceAPI.sendHardwareData();
-    standupService.runStandup();
-    softwareServiceAPI.sendSoftwareData();
-    screenshotService.enableScreenShot();
+//    hardwareServiceAPI.sendHardwareData();
+//    standupService.runStandup();
+//    softwareServiceAPI.sendSoftwareData();
+//    screenshotService.enableScreenShot();
     Runnable runnable = () -> {
       Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
       activityListener.unListen();
     };
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
-    activityListener.listen();
+//    activityListener.listen();
+//    dailyLogHandler.checkIfUserIsBreak();
   }
 
   public void deactivate() {
@@ -47,7 +48,7 @@ public class ServiceManager {
     screenshotService.disableScreenshot();
     screenshotService.shutdownScheduler();
     kickerService.stopKicker();
-    tokenService.stopToken();
+    authenticatorService.stopToken();
     activityListener.unListen();
   }
 

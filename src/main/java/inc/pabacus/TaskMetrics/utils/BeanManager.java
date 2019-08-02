@@ -1,8 +1,10 @@
 package inc.pabacus.TaskMetrics.utils;
 
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenService;
+import inc.pabacus.TaskMetrics.api.generateToken.AuthenticatorService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.kicker.KickerService;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
@@ -15,7 +17,7 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.status.StatusUpdateHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
-import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogConnector;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 
 public class BeanManager {
@@ -30,11 +32,12 @@ public class BeanManager {
   private static DailyLogHandler dailyLogService = new DailyLogHandler();
   private static XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
   private static ActivityHandler activityHandler = new ActivityHandler();
-  private static TokenService tokenService = new TokenService();
+  private static AuthenticatorService authenticatorService = new AuthenticatorService();
   private static LeaveService leaveService = new LeaveService();
   private static StatusUpdateHandler statusUpdateHandler = new StatusUpdateHandler();
   private static ValidationHandler validationHandler = new ValidationHandler();
-  private static TimeLogHandler timeLogHandler = new TimeLogHandler();
+  private static TimeLogConnector timeLogConnector = new TimeLogConnector();
+  private static CacheService cacheService = new StringCacheService();
 
   public static ActivityListener activityListener() {
     return activityListener;
@@ -80,8 +83,8 @@ public class BeanManager {
     return activityHandler;
   }
 
-  public static TokenService tokenService() {
-    return tokenService;
+  public static AuthenticatorService tokenService() {
+    return authenticatorService;
   }
 
   public static LeaveService leaveService() {
@@ -92,8 +95,12 @@ public class BeanManager {
     return statusUpdateHandler;
   }
 
-  public static TimeLogHandler timeLogHandler() {
-    return timeLogHandler;
+  public static TimeLogConnector timeLogConnector() {
+    return timeLogConnector;
+  }
+
+  public static CacheService cacheService() {
+    return cacheService;
   }
 
   // I am too lazy to provide an explanation as to why

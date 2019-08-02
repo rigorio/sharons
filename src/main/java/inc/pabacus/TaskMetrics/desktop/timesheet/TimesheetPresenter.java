@@ -1,17 +1,14 @@
 package inc.pabacus.TaskMetrics.desktop.timesheet;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
-import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.LogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLogFXAdapter;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
-import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
@@ -20,6 +17,7 @@ import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,16 +30,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.controlsfx.control.Notifications;
 
-import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -64,43 +57,42 @@ public class TimesheetPresenter implements Initializable {
 
   private static final int DEF_SIZE = 900;
 
-  private DailyLogHandler dailyLogHandler;
   private MockUser mockUser;
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
   private HostConfig hostConfig = new HostConfig();
+  private LogService logService;
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
-  private TimeLogHandler timeLogHandler;
 
   private static String HOST;
 
   public TimesheetPresenter() {
     HOST = hostConfig.getHost();
-    dailyLogHandler = BeanManager.dailyLogService();
     userHandler = BeanManager.userHandler();
     activityHandler = BeanManager.activityHandler();
-    timeLogHandler = BeanManager.timeLogHandler(); // TODO if to be using the new api, use this handler instead
+    logService = new HRISLogHandler();
   }
 
   @Override
   @SuppressWarnings("all")
   public void initialize(URL location, ResourceBundle resources) {
+    Platform.runLater(() -> {
+      mockUser = new MockUser("Rigo", "Logged Out");
+      userName.setText(userHandler.getUsername()); //set userName
 
-    mockUser = new MockUser("Rigo", "Logged Out");
-    userName.setText(userHandler.getUsername()); //set username
-
-    String status = getStatus();
-    comboBox.setValue(status);
-    initTimeSheet();
-    populateCombobox();
+      String status = getStatus();
+      comboBox.setValue(status);
+      initTimeSheet();
+      populateCombobox();
+    });
   }
 
   @FXML
   public void updateStatus() {
-    String status = comboBox.getValue();
-    if (status.equals("Break")) {
+    String chosenStatus = comboBox.getValue();
+    if (chosenStatus.equals("Break")) {
       System.out.println("Spawn countdown timer");
-    } else if (status.equals("Meeting")) {
+    } else if (chosenStatus.equals("Meeting")) {
       System.out.println("Spawn MEETING DONE box");
     } else {
 
@@ -114,16 +106,14 @@ public class TimesheetPresenter implements Initializable {
       }
 
       Activity activity = Activity.BUSY; // default ?
-
-      switch (status) {
-        case "Logged Out":
-          status = "Logged Out";
-          dailyLogHandler.changeLog(LogStatus.OUT.getStatus());
+      LogStatus status = null;
+      switch (chosenStatus) {
+        case "Time Out":
+          status = LogStatus.OUT;
           activity = Activity.OFFLINE;
           break;
-        case "Logged In":
-          status = "Logged In";
-          dailyLogHandler.changeLog(LogStatus.IN.getStatus());
+        case "Time In":
+          status = LogStatus.IN;
           activity = Activity.ONLINE;
           break;
         case "Lunch Break":
@@ -131,8 +121,7 @@ public class TimesheetPresenter implements Initializable {
             notification("Break Timer is currently on!");
             break;
           } else {
-            status = "Lunch Break";
-            dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+            status = LogStatus.LB;
             activity = Activity.LUNCH;
             GuiManager.getInstance().displayView(new BreakView());
             notification("Status changed to Break");
@@ -143,14 +132,14 @@ public class TimesheetPresenter implements Initializable {
             notification("Break Timer is currently on, please Back Online!");
             break;
           } else {
-            status = "Back From Break";
-            dailyLogHandler.changeLog(LogStatus.BFB.getStatus());
+            status = LogStatus.BFB;
             activity = Activity.BUSY;
             break;
           }
       }
-      mockUser.setStatus(status);
-      comboBox.setValue(status);
+      logService.changeLog(status.getStatus());
+      mockUser.setStatus(chosenStatus);
+      comboBox.setValue(chosenStatus);
       refreshTimesheetTable();
       activityHandler.saveTimestamp(activity);
     }
@@ -159,10 +148,10 @@ public class TimesheetPresenter implements Initializable {
   private void populateCombobox() {
 
     List<String> statuses = new ArrayList<>();
-    statuses.add("Logged In");
+    statuses.add("Time In");
     statuses.add("Lunch Break");
     statuses.add("Back From Break");
-    statuses.add("Logged Out");
+    statuses.add("Time Out");
     statuses.add("Break");
     statuses.add("Meeting");
     ObservableList<String> defaultChoices = FXCollections.observableArrayList(statuses);
@@ -195,15 +184,19 @@ public class TimesheetPresenter implements Initializable {
     otl.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
     bfl.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
     out.prefWidthProperty().bind(timeSheet.widthProperty().divide(8));
-    getLogs();
+//    getLogs();
     timeSheet.getColumns().addAll(date, in, otl, bfl, out);
 
     refreshTimesheetTable();
 
   }
 
+  private List<DailyLog> allHrisTimeLogs() {
+    return logService.allConvertedDailyLogs();
+  }
+
   private ObservableList<DailyLogFXAdapter> getLogs() {
-    List<DailyLogFXAdapter> logs = dailyLogHandler.getAllLogs().stream()
+    List<DailyLogFXAdapter> logs = allHrisTimeLogs().stream()
         .map(DailyLogFXAdapter::new)
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(logs);
@@ -216,81 +209,7 @@ public class TimesheetPresenter implements Initializable {
   // TODO refactor/extract. Does not follow code by responsibility
 
   private String getStatus() {
-//    String in = null, otl = null, bfl = null, out = null;
-    String status = "";
-    try {
-      LocalDate dateNow = LocalDate.now();
-
-      // code request code here
-      Request request = new Request.Builder()
-          .url(HOST + "/api/logs")
-          .addHeader("Accept", "application/json")
-          .addHeader("Authorization", TokenRepository.getToken().getToken())
-          .method("GET", null)
-          .build();
-
-      Response response = client.newCall(request).execute();
-      String jsonString = response.body().string();
-
-      List<DailyLog> dailyLogs = new ObjectMapper().readValue(jsonString, new TypeReference<List<DailyLog>>() {});
-      Optional<DailyLog> any = dailyLogs.stream()
-          .filter(dailyLog -> dailyLog.getDate().equals(dateNow.toString()))
-          .findAny();
-      if (!any.isPresent())
-        status = "Logged Out";
-      else {
-        DailyLog dailyLog = any.get();
-        String in = dailyLog.getIn();
-        String otl = dailyLog.getOtl();
-        String bfl = dailyLog.getBfl();
-        String out = dailyLog.getOut();
-        if (in == null || in.equals("null"))
-          status = "Logged Out";
-        else if (otl == null || otl.equals("null"))
-          status = "Logged In";
-        else if (bfl == null || bfl.equals("null"))
-          status = "Lunch Break";
-        else if (out == null || out.equals("null"))
-          status = "Back From Break";
-        else
-          status = "Logged Out";
-      }
-
-/*
-      JSONArray jsonarray = new JSONArray(jsonString);
-      for (int i = 0; i < jsonarray.length(); i++) {
-        JSONObject jsonobject = jsonarray.getJSONObject(i);
-        dateLabel.setText(jsonobject.getString("date"));
-        if (dateLabel.getText().equalsIgnoreCase(String.valueOf(dateNow))) {
-          in = jsonobject.getString("in");
-          otl = jsonobject.getString("otl");
-          bfl = jsonobject.getString("bfl");
-          out = jsonobject.getString("out");
-        }
-      }
-      */
-    } catch (IOException e) {
-      System.out.println(e); // TODO log exception
-    }
-    return status;
-/*
-    if (dateLabel.getText().equalsIgnoreCase(String.valueOf(dateNow))) {
-      if (in == null || in.equals("null")) {
-        statusText.setText("Logged Out");
-      } else if (otl == null || otl.equals("null")) {
-        statusText.setText("Logged In");
-      } else if (bfl == null || bfl.equals("null")) {
-        statusText.setText("Out To Lunch");
-      } else if (out == null || out.equals("null")) {
-        statusText.setText("Back From Lunch");
-      } else {
-        statusText.setText("Logged Out"); //incase all status are null
-      }
-    } else {
-      statusText.setText("Logged Out");
-    }
-    */
-
+    return logService.getLatest();
   }
 
   private void notification(String notif) {

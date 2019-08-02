@@ -1,34 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.141"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.tasks.TasksPresenter">
-  <TableView fx:id="tasksTable" layoutX="14.0" layoutY="59.0" onMouseClicked="#tableClicked" prefHeight="609.0"
-             prefWidth="884.0">
+<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.tasks.TasksPresenter">
+  <TableView fx:id="tasksTable" layoutX="14.0" layoutY="57.0" onMouseClicked="#tableClicked" prefHeight="647.0" prefWidth="899.0">
     <columnResizePolicy>
-      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
     </columnResizePolicy>
   </TableView>
-  <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="683.0" layoutY="21.0" onAction="#newTask"
-             style="-fx-background-color: #E65100;" text="+ New Task" textFill="WHITE"/>
-  <JFXButton fx:id="startButton" layoutX="785.0" layoutY="21.0" mnemonicParsing="false" onAction="#startTask"
-             style="-fx-background-color: #E65100;" text="Start" textFill="WHITE"/>
-  <JFXButton fx:id="refreshButton" layoutX="842.0" layoutY="21.0" mnemonicParsing="false" onAction="#refreshTask"
-             style="-fx-background-color: #E65100;" text="Refresh" textFill="WHITE"/>
-  <JFXComboBox fx:id="statusBox" layoutX="134.0" layoutY="21.0" onAction="#updateTable" prefHeight="25.0"
-               prefWidth="148.0"/>
-  <JFXButton layoutX="765.0" layoutY="675.0" mnemonicParsing="false" onAction="#viewWorkSummary" prefHeight="25.0"
-             prefWidth="133.0" style="-fx-background-color: #E65100;" text="View work summary" textFill="WHITE"/>
-  <JFXButton fx:id="editButton" layoutX="623.0" layoutY="21.0" mnemonicParsing="false" onAction="#editTask"
-             style="-fx-background-color: #E65100;" text="Edit" textFill="WHITE"/>
-  <Label layoutX="14.0" layoutY="25.0" prefHeight="17.0" prefWidth="79.0" text="Filter Task by:"/>
-  <Label layoutX="93.0" layoutY="25.0" prefHeight="17.0" prefWidth="41.0" text="Status"/>
-  <Label layoutX="285.0" layoutY="25.0" prefHeight="17.0" prefWidth="41.0" text="Time"/>
-  <JFXComboBox fx:id="timeBox" layoutX="326.0" layoutY="21.0" onAction="#updateTable" prefHeight="25.0"
-               prefWidth="148.0"/>
+  <JFXComboBox fx:id="statusBox" layoutX="68.0" layoutY="13.0" onAction="#updateTable" prefHeight="25.0" prefWidth="148.0" />
+<!--  <JFXButton fx:id="editButton" layoutX="620.0" layoutY="13.0" mnemonicParsing="false" onAction="#editTask"-->
+<!--             style="-fx-background-color: #E65100;" text="Edit" textFill="WHITE"/>-->
+  <JFXComboBox fx:id="timeBox" layoutX="236.0" layoutY="13.0" onAction="#updateTable" prefHeight="25.0" prefWidth="148.0" />
+  <Hyperlink layoutX="14.0" layoutY="14.0" onAction="#viewJobsPage" text="Back" />
+  <Hyperlink fx:id="startLink" layoutX="680.0" layoutY="14.0" onAction="#startTask" text="Start" />
+  <Hyperlink fx:id="refreshButton" layoutX="734.0" layoutY="14.0" onAction="#refreshTask" text="Refresh" />
+  <Hyperlink layoutX="801.0" layoutY="14.0" onAction="#viewWorkSummary" text="Work Summary" />
+  <Hyperlink layoutX="579.0" layoutY="14.0" onAction="#newTask" text="+ New Task" />
+  <Label layoutX="730.0" layoutY="18.0" text="|" textFill="#aeaead" />
+   <Label layoutX="799.0" layoutY="18.0" text="|" textFill="#aeaead" />
+   <Label layoutX="676.0" layoutY="18.0" text="|" textFill="#aeaead" />
 </AnchorPane>

@@ -18,3 +18,10 @@
  .table-row-cell{
      -fx-background-color: #FFFFFF;
  }
+
+ .hyperlink {
+     -fx-text-fill: #F57C00;
+ }
+ .hyperlink #startLink{
+     -fx-text-fill: #1DE9B6;
+ }

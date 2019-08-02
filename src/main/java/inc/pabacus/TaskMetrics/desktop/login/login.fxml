@@ -6,18 +6,25 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane id="login-background" fx:id="mainPane" prefHeight="550.0" prefWidth="900.0" stylesheets="login.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.login.LoginPresenter">
+<AnchorPane id="login-background" fx:id="mainPane" prefHeight="550.0" prefWidth="900.0" stylesheets="login.css"
+            xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="inc.pabacus.TaskMetrics.desktop.login.LoginPresenter">
   <!--   <ImageView fitHeight="642.0" fitWidth="1026.0" layoutX="-13.0" pickOnBounds="true" preserveRatio="true">-->
   <!--      <Image url="@../../../../../../resources/images/laptop-one-side.jpg" />-->
   <!--   </ImageView>-->
-  <AnchorPane layoutX="-20.0" prefHeight="577.0" prefWidth="473.0" style="-fx-background-color: #FFF;" AnchorPane.topAnchor="0.0">
-    <JFXTextField fx:id="usernameField" focusColor="#FFE0B2" labelFloat="true" layoutX="100.0" layoutY="145.0" onAction="#onLoginUser" prefHeight="30.0" prefWidth="250.0" promptText="username" unFocusColor="#E65100" />
-    <JFXPasswordField fx:id="passwordField" focusColor="#FFE0B2" labelFloat="true" layoutX="100.0" layoutY="212.0" onAction="#onLoginPassword" prefHeight="30.0" prefWidth="250.0" promptText="password" unFocusColor="#E65100" />
-    <JFXButton id="signIn" buttonType="RAISED" layoutX="100.0" layoutY="282.0" onAction="#login" prefHeight="30.0" prefWidth="250.0" ripplerFill="#FFE0B2" style="-fx-background-color: #E65100;" text="Sign in" textFill="WHITE" />
+  <AnchorPane layoutX="-20.0" prefHeight="577.0" prefWidth="473.0" style="-fx-background-color: #FFF;"
+              AnchorPane.topAnchor="0.0">
+    <JFXTextField fx:id="usernameField" focusColor="#FFE0B2" labelFloat="true" layoutX="100.0" layoutY="145.0"
+                  onAction="#login" prefHeight="30.0" prefWidth="250.0" promptText="username" unFocusColor="#E65100"/>
+    <JFXPasswordField fx:id="passwordField" focusColor="#FFE0B2" labelFloat="true" layoutX="100.0" layoutY="212.0"
+                      onAction="#login" prefHeight="30.0" prefWidth="250.0" promptText="password"
+                      unFocusColor="#E65100"/>
+    <JFXButton id="signIn" buttonType="RAISED" layoutX="100.0" layoutY="282.0" onAction="#login" prefHeight="30.0"
+               prefWidth="250.0" ripplerFill="#FFE0B2" style="-fx-background-color: #E65100;" text="Sign in"
+               textFill="WHITE"/>
     <Label layoutX="187.0" layoutY="75.0" prefHeight="48.0" prefWidth="76.0" text="Sign In" textFill="#6f6c6c">
       <font>
-        <Font size="24.0" />
+        <Font size="24.0"/>
       </font>
     </Label>
   </AnchorPane>

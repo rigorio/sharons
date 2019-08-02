@@ -10,12 +10,15 @@ import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
+import inc.pabacus.TaskMetrics.desktop.jobs.JobTaskIdHolder;
+import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,7 +27,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
@@ -52,12 +57,12 @@ public class TasksPresenter implements Initializable {
   @FXML
   private JFXComboBox<String> statusBox;
   @FXML
-  private JFXButton refreshButton;
+  private Hyperlink refreshButton;
   @FXML
-  private JFXButton startButton;
+  private Hyperlink startLink;
   @FXML
   private TableView<XpmTaskAdapter> tasksTable;
-//  @FXML
+  //  @FXML
 //  private JFXTextField sortTask;
   @FXML
   private JFXComboBox<String> timeBox;
@@ -67,16 +72,18 @@ public class TasksPresenter implements Initializable {
 
   public TasksPresenter() {
     activityHandler = BeanManager.activityHandler();
-    xpmTaskHandler = BeanManager.xpmTaskHandler();
+    xpmTaskHandler = new XpmTaskWebHandler();
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+
     //Start button will be disable when you click it without choosing a task
-    startButton.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()));
+    startLink.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()));
 
     statusBox.setValue("All");
-    timeBox.setValue("All");
+    timeBox.setValue("Today");
 
     TableColumn<XpmTaskAdapter, String> dateCreated = new TableColumn<>("Date Created");
     dateCreated.setCellValueFactory(param -> param.getValue().getDateCreated());
@@ -150,12 +157,12 @@ public class TasksPresenter implements Initializable {
 //
 //    });
 //
-//  }
 
+  //  }
   @FXML
   void tableClicked(MouseEvent event) {
     event.consume();
-    startButton.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()).or(Bindings.when(new SimpleBooleanProperty(BreakPresenter.windowIsOpen)).then(true).otherwise(false)));
+    startLink.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()).or(Bindings.when(new SimpleBooleanProperty(BreakPresenter.windowIsOpen)).then(true).otherwise(false)));
   }
 
   @FXML
@@ -188,7 +195,7 @@ public class TasksPresenter implements Initializable {
     }
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
-    ((Stage) startButton.getScene().getWindow()).setIconified(true);
+    ((Stage) startLink.getScene().getWindow()).setIconified(true);
   }
 
   @FXML
@@ -207,6 +214,11 @@ public class TasksPresenter implements Initializable {
     GuiManager.getInstance().displayView(new EditView());
   }
 
+  @FXML
+  public void viewJobsPage() {
+    updateDynamicPaneContent(new JobsView().getView());
+  }
+
   private void initTasksTable() {
     tasksTable.setItems(FXCollections.observableArrayList(getAllTasks()));
   }
@@ -220,28 +232,14 @@ public class TasksPresenter implements Initializable {
       case "Last Week":
         backLogs = getAllTasks().stream()
             .filter(backLog -> {
-              StringProperty currentSTatus = backLog.getStatus();
-              if (currentSTatus == null)
-                currentSTatus = new SimpleStringProperty("");
-              LocalDate date = LocalDate.now().minusDays(7);
-              LocalDate getDate = LocalDate.parse(backLog.getDateCreated().get());
-              if (status.equalsIgnoreCase("all"))
-                return getDate.isAfter(date);
-              return getDate.isAfter(date) && currentSTatus.get().equalsIgnoreCase(status);
+              return lovelyDay(status, backLog, 7);
             })
             .collect(Collectors.toList());
         break;
       case "Last Month":
         backLogs = getAllTasks().stream()
             .filter(backLog -> {
-              StringProperty currentSTatus = backLog.getStatus();
-              if (currentSTatus == null)
-                currentSTatus = new SimpleStringProperty("");
-              LocalDate date = LocalDate.now().minusDays(30);
-              LocalDate getDate = LocalDate.parse(backLog.getDateCreated().get());
-              if (status.equalsIgnoreCase("all"))
-                return getDate.isAfter(date);
-              return getDate.isAfter(date) && currentSTatus.get().equalsIgnoreCase(status);
+              return lovelyDay(status, backLog, 30);
             })
             .collect(Collectors.toList());
         break;
@@ -287,10 +285,27 @@ public class TasksPresenter implements Initializable {
     return FXCollections.observableArrayList(backLogs);
   }
 
+  private boolean lovelyDay(String status, XpmTaskAdapter backLog, int i) {
+    StringProperty currentSTatus = backLog.getStatus();
+    if (currentSTatus == null)
+      currentSTatus = new SimpleStringProperty("");
+    LocalDate date = LocalDate.now().minusDays(i);
+    LocalDate getDate = LocalDate.parse(backLog.getDateCreated().get());
+    if (status.equalsIgnoreCase("all"))
+      return getDate.isAfter(date);
+    return getDate.isAfter(date) && currentSTatus.get().equalsIgnoreCase(status);
+  }
+
   private void refreshTasks() {
+    List<TableColumn<XpmTaskAdapter, ?>> sortOrder = new ArrayList<>(tasksTable.getSortOrder());
     int i = tasksTable.getSelectionModel().getSelectedIndex();
-    refreshTables();
-    tasksTable.getSelectionModel().select(i);
+    Platform.runLater(() -> {
+      initTasksTable();
+//      refreshTables();
+      tasksTable.getSortOrder().clear();
+      tasksTable.getSortOrder().addAll(sortOrder);
+      tasksTable.getSelectionModel().select(i);
+    });
   }
 
   private void refreshTables() {
@@ -306,14 +321,25 @@ public class TasksPresenter implements Initializable {
    */
   private void refreshingService() {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(this::refreshTasks, 5L, 5L, TimeUnit.SECONDS);
+    ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(this::refreshTasks, 60L, 60L, TimeUnit.SECONDS);
   }
 
   private List<XpmTaskAdapter> getAllTasks() {
-    List<XpmTask> allTasks = xpmTaskHandler.findAll();
+    Long id = JobTaskIdHolder.getId();
+    List<XpmTask> allTasks = xpmTaskHandler.findByJobTask(id);
     return FXCollections
         .observableArrayList(allTasks.stream()
                                  .map(XpmTaskAdapter::new)
                                  .collect(Collectors.toList()));
+  }
+
+  private void updateDynamicPaneContent(Parent parent) {
+    AnchorPane.setTopAnchor(parent, 0.0);
+    AnchorPane.setLeftAnchor(parent, 0.0);
+    AnchorPane.setBottomAnchor(parent, 0.0);
+    AnchorPane.setRightAnchor(parent, 0.0);
+
+    mainPane.getChildren().clear();
+    mainPane.getChildren().add(parent);
   }
 }

@@ -2,7 +2,9 @@ package inc.pabacus.TaskMetrics.api.tasks;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
+import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
 import okhttp3.*;
@@ -21,6 +23,7 @@ public class XpmTaskWebHandler {
   private static String HOST;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
+  private StringCacheService stringCacheService = new StringCacheService();
 
   public XpmTaskWebHandler() {
     HOST = new HostConfig().getHost();
@@ -29,11 +32,12 @@ public class XpmTaskWebHandler {
   @SuppressWarnings("all")
   public XpmTask save(XpmTask task) {
     try {
-      String jsonString = mapper.writeValueAsString(task);
+      XpmTaskPostEntity xpmDto = new XpmTaskPostEntity();
+      String jsonString = mapper.writeValueAsString(xpmDto);
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/task")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .url(HOST + "/api/user/timesheet")
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
@@ -46,6 +50,25 @@ public class XpmTaskWebHandler {
     return task;
   }
 
+  public void save(XpmTaskPostEntity dto_save) {
+    try {
+      String jsonString = mapper.writeValueAsString(dto_save);
+      System.out.println(jsonString);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/timesheet")
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
+                                     .post(body)
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      XpmTask xpmTask;
+      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+      xpmTask.setId(xpmTask.getId());
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+  }
+
   public Optional<XpmTask> findById(Long id) {
     return findAll().stream()
         .filter(task -> task.getId().equals(id))
@@ -55,8 +78,8 @@ public class XpmTaskWebHandler {
   public void deleteById(Long id) {
     try {
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/task/" + id)
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .url(HOST + "/api/user/timesheet/" + id)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .delete()
                                      .build());
       call.execute();
@@ -70,35 +93,74 @@ public class XpmTaskWebHandler {
     try {
 
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/tasks")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .url(HOST + "/api/user/timesheet")
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
       tasks = mapper.readValue(jsonString, new TypeReference<List<XpmTask>>() {});
-
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
     return tasks;
   }
 
-  public List<XpmTask> findAllDefaults() {
+  public List<XpmTask> findByJobTask(Long jobTaskId) {
     List<XpmTask> tasks = new ArrayList<>();
+    try {
+//      System.out.println("token " + stringCacheService.get(CacheKey.TRIBELY_TOKEN));
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/timesheet/jobtask/" + jobTaskId)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
+                                     .build());
+      ResponseBody body = call.execute().body();
+      String jsonString = body.string();
+      tasks = mapper.readValue(jsonString, new TypeReference<List<XpmTask>>() {});
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+    return tasks;
+  }
+
+  public Assignee getAssignee() {
+    List<Assignee> assignees = new ArrayList<>();
     try {
 
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/tasks/defaults")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .url(HOST + "/api/jobs/assignees")
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
-      tasks = mapper.readValue(jsonString, new TypeReference<List<XpmTask>>() {});
+      assignees = mapper.readValue(jsonString, new TypeReference<List<Assignee>>() {});
 
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
-    return tasks;
+
+    Optional<Assignee> any = assignees.stream().filter(assignee -> assignee.getUserName().equals(UsernameHolder.username))
+        .findAny();
+    Assignee assignee;
+    assignee = any.orElseGet(() -> new Assignee(1L, UsernameHolder.username));
+    return assignee;
   }
 
+  public void edit(XpmTaskPostEntity helpMe) {
+    try {
+      String jsonString = mapper.writeValueAsString(helpMe);
+      System.out.println(jsonString);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/timesheet/" + helpMe.getId())
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
+                                     .put(body)
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      XpmTask xpmTask;
+      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+      xpmTask.setId(xpmTask.getId());
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+  }
 }

@@ -4,13 +4,14 @@ import okhttp3.OkHttpClient;
 
 import javax.net.ssl.*;
 import java.security.cert.CertificateException;
+import java.util.concurrent.TimeUnit;
 
 public class SslUtil {
 
   public static OkHttpClient getSslOkHttpClient() {
     try {
       // Create a trust manager that does not validate certificate chains
-      final TrustManager[] trustAllCerts = new TrustManager[] {
+      final TrustManager[] trustAllCerts = new TrustManager[]{
           new X509TrustManager() {
             @Override
             public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
@@ -32,18 +33,17 @@ public class SslUtil {
       sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
       // Create an ssl socket factory with our all-trusting manager
       final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-      OkHttpClient.Builder builder = new OkHttpClient.Builder();
-      builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
-      builder.hostnameVerifier(new HostnameVerifier() {
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-          return true;
-        }
-      });
-
-      OkHttpClient okHttpClient = builder.build();
-      return okHttpClient;
+      return new OkHttpClient.Builder()
+          .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+          .hostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+              return true;
+            }
+          })
+          .connectTimeout(30, TimeUnit.SECONDS)
+          .writeTimeout(30, TimeUnit.SECONDS)
+          .readTimeout(30, TimeUnit.SECONDS).build();
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

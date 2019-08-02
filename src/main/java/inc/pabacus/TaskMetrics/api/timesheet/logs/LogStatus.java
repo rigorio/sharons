@@ -1,10 +1,10 @@
 package inc.pabacus.TaskMetrics.api.timesheet.logs;
 
 public enum LogStatus {
-  IN("in"),
-  LB("lb"), // lunch break
-  BFB("bfb"), // back from break
-  OUT("out");
+  IN("Time In"),
+  LB("Lunch Break"), // lunch break
+  BFB("Back From Break"), // back from break
+  OUT("Time Out");
 
   private String status;
 

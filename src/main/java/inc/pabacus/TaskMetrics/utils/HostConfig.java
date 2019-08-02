@@ -14,10 +14,15 @@ public class HostConfig {
 
   private Repository<Map<String, Object>, Long> hostRepository;
   private static final String KEY = "host";
+  private String hris = "https://hureyweb-staging.azurewebsites.net";
+
+  public String getHris() {
+    return hris;
+  }
 
   public HostConfig() {
     FlatFileSettings flatFileSettings = new DefaultSettings();
-    flatFileSettings.setFileName("host.json");
+    flatFileSettings.setFileName("DevHost.json"); // so we can run two tribely apps at the same time
     hostRepository = new FlatFileRepository(flatFileSettings);
   }
 

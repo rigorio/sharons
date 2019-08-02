@@ -11,4 +11,5 @@ public class ReqEnt {
   private String tribelyToken;
   private String hureyToken;
   private String employeeId;
+  private boolean status;
 }

@@ -44,7 +44,7 @@ public class LoginPresenter implements Initializable {
     kickerService = BeanManager.kickerService();
     service = BeanManager.tokenService();
     userHandler = BeanManager.userHandler();
-    activityHandler = BeanManager.activityHandler();
+    activityHandler = new ActivityHandler();
   }
 
   @Override

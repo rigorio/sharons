@@ -1,10 +1,12 @@
 package inc.pabacus.TaskMetrics.api.generateToken;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqEnt {
@@ -12,4 +14,5 @@ public class ReqEnt {
   private String hureyToken;
   private String employeeId;
   private boolean status;
+  private String error;
 }

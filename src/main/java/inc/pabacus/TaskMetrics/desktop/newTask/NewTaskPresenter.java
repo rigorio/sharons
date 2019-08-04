@@ -6,7 +6,6 @@ import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
-import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
@@ -71,9 +70,6 @@ public class NewTaskPresenter implements Initializable {
     //unfocus textfield
     Platform.runLater(() -> closeButton.requestFocus()); // what
 
-    List<String> businesses = getAllBusinessValues().stream()
-        .map(BusinessValue::getBusiness)
-        .collect(Collectors.toList());
 //    jobComboBox.setPromptText("Select a job");
 //    if (DefaultTaskHolder.getDefaultJob() != null) {
 //      jobComboBox.setValue(DefaultTaskHolder.getDefaultJob());
@@ -83,12 +79,6 @@ public class NewTaskPresenter implements Initializable {
     if (DefaultTaskHolder.getDefaultTask() != null)
       taskCombobox.setValue(DefaultTaskHolder.getDefaultTask());
 //    jobComboBox.setItems(FXCollections.observableArrayList(getJobs()));
-    customTaskField.setVisible(false);
-    customTaskLabel.setVisible(false);
-    descriptionLabel.setLayoutY(205);
-    descriptionField.setLayoutY(201);
-    estimateLabel.setLayoutY(170);
-    estimateField.setLayoutY(165);
     estimateFieldTextProperty();
     changeTask(job);
   }
@@ -213,24 +203,5 @@ public class NewTaskPresenter implements Initializable {
     stage.close();
 
   }
-
-
-  private List<BusinessValue> getAllBusinessValues() {
-    return businessValueHandler.getAll();
-  }
-
-//  private boolean isAlrightAlrightAlright() {
-//    return jobComboBox.getSelectionModel().isEmpty() || taskCombobox.getSelectionModel().isEmpty() || descriptionField.getText().isEmpty() || estimateField.getText().isEmpty();
-//  }
-
-  private boolean isCustomTaskEmpty() {
-    String task = taskCombobox.getValue();
-    boolean status = task.equalsIgnoreCase("Custom Task");
-    if (status) {
-      return customTaskField.getText().isEmpty();
-    }
-    return false;
-  }
-
 
 }

@@ -3,9 +3,10 @@ package inc.pabacus.TaskMetrics.desktop.chat;
 import com.jfoenix.controls.JFXListView;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.chat.Chat;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.handlers.LogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
@@ -61,11 +62,13 @@ public class ChatPresenter implements Initializable {
   private ActivityHandler activityHandler;
   private LogService logService;
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
+  private StringCacheService cacheService;
 
   public ChatPresenter() {
     HOST = hostConfig.getHost();
     activityHandler = BeanManager.activityHandler();
     logService = new HRISLogHandler();
+    cacheService = new StringCacheService();
   }
 
   @Override
@@ -210,7 +213,7 @@ public class ChatPresenter implements Initializable {
     Request request = new Request.Builder()
         .url(HOST + "/api/chats")
         .addHeader("Content-Type", "application/json")
-        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .addHeader("Authorization", cacheService.get(CacheKey.TRIBELY_TOKEN))
         .method("GET", null)
         .build();
 

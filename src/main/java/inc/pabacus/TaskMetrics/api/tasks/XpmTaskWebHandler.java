@@ -24,11 +24,9 @@ public class XpmTaskWebHandler {
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   private StringCacheService stringCacheService = new StringCacheService();
-  private String tribelyToken;
 
   public XpmTaskWebHandler() {
     HOST = new HostConfig().getHost();
-    tribelyToken = stringCacheService.get(CacheKey.TRIBELY_TOKEN);
   }
 
   @SuppressWarnings("all")
@@ -39,7 +37,7 @@ public class XpmTaskWebHandler {
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet")
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
@@ -55,10 +53,11 @@ public class XpmTaskWebHandler {
   public void save(XpmTaskPostEntity dto_save) {
     try {
       String jsonString = mapper.writeValueAsString(dto_save);
+      System.out.println(jsonString);
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet")
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
@@ -80,7 +79,7 @@ public class XpmTaskWebHandler {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet/" + id)
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .delete()
                                      .build());
       call.execute();
@@ -95,7 +94,7 @@ public class XpmTaskWebHandler {
 
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet")
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -109,10 +108,10 @@ public class XpmTaskWebHandler {
   public List<XpmTask> findByJobTask(Long jobTaskId) {
     List<XpmTask> tasks = new ArrayList<>();
     try {
-//      System.out.println("token " + tribelyToken);
+//      System.out.println("token " + stringCacheService.get(CacheKey.TRIBELY_TOKEN));
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet/jobtask/" + jobTaskId)
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -129,7 +128,7 @@ public class XpmTaskWebHandler {
 
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/jobs/assignees")
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
@@ -149,10 +148,11 @@ public class XpmTaskWebHandler {
   public void edit(XpmTaskPostEntity helpMe) {
     try {
       String jsonString = mapper.writeValueAsString(helpMe);
+      System.out.println(jsonString);
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/timesheet/" + helpMe.getId())
-                                     .addHeader("Authorization", tribelyToken)
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .put(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();

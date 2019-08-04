@@ -2,6 +2,8 @@ package inc.pabacus.TaskMetrics.api.leave;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
@@ -20,6 +22,7 @@ public class LeaveService {
   private static String HOST;
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
+  private StringCacheService cs = new StringCacheService();
 
   public LeaveService() {
     HOST = new HostConfig().getHost();
@@ -30,7 +33,7 @@ public class LeaveService {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/leave")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", cs.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody responseBody = call.execute().body();
       leaves = mapper.readValue(responseBody.string(),
@@ -48,7 +51,7 @@ public class LeaveService {
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/user/leave")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", cs.get(CacheKey.TRIBELY_TOKEN))
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();

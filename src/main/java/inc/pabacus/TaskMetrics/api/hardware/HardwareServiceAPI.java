@@ -1,6 +1,8 @@
 package inc.pabacus.TaskMetrics.api.hardware;
 
 import com.google.gson.Gson;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
@@ -51,23 +53,24 @@ public class HardwareServiceAPI {
 
         OkHttpClient client = SslUtil.getSslOkHttpClient();
         MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"disks\":" + JsonDisks + ",\n\t\"displays\":" + JsonDisplays + ",\n\t\"usbDevices\":" + JsonUsbDevices + "}]");
+        RequestBody body = RequestBody.create(mediaType, "{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"disks\":" + JsonDisks + ",\n\t\"displays\":" + JsonDisplays + ",\n\t\"usbDevices\":" + JsonUsbDevices + "}");
         Request request = new Request.Builder()
-            .url(HOST + "/api/runningHardwares")
+            .url(HOST + "/api/userhardwaresAPI")
             .addHeader("content-type", "application/json")
-            .addHeader("Authorization", TokenRepository.getToken().getToken())
+            .addHeader("Authorization", new StringCacheService().get(CacheKey.TRIBELY_TOKEN))
             .post(body)
             .build();
 
         Response response = client.newCall(request).execute();
 
       } catch (Exception x) {
+        System.out.println(x.getMessage());
         logger.warn(x.getMessage());
       }
 
     });
     //execute every 5 minutes
-    scheduledFuture = executor.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
+    scheduledFuture = executor.scheduleAtFixedRate(task, 0, 5, TimeUnit.MINUTES);
   }
 
   public void cancel() {

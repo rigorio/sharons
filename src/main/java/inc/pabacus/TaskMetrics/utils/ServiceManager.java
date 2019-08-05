@@ -25,7 +25,7 @@ public class ServiceManager {
 
 
   public void activate() {
-//    hardwareServiceAPI.sendHardwareData();
+    hardwareServiceAPI.sendHardwareData();
 //    standupService.runStandup();
 //    softwareServiceAPI.sendSoftwareData();
 //    screenshotService.enableScreenShot();

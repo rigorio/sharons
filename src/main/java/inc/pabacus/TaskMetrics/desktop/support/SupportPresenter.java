@@ -28,12 +28,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -83,6 +85,7 @@ public class SupportPresenter implements Initializable {
 //    tasks.forEach(task -> technicalBox.getItems().add(task.getTask()));
 
     technicalBox.getItems().addAll("Mouse not working", "Slow internet", "Problem with Display", "Faulty Keyboard");
+    Platform.runLater(() -> initTable());
     initTable();
 
     payslipComboBox.getItems().addAll("Jul 01 - Jul 15", "Jul 01 - Jul 31", "Aug 01 - Aug 15");
@@ -369,10 +372,7 @@ public class SupportPresenter implements Initializable {
     ObservableList<LeaveAdapter> allLeaves = getAndConvertLeaves();
 
     TableColumn<LeaveAdapter, String> staff = new TableColumn<>("Staff");
-    staff.setCellValueFactory(param -> {
-      Long value = param.getValue().getUserId().getValue();
-      return new SimpleStringProperty(staffHolder.getStaff(value));
-    });
+    staff.setCellValueFactory(param -> param.getValue().getEmployeeId());
 
     TableColumn<LeaveAdapter, String> startDate = new TableColumn<>("Start Date");
     startDate.setCellValueFactory(param -> param.getValue().getStartDate());
@@ -384,10 +384,9 @@ public class SupportPresenter implements Initializable {
     status.setCellValueFactory(param -> param.getValue().getStatus());
 
     TableColumn<LeaveAdapter, String> typeOfRequest = new TableColumn<>("Type");
-    typeOfRequest.setCellValueFactory(param -> param.getValue().getTypeOfRequest());
+    typeOfRequest.setCellValueFactory(param -> param.getValue().getLeaveTypeId());
 
-    leaveTable.getColumns().addAll(staff, startDate, endDate,
-                                   typeOfRequest, status);
+    leaveTable.getColumns().addAll(staff, startDate, endDate,status,typeOfRequest);
     leaveTable.setItems(allLeaves);
   }
 
@@ -413,10 +412,7 @@ public class SupportPresenter implements Initializable {
   private List<Leave> getApprovalQueue() {
     List<Leave> all = leaveService.getAllLeaves();
     String username = userHandler.getUsername();
-    return all.stream()
-        .filter(leave -> leave.getApprovers().stream()
-            .anyMatch(approver -> approver.getApprover().equals(username)))
-        .collect(Collectors.toList());
+    return new ArrayList<>(all);
   }
 
   private void getPayslip() {

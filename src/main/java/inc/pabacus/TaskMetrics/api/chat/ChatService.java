@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.leave.Approver;
-import inc.pabacus.TaskMetrics.api.leave.Leave;
-import inc.pabacus.TaskMetrics.api.leave.LeaveService;
 import inc.pabacus.TaskMetrics.desktop.leave.LeaveView;
 import inc.pabacus.TaskMetrics.desktop.status.StatusView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -138,10 +136,10 @@ public class ChatService {
       String split[] = command.split("-");
       startDate = split[0];
       endDate = split[1];
-      LeaveService services = new LeaveService();
-      Leave leave = services.saveLeave(new Leave(2L, 3L, getApprovers, startDate, endDate, "testing", status, typeOfRequest));
-      System.out.println("--------------------");
-      System.out.println(leave);
+//      LeaveService services = new LeaveService();
+//      Leave leave = services.saveLeave(new Leave(2L, 3L, getApprovers, startDate, endDate, "testing", status, typeOfRequest));
+//      System.out.println("--------------------");
+//      System.out.println(leave);
       return Tribely + "Success!";
     } else {
       service.sendChat(new Chat(Tribely + "I don't know what you are talking about. I am still learning.", formatter.format(LocalTime.now())));

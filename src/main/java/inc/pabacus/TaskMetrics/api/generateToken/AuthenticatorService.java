@@ -58,9 +58,10 @@ public class AuthenticatorService {
   }
 
   public void retrieveEmployeeManagerId() {
-    String employeeId = new StringCacheService().get(CacheKey.EMPLOYEE_ID);
+    StringCacheService stringCacheService = new StringCacheService();
+    String employeeId = stringCacheService.get(CacheKey.EMPLOYEE_ID);
     try {
-      String accessToken = new StringCacheService().get(CacheKey.SHRIS_TOKEN);
+      String accessToken = stringCacheService.get(CacheKey.SHRIS_TOKEN);
       Call call = client.newCall(new Request.Builder()
                                      .url(hostConfig.getHris() + "/api/services/app/Employee/Get?id=" + employeeId)
                                      .addHeader("Authorization", accessToken)
@@ -72,7 +73,7 @@ public class AuthenticatorService {
       Map<String, Object> result = (Map<String, Object>) response.get("result");
       Object managerEmployeeId = result.get("managerEmployeeId");
 
-      new StringCacheService().put(CacheKey.MANAGER_ID, managerEmployeeId.toString());
+      stringCacheService.put(CacheKey.MANAGER_ID, managerEmployeeId.toString());
 
       // code below is result of how bad staging api is nothing was working this was just a quick temporary workaround for me
 //      Call c = client.newCall(new Request.Builder()

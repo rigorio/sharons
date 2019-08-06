@@ -1,7 +1,8 @@
 package inc.pabacus.TaskMetrics.api.software;
 
-import com.google.gson.Gson;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
@@ -10,9 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,34 +31,31 @@ public class SoftwareServiceAPI {
   }
 
   public void sendSoftwareData() {
-    getSoftwareMonitoringMinutes();
-    String minutes = getSoftwareMonitoringMinutes();
+//    getSoftwareMonitoringMinutes();
+//    String minutes = getSoftwareMonitoringMinutes();
 
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     Runnable task = () -> Platform.runLater(() -> {
 
       try {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Calendar cal = Calendar.getInstance();
-        System.out.println(dateFormat.format(cal.getTime()));
-
         softwareService = new SoftwareHandler();
         List<SoftwareData> allSoftware = softwareService.getSoftware();
-
-        String json = new Gson().toJson(allSoftware);
+        SoftwareDataEntity entity = new SoftwareDataEntity();
+        entity.setRunningSoftwares(allSoftware);
+        entity.setTimeStamp(LocalDateTime.now().toString());
+        MediaType mediaType = MediaType.parse("application/json");
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(entity);
+        RequestBody requestBody = RequestBody.create(mediaType, content);
 
         OkHttpClient client = SslUtil.getSslOkHttpClient();
-        System.out.println(json);
-        MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, "[{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"runningSoftwares\":" + json + "}]");
+
         Request request = new Request.Builder()
-            .url(HOST + "/api/runningSoftwares")
-            .post(body)
+            .url(HOST + "/api/usersoftwaresapi")
             .addHeader("content-type", "application/json")
-            .addHeader("cache-control", "no-cache")
-            .addHeader("postman-token", "08af0720-79cc-ff3d-2a7d-f208202e5ec0")
-            .addHeader("Authorization", TokenRepository.getToken().getToken())
+            .addHeader("Authorization", new StringCacheService().get(CacheKey.TRIBELY_TOKEN))
+            .post(requestBody)
             .build();
 
         Response response = client.newCall(request).execute();
@@ -82,7 +79,7 @@ public class SoftwareServiceAPI {
     Request request = new Request.Builder()
         .url(HOST + "/api/monitorSoftware")
         .addHeader("Accept", "application/json")
-        .addHeader("Authorization", TokenRepository.getToken().getToken())
+        .addHeader("Authorization", new StringCacheService().get(CacheKey.TRIBELY_TOKEN))
         .method("GET", null)
         .build();
 

@@ -37,6 +37,8 @@ public class WindowsSoftwareFetcher implements SoftwareFetcher<List<SoftwareData
 
   private String getDateInstalled(SoftwareData softwareData) {
     String di = softwareData.getDateInstalled();
+    if (di != null && di.contains("/"))
+      return null;
     return di != null
         ? new StringBuilder().append(di, 0, 4).append("-").append(di, 4, 6).append("-").append(di, 6, 8).toString()
         : null;

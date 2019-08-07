@@ -95,6 +95,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
       ScreenshotTool tool = new ScreenshotTool();
       BufferedImage image = tool.blurredScreenshot();
       tool.saveImage(image, "png", file);
+      connector.uploadFile(file);
       // retrieve image, send to assets
     } catch (AWTException | IOException e) {
       logger.warn(e.getMessage());

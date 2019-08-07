@@ -23,14 +23,15 @@ import java.util.stream.Collectors;
 public class ScreenshotServiceImpl implements ScreenshotService {
 
   private static final Logger logger = Logger.getLogger(ScreenshotServiceImpl.class);
-  private static final long DEFAULT_INTERVAL = 300;
+  private static final long DEFAULT_INTERVAL = 10;
   private ScheduledExecutorService executorService;
   private ScheduledFuture<?> scheduledFuture;
   private Runnable run = this::takeScreenShot;
   private static final String dir = ".pabacus";
-
+  private ScreenshotConnector connector;
 
   public ScreenshotServiceImpl() {
+    connector = new ScreenshotConnector();
   }
 
   @Override
@@ -76,8 +77,9 @@ public class ScreenshotServiceImpl implements ScreenshotService {
    * TODO
    * can be made public?
    */
-  private List<Path> getScreenshots() throws IOException {
+  public List<Path> getScreenshots() throws IOException {
     return Files.walk(Paths.get(FileUtils.tmpFile(dir).getAbsolutePath()))
+        .filter(Files::isRegularFile)
         .collect(Collectors.toList());
   }
 

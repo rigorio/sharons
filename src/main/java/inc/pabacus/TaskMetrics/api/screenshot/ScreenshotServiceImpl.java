@@ -28,9 +28,10 @@ public class ScreenshotServiceImpl implements ScreenshotService {
   private ScheduledFuture<?> scheduledFuture;
   private Runnable run = this::takeScreenShot;
   private static final String dir = ".pabacus";
-
+  private ScreenshotConnector connector;
 
   public ScreenshotServiceImpl() {
+    connector = new ScreenshotConnector();
   }
 
   @Override
@@ -76,8 +77,9 @@ public class ScreenshotServiceImpl implements ScreenshotService {
    * TODO
    * can be made public?
    */
-  private List<Path> getScreenshots() throws IOException {
+  public List<Path> getScreenshots() throws IOException {
     return Files.walk(Paths.get(FileUtils.tmpFile(dir).getAbsolutePath()))
+        .filter(Files::isRegularFile)
         .collect(Collectors.toList());
   }
 
@@ -93,6 +95,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
       ScreenshotTool tool = new ScreenshotTool();
       BufferedImage image = tool.blurredScreenshot();
       tool.saveImage(image, "png", file);
+      connector.uploadFile(file);
       // retrieve image, send to assets
     } catch (AWTException | IOException e) {
       logger.warn(e.getMessage());

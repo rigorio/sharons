@@ -46,7 +46,10 @@ public class LeaveService {
       String responseString = responseBody.string();
       JSONObject jsonObject = new JSONObject(responseString);
       System.out.println(jsonObject);
-
+      boolean success = jsonObject.getBoolean("success");
+      if (!success) {
+        return new ArrayList<>();
+      }
       JSONArray arr = jsonObject.getJSONArray("result");
       for (int i = 0; i < arr.length(); ++i) {
         Leave leave = new Leave();

@@ -5,6 +5,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.leave.Leave;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
 import inc.pabacus.TaskMetrics.api.payslip.Payslip;
@@ -20,7 +22,6 @@ import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,8 +29,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,14 +46,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class SupportPresenter implements Initializable {
 
@@ -386,7 +385,7 @@ public class SupportPresenter implements Initializable {
     TableColumn<LeaveAdapter, String> typeOfRequest = new TableColumn<>("Type");
     typeOfRequest.setCellValueFactory(param -> param.getValue().getLeaveTypeId());
 
-    leaveTable.getColumns().addAll(staff, startDate, endDate,status,typeOfRequest);
+    leaveTable.getColumns().addAll(staff, startDate, endDate, status, typeOfRequest);
     leaveTable.setItems(allLeaves);
   }
 
@@ -424,7 +423,7 @@ public class SupportPresenter implements Initializable {
       Request request = new Request.Builder()
           .url("https://hureyweb-staging.azurewebsites.net/api/services/app/EmployeePayRun/GetByCurrentEmployee")
           // TODO will need another token generator to Hurey website
-          .addHeader("Authorization", "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiY2FybG8ubW9udGVtYXlvciIsIkFzcE5ldC5JZGVudGl0eS5TZWN1cml0eVN0YW1wIjoiRkRYRTdQSDM2WjNVNVA0QktMSU9BRUlSU1NONURRS1QiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJFbXBsb3llZSIsImh0dHA6Ly93d3cuYXNwbmV0Ym9pbGVycGxhdGUuY29tL2lkZW50aXR5L2NsYWltcy90ZW5hbnRJZCI6IjEiLCJzdWIiOiI2IiwianRpIjoiYzIwYjE2MTEtNjdkZC00ODM3LTlhMzAtMWRlYTRiMzIwMDM4IiwiaWF0IjoxNTY0MDExODY0LCJuYmYiOjE1NjQwMTE4NjQsImV4cCI6MTU2NDA5ODI2NCwiaXNzIjoiSFVSRVlfU1RBR0lORyIsImF1ZCI6IkhVUkVZX1NUQUdJTkcifQ.aOYSl8pfBRJQJ7LF9tbATrQaEnVUP1qdkPs0oYa4zsM")
+          .addHeader("Authorization", new StringCacheService().get(CacheKey.SHRIS_TOKEN))
           .method("GET", null)
           .build();
 

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class ScreenshotServiceImpl implements ScreenshotService {
 
   private static final Logger logger = Logger.getLogger(ScreenshotServiceImpl.class);
-  private static final long DEFAULT_INTERVAL = 10;
+  private static final long DEFAULT_INTERVAL = 300;
   private ScheduledExecutorService executorService;
   private ScheduledFuture<?> scheduledFuture;
   private Runnable run = this::takeScreenShot;

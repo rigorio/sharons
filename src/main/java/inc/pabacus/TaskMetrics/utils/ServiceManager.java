@@ -25,9 +25,9 @@ public class ServiceManager {
 
 
   public void activate() {
-//    hardwareServiceAPI.sendHardwareData();
+    hardwareServiceAPI.sendHardwareData();
 //    standupService.runStandup();
-//    softwareServiceAPI.sendSoftwareData();
+    softwareServiceAPI.sendSoftwareData();
 //    screenshotService.enableScreenShot();
     Runnable runnable = () -> {
       Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));

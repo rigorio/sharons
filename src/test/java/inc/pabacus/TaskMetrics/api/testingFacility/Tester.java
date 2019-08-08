@@ -1,19 +1,39 @@
 package inc.pabacus.TaskMetrics.api.testingFacility;
 
+import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotConnector;
+import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLog;
 import inc.pabacus.TaskMetrics.api.timesheet.time.TimeLogConnector;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Tester {
 
+
+  @Test
+  @Ignore
+  public void testUpload() {
+    try {
+      List<File> screenshots = new ScreenshotServiceImpl().getScreenshots()
+          .stream()
+          .map(Path::toFile)
+          .collect(Collectors.toList());
+      new ScreenshotConnector().uploadFiles(screenshots);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Test
   @Ignore

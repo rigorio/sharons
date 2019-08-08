@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class ScreenshotServiceImpl implements ScreenshotService {
 
   private static final Logger logger = Logger.getLogger(ScreenshotServiceImpl.class);
-  private static final long DEFAULT_INTERVAL = 300;
+  private static final long DEFAULT_INTERVAL = 5;
   private ScheduledExecutorService executorService;
   private ScheduledFuture<?> scheduledFuture;
   private Runnable run = this::takeScreenShot;
@@ -36,7 +36,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
 
   @Override
   public String takeScreenShot() {
-    final String defaultName = LocalDateTime.now().withNano(0).toString().replaceAll(":", "");
+    final String defaultName = LocalDateTime.now().withNano(0).toString();
     return screenshot(defaultName);
   }
 

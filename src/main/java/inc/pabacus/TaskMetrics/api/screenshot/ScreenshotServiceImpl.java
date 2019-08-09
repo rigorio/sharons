@@ -36,7 +36,7 @@ public class ScreenshotServiceImpl implements ScreenshotService {
 
   @Override
   public String takeScreenShot() {
-    final String defaultName = LocalDateTime.now().withNano(0).toString();
+    final String defaultName = LocalDateTime.now().withNano(0).toString().replace(":", "");
     return screenshot(defaultName);
   }
 

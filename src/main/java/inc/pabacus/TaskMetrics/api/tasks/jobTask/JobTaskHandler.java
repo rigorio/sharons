@@ -59,6 +59,7 @@ public class JobTaskHandler {
       } else {
         requestBody = RequestBody.create(JSON, "{}");
       }
+      System.out.println(jobId + " -- " + s);
       Request.Builder request = new Request.Builder()
           .url(HOST + "/api/job/tasks/create/" + jobId)
           .post(requestBody)

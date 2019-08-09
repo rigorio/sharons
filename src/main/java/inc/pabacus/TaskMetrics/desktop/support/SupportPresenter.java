@@ -83,12 +83,52 @@ public class SupportPresenter implements Initializable {
 //        .collect(Collectors.toList());
 //    tasks.forEach(task -> technicalBox.getItems().add(task.getTask()));
 
-    technicalBox.getItems().addAll("Mouse not working", "Slow internet", "Problem with Display", "Faulty Keyboard");
+    technicalBox.getItems().addAll(kwan().stream().map(Task::getTask).collect(Collectors.toList()));
     Platform.runLater(() -> initTable());
     initTable();
 
     payslipComboBox.getItems().addAll("Jul 01 - Jul 15", "Jul 01 - Jul 31", "Aug 01 - Aug 15");
 
+  }
+
+  private List<Task> kwan() {
+    Job ts = jobTaskHandler.allJobs().stream()
+        .filter(job -> job.getJob().equals("Technical Support"))
+        .findFirst()
+        .get();
+    List<Task> techTasks = jobTaskHandler.allTasks()
+        .stream()
+        .filter(task -> task.getJobId().equals(ts.getId()))
+        .collect(Collectors.toList());
+    return techTasks;
+  }
+
+  @FXML
+  public void sendReport() {
+    String taskName = technicalBox.getValue();
+//    Job job = getAction_center();
+//    Task task = jobTaskHandler.allTasks().stream()
+//        .filter(t -> t.getJobId().equals(job.getId()) && t.getTask().equals("Technical Issue"))
+//        .findFirst()
+//        .get();
+    Task chosenTask = kwan()
+        .stream()
+        .filter(t -> t.getTask().equals(taskName))
+        .findFirst()
+        .get();
+    jobTaskHandler.createJobTask(chosenTask.getJobId(), chosenTask.getId(), taskName);
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Success");
+    alert.setHeaderText(null);
+    alert.setContentText("Report has been sent");
+    alert.showAndWait();
+  }
+
+  @NotNull
+  private Job getAction_center() {
+    return jobTaskHandler.allJobs().stream()
+        .filter(job -> job.getJob().equals("Action Center"))
+        .findFirst().get();
   }
 
   @FXML
@@ -342,29 +382,6 @@ public class SupportPresenter implements Initializable {
       e.printStackTrace();
     }
 
-  }
-
-  @NotNull
-  private Job getAction_center() {
-    return jobTaskHandler.allJobs().stream()
-        .filter(job -> job.getJob().equals("Action Center"))
-        .findFirst().get();
-  }
-
-  @FXML
-  public void sendReport() {
-    String taskName = technicalBox.getValue();
-    Job job = getAction_center();
-    Task task = jobTaskHandler.allTasks().stream()
-        .filter(t -> t.getJobId().equals(job.getId()) && t.getTask().equals("Technical Issue"))
-        .findFirst()
-        .get();
-    jobTaskHandler.createJobTask(job.getId(), task.getId(), taskName);
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setTitle("Success");
-    alert.setHeaderText(null);
-    alert.setContentText("Report has been sent");
-    alert.showAndWait();
   }
 
   private void initTable() {

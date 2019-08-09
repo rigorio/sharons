@@ -36,7 +36,8 @@ public class ScreenshotServiceImpl implements ScreenshotService {
 
   @Override
   public String takeScreenShot() {
-    final String defaultName = LocalDateTime.now().withNano(0).toString();
+    // removed colon as file name cannot have colon
+    final String defaultName = LocalDateTime.now().withNano(0).toString().replace(":", "");
     return screenshot(defaultName);
   }
 

@@ -167,7 +167,7 @@ public class SettingsPresenter implements Initializable {
     SoftwareService softwareService = new SoftwareHandler();
     ObservableList<SoftwareDataFXAdapter> softwares = FXCollections.observableArrayList();
 
-    JFXTreeTableColumn<SoftwareDataFXAdapter, String> name = new JFXTreeTableColumn<>("Name");
+    JFXTreeTableColumn<SoftwareDataFXAdapter, String> name = new JFXTreeTableColumn<>("Software");
     name.setCellValueFactory(param -> param.getValue().getValue().getName());
 
     JFXTreeTableColumn<SoftwareDataFXAdapter, String> version = new JFXTreeTableColumn<>("Version");

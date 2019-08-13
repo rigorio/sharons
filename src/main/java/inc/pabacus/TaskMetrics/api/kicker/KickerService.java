@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
+import inc.pabacus.TaskMetrics.utils.cacheService.LocalCacheHandler;
 import javafx.application.Platform;
 import okhttp3.Call;
 import okhttp3.MediaType;
@@ -41,7 +42,7 @@ public class KickerService {
     KickStatus status = null; // not right
     Call call = client.newCall(new Request.Builder()
                                    .url(HOST + "/api/kickout/" + username)
-                                   .header("Authorization", TokenRepository.getToken().getToken())
+                                   .header("Authorization", LocalCacheHandler.getTribelyToken())
                                    .build());
     try {
       response = call.execute().body().string();
@@ -56,7 +57,7 @@ public class KickerService {
   public void logout(String token) {
     Call call = client.newCall(new Request.Builder()
                                    .url(HOST + "/api/kickout/logout?token=" + token)
-                                   .header("Authorization", TokenRepository.getToken().getToken())
+                                   .header("Authorization", LocalCacheHandler.getTribelyToken())
                                    .build());
     try {
       call.execute();
@@ -104,7 +105,7 @@ public class KickerService {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/kickout/exists?token=" + TokenHolder.getToken())
-                                     .header("Authorization", TokenRepository.getToken().getToken())
+                                     .header("Authorization", LocalCacheHandler.getTribelyToken())
                                      .build());
       String response = call.execute().body().string();
       exists = Boolean.valueOf(response);

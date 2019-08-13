@@ -44,6 +44,7 @@ public class BreakPresenter implements Initializable {
   private LogService logService;
   private ActivityListener activityListener = BeanManager.activityListener();
   public static boolean windowIsOpen = false;
+  private String lastLog;
 
   public BreakPresenter() {
     activityHandler = BeanManager.activityHandler();
@@ -68,22 +69,22 @@ public class BreakPresenter implements Initializable {
     timerService.start();
     windowIsOpen = true;
 
+    lastLog = activityHandler.getLastLog();
     Platform.runLater(this::onCloseRequest);
 
   }
 
   private void tickTime() {
-    ActivityHandler activityHandler = new ActivityHandler();
     long duration = timerService.getTime();
     String time = timerService.formatSeconds(duration);
 
     timerText.setText(time);
     //13 minutes
-    if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
+    if (lastLog.equalsIgnoreCase("break")) {
       if (duration == 780) {
         timerText.setStyle("-fx-text-fill: red");
       }
-    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
+    } else if (lastLog.equalsIgnoreCase("lunch") || lastLog.equalsIgnoreCase("lunch break")) {
       if (duration == 3300) { // 55 minutes
         timerText.setStyle("-fx-text-fill: red");
       }
@@ -94,11 +95,11 @@ public class BreakPresenter implements Initializable {
   private void backOnline() {
     String recordActivity = "Break";
     logService.changeLog(LogStatus.BFB.getStatus());
-    if (activityHandler.getLastLog().equalsIgnoreCase("break")) {
+    if (lastLog.equalsIgnoreCase("break")) {
       activityHandler.saveTimestamp(Activity.ONLINE);
       recordActivity = "Break";
       notification("Online");
-    } else if (activityHandler.getLastLog().equalsIgnoreCase("lunch") || activityHandler.getLastLog().equalsIgnoreCase("lunch break")) {
+    } else if (lastLog.equalsIgnoreCase("lunch") || lastLog.equalsIgnoreCase("lunch break")) {
       activityHandler.saveTimestamp(Activity.BFB);
       recordActivity = "Lunch Break";
       notification("Back From Lunch");

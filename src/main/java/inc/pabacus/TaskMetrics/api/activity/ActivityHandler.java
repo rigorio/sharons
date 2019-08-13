@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
+import lombok.Data;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -30,11 +31,11 @@ public class ActivityHandler {
   private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
-    private StringCacheService stringCacheService = new StringCacheService();
+  private StringCacheService stringCacheService = new StringCacheService();
 
   public ActivityHandler() {
     HOST = hostConfig.getHost();
-    
+
   }
 
 
@@ -113,19 +114,17 @@ public class ActivityHandler {
 
   public void saveTimestamp(ActivityTimestamp activityTimestamp) {
     try {
-      List<ActivityTimestamp> ua = new ArrayList<>();
-      ua.add(activityTimestamp);
-      String jsonValue = mapper.writeValueAsString(ua);
+      String jsonValue = mapper.writeValueAsString(new ActivityCreate(activityTimestamp.getDate(), activityTimestamp.getTime(), activityTimestamp.getActivity()));
       RequestBody requestBody = RequestBody.create(JSON, jsonValue);
-
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/activities")
+                                     .addHeader("Content-Type", "application/json")
                                      .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .post(requestBody)
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
-//    System.out.println(jsonString);
+//      System.out.println("respo " + jsonString);
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
@@ -154,5 +153,18 @@ public class ActivityHandler {
       e.printStackTrace();
     }
     return activity != null ? activity : "";
+  }
+
+  @Data
+  private class ActivityCreate {
+    private String date;
+    private String time;
+    private String activity;
+
+    public ActivityCreate(String date, String time, String activity) {
+      this.date = date;
+      this.time = time;
+      this.activity = activity;
+    }
   }
 }

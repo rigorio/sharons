@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogWebRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
+import inc.pabacus.TaskMetrics.utils.cacheService.LocalCacheHandler;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,7 +34,7 @@ public class StatusUpdateHandler {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/status/updates")
-                                     .addHeader("Authorization", TokenRepository.getToken().getToken())
+                                     .addHeader("Authorization", LocalCacheHandler.getTribelyToken())
                                      .build());
 
       String jsonString = call.execute().body().string();

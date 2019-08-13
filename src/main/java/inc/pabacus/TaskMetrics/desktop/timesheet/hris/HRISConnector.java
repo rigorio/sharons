@@ -19,6 +19,7 @@ import java.net.InetAddress;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,19 +35,19 @@ public class HRISConnector {
       = MediaType.parse("application/json; charset=utf-8");
   private CacheService<CacheKey, String> cacheService;
   private final String employeeId;
-  private String logDate;
+  private LocalDate logDate;
 
   public HRISConnector() {
     cacheService = new StringCacheService();
     employeeId = cacheService.get(CacheKey.EMPLOYEE_ID);
     bearer = cacheService.get(CacheKey.SHRIS_TOKEN);
-    logDate = LocalDate.now().toString();
+    logDate = LocalDate.now().plus(3, ChronoUnit.DAYS);
   }
 
   public List<HRISTimeLog> hrisLogs() {
     try {
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + logDate)
+                                     .url(HOST + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + logDate.toString())
                                      .addHeader("Authorization", bearer)
                                      .build());
       String string = call.execute().body().string();
@@ -57,7 +58,7 @@ public class HRISConnector {
       logs = logs.stream()
           .peek(hrisTimeLog -> {
             String time = hrisTimeLog.getTime();
-            hrisTimeLog.setDate(logDate);
+            hrisTimeLog.setDate(logDate.toString());
             hrisTimeLog.setTime(time.split("T")[1]);
           })
           .collect(Collectors.toList());
@@ -86,7 +87,7 @@ public class HRISConnector {
         timeLogTypeId = 2;
         break;
     }
-    String timeLog = LocalDate.now().toString() + "T" + formatter.format(LocalTime.now());
+    String timeLog = logDate + "T" + formatter.format(LocalTime.now());
     InetAddress localHost = null;
     try {
       localHost = InetAddress.getLocalHost();
@@ -95,7 +96,7 @@ public class HRISConnector {
           .timeLog(timeLog)
           .timeLogTypeId(timeLogTypeId)
           .ipAddress(localHost.getHostAddress())
-          .shiftDate(logDate + "T00:00:00+00:00")
+          .shiftDate(logDate.toString() + "T00:00:00+00:00")
           .id(0)
           .build();
       String requestString = mapper.writeValueAsString(crazyHrisEntity);

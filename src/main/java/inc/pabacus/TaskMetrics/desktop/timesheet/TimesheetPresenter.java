@@ -81,7 +81,7 @@ public class TimesheetPresenter implements Initializable {
       userName.setText(userHandler.getUsername()); //set userName
 
       String status = getStatus();
-      comboBox.setValue(status);
+      comboBox.setPromptText(status);
       initTimeSheet();
       populateCombobox();
     });

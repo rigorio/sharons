@@ -1,9 +1,9 @@
 package inc.pabacus.TaskMetrics.api.leave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
-import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
-import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
+import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.utils.cacheService.CacheService;
+import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.desktop.leave.SendLeave;
 import inc.pabacus.TaskMetrics.desktop.leaveViewer.LeaveHolder;
 import inc.pabacus.TaskMetrics.utils.HostConfig;

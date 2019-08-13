@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.api.cacheService;
+package inc.pabacus.TaskMetrics.utils.cacheService;
 
 public interface CacheService<K, V> {
   V put(K key, V value);

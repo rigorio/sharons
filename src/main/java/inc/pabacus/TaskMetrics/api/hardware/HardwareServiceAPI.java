@@ -1,9 +1,8 @@
 package inc.pabacus.TaskMetrics.api.hardware;
 
 import com.google.gson.Gson;
-import inc.pabacus.TaskMetrics.api.cacheService.CacheKey;
-import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
 import javafx.application.Platform;

@@ -1,8 +1,8 @@
 package inc.pabacus.TaskMetrics.utils;
 
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.cacheService.CacheService;
-import inc.pabacus.TaskMetrics.api.cacheService.StringCacheService;
+import inc.pabacus.TaskMetrics.utils.cacheService.CacheService;
+import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.chat.ChatService;
 import inc.pabacus.TaskMetrics.api.generateToken.AuthenticatorService;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareServiceAPI;

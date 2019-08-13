@@ -35,19 +35,19 @@ public class ServiceManager {
     };
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
-//    activityListener.listen();
+    activityListener.listen();
 //    dailyLogHandler.checkIfUserIsBreak();
   }
 
   public void deactivate() {
 
-    kickerService.logout(TokenHolder.getToken());
-    standupService.close();
+//    kickerService.logout(TokenHolder.getToken());
+//    standupService.close();
     hardwareServiceAPI.cancel();
     softwareServiceAPI.cancel();
     screenshotService.disableScreenshot();
     screenshotService.shutdownScheduler();
-    kickerService.stopKicker();
+//    kickerService.stopKicker();
     authenticatorService.stopToken();
     activityListener.unListen();
   }

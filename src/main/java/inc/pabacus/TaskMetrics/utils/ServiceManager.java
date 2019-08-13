@@ -48,7 +48,7 @@ public class ServiceManager {
     screenshotService.disableScreenshot();
     screenshotService.shutdownScheduler();
 //    kickerService.stopKicker();
-    authenticatorService.stopToken();
+//    authenticatorService.stopToken();
     activityListener.unListen();
   }
 

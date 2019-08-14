@@ -2,14 +2,15 @@ package inc.pabacus.TaskMetrics.api.generateToken;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
-import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
+import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
@@ -24,11 +25,13 @@ public class AuthenticatorService {
   private static final long DEFAULT_INTERVAL = 3000000; // 55 minutes
   private OkHttpClient client;
   private ObjectMapper mapper = new ObjectMapper();
+  private StringCacheService cacheService;
 
   public AuthenticatorService() {
     client = SslUtil.getSslOkHttpClient();
     hostConfig = new HostConfig();
     HOST = hostConfig.getHost();
+    cacheService = new StringCacheService();
   }
 
   public ReqEnt retrieveRequestItems(Credentials credentials) {
@@ -57,13 +60,64 @@ public class AuthenticatorService {
     }
   }
 
+  public ReqEnt retrieveHureyItems(String un, String pw) {
+    try {
+      String requestString = mapper.writeValueAsString(new HashMap<String, Object>() {{
+        put("userNameOrEmailAddress", un);
+        put("password", pw);
+        put("rememberClient", true);
+      }});
+      RequestBody requestBody = RequestBody.create(JSON, requestString);
+
+      String host = cacheService.get(CacheKey.HUREY_HOST);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(host + "/api/tokenauth/authenticate")
+                                     .post(requestBody)
+                                     .build());
+      String string = call.execute().body().string();
+      System.out.println(string);
+      HureyResponse response = mapper.readValue(string, new TypeReference<HureyResponse>() {});
+
+      if (!response.getSuccess())
+        return returnError(response.getError().toString());
+
+      HureyResult result = mapper.readValue(mapper.writeValueAsString(response.getResult()), new TypeReference<HureyResult>() {});
+      String accessToken = "bearer " + result.getAccessToken();
+      // -----------------------------------------------
+      String employeeIdResponse = client
+          .newCall(new Request.Builder()
+                       .url(host + "/api/services/app/User/GetCurrentUserEmployeeId")
+                       .addHeader("Authorization", accessToken)
+                       .build())
+          .execute()
+          .body()
+          .string();
+
+      HureyResponse hureyResponse = mapper.readValue(employeeIdResponse, new TypeReference<HureyResponse>() {});
+
+      if (!hureyResponse.getSuccess())
+        return returnError(hureyResponse.getError().toString());
+
+      String employeeId = hureyResponse.getResult().toString();
+
+      return new ReqEnt.ReqEntBuilder()
+          .successful(true)
+          .hureyToken(accessToken)
+          .employeeId(employeeId)
+          .build();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return returnError(e.toString());
+    }
+  }
+
   public void retrieveEmployeeManagerId() {
     StringCacheService stringCacheService = new StringCacheService();
     String employeeId = stringCacheService.get(CacheKey.EMPLOYEE_ID);
     try {
       String accessToken = stringCacheService.get(CacheKey.SHRIS_TOKEN);
       Call call = client.newCall(new Request.Builder()
-                                     .url(hostConfig.getHris() + "/api/services/app/Employee/Get?id=" + employeeId)
+                                     .url(cacheService.get(CacheKey.HUREY_HOST) + "/api/services/app/Employee/Get?id=" + employeeId)
                                      .addHeader("Authorization", accessToken)
                                      .build());
       String responseString = call.execute().body().string();

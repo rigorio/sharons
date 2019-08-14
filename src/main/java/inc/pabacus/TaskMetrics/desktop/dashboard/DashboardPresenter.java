@@ -15,10 +15,11 @@ import inc.pabacus.TaskMetrics.desktop.productivity.ProductivityView;
 import inc.pabacus.TaskMetrics.desktop.screenshot.ScreenShotView;
 import inc.pabacus.TaskMetrics.desktop.settings.SettingsView;
 import inc.pabacus.TaskMetrics.desktop.support.SupportView;
-import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.desktop.timesheet.TimesheetView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -240,7 +241,21 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void viewTimesheet() {
+    if (checkIfLoggedInToHurey())
+      return;
     updateDynamicPaneContent(new TimesheetView().getView());
+  }
+
+  private boolean checkIfLoggedInToHurey() {
+    StringCacheService cacheService = new StringCacheService();
+    String s = cacheService.get(CacheKey.SHRIS_TOKEN);
+    if (s == null) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Not connected");
+      alert.setContentText("Please connect your hurey account in settings");
+      alert.showAndWait();
+    }
+    return s == null;
   }
 
   @FXML
@@ -250,6 +265,8 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void viewChats() {
+    if (checkIfLoggedInToHurey())
+      return;
     updateDynamicPaneContent(new ChatView().getView());
   }
 
@@ -259,6 +276,8 @@ public class DashboardPresenter implements Initializable {
   }
 
   public void viewSupport() {
+    if (checkIfLoggedInToHurey())
+      return;
     updateDynamicPaneContent(new SupportView().getView());
   }
 

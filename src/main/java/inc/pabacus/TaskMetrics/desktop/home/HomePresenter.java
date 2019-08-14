@@ -28,7 +28,7 @@ public class HomePresenter implements Initializable {
   @FXML
   private Label labelTask;
   @FXML
-  private Label nani_kore;
+  private Label information;
 
   private JobTaskHandler jobTaskHandler;
   private XpmTaskWebHandler xpmTaskWebHandler;

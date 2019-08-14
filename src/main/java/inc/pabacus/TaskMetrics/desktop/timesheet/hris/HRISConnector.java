@@ -47,7 +47,7 @@ public class HRISConnector {
   public List<HRISTimeLog> hrisLogs() {
     try {
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + logDate.toString())
+                                     .url(new StringCacheService().get(CacheKey.HUREY_HOST) + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + logDate.toString())
                                      .addHeader("Authorization", bearer)
                                      .build());
       String string = call.execute().body().string();
@@ -102,7 +102,7 @@ public class HRISConnector {
       String requestString = mapper.writeValueAsString(crazyHrisEntity);
       RequestBody requestBody = RequestBody.create(JSON, requestString);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/services/app/EmployeeTimeLog/Create")
+                                     .url(new StringCacheService().get(CacheKey.HUREY_HOST) + "/api/services/app/EmployeeTimeLog/Create")
                                      .addHeader("Authorization", bearer)
                                      .post(requestBody)
                                      .build());

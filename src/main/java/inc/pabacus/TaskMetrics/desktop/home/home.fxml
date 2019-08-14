@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="inc.pabacus.TaskMetrics.desktop.home.HomePresenter"
-            prefHeight="400.0" prefWidth="600.0">
-
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="inc.pabacus.TaskMetrics.desktop.home.HomePresenter">
+  <Label fx:id="countClients" layoutX="254.0" layoutY="112.0" onMouseClicked="#viewClients"
+         onMouseEntered="#hoveringAbove" onMouseExited="#unhover" text="0">
+    <font>
+      <Font size="96.0"/>
+    </font>
+  </Label>
+  <Label fx:id="countJobs" layoutX="430.0" layoutY="112.0" onMouseClicked="#viewJobs" onMouseEntered="#hoveringAbove"
+         onMouseExited="#unhover" text="0">
+    <font>
+      <Font size="96.0"/>
+    </font>
+  </Label>
+  <Label fx:id="countTasks" layoutX="606.0" layoutY="112.0" onMouseClicked="#viewTasks" onMouseEntered="#hoveringAbove"
+         onMouseExited="#unhover" text="0">
+    <font>
+      <Font size="96.0"/>
+    </font>
+  </Label>
+  <Label fx:id="labelClient" layoutX="263.0" layoutY="232.0" onMouseClicked="#viewClients"
+         onMouseEntered="#hoveringAbove" onMouseExited="#unhover" text="Clients"/>
+  <Label fx:id="labelJobs" layoutX="439.0" layoutY="232.0" onMouseEntered="#hoveringAbove" onMouseExited="#unhover"
+         text="Jobs"/>
+  <Label fx:id="labelTask" layoutX="614.0" layoutY="232.0" text="Tasks"/>
+  <Label fx:id="nani_kore" layoutX="87.0" layoutY="469.0" text="There are 10 tasks incompleted bla bla"/>
 </AnchorPane>

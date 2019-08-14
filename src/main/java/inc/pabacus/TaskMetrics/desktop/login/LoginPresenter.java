@@ -92,7 +92,7 @@ public class LoginPresenter implements Initializable {
     cacheService.put(CacheKey.TRIBELY_TOKEN, reqEnt.getTribelyToken());
     cacheService.put(CacheKey.SHRIS_TOKEN, reqEnt.getHureyToken());
     cacheService.put(CacheKey.EMPLOYEE_ID, reqEnt.getEmployeeId());
-    service.retrieveEmployeeManagerId();
+//    service.retrieveEmployeeManagerId();
     return true;
   }
 

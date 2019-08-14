@@ -257,6 +257,7 @@ public class SettingsPresenter implements Initializable {
     }
     cacheService.put(CacheKey.EMPLOYEE_ID, reqEnt.getEmployeeId());
     cacheService.put(CacheKey.SHRIS_TOKEN, reqEnt.getHureyToken());
+    authenticatorService.retrieveEmployeeManagerId();
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
     alert.setTitle("Logged In!");
     alert.setContentText("Success!");

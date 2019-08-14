@@ -128,23 +128,6 @@ public class AuthenticatorService {
       Object managerEmployeeId = result.get("managerEmployeeId");
 
       stringCacheService.put(CacheKey.MANAGER_ID, managerEmployeeId.toString());
-
-      // code below is result of how bad staging api is nothing was working this was just a quick temporary workaround for me
-//      Call c = client.newCall(new Request.Builder()
-//                                  .url("https://hureyweb-staging.azurewebsites.net/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=f6befdfe-8876-4b6a-f503-08d704e3effb&logDate=2019-07-24")
-//                                  .addHeader("Authorization", accessToken)
-//                                  .build()
-//      );
-//      String string = c.execute().body().string();
-//      Map<String, Object> r = mapper.readValue(string,
-//                                                      new TypeReference<Map<String, Object>>() {});
-//      Map<String, Object> result = (Map<String, Object>) r.get("result");
-//      List<Map<String, Object>> items = (List<Map<String, Object>>) result.get("items");
-//      Map<String, Object> stringObjectMap = items.get(0);
-//      Object employeeId1 = stringObjectMap.get("employeeId");
-//      cacheService.put(CacheKey.EMPLOYEE_ID, employeeId1.toString());
-
-
     } catch (Exception e) {
       e.printStackTrace();
     }

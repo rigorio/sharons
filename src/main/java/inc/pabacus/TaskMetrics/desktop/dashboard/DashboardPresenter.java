@@ -9,6 +9,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.chat.ChatView;
 import inc.pabacus.TaskMetrics.desktop.easyChat.EasyChatView;
+import inc.pabacus.TaskMetrics.desktop.home.HomeView;
 import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
 import inc.pabacus.TaskMetrics.desktop.login.LoginView;
 import inc.pabacus.TaskMetrics.desktop.productivity.ProductivityView;
@@ -138,7 +139,8 @@ public class DashboardPresenter implements Initializable {
 
     status.getItems().addAll("Busy", "Meeting", "Lunch", "Offline");
 
-    viewTasks();
+    updateDynamicPaneContent(new HomeView().getView());
+//    viewTasks();
     shortcutKeyPressed();
   }
 
@@ -300,6 +302,11 @@ public class DashboardPresenter implements Initializable {
     } else {
       alert.close();
     }
+  }
+
+  @FXML
+  public void viewHome() {
+    updateDynamicPaneContent(new HomeView().getView());
   }
 
   @FXML

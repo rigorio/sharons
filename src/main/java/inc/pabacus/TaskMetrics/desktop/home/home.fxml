@@ -25,8 +25,9 @@
   </Label>
   <Label fx:id="labelClient" layoutX="263.0" layoutY="232.0" onMouseClicked="#viewClients"
          onMouseEntered="#hoveringAbove" onMouseExited="#unhover" text="Clients"/>
-  <Label fx:id="labelJobs" layoutX="439.0" layoutY="232.0" onMouseEntered="#hoveringAbove" onMouseExited="#unhover"
-         text="Jobs"/>
-  <Label fx:id="labelTask" layoutX="614.0" layoutY="232.0" text="Tasks"/>
+  <Label fx:id="labelJobs" layoutX="439.0" layoutY="232.0" onMouseClicked="#viewJobs" onMouseEntered="#hoveringAbove"
+         onMouseExited="#unhover" text="Jobs"/>
+  <Label fx:id="labelTask" layoutX="614.0" layoutY="232.0" onMouseClicked="#viewTasks" onMouseEntered="#hoveringAbove"
+         onMouseExited="#unhover" text="Tasks"/>
   <Label fx:id="nani_kore" layoutX="87.0" layoutY="469.0" text="There are 10 tasks incompleted bla bla"/>
 </AnchorPane>

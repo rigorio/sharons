@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
@@ -14,7 +15,7 @@ import java.util.ResourceBundle;
 
 public class HomePresenter implements Initializable {
   @FXML
-  private AnchorPane mainPane;
+  private AnchorPane dynamicContentPane;
   @FXML
   private Label countClients;
   @FXML
@@ -54,7 +55,7 @@ public class HomePresenter implements Initializable {
   @FXML
   public void hoveringAbove() {
     System.out.println("up above");
-    mainPane.setCursor(Cursor.HAND);
+    dynamicContentPane.setCursor(Cursor.HAND);
   }
 
   @FXML
@@ -74,10 +75,20 @@ public class HomePresenter implements Initializable {
 
   @FXML
   public void unhover() {
-    mainPane.setCursor(Cursor.DEFAULT);
+    dynamicContentPane.setCursor(Cursor.DEFAULT);
   }
 
   private void gatherInfo() {
     information.setText("Dynamic information report regarding jobs and tasks");
+  }
+
+  private void updateDynamicPaneContent(Parent parent) {
+    AnchorPane.setTopAnchor(parent, 0.0);
+    AnchorPane.setLeftAnchor(parent, 0.0);
+    AnchorPane.setBottomAnchor(parent, 0.0);
+    AnchorPane.setRightAnchor(parent, 0.0);
+
+    dynamicContentPane.getChildren().clear();
+    dynamicContentPane.getChildren().add(parent);
   }
 }

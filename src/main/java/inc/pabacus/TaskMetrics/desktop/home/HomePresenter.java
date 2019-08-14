@@ -1,5 +1,6 @@
 package inc.pabacus.TaskMetrics.desktop.home;
 
+import inc.pabacus.TaskMetrics.api.client.ClientHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import javafx.fxml.FXML;
@@ -31,10 +32,12 @@ public class HomePresenter implements Initializable {
 
   private JobTaskHandler jobTaskHandler;
   private XpmTaskWebHandler xpmTaskWebHandler;
+  private ClientHandler clientHandler;
 
   public HomePresenter() {
     jobTaskHandler = new JobTaskHandler();
     xpmTaskWebHandler = new XpmTaskWebHandler();
+    clientHandler = new ClientHandler();
   }
 
   @Override
@@ -43,7 +46,8 @@ public class HomePresenter implements Initializable {
     countJobs.setText("" + numberOfJobs);
     int numberOfTasks = xpmTaskWebHandler.findAll().size();
     countTasks.setText("" + numberOfTasks);
-
+    int numberOfClients = clientHandler.allClients().size();
+    countClients.setText("" + numberOfClients);
   }
 
   @FXML

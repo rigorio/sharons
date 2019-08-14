@@ -48,6 +48,7 @@ public class HomePresenter implements Initializable {
     countTasks.setText("" + numberOfTasks);
     int numberOfClients = clientHandler.allClients().size();
     countClients.setText("" + numberOfClients);
+    gatherInfo();
   }
 
   @FXML
@@ -74,5 +75,9 @@ public class HomePresenter implements Initializable {
   @FXML
   public void unhover() {
     mainPane.setCursor(Cursor.DEFAULT);
+  }
+
+  private void gatherInfo() {
+    information.setText("Dynamic information report regarding jobs and tasks");
   }
 }

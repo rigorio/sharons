@@ -19,7 +19,7 @@ public class XpmHelper {
 
   public XpmTaskPostEntity helpMe(XpmTask xpmTask) {
     String jobName = xpmTask.getJob();
-    Optional<Job> anyJob = jobTaskHandler.allJobs().stream()
+    Optional<Job> anyJob = jobTaskHandler.allJobs(true).stream()
         .filter(job -> job.getJob().equals(jobName))
         .findAny();
 

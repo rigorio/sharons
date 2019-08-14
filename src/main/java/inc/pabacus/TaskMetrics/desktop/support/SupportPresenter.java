@@ -92,7 +92,7 @@ public class SupportPresenter implements Initializable {
   }
 
   private List<Task> kwan() {
-    Job ts = jobTaskHandler.allJobs().stream()
+    Job ts = jobTaskHandler.allJobs(false).stream()
         .filter(job -> job.getJob().equals("Action Center"))
         .findFirst()
         .get();
@@ -126,7 +126,7 @@ public class SupportPresenter implements Initializable {
 
   @NotNull
   private Job getAction_center() {
-    return jobTaskHandler.allJobs().stream()
+    return jobTaskHandler.allJobs(true).stream()
         .filter(job -> job.getJob().equals("Action Center"))
         .findFirst().get();
   }

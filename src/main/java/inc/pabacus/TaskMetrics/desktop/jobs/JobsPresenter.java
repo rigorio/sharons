@@ -94,7 +94,7 @@ public class JobsPresenter implements Initializable {
   }
 
   private List<Job> getJobs() {
-    return jobTaskHandler.allJobs();
+    return jobTaskHandler.allJobs(true);
   }
 
   private List<JobTaskAdapter> getJobTasks() {

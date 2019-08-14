@@ -153,7 +153,7 @@ public class EditPresenter implements Initializable {
   }
 
   private List<String> getJobs() {
-    return jobTaskHandler.allJobs().stream()
+    return jobTaskHandler.allJobs(true).stream()
         .map(Job::getJob)
         .collect(Collectors.toList());
   }
@@ -161,7 +161,7 @@ public class EditPresenter implements Initializable {
   @FXML
   public void changeTasks() {
     String project = jobComboBox.getValue();
-    Optional<Job> any = jobTaskHandler.allJobs().stream()
+    Optional<Job> any = jobTaskHandler.allJobs(true).stream()
         .filter(job -> job.getJob().equals(project))
         .findAny();
 

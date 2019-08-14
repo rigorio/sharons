@@ -76,11 +76,11 @@ public class JobTaskHandler {
     }
   }
 
-  public List<Job> allJobs() {
+  public List<Job> allJobs(boolean byDepartment) {
     List<Job> jobs = new ArrayList<>();
     try {
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/jobs")
+                                     .url(HOST + "/api/jobs?byDepartment=" + byDepartment)
                                      .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody responseBody = call.execute().body();

@@ -93,7 +93,7 @@ public class NewTaskPresenter implements Initializable {
   }
 
   private List<String> getJobs() {
-    return jobTaskHandler.allJobs().stream()
+    return jobTaskHandler.allJobs(true).stream()
         .map(Job::getJob)
         .collect(Collectors.toList());
   }
@@ -122,7 +122,7 @@ public class NewTaskPresenter implements Initializable {
 
   @NotNull
   private Job getSelectedJob(String project) {
-    Optional<Job> any = jobTaskHandler.allJobs().stream()
+    Optional<Job> any = jobTaskHandler.allJobs(true).stream()
         .filter(job -> job.getJob().equals(project))
         .findAny();
     if (!any.isPresent())

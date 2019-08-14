@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.desktop.home;
 import inc.pabacus.TaskMetrics.api.client.ClientHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
+import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
@@ -60,7 +61,7 @@ public class HomePresenter implements Initializable {
 
   @FXML
   public void viewJobs() {
-    System.out.println("watashini jobs");
+    updateDynamicPaneContent(new JobsView().getView());
   }
 
   @FXML

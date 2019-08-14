@@ -2,6 +2,8 @@ package inc.pabacus.TaskMetrics.desktop.settings;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import inc.pabacus.TaskMetrics.api.generateToken.AuthenticatorService;
+import inc.pabacus.TaskMetrics.api.generateToken.ReqEnt;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareData;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareDataFXAdapter;
 import inc.pabacus.TaskMetrics.api.hardware.HardwareService;
@@ -17,18 +19,20 @@ import inc.pabacus.TaskMetrics.desktop.newTask.DefaultTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 import lombok.Data;
 
 import java.net.URL;
@@ -41,6 +45,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings("all")
 public class SettingsPresenter implements Initializable {
 
+  @FXML
+  private JFXTextField hureyHostTextBox;
   @FXML
   private JFXTextField hostTextBox;
   @FXML
@@ -65,7 +71,7 @@ public class SettingsPresenter implements Initializable {
   @FXML
   private JFXButton extendButton;
 
-
+  private AuthenticatorService authenticatorService;
   private JobTaskHandler jobTaskHandler;
   private HostConfig hostConfig;
 
@@ -73,6 +79,7 @@ public class SettingsPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     hostConfig = new HostConfig();
     hostTextBox.setText(hostConfig.getHost());
+    authenticatorService = new AuthenticatorService();
 
     jobTaskHandler = new JobTaskHandler();
     if (DefaultTaskHolder.getDefaultJob() == null)
@@ -102,7 +109,7 @@ public class SettingsPresenter implements Initializable {
   @FXML
   public void changeJob() {
     String project = jobBox.getValue();
-    Optional<Job> any = jobTaskHandler.allJobs().stream()
+    Optional<Job> any = jobTaskHandler.allJobs(true).stream()
         .filter(job -> job.getJob().equals(project))
         .findAny();
     if (!any.isPresent())
@@ -131,7 +138,7 @@ public class SettingsPresenter implements Initializable {
   }
 
   private List<String> getJobs() {
-    return jobTaskHandler.allJobs().stream()
+    return jobTaskHandler.allJobs(true).stream()
         .map(Job::getJob)
         .collect(Collectors.toList());
   }
@@ -233,6 +240,29 @@ public class SettingsPresenter implements Initializable {
     hostConfig.updateHost(hostTextBox.getText());
   }
 
+  @FXML
+  public void connectHureyHost() {
+    StringCacheService cacheService = new StringCacheService();
+    cacheService.put(CacheKey.HUREY_HOST, hureyHostTextBox.getText());
+    Pair<String, String> tribelyLogin = showTribelyLogin();
+    String username = tribelyLogin.getKey();
+    String password = tribelyLogin.getValue();
+    ReqEnt reqEnt = authenticatorService.retrieveHureyItems(username, password);
+    if (!reqEnt.isSuccessful()) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Unsuccessful login");
+      alert.setContentText(reqEnt.getError());
+      alert.showAndWait();
+      return;
+    }
+    cacheService.put(CacheKey.EMPLOYEE_ID, reqEnt.getEmployeeId());
+    cacheService.put(CacheKey.SHRIS_TOKEN, reqEnt.getHureyToken());
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Logged In!");
+    alert.setContentText("Success!");
+    alert.showAndWait();
+  }
+
   public ObservableList<String> populateManagers() {
     List<String> names = new ArrayList<>();
     names.add("Joy Cuison");
@@ -272,5 +302,59 @@ public class SettingsPresenter implements Initializable {
   @Data
   private class Person {
     StringProperty name;
+  }
+
+
+  private Pair<String, String> showTribelyLogin() {
+    // Create the custom dialog.
+    Dialog<Pair<String, String>> dialog = new Dialog<>();
+    dialog.setTitle("Login");
+    dialog.setHeaderText("Please Login with your Tribely Account");
+
+// Set the button types.
+    ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+    dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+// Create the username and password labels and fields.
+
+    GridPane grid = new GridPane();
+    grid.setHgap(10);
+    grid.setVgap(10);
+    grid.setPadding(new Insets(20, 150, 10, 10));
+
+    TextField username = new TextField();
+    username.setPromptText("Username");
+    PasswordField password = new PasswordField();
+    password.setPromptText("Password");
+
+    grid.add(new Label("Username:"), 0, 0);
+    grid.add(username, 1, 0);
+    grid.add(new Label("Password:"), 0, 1);
+    grid.add(password, 1, 1);
+
+// Enable/Disable login button depending on whether a username was entered.
+    Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+    loginButton.setDisable(true);
+
+// Do some validation (using the Java 8 lambda syntax).
+    username.textProperty().addListener((observable, oldValue, newValue) -> {
+      loginButton.setDisable(newValue.trim().isEmpty());
+    });
+
+    dialog.getDialogPane().setContent(grid);
+
+// Request focus on the username field by default.
+    Platform.runLater(username::requestFocus);
+
+// Convert the result to a username-password-pair when the login button is clicked.
+    dialog.setResultConverter(dialogButton -> {
+      if (dialogButton == loginButtonType) {
+        return new Pair<>(username.getText(), password.getText());
+      }
+      return null;
+    });
+
+    Optional<Pair<String, String>> result = dialog.showAndWait();
+    return result.get();
   }
 }

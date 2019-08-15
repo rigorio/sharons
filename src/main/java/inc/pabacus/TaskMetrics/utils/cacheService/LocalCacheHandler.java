@@ -9,4 +9,8 @@ public class LocalCacheHandler {
   public static String getTribelyToken() {
     return stringCacheService.get(CacheKey.TRIBELY_TOKEN);
   }
+
+  public static String getHureyToken() {
+    return stringCacheService.get(CacheKey.SHRIS_TOKEN);
+  }
 }

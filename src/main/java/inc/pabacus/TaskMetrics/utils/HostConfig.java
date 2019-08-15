@@ -13,8 +13,10 @@ import java.util.Optional;
 public class HostConfig {
 
   private Repository<Map<String, Object>, Long> hostRepository;
-  private static final String KEY = "host";
+  private Repository<Map<String, Object>, Long> hrisRepository;
+  private static final String KEY = "tribelyHost";
   private String hris = "https://hureyweb-staging.azurewebsites.net";
+  private static final String HRIS_KEY = "hrisHost";
 
   public String getHris() {
     return hris;
@@ -22,8 +24,25 @@ public class HostConfig {
 
   public HostConfig() {
     FlatFileSettings flatFileSettings = new DefaultSettings();
-    flatFileSettings.setFileName("DevHost.json"); // so we can run two tribely apps at the same time
+    flatFileSettings.setFileName("tribelyHost.json"); // so we can run two tribely apps at the same time
     hostRepository = new FlatFileRepository(flatFileSettings);
+
+    FlatFileSettings hrisFFS = new DefaultSettings();
+    hrisFFS.setFileName("hrisHost.json"); // so we can run two tribely apps at the same time
+    hrisRepository = new FlatFileRepository(hrisFFS);
+  }
+
+  public String getHrisHost() {
+    Optional<Map<String, Object>> allList = hrisRepository.findAll().stream().findAny();
+    if (!allList.isPresent()) {
+      HashMap<String, Object> map = new HashMap<>();
+      map.put(HRIS_KEY, "");
+      hrisRepository.save(map);
+      allList = hrisRepository.findAll().stream().findAny();
+    }
+    Map<String, Object> hrisFile = allList.get();
+    Object value = hrisFile.get(HRIS_KEY);
+    return value == null ? "" : value.toString();
   }
 
   public String getHost() {
@@ -73,5 +92,13 @@ public class HostConfig {
 
   }
 
+  public void updateHureyHost(String host) {
+
+    Map<String, Object> map = new HashMap<>();
+    map.put(HRIS_KEY, host);
+    Map<String, Object> savedMap = hrisRepository.save(map);
+    System.out.println(savedMap);
+
+  }
 
 }

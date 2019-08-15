@@ -61,9 +61,9 @@ public class XpmTaskWebHandler {
                                      .post(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
-      XpmTask xpmTask;
-      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
-      xpmTask.setId(xpmTask.getId());
+//      XpmTask xpmTask;
+//      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+//      xpmTask.setId(xpmTask.getId());
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }

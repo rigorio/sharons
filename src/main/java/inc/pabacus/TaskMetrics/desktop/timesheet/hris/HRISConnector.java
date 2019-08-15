@@ -49,7 +49,7 @@ public class HRISConnector {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(new StringCacheService().get(CacheKey.HUREY_HOST) + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + logDate.toString())
-                                     .addHeader("Authorization", LocalCacheHandler.getTribelyToken())
+                                     .addHeader("Authorization", LocalCacheHandler.getHureyToken())
                                      .build());
       String string = call.execute().body().string();
       Map<String, Object> o = mapper.readValue(string, new TypeReference<Map<String, Object>>() {});
@@ -102,13 +102,14 @@ public class HRISConnector {
           .build();
       String requestString = mapper.writeValueAsString(crazyHrisEntity);
       RequestBody requestBody = RequestBody.create(JSON, requestString);
+
       Call call = client.newCall(new Request.Builder()
                                      .url(new StringCacheService().get(CacheKey.HUREY_HOST) + "/api/services/app/EmployeeTimeLog/Create")
-                                     .addHeader("Authorization", LocalCacheHandler.getTribelyToken())
+                                     .addHeader("Authorization", LocalCacheHandler.getHureyToken())
                                      .post(requestBody)
                                      .build());
       String string = call.execute().body().string();
-      System.out.println("nani ?");
+      System.out.println("change logs response");
       System.out.println(string);
     } catch (IOException e) {
       e.printStackTrace();

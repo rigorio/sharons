@@ -80,13 +80,16 @@ public class BreakPresenter implements Initializable {
 
     timerText.setText(time);
     //13 minutes
-    if (lastLog.equalsIgnoreCase("break")) {
-      if (duration == 780) {
-        timerText.setStyle("-fx-text-fill: red");
-      }
-    } else if (lastLog.equalsIgnoreCase("lunch") || lastLog.equalsIgnoreCase("lunch break")) {
-      if (duration == 3300) { // 55 minutes
-        timerText.setStyle("-fx-text-fill: red");
+    // TODO this can be optimized by instead checking for the duration first
+    if (duration >= 780) { // This causes it to only check once instead of twice
+      if (lastLog.equalsIgnoreCase("break")) {
+        if (duration == 780) {
+          timerText.setStyle("-fx-text-fill: red");
+        }
+      } else if (lastLog.contains("lunch")) {
+        if (duration == 3300) { // 55 minutes
+          timerText.setStyle("-fx-text-fill: red");
+        }
       }
     }
   }

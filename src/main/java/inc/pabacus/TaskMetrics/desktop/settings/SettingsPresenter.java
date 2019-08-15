@@ -79,6 +79,7 @@ public class SettingsPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     hostConfig = new HostConfig();
     hostTextBox.setText(hostConfig.getHost());
+    hureyHostTextBox.setText(hostConfig.getHrisHost());
     authenticatorService = new AuthenticatorService();
 
     jobTaskHandler = new JobTaskHandler();
@@ -243,6 +244,7 @@ public class SettingsPresenter implements Initializable {
   @FXML
   public void connectHureyHost() {
     StringCacheService cacheService = new StringCacheService();
+    hostConfig.updateHureyHost(hureyHostTextBox.getText());
     cacheService.put(CacheKey.HUREY_HOST, hureyHostTextBox.getText());
     Pair<String, String> tribelyLogin = showTribelyLogin();
     String username = tribelyLogin.getKey();

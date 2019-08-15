@@ -11,6 +11,8 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
+import inc.pabacus.TaskMetrics.api.timesheet.handlers.LogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.desktop.settings.ExtendConfiguration;
@@ -18,6 +20,8 @@ import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import inc.pabacus.TaskMetrics.utils.XpmHelper;
+import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
+import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
@@ -73,6 +77,7 @@ public class TrackerPresenter implements Initializable {
   private XpmTaskWebHandler xpmTaskWebHandler;
   private ActivityHandler activityHandler;
   private DailyLogService dailyLogHandler;
+  private LogService logService;
   private String startTime;
   private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
   private double timeCompensation = 0;
@@ -85,6 +90,7 @@ public class TrackerPresenter implements Initializable {
   public TrackerPresenter() {
     timerService = new TimerService();
     xpmTaskWebHandler = new XpmTaskWebHandler();
+    logService = new HRISLogHandler();
     activityHandler = BeanManager.activityHandler();
     dailyLogHandler = BeanManager.dailyLogService();
     process = this::tickTime;
@@ -141,11 +147,14 @@ public class TrackerPresenter implements Initializable {
     });
 
     lunch.setOnAction(event -> {
+      if (checkIfLoggedInToHurey())
+        return;
       isPause = true;
       Activity activity;
       activity = Activity.LUNCH;
       activityHandler.saveTimestamp(activity);
-      dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+//      dailyLogHandler.changeLog(LogStatus.LB.getStatus());
+      logService.changeLog(LogStatus.LB.getStatus());
       timerService.reRun(); // rerun services
       GuiManager.getInstance().displayView(new BreakView());
       notification("Status changed to Lunch");
@@ -469,5 +478,17 @@ public class TrackerPresenter implements Initializable {
         .hideAfter(Duration.seconds(5));
     notifications.darkStyle();
     notifications.showWarning();
+  }
+
+  private boolean checkIfLoggedInToHurey() {
+    StringCacheService cacheService = new StringCacheService();
+    String s = cacheService.get(CacheKey.SHRIS_TOKEN);
+    if (s == null) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Not connected");
+      alert.setContentText("Please connect your hurey account in settings");
+      alert.showAndWait();
+    }
+    return s == null;
   }
 }

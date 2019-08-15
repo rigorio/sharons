@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheService;
+import inc.pabacus.TaskMetrics.utils.cacheService.LocalCacheHandler;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.utils.SslUtil;
@@ -30,7 +31,7 @@ public class HRISConnector {
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private String HOST = "https://hureyweb-staging.azurewebsites.net";
-  private String bearer;
+//  private String bearer;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   private CacheService<CacheKey, String> cacheService;
@@ -40,7 +41,7 @@ public class HRISConnector {
   public HRISConnector() {
     cacheService = new StringCacheService();
     employeeId = cacheService.get(CacheKey.EMPLOYEE_ID);
-    bearer = cacheService.get(CacheKey.SHRIS_TOKEN);
+//    bearer = cacheService.get(CacheKey.SHRIS_TOKEN);
     logDate = LocalDate.now().plus(3, ChronoUnit.DAYS);
   }
 
@@ -48,7 +49,7 @@ public class HRISConnector {
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(new StringCacheService().get(CacheKey.HUREY_HOST) + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + logDate.toString())
-                                     .addHeader("Authorization", bearer)
+                                     .addHeader("Authorization", LocalCacheHandler.getTribelyToken())
                                      .build());
       String string = call.execute().body().string();
       Map<String, Object> o = mapper.readValue(string, new TypeReference<Map<String, Object>>() {});
@@ -103,7 +104,7 @@ public class HRISConnector {
       RequestBody requestBody = RequestBody.create(JSON, requestString);
       Call call = client.newCall(new Request.Builder()
                                      .url(new StringCacheService().get(CacheKey.HUREY_HOST) + "/api/services/app/EmployeeTimeLog/Create")
-                                     .addHeader("Authorization", bearer)
+                                     .addHeader("Authorization", LocalCacheHandler.getTribelyToken())
                                      .post(requestBody)
                                      .build());
       String string = call.execute().body().string();

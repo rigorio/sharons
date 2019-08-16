@@ -1,8 +1,10 @@
 package inc.pabacus.TaskMetrics.desktop.home;
 
 import inc.pabacus.TaskMetrics.api.client.ClientHandler;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
+import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class HomePresenter implements Initializable {
@@ -46,11 +49,10 @@ public class HomePresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     int numberOfJobs = jobTaskHandler.allJobTasks().size();
     countJobs.setText("" + numberOfJobs);
-    int numberOfTasks = xpmTaskWebHandler.findAll().size();
-    countTasks.setText("" + numberOfTasks);
+    getTaskStatistics();
     int numberOfClients = clientHandler.allClients().size();
     countClients.setText("" + numberOfClients);
-    gatherInfo();
+//    gatherInfo();
   }
 
   @FXML
@@ -77,6 +79,32 @@ public class HomePresenter implements Initializable {
   @FXML
   public void unhover() {
     dynamicContentPane.setCursor(Cursor.DEFAULT);
+  }
+
+  private void getTaskStatistics() {
+    List<XpmTask> xpmTasks = allTasks();
+    int numberOfTasks = xpmTasks.size();
+    countTasks.setText("" + numberOfTasks);
+
+    int p = 0, ip = 0, d = 0;
+    for (XpmTask xpmTask : xpmTasks) {
+      String status = xpmTask.getStatus();
+      if (status.equals(Status.PENDING.getStatus()))
+        p++;
+      else if (status.equals(Status.IN_PROGRESS.getStatus()))
+        ip++;
+      else if (status.equals(Status.DONE.getStatus()))
+        d++;
+    }
+
+    information.setText(((p > 0) ? p + " tasks in pending" : "") + "\n" +
+                            ((ip > 0) ? ip + " tasks in progress" : "") + "\n" +
+                            ((d > 0) ? d + " tasks done" : ""));
+
+  }
+
+  private List<XpmTask> allTasks() {
+    return xpmTaskWebHandler.findAll();
   }
 
   private void gatherInfo() {

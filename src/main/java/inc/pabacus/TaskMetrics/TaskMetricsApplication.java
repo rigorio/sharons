@@ -64,8 +64,8 @@ public class TaskMetricsApplication extends Application {
   }
 
   private void stopProcesses() {
-    ValidationHandler validationHandler = BeanManager.validationHandler();
-    validationHandler.runValidationChecks();
+//    ValidationHandler validationHandler = BeanManager.validationHandler();
+//    validationHandler.runValidationChecks();
     //to force stop/close the threads.
     Thread.currentThread().interrupt();
     //to make sure app is close

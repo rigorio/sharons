@@ -139,7 +139,7 @@ public class DashboardPresenter implements Initializable {
 
     status.getItems().addAll("Busy", "Meeting", "Lunch", "Offline");
 
-    updateDynamicPaneContent(new HomeView().getView());
+    updateDynamicPaneContent(new JobsView().getView());
 //    viewTasks();
     shortcutKeyPressed();
   }

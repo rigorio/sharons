@@ -30,8 +30,9 @@ public class ServiceManager {
     softwareServiceAPI.sendSoftwareData();
     screenshotService.enableScreenShot();
     Runnable runnable = () -> {
-      Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
-      activityListener.unListen();
+//      Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
+//      activityListener.unListen();
+      System.out.println("Thou was idle");
     };
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);

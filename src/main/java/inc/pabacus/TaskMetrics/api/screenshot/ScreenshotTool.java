@@ -25,7 +25,7 @@ public class ScreenshotTool {
   }
 
   public BufferedImage blurImage(BufferedImage image) {
-    int radius = 3;
+    int radius = 11;
     int size = radius * 2 + 1;
     float weight = 1.0f / (size * size);
     float[] data = new float[size * size];

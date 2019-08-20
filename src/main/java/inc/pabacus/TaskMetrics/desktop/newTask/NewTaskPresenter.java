@@ -180,7 +180,7 @@ public class NewTaskPresenter implements Initializable {
         .id(0L)
         .task(taskTitle)
         .job(this.job)
-        .billable(true)
+        .billable("Y")
         .estimateTime(estimateFields)
 //        .invoiceTypeId(new InvoiceType(1L, "Staff"))
 //        .assigneeId(new Assignee(1L, UsernameHolder.username))

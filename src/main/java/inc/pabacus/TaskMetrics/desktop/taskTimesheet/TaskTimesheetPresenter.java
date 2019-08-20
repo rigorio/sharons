@@ -92,7 +92,7 @@ public class TaskTimesheetPresenter implements Initializable {
       // handle null value
       Boolean isBillable;
       try {
-        isBillable = param.getValue().getBillable().getValue();
+        isBillable = param.getValue().getBillable().getValue().equals("Y");
       } catch (Exception e) {
         isBillable = false;
       }

@@ -15,7 +15,7 @@ public class XpmTaskPostEntity {
   private String status;
   private String description;
   private String totalTimeSpent;
-  private Boolean billable;
+  private String billable;
   private String startTime;
   private String endTime;
   private String estimateTime;

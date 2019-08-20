@@ -216,7 +216,7 @@ public class EditPresenter implements Initializable {
     XpmTask xpmTask = XpmTask.builder()
         .task(taskTitle)
         .job(jobComboBox.getValue())
-        .billable(true)
+        .billable("Y")
         .estimateTime(estimateTimeField.getText())
 //        .invoiceTypeId(taskBeingEdited.getInvoiceTypeAdapter().get())
 //        .assigneeId(taskBeingEdited.getAssigneeAdapter().get())

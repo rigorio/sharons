@@ -14,22 +14,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class
 XpmTask {
-                                                    /**/
-  private Long id;                                  /*       "id": 35,*/
-  private String client;                            /*        "client": "DBA",*/
-  private String job;                               /*        "job": "Tribely",*/
-  private String description;                       /*        "description": "",*/
-  private String task;                              /*        "task": "System Development",*/
-  private String status;                            /*        "status": "Pending",*/
-  private String dateCreated;                       /*        "dateCreated": "2019-07-29",*/
-  private String dateFinished;                      /*        "dateFinished": null,*/
-  private Boolean billable;                         /*        "billable": "true",*/
-  private String startTime;                         /*        "startTime": null,*/
-  private String endTime;                           /*        "endTime": null,*/
-  private String estimateTime;                      /*        "estimateTime": 0,*/
-  private String extendCounter;                     /*        "extendCounter": null,*/
-  private String totalTimeSpent;                    /*        "totalTimeSpent": 0,*/
-  private String percentCompleted;                  /*        "percentCompleted": "0%"*/
+
+  private Long id;
+  private String client;
+  private String job;
+  private String description;
+  private String task;
+  private String status;
+  private String dateCreated;
+  private String dateFinished;
+  private String billable;
+  private String startTime;
+  private String endTime;
+  private String estimateTime;
+  private String extendCounter;
+  private String totalTimeSpent;
+  private String percentCompleted;
 //  private Long businessValueId;
 //  private InvoiceType invoiceTypeId;
 //  private Assignee assigneeId;
@@ -61,7 +61,7 @@ XpmTask {
     StringProperty dateFinished = xpmTask.getDateFinished();
     this.dateFinished = dateFinished != null ? dateFinished.get() : null;
 
-    BooleanProperty billable = xpmTask.getBillable();
+    StringProperty billable = xpmTask.getBillable();
     this.billable = billable != null ? billable.get() : null;
 
     StringProperty startTime = xpmTask.getStartTime();

@@ -28,7 +28,7 @@ public class XpmTaskAdapter {
   private StringProperty status;
   private StringProperty dateCreated;
   private StringProperty dateFinished;
-  private BooleanProperty billable;
+  private StringProperty billable;
   private StringProperty startTime;
   private StringProperty endTime;
   private StringProperty estimateTime;
@@ -66,8 +66,8 @@ public class XpmTaskAdapter {
     String dateFinished = xpmTask.getDateFinished();
     this.dateFinished = dateFinished != null ? new SimpleStringProperty(dateFinished) : null;
 
-    Boolean billable = xpmTask.getBillable();
-    this.billable = billable != null ? new SimpleBooleanProperty(billable) : null;
+    String billable = xpmTask.getBillable();
+    this.billable = billable != null ? new SimpleStringProperty(billable) : null;
 
     String startTime = xpmTask.getStartTime();
     this.startTime = startTime != null ? new SimpleStringProperty(startTime) : null;

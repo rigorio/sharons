@@ -38,6 +38,7 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -284,7 +285,7 @@ public class TrackerPresenter implements Initializable {
       selectedTask.setEndTime(new SimpleStringProperty(getCurrentTime()));
       updateTask(Status.DONE.getStatus());
       selectedTask.setPercentCompleted(new SimpleStringProperty(onehundred.getText()));
-      selectedTask.setDateFinished(new SimpleStringProperty(LocalTime.now().toString()));
+      selectedTask.setDateFinished(new SimpleStringProperty(LocalDate.now().toString()));
       saveAndClose();
     });
 

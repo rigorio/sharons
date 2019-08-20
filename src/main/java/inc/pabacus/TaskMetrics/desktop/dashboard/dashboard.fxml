@@ -22,7 +22,7 @@
                      onAction="#changeStatus" prefHeight="21.0" prefWidth="120.0" unFocusColor="WHITE"/>
       </Pane>
       <JFXButton id="tasks" fx:id="tasksButton" alignment="BASELINE_LEFT" graphicTextGap="3.0" mnemonicParsing="false"
-                 onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Tasks" textFill="WHITE">
+                 onAction="#viewTasks" prefHeight="58.0" prefWidth="300.0" text="Jobs" textFill="WHITE">
         <font>
           <Font size="20.0"/>
         </font>

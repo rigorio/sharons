@@ -42,7 +42,7 @@ public class HRISConnector {
     cacheService = new StringCacheService();
     employeeId = cacheService.get(CacheKey.EMPLOYEE_ID);
 //    bearer = cacheService.get(CacheKey.SHRIS_TOKEN);
-    logDate = LocalDate.now().plus(3, ChronoUnit.DAYS);
+    logDate = LocalDate.now();
   }
 
   public List<HRISTimeLog> hrisLogs() {

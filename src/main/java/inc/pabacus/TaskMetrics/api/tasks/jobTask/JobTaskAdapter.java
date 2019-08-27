@@ -13,6 +13,7 @@ import javax.net.ssl.SSLParameters;
 public class JobTaskAdapter {
 
   private LongProperty id;
+  private StringProperty jobNumber;
   private StringProperty dateCreated;
   private StringProperty status;
   private DoubleProperty timeSpent;
@@ -24,6 +25,9 @@ public class JobTaskAdapter {
   public JobTaskAdapter(JobTask jobTask) {
     Long id = jobTask.getId();
     this.id = id != null ? new SimpleLongProperty(id) : null;
+
+    String jobNumber = jobTask.getJobNumber();
+    this.jobNumber = jobNumber != null ? new SimpleStringProperty(jobNumber) : null;
 
     String dateCreated = jobTask.getDateCreated();
     this.dateCreated = dateCreated != null ? new SimpleStringProperty(dateCreated) : null;

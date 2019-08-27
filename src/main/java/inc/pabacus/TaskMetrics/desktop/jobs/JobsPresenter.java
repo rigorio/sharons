@@ -56,8 +56,8 @@ public class JobsPresenter implements Initializable {
   }
 
   private void initialize() {
-    TableColumn<JobTaskAdapter, String> dateCreated = new TableColumn<>("Date Created");
-    dateCreated.setCellValueFactory(param -> param.getValue().getDateCreated());
+    TableColumn<JobTaskAdapter, String> dateCreated = new TableColumn<>("Id");
+    dateCreated.setCellValueFactory(param -> param.getValue().getJobNumber());
 
     TableColumn<JobTaskAdapter, String> jobName = new TableColumn<>("Job");
     jobName.setCellValueFactory(param -> param.getValue().getJobName());

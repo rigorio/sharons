@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.desktop.newTask;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import inc.pabacus.TaskMetrics.api.tasks.TaskCreationDTO;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
@@ -34,6 +35,8 @@ import java.util.stream.Collectors;
 public class NewTaskPresenter implements Initializable {
 
   @FXML
+  private JFXTextField taskTextBox;
+  @FXML
   private Label customTaskLabel;
   @FXML
   private Label descriptionLabel;
@@ -41,8 +44,8 @@ public class NewTaskPresenter implements Initializable {
   private JFXTextField customTaskField;
   @FXML
   private JFXTextField descriptionField;
-  @FXML
-  private JFXComboBox<String> taskCombobox;
+//  @FXML
+//  private JFXComboBox<String> taskCombobox;
   @FXML
   private JFXButton saveButton;
   @FXML
@@ -75,9 +78,9 @@ public class NewTaskPresenter implements Initializable {
 //      jobComboBox.setValue(DefaultTaskHolder.getDefaultJob());
 //      changeTask(DefaultTaskHolder.getDefaultJob());
 //    }
-    taskCombobox.setPromptText("Select a task");
-    if (DefaultTaskHolder.getDefaultTask() != null)
-      taskCombobox.setValue(DefaultTaskHolder.getDefaultTask());
+    taskTextBox.setPromptText("Task name");
+//    if (DefaultTaskHolder.getDefaultTask() != null)
+//      taskTextBox.setT(DefaultTaskHolder.getDefaultTask());
 //    jobComboBox.setItems(FXCollections.observableArrayList(getJobs()));
     estimateFieldTextProperty();
     changeTask(job);
@@ -112,8 +115,8 @@ public class NewTaskPresenter implements Initializable {
         .filter(task -> task.getJobId().equals(job.getId()))
         .map(Task::getTask)
         .collect(Collectors.toList());
-    taskCombobox.setItems(FXCollections.observableArrayList(filteredTasks));
-    taskCombobox.getItems().add("Custom Task");
+//    taskCombobox.setItems(FXCollections.observableArrayList(filteredTasks));
+//    taskCombobox.getItems().add("Custom Task");
   }
 
   private List<Task> getTasks() {
@@ -132,8 +135,8 @@ public class NewTaskPresenter implements Initializable {
 
   @FXML
   public void selectTask() {
-    String task = taskCombobox.getValue();
-    boolean status = !task.equalsIgnoreCase("Custom Task");
+//    String task = taskCombobox.getValue();
+//    boolean status = !task.equalsIgnoreCase("Custom Task");
   }
 
   @FXML
@@ -154,9 +157,9 @@ public class NewTaskPresenter implements Initializable {
 //    }
 
     String description = descriptionField.getText(); // actually task of task
-    Boolean billable = Boolean.valueOf(taskCombobox.getValue());
+//    Boolean billable = Boolean.valueOf(taskCombobox.getValue());
     String estimateFields = estimateField.getText();
-    String taskTitle = taskCombobox.getValue();
+    String taskTitle = taskTextBox.getText();
 
 
 //    Job job = getSelectedJob(jobComboBox.getValue());
@@ -175,24 +178,38 @@ public class NewTaskPresenter implements Initializable {
 
 //    BusinessValue businessValue = getBusinessValue();
 //    Project project = getProject();
+    Optional<Job> anyJob = jobTaskHandler.allJobs(true).stream()
+        .filter(job -> job.getJob().equals(this.job))
+        .findAny();
 
-    XpmTask xpmTask = XpmTask.builder()
-        .id(0L)
+    Job job = anyJob.get();
+
+
+    TaskCreationDTO dto = TaskCreationDTO.builder()
         .task(taskTitle)
-        .job(this.job)
-        .billable("Y")
-        .estimateTime(estimateFields)
-//        .invoiceTypeId(new InvoiceType(1L, "Staff"))
-//        .assigneeId(new Assignee(1L, UsernameHolder.username))
-        .percentCompleted("0%")
-        .totalTimeSpent("0.0")
-//        .businessValueId(1L)
-        .status(Status.PENDING.getStatus())
+        .jobId(job.getId())
         .description(description)
-        .dateCreated(LocalDate.now().toString())
+        .estimatedTime(Double.parseDouble(estimateFields))
         .build();
-    XpmTaskPostEntity xpmTaskPostEntity = new XpmHelper().helpMe(xpmTask);
-    xpmTaskHandler.save(xpmTaskPostEntity);
+    xpmTaskHandler.otherSave(dto);
+
+//    XpmTask xpmTask = XpmTask.builder()
+//        .id(0L)
+//        .task(taskTitle)
+//        .job(this.job)
+//        .billable("Y")
+//        .estimateTime(estimateFields)
+////        .invoiceTypeId(new InvoiceType(1L, "Staff"))
+////        .assigneeId(new Assignee(1L, UsernameHolder.username))
+//        .percentCompleted("0%")
+//        .totalTimeSpent("0.0")
+////        .businessValueId(1L)
+//        .status(Status.PENDING.getStatus())
+//        .description(description)
+//        .dateCreated(LocalDate.now().toString())
+//        .build();
+//    XpmTaskPostEntity xpmTaskPostEntity = new XpmHelper().helpMe(xpmTask);
+//    xpmTaskHandler.save(xpmTaskPostEntity);
 
 //    xpmTaskHandler.save(xpmTask);
 

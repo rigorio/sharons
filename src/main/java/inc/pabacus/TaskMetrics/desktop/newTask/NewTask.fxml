@@ -23,7 +23,7 @@
              prefWidth="82.0" style="-fx-background-color: #E65100;" text="Save" textFill="WHITE"/>
   <JFXButton fx:id="closeButton" layoutX="249.0" layoutY="199.0" onAction="#close" prefHeight="32.0" prefWidth="82.0"
              style="-fx-background-color: #D2D2D2;" text="Close" textFill="WHITE"/>
-  <JFXComboBox fx:id="taskCombobox" layoutX="129.0" layoutY="70.0" onAction="#selectTask" prefHeight="25.0"
+  <JFXTextField fx:id="taskTextBox" layoutX="129.0" layoutY="70.0" prefHeight="25.0"
                prefWidth="202.0"/>
   <Label fx:id="estimateLabel" layoutX="26.0" layoutY="118.0" prefHeight="17.0" prefWidth="82.0" text="Estimate Time:"/>
   <JFXTextField fx:id="estimateField" layoutX="129.0" layoutY="114.0" prefHeight="25.0" prefWidth="202.0"/>

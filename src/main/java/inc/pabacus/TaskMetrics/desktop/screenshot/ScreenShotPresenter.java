@@ -1,6 +1,6 @@
 package inc.pabacus.TaskMetrics.desktop.screenshot;
 
-import inc.pabacus.TaskMetrics.utils.FileUtils;
+import inc.pabacus.TaskMetrics.utils.file.FileUtils;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

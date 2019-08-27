@@ -1,6 +1,6 @@
 package inc.pabacus.TaskMetrics.api.screenshot;
 
-import inc.pabacus.TaskMetrics.utils.FileUtils;
+import inc.pabacus.TaskMetrics.utils.file.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 

@@ -31,7 +31,7 @@ public class HRISConnector {
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private String HOST = "https://hureyweb-staging.azurewebsites.net";
-//  private String bearer;
+  //  private String bearer;
   private static final MediaType JSON
       = MediaType.parse("application/json; charset=utf-8");
   private CacheService<CacheKey, String> cacheService;
@@ -60,7 +60,7 @@ public class HRISConnector {
           .peek(hrisTimeLog -> {
             String time = hrisTimeLog.getTime();
             hrisTimeLog.setDate(logDate.toString());
-            hrisTimeLog.setTime(time.split("T")[1]);
+            hrisTimeLog.setTime(time.split("T")[1].replace("Z", ""));
           })
           .collect(Collectors.toList());
       return logs;

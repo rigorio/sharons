@@ -487,7 +487,7 @@ public class TrackerPresenter implements Initializable {
     if (s == null) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Not connected");
-      alert.setContentText("Please connect your hurey account in settings");
+      alert.setContentText("Please connect your Hurey account in settings");
       alert.showAndWait();
     }
     return s == null;

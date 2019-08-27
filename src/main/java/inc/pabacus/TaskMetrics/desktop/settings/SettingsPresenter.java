@@ -312,7 +312,7 @@ public class SettingsPresenter implements Initializable {
     // Create the custom dialog.
     Dialog<Pair<String, String>> dialog = new Dialog<>();
     dialog.setTitle("Login");
-    dialog.setHeaderText("Please Login with your Tribely Account");
+    dialog.setHeaderText("Please Login with your Hurey Account");
 
 // Set the button types.
     ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);

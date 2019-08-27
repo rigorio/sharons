@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("all")
 public class XpmTaskWebHandler {
 
   private static final Logger logger = Logger.getLogger(XpmTaskWebHandler.class);
@@ -64,6 +65,24 @@ public class XpmTaskWebHandler {
 //      XpmTask xpmTask;
 //      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
 //      xpmTask.setId(xpmTask.getId());
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+  }
+
+  public void otherSave(TaskCreationDTO dto) {
+    try {
+      String jsonString = mapper.writeValueAsString(dto);
+      System.out.println("i wanted " + jsonString);
+      RequestBody body = RequestBody.create(JSON, jsonString);
+      Call call = client.newCall(new Request.Builder()
+                                     .url(HOST + "/api/user/timesheet")
+                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
+                                     .post(body)
+                                     .build());
+      ResponseBody responseBody = call.execute().body();
+      String responseString = responseBody.string();
+      System.out.println("response string is " + responseString);
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
@@ -148,6 +167,7 @@ public class XpmTaskWebHandler {
   public void edit(XpmTaskPostEntity helpMe) {
     try {
       String jsonString = mapper.writeValueAsString(helpMe);
+      System.out.println("editing");
       System.out.println(jsonString);
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
@@ -157,7 +177,10 @@ public class XpmTaskWebHandler {
                                      .build());
       ResponseBody responseBody = call.execute().body();
       XpmTask xpmTask;
-      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+      String respostring = responseBody.string();
+      System.out.println("respo");
+      System.out.println(respostring);
+      xpmTask = mapper.readValue(respostring, new TypeReference<XpmTask>() {});
       xpmTask.setId(xpmTask.getId());
     } catch (IOException e) {
       logger.warn(e.getMessage());

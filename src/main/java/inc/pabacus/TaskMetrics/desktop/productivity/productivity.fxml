@@ -2,26 +2,134 @@
 
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane style="-fx-background-color: #FFF;" prefHeight="720" prefWidth="925"
-            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            stylesheets="productivity.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.productivity.ProductivityPresenter">
-  <BarChart fx:id="barChart" layoutX="11.0" layoutY="61.0" prefHeight="308.0" prefWidth="899.0">
-    <xAxis>
-      <CategoryAxis side="BOTTOM"/>
-    </xAxis>
-    <yAxis>
-      <NumberAxis prefWidth="44.0" side="LEFT"/>
-    </yAxis>
-  </BarChart>
-  <JFXComboBox fx:id="dayCombobox" layoutX="14.0" layoutY="14.0" onAction="#filterTasks" prefWidth="150.0"/>
-  <PieChart fx:id="taskPieChart" layoutX="14.0" layoutY="391.0" prefHeight="315.0" prefWidth="384.0"/>
-  <JFXComboBox fx:id="pieCombobox" layoutX="415.0" layoutY="391.0" onAction="#filterRecords" prefWidth="150.0"/>
-  <JFXTextArea fx:id="recommendation" layoutX="415.0" layoutY="454.0" prefHeight="252.0" prefWidth="497.0"
-               text="&#10;"/>
+  <ScrollPane fitToHeight="true" fitToWidth="true" focusTraversable="false" maxHeight="1.7976931348623157E308"
+              maxWidth="1.7976931348623157E308" pannable="true" style="-fx-background-color: transparent;"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
+    <content>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+        <children>
+          <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                      AnchorPane.topAnchor="0.0">
+            <center>
+              <BarChart fx:id="barChart" maxHeight="1.7976931348623157E308"
+                        maxWidth="1.7976931348623157E308" minHeight="250.0" minWidth="0.0"
+                        BorderPane.alignment="CENTER">
+                <xAxis>
+                  <CategoryAxis side="BOTTOM"/>
+                </xAxis>
+                <yAxis>
+                  <NumberAxis prefWidth="44.0" side="LEFT"/>
+                </yAxis>
+                <BorderPane.margin>
+                  <Insets left="18.0" right="18.0" top="25.0"/>
+                </BorderPane.margin>
+              </BarChart>
+            </center>
+            <bottom>
+              <BorderPane minWidth="0.0" BorderPane.alignment="CENTER">
+                <top>
+                  <BorderPane BorderPane.alignment="CENTER">
+                    <top>
+                      <JFXComboBox fx:id="pieCombobox" minHeight="0.0" minWidth="0.0"
+                                   onAction="#filterRecords" prefWidth="150.0"
+                                   BorderPane.alignment="CENTER"/>
+                    </top>
+                  </BorderPane>
+                </top>
+                <center>
+                  <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308"
+                             maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0"
+                             styleClass="split-pane" BorderPane.alignment="CENTER">
+                    <items>
+                      <AnchorPane minWidth="100.0">
+                        <children>
+                          <PieChart fx:id="taskPieChart" AnchorPane.bottomAnchor="0.0"
+                                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                    AnchorPane.topAnchor="0.0"/>
+                        </children>
+                      </AnchorPane>
+                      <AnchorPane minWidth="100.0">
+                        <children>
+                          <JFXTextArea fx:id="recommendation" editable="false"
+                                       focusTraversable="false"
+                                       maxHeight="1.7976931348623157E308"
+                                       maxWidth="1.7976931348623157E308" minHeight="0.0"
+                                       minWidth="0.0" wrapText="true"
+                                       AnchorPane.bottomAnchor="0.0"
+                                       AnchorPane.leftAnchor="0.0"
+                                       AnchorPane.rightAnchor="0.0"
+                                       AnchorPane.topAnchor="0.0"/>
+                        </children>
+                      </AnchorPane>
+                    </items>
+                    <BorderPane.margin>
+                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+                    </BorderPane.margin>
+                  </SplitPane>
+                </center>
+              </BorderPane>
+            </bottom>
+            <top>
+              <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                          minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER">
+                <left>
+                  <GridPane alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="0.0" minWidth="0.0"
+                                         percentWidth="100.0" prefWidth="104.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints/>
+                      <RowConstraints/>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                      <HBox alignment="CENTER_LEFT" GridPane.rowIndex="2">
+                        <GridPane.margin>
+                          <Insets left="25.0"/>
+                        </GridPane.margin>
+                        <children>
+                          <JFXComboBox fx:id="dayCombobox" minWidth="-Infinity"
+                                       onAction="#filterRecords" prefWidth="150.0"/>
+                        </children>
+                      </HBox>
+                    </children>
+                    <cursor>
+                      <Cursor fx:constant="DEFAULT"/>
+                    </cursor>
+                    <BorderPane.margin>
+                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+                    </BorderPane.margin>
+                  </GridPane>
+                </left>
+              </BorderPane>
+            </top>
+          </BorderPane>
+        </children>
+      </AnchorPane>
+    </content>
+  </ScrollPane>
+  <padding>
+    <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+  </padding>
 </AnchorPane>

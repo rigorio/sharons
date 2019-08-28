@@ -32,18 +32,22 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class ProductivityPresenter implements Initializable {
 
-  @FXML
-  private JFXTextArea recommendation;
-  @FXML
-  private JFXComboBox pieCombobox;
-  @FXML
-  private JFXComboBox<String> dayCombobox;
-  @FXML
-  private BarChart barChart;
+  public JFXComboBox pieCombobox;
+
   @FXML
   private AnchorPane mainPane;
+
+  @FXML
+  private BarChart barChart;
+
+  @FXML
+  private JFXTextArea recommendation;
+
   @FXML
   private PieChart taskPieChart;
+
+  @FXML
+  private JFXComboBox<String> dayCombobox;
 
   private ActivityHandler activityHandler;
   private XpmTaskWebHandler xpmTaskWebHandler;

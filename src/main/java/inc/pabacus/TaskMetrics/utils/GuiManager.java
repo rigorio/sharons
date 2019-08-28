@@ -32,6 +32,17 @@ public class GuiManager {
 
   private FXMLView closeWindowDisplayView;
 
+  public void displayViewWithOnCloseRequest(FXMLView view, Runnable onCloseRequest) {
+    Stage stage = new Stage();
+    if (view.toString().contains("IdleView"))
+      stage.initModality(Modality.APPLICATION_MODAL);
+    stage.setOnCloseRequest(event -> {
+      onCloseRequest.run();
+    });
+    stage.setScene(new Scene(view.getView()));
+    stage.show();
+  }
+
   public void displayView(FXMLView view) {
     closeWindowDisplayView = view;
     Stage stage = new Stage();

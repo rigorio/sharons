@@ -20,7 +20,7 @@ import inc.pabacus.TaskMetrics.desktop.leaveViewer.LeaveViewerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
-import inc.pabacus.TaskMetrics.utils.SslUtil;
+import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

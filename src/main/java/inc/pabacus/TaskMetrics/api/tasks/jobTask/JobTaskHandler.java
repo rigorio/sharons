@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
-import inc.pabacus.TaskMetrics.utils.SslUtil;
+import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 

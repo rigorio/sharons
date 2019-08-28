@@ -2,10 +2,9 @@ package inc.pabacus.TaskMetrics.api.timesheet.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogWebRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
-import inc.pabacus.TaskMetrics.utils.SslUtil;
+import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import inc.pabacus.TaskMetrics.utils.cacheService.LocalCacheHandler;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;

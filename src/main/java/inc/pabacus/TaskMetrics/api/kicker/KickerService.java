@@ -2,9 +2,8 @@ package inc.pabacus.TaskMetrics.api.kicker;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.utils.HostConfig;
-import inc.pabacus.TaskMetrics.utils.SslUtil;
+import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import inc.pabacus.TaskMetrics.utils.cacheService.LocalCacheHandler;
 import javafx.application.Platform;
 import okhttp3.Call;

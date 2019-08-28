@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.utils;
+package inc.pabacus.TaskMetrics.utils.web;
 
 public class HostService {
   public static String HOST = "http://localhost:8080";

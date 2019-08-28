@@ -12,6 +12,7 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
+import inc.pabacus.TaskMetrics.utils.WindowChecker;
 import inc.pabacus.TaskMetrics.utils.XpmHelper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -62,6 +63,7 @@ public class NewTaskPresenter implements Initializable {
   private XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
   private JobTaskHandler jobTaskHandler;
   private String job = JobHolder.getJob();
+  private WindowChecker windowChecker = new WindowChecker();
 
   public NewTaskPresenter() {
     jobTaskHandler = new JobTaskHandler();
@@ -141,6 +143,7 @@ public class NewTaskPresenter implements Initializable {
 
   @FXML
   public void close() {
+    windowChecker.setNewTaskWindowOpen(false);
     Stage stage = (Stage) saveButton.getScene().getWindow();
     stage.close();
   }
@@ -216,6 +219,7 @@ public class NewTaskPresenter implements Initializable {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Task saved!");
     alert.showAndWait();
+    windowChecker.setNewTaskWindowOpen(false);
     Stage stage = (Stage) saveButton.getScene().getWindow();
     stage.close();
 

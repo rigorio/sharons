@@ -8,7 +8,7 @@ import inc.pabacus.TaskMetrics.utils.cacheService.CacheService;
 import inc.pabacus.TaskMetrics.utils.cacheService.LocalCacheHandler;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
-import inc.pabacus.TaskMetrics.utils.SslUtil;
+import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,6 @@ import java.net.InetAddress;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 

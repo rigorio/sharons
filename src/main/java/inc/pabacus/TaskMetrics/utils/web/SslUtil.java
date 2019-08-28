@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.utils;
+package inc.pabacus.TaskMetrics.utils.web;
 
 import okhttp3.OkHttpClient;
 

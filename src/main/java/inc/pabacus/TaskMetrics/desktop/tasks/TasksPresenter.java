@@ -18,6 +18,7 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import inc.pabacus.TaskMetrics.utils.WindowChecker;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -205,7 +206,12 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void newTask() {
-    GuiManager.getInstance().displayView(new NewTaskView());
+    if (!WindowChecker.isNewTaskWindowOpen()) {
+      WindowChecker.setNewTaskWindowOpen(true);
+      GuiManager.getInstance().displayViewWithOnCloseRequest(new NewTaskView(), () -> {
+        WindowChecker.setNewTaskWindowOpen(false);
+      });
+    }
   }
 
   @FXML

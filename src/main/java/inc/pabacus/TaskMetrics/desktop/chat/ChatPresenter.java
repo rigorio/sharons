@@ -3,6 +3,8 @@ package inc.pabacus.TaskMetrics.desktop.chat;
 import com.jfoenix.controls.JFXListView;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
+import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
+import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.chat.Chat;
@@ -16,6 +18,8 @@ import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -45,16 +49,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import static inc.pabacus.TaskMetrics.desktop.chat.ChatCell.chatData;
+
 public class ChatPresenter implements Initializable {
 
   @FXML
   private AnchorPane mainPane;
   @FXML
-  private JFXListView<String> listView;
+  private JFXListView listView;
   @FXML
   private TextField command;
   @FXML
   private ImageView image;
+
+  private static ChatData chatData = new ChatData();
+  private ObservableList<ChatData> chatDataObservableList;
 
   private ChatService chatService;
   private static String HOST;
@@ -82,7 +91,6 @@ public class ChatPresenter implements Initializable {
 
     textProperty();
     getChatData();
-    setListView();
   }
 
   private void textProperty() {
@@ -118,41 +126,44 @@ public class ChatPresenter implements Initializable {
       listView.getItems().clear();
     } else if (commands.toLowerCase().equalsIgnoreCase("leave approval") || commands.toLowerCase().equalsIgnoreCase("leave approvals")) {
       addItem(listView, commands);
-      if (checking.equals(1))
-        listView.getItems().add("TRIBELY: 1. Carlo Montemayor - Sick Leave - 07/11/2019-07/11/2019");
-      else if (checking.equals(3))
-        listView.getItems().add("TRIBELY: 1. Christopher May Nebril - Vacation Leave - 07/30/2019-07/30/2019");
-      else if (checking.equals(0))
-        listView.getItems().add("TRIBELY: 1. Christopher May Nebril - Vacation Leave - 07/30/2019-07/30/2019 | 2. Carlo Montemayor - Sick Leave - 07/11/2019-07/11/2019");
-      else listView.getItems().add("TRIBELY: Nothing to approve");
+      if (checking.equals(1)) {
+        addItemTribely(listView, "1. Carlo Montemayor - Sick Leave - 07/11/2019-07/11/2019");
+      } else if (checking.equals(3)) {
+        addItemTribely(listView, "1. Christopher May Nebril - Vacation Leave - 07/30/2019-07/30/2019");
+      } else if (checking.equals(0)) {
+        addItemTribely(listView, "1. Christopher May Nebril - Vacation Leave - 07/30/2019-07/30/2019 | 2. Carlo Montemayor - Sick Leave - 07/11/2019-07/11/2019");
+      } else {
+        addItemTribely(listView, "Nothing to approve");
+      }
     } else if (commands.toLowerCase().equalsIgnoreCase("1 approve") || commands.toLowerCase().equalsIgnoreCase("1 approved")) {
       addItem(listView, commands);
       if (checking.equals(3))
         checking = 2;
       else checking = 1;
-      listView.getItems().add("TRIBELY: Success!");
+      addItemTribely(listView, "Success!");
     } else if (commands.toLowerCase().equalsIgnoreCase("2 approve") || commands.toLowerCase().equalsIgnoreCase("2 approved")) {
       addItem(listView, commands);
       if (checking.equals(1))
         checking = 2;
       else checking = 3;
-      listView.getItems().add("TRIBELY: Success!");
+      addItemTribely(listView, "Success!");
     } else if (commands.toLowerCase().equalsIgnoreCase("1 approve and 2 approve") || commands.toLowerCase().equalsIgnoreCase("1 approved and 2 approved")) {
       addItem(listView, commands);
       checking = 2;
-      listView.getItems().add("TRIBELY: Success!");
+      addItemTribely(listView, "Success!");
     } else if (commands.toLowerCase().equalsIgnoreCase("my leave")) {
       addItem(listView, commands);
       checking = 2;
-      listView.getItems().add("TRIBELY: Type:" + ChatService.typeOfRequest + ", Date: " + ChatService.leaveDate + ", Status:" + ChatService.status);
+      addItemTribely(listView,
+              "Type:" + ChatService.typeOfRequest + ", Date: " + ChatService.leaveDate + ", Status:" + ChatService.status);
     } else if (commands != null) {
       addItem(listView, commands);
 
       ChatService service = new ChatService();
-      Chat chats = service.sendChat(new Chat("Me " + timeToday(), timeToday()));
+      Chat chats = service.sendChat(new Chat(timeToday(), timeToday()));
       Chat answers = service.sendChat(new Chat(commands, timeToday()));
       System.out.println(answers);
-      listView.getItems().add(chatService.pushCommand(commands));
+      addItemTribely(listView, chatService.pushCommand(commands));
       //switch breaks
       LogStatus status = null;
       switch (commands.toLowerCase()) {
@@ -193,29 +204,69 @@ public class ChatPresenter implements Initializable {
       }
       logService.changeLog(status.getStatus());
     }
-    setListView();
+
     command.setText(null);
     command.requestFocus();
 
   }
 
-  private <T> void addItem(ListView<T> listView, T item) {
-    List<T> items = listView.getItems();
+  private void addItemTribely(ListView listView, String item) {
+    List items = listView.getItems();
     int index = items.size();
-    items.add((T) ("Me " + timeToday()));
-    items.add(item);
+
+    chatDataObservableList = FXCollections.observableArrayList();
+
+    chatData.setUsername("Tribely");
+    chatData.setTime("");
+    chatData.setMessage(item);
+
+    chatDataObservableList.add(
+            new ChatData(chatData.getUsername(),
+                    chatData.getMessage(), chatData.getTime())
+    );
+
+    items.addAll(chatDataObservableList);
+    listView.setCellFactory(chatView -> new ChatCell());
+
     listView.scrollTo(index);
+
+    command.setText(null);
+    command.requestFocus();
+  }
+
+  private void addItem(ListView listView, String item) {
+    List items = listView.getItems();
+    int index = items.size();
+
+    chatDataObservableList = FXCollections.observableArrayList();
+
+    chatData.setUsername(UsernameHolder.username);
+    chatData.setTime(timeToday());
+    chatData.setMessage(item);
+
+    chatDataObservableList.add(
+            new ChatData(chatData.getUsername(), chatData.getMessage(),
+                    chatData.getTime())
+    );
+
+    items.addAll(chatDataObservableList);
+    listView.setCellFactory(chatView -> new ChatCell());
+
+    listView.scrollTo(index);
+
+    command.setText(null);
+    command.requestFocus();
   }
 
   private void getChatData() {
 
     // code request code here
     Request request = new Request.Builder()
-        .url(HOST + "/api/chats")
-        .addHeader("Content-Type", "application/json")
-        .addHeader("Authorization", cacheService.get(CacheKey.TRIBELY_TOKEN))
-        .method("GET", null)
-        .build();
+            .url(HOST + "/api/chats")
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", cacheService.get(CacheKey.TRIBELY_TOKEN))
+            .method("GET", null)
+            .build();
 
     try {
       Response response = client.newCall(request).execute();
@@ -223,42 +274,49 @@ public class ChatPresenter implements Initializable {
       JSONArray jsonarray = new JSONArray(getChats);
       for (int i = 0; i < jsonarray.length(); ++i) {
         JSONObject jsonobject = jsonarray.getJSONObject(i);
-        List<String> items = listView.getItems();
+        List items = listView.getItems();
+        chatDataObservableList = FXCollections.observableArrayList();
+        String time;
+        String message;
         int index = items.size();
-        items.add(jsonobject.getString("message"));
+
+        if (i % 2 == 0) {
+
+          time = jsonobject.getString("time");
+          message = jsonobject.getString("message");
+
+          chatData.setUsername(UsernameHolder.username);
+          chatData.setTime(time);
+          chatData.setMessage(message);
+
+          chatDataObservableList.add(
+                  new ChatData(chatData.getUsername(), chatData.getMessage(),
+                          chatData.getTime())
+          );
+
+          items.addAll(chatDataObservableList);
+          listView.setCellFactory(chatView -> new ChatCell());
+
+        } else {
+          message = jsonobject.getString("message");
+
+          chatData.setUsername("Tribely");
+          chatData.setTime("");
+          chatData.setMessage(message);
+
+          chatDataObservableList.add(
+                  new ChatData(chatData.getUsername(),
+                          chatData.getMessage(), chatData.getTime())
+          );
+          items.addAll(chatDataObservableList);
+          listView.setCellFactory(chatView -> new ChatCell());
+        }
         listView.scrollTo(index);
       }
 
     } catch (IOException | JSONException e) {
       e.printStackTrace();
     }
-
-  }
-
-  private void setListView() {
-    listView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-      @Override
-      public ListCell<String> call(ListView<String> param) {
-        final ListCell cell = new ListCell() {
-          private Text text;
-
-          @Override
-          public void updateItem(Object item, boolean empty) {
-            super.updateItem(item, empty);
-            if (!isEmpty()) {
-              text = new Text(item.toString());
-              setWrapText(true);
-              setGraphic(text);
-              if ((getIndex()) % 6 < 3) {
-                setStyle("-fx-background-color: #EFF8FD;");
-              } else setStyle("-fx-background-color: #FFFFFF;");
-            }
-          }
-        };
-        return cell;
-      }
-
-    });
   }
 
   private void notification(String notif) {

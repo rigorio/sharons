@@ -20,6 +20,10 @@
    -fx-focus-color: transparent ;
  }
 
-.image-view:hover{
-     -fx-cursor: hand;
+.list-cell {
+    -fx-padding: 0.25em 0px 0.25em 0px;
+}
+
+#ChatPane:hover {
+    -fx-background-color: #ffb74d;
 }

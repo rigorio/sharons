@@ -58,81 +58,80 @@ public class ChatService {
   public String pushCommand(String command) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
     ChatService service = new ChatService();
-    String Tribely = "TRIBELY: ";
     List<Approver> getApprovers = Arrays.asList(new Approver(3L, "Rose Cayabyab", status),
                                                 new Approver(4L, "Joy Cuison", status));
 
     switch (command.toLowerCase()) {
 //    for Leaves
       case "leave":
-        service.sendChat(new Chat(Tribely + "What type of leave?", formatter.format(LocalTime.now())));
-        return Tribely + "What type of leave?";
+        service.sendChat(new Chat("What type of leave?", formatter.format(LocalTime.now())));
+        return "What type of leave?";
       case "leave form":
         GuiManager.getInstance().displayView(new LeaveView());
-        return Tribely + "Showing leave form";
+        return "Showing leave form";
       case "vl":
       case "vacation":
       case "vacation leave":
-        service.sendChat(new Chat(Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
+        service.sendChat(new Chat("When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
         typeOfRequest = "Vacation Leave";
-        return Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
+        return "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
       case "sl":
       case "sick":
       case "sick leave":
-        service.sendChat(new Chat(Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
+        service.sendChat(new Chat("When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
         typeOfRequest = "Sick Leave";
-        return Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
+        return "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
       case "maternity":
       case "maternity leave":
-        service.sendChat(new Chat(Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
+        service.sendChat(new Chat("When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
         typeOfRequest = "Maternity Leave";
-        return Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
+        return "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
       case "paternity":
       case "paternity leave":
-        service.sendChat(new Chat(Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
+        service.sendChat(new Chat("When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
         typeOfRequest = "Paternity Leave";
-        return Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
+        return "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
       case "magna carta":
       case "magnacarta":
       case "magna carta leave":
       case "magnacarta leave":
       case "MagnaCarta for Women":
-        service.sendChat(new Chat(Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
+        service.sendChat(new Chat("When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)", formatter.format(LocalTime.now())));
         typeOfRequest = "MagnaCarta for Women";
-        return Tribely + "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
+        return "When? Start Date and End Date (MM/dd/yyyy-MM/dd/yyyy)";
 //    for status
       case "status":
       case "my status":
       case "current status":
-        service.sendChat(new Chat(Tribely + "Your current status is " + activityHandler.getLastLog(), formatter.format(LocalTime.now())));
-        return Tribely + "Your current status is " + activityHandler.getLastLog();
+        service.sendChat(new Chat("Your current status is " + activityHandler.getLastLog(), formatter.format(LocalTime.now())));
+        return "Your current status is " + activityHandler.getLastLog();
       case "in":
       case "log in":
       case "login":
-        service.sendChat(new Chat(Tribely + "Logged in!", formatter.format(LocalTime.now())));
-        return Tribely + "Logged in!";
+        service.sendChat(new Chat("Logged in!", formatter.format(LocalTime.now())));
+        return "Logged in!";
       case "lb":
       case "lunch":
       case "lunch break":
-        service.sendChat(new Chat(Tribely + "Status change to Lunch Break!", formatter.format(LocalTime.now())));
-        return Tribely + "Status change to Lunch Break!";
+        service.sendChat(new Chat("Status change to Lunch Break!", formatter.format(LocalTime.now())));
+        return "Status change to Lunch Break!";
       case "bfb":
       case "back from lunch":
       case "back from break":
-        service.sendChat(new Chat(Tribely + "Status change to Back From Break!", formatter.format(LocalTime.now())));
-        return Tribely + "Status change to Back From Break!";
+        service.sendChat(new Chat("Status change to Back From Break!", formatter.format(LocalTime.now())));
+        return "Status change to Back From Break!";
       case "out":
       case "logout":
       case "log out":
-        service.sendChat(new Chat(Tribely + "Successfully Logged out", formatter.format(LocalTime.now())));
-        return Tribely + "Successfully Logged out";
+        service.sendChat(new Chat("Successfully Logged out", formatter.format(LocalTime.now())));
+        return "Successfully Logged out";
       case "break":
-        service.sendChat(new Chat(Tribely + "Status change to Break!", formatter.format(LocalTime.now())));
-        return Tribely + "Status change to Break!";
+        service.sendChat(new Chat("Status change to Break!", formatter.format(LocalTime.now())));
+        return "Status change to Break!";
     }
 
     if (isValidDate(command)) {
-      service.sendChat(new Chat(Tribely + "Success!", formatter.format(LocalTime.now())));
+      service.sendChat(new Chat("Success!", formatter.format(LocalTime.now())));
       leaveDate = command;
       String split[] = command.split("-");
       startDate = split[0];
@@ -141,10 +140,10 @@ public class ChatService {
 //      Leave leave = services.saveLeave(new Leave(2L, 3L, getApprovers, startDate, endDate, "testing", status, typeOfRequest));
 //      System.out.println("--------------------");
 //      System.out.println(leave);
-      return Tribely + "Success!";
+      return "Success!";
     } else {
-      service.sendChat(new Chat(Tribely + "I don't know what you are talking about. I am still learning.", formatter.format(LocalTime.now())));
-      return Tribely + "I don't know what you are talking about. I am still learning.";
+      service.sendChat(new Chat("I don't know what you are talking about. I am still learning.", formatter.format(LocalTime.now())));
+      return "I don't know what you are talking about. I am still learning.";
     }
   }
 

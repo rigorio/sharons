@@ -125,7 +125,7 @@ public class BreakPresenter implements Initializable {
     stage.close();
     //reRun Listener
     Runnable runnable = () -> {
-      Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
+//      Platform.runLater(() -> GuiManager.getInstance().displayView(new IdleView()));
       activityListener.unListen();
     };
     activityListener.setEvent(runnable);

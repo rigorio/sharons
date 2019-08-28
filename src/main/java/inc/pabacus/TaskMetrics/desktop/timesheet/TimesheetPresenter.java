@@ -48,8 +48,7 @@ public class TimesheetPresenter implements Initializable {
   private JFXButton updateButton;
   @FXML
   private JFXButton statusButton;
-  @FXML
-  private Label userName;
+
   @FXML
   private TableView<DailyLogFXAdapter> timeSheet;
   @FXML
@@ -78,7 +77,6 @@ public class TimesheetPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     Platform.runLater(() -> {
       mockUser = new MockUser("Rigo", "Logged Out");
-      userName.setText(userHandler.getUsername()); //set userName
 
       String status = getStatus();
       comboBox.setPromptText(status);

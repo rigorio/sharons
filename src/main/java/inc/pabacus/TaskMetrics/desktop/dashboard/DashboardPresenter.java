@@ -34,10 +34,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.Optional;
@@ -50,19 +47,15 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXButton settingsButton;
   @FXML
-  private ImageView settingsIcon;
-  @FXML
-  private ImageView supportIcon;
-  @FXML
   private JFXButton supportButton;
   @FXML
   private AnchorPane mainPane;
   @FXML
-  private AnchorPane dashboardPane;
+  private BorderPane dashboardPane;
   @FXML
-  private Pane userPane;
+  private RowConstraints userPane;
   @FXML
-  private VBox vboxPane;
+  private GridPane vboxPane;
   @FXML
   private HBox easyChatHBox;
   @FXML
@@ -72,7 +65,7 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXButton screenshotButton;
   @FXML
-  private VBox dynamicContentPane;
+  private AnchorPane dynamicContentPane;
   @FXML
   private JFXButton tasksButton;
   @FXML
@@ -82,9 +75,10 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXButton logoutBtn;
   @FXML
-  private ImageView productivityIcon;
-  @FXML
   private JFXButton productivityButton;
+
+  @FXML
+  private ImageView profilePicture;
 
   private UserHandler userHandler;
   private ActivityHandler activityHandler;
@@ -103,9 +97,8 @@ public class DashboardPresenter implements Initializable {
 
     services();
 //    showEasyChat();
-    responsive();
 
-    ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/jobs.png")));
+    ImageView taskImage = new ImageView(new Image(getClass().getResourceAsStream("/img/tasks.png")));
     setSize(taskImage);
     tasksButton.setGraphic(taskImage);
 
@@ -155,68 +148,6 @@ public class DashboardPresenter implements Initializable {
         }));
   }
 
-  private void responsive() {
-    //trick - remove focus on the easyChat ----
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        mainPane.requestFocus();
-      }
-    });
-
-    dynamicContentPane.toBack();
-    //calculate width and height
-//    mainPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-//      double width = (double) newValue;
-//
-//      dashboardPane.setPrefWidth(width);
-//      easyChatHBox.setPrefWidth(width / 1.15);
-//    });
-
-    mainPane.heightProperty().addListener((observable, oldValue, newValue) -> {
-      double height = (double) newValue;
-      dashboardPane.setPrefHeight(height);
-    });
-
-//    dashboardPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-//      double width = (double) newValue;
-//      easyChatHBox.setPrefWidth(width);
-//      dynamicContentPane.setPrefWidth(width / 1.2);
-//      vboxPane.setPrefWidth(width / 6.5);
-//    });
-
-    dashboardPane.heightProperty().addListener((observable, oldValue, newValue) -> {
-      double height = (double) newValue;
-      dynamicContentPane.setPrefHeight(height);
-      vboxPane.setPrefHeight(height);
-    });
-
-    vboxPane.widthProperty().addListener((observable, oldValue, newValue) -> {
-      double width = (double) newValue;
-      status.setPrefWidth(width / 1.5);
-      tasksButton.setPrefWidth(width);
-      timesheetButton.setPrefWidth(width);
-      screenshotButton.setPrefWidth(width);
-      chatButton.setPrefWidth(width);
-      logoutBtn.setPrefWidth(width);
-      username.setPrefWidth(width);
-      userPane.setPrefWidth(width);
-    });
-
-    vboxPane.heightProperty().addListener((observable, oldValue, newValue) -> {
-      double height = (double) newValue;
-      status.setPrefHeight(height / 20.5);
-      tasksButton.setPrefHeight(height / 15);
-      timesheetButton.setPrefHeight(height / 15);
-      screenshotButton.setPrefHeight(height / 15);
-      chatButton.setPrefHeight(height / 15);
-      logoutBtn.setPrefHeight(height / 15);
-      username.setPrefHeight(height / 15);
-      userPane.setPrefHeight(height / 5);
-    });
-
-  }
-
   private void services() {
     BeanManager.activate();
   }
@@ -254,7 +185,7 @@ public class DashboardPresenter implements Initializable {
     if (s == null) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Not connected");
-      alert.setContentText("Please connect your hurey account in settings");
+      alert.setContentText("Please connect your Hurey account in settings");
       alert.showAndWait();
     }
     return s == null;

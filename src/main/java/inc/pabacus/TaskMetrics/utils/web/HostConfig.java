@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.utils;
+package inc.pabacus.TaskMetrics.utils.web;
 
 import inc.pabacus.TaskMetrics.utils.file.DefaultSettings;
 import inc.pabacus.TaskMetrics.utils.file.FlatFileRepository;

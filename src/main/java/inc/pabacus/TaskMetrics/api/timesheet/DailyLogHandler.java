@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogItem;
-import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import okhttp3.*;
 import org.apache.log4j.Logger;

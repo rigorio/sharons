@@ -7,7 +7,7 @@ import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheService;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.leave.LeaveService;
-import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

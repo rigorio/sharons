@@ -3,7 +3,7 @@ package inc.pabacus.TaskMetrics.api.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
-import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import inc.pabacus.TaskMetrics.utils.cacheService.LocalCacheHandler;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;

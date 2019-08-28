@@ -18,7 +18,7 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.desktop.newTask.DefaultTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
-import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import javafx.application.Platform;

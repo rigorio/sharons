@@ -5,7 +5,7 @@ import inc.pabacus.TaskMetrics.api.generateToken.TokenRepository;
 import inc.pabacus.TaskMetrics.api.standuply.Answers;
 import inc.pabacus.TaskMetrics.api.standuply.StandupAnswer;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
-import inc.pabacus.TaskMetrics.utils.HostConfig;
+import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

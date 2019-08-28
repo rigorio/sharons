@@ -28,7 +28,7 @@ public class TaskMetricsApplication extends Application {
   @Override
   public void start(Stage stage) {
 //    disableSslVerification();
-    stage.setResizable(false);
+    stage.setResizable(true);
 //    stage.initStyle(StageStyle.TRANSPARENT);
     stage.getIcons().add(new Image("/img/PabacusLogo.png"));
     //Prevent from closing

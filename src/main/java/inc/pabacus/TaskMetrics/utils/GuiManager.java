@@ -94,7 +94,7 @@ public class GuiManager {
     stage.initStyle(StageStyle.UNDECORATED);
     stage.setScene(scene);
     stage.setAlwaysOnTop(true);
-    stage.setResizable(false);
+    stage.setResizable(true);
     stage.show();
     //Prevent from closing
     stage.setOnCloseRequest(evt -> {

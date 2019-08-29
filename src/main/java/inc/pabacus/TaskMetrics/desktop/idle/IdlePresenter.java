@@ -72,7 +72,7 @@ public class IdlePresenter implements Initializable {
     }
 
     ActivityListener activityListener = BeanManager.activityListener();
-    activityListener.listen();
+//    activityListener.listen();
 
     Stage stage = (Stage) actionsBox.getScene().getWindow();
     stage.close();

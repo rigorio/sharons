@@ -130,7 +130,7 @@ public class BreakPresenter implements Initializable {
     };
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
-    activityListener.listen();
+//    activityListener.listen();
   }
 
   private String roundOffDecimal(double totalTimeSpent) {

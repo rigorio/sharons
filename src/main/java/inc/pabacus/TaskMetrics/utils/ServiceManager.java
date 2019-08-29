@@ -36,7 +36,7 @@ public class ServiceManager {
     };
     activityListener.setEvent(runnable);
     activityListener.setInterval(300000);
-    activityListener.listen();
+//    activityListener.listen();
 //    dailyLogHandler.checkIfUserIsBreak();
   }
 
@@ -50,7 +50,7 @@ public class ServiceManager {
     screenshotService.shutdownScheduler();
 //    kickerService.stopKicker();
 //    authenticatorService.stopToken();
-    activityListener.unListen();
+//    activityListener.unListen();
   }
 
 }

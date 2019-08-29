@@ -14,6 +14,7 @@ public class JobTask {
 
   private Long id;
   private String jobNumber;
+  private String description;
   private String dateCreated;
   private String status;
   private Double timeSpent;
@@ -28,6 +29,9 @@ public class JobTask {
 
     StringProperty jobNumber = jobTask.getJobNumber();
     this.jobNumber = job != null ? jobNumber.getValue() : null;
+
+    StringProperty description = jobTask.getDescription();
+    this.description = description != null ? description.getValue() : null;
 
     StringProperty dateCreated = jobTask.getDateCreated();
     this.dateCreated = dateCreated != null ? dateCreated.get() : null;

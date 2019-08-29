@@ -14,6 +14,7 @@ public class JobTaskAdapter {
 
   private LongProperty id;
   private StringProperty jobNumber;
+  private StringProperty description;
   private StringProperty dateCreated;
   private StringProperty status;
   private DoubleProperty timeSpent;
@@ -28,6 +29,9 @@ public class JobTaskAdapter {
 
     String jobNumber = jobTask.getJobNumber();
     this.jobNumber = jobNumber != null ? new SimpleStringProperty(jobNumber) : null;
+
+    String description = jobTask.getDescription();
+    this.description = description != null ? new SimpleStringProperty(description) : null;
 
     String dateCreated = jobTask.getDateCreated();
     this.dateCreated = dateCreated != null ? new SimpleStringProperty(dateCreated) : null;

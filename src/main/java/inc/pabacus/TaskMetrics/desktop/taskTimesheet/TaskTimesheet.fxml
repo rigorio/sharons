@@ -12,7 +12,10 @@
               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     <top>
       <AnchorPane prefHeight="53.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <JFXDatePicker fx:id="datePicker" layoutX="25.0" layoutY="11.0" onAction="#filterSummaries"/>
+        <JFXDatePicker fx:id="datePicker" layoutX="694.0" layoutY="11.0" onAction="#filterSummaries"/>
+        <Hyperlink layoutX="130.0" layoutY="12.0" onAction="#viewYesterday" text="Yesterday"/>
+        <Hyperlink layoutX="65.0" layoutY="12.0" onAction="#viewToday" text="Today"/>
+        <Hyperlink layoutX="25.0" layoutY="12.0" onAction="#viewAll" text="All"/>
       </AnchorPane>
     </top>
     <center>

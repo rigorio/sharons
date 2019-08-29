@@ -18,6 +18,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -58,6 +60,21 @@ public class TaskTimesheetPresenter implements Initializable {
     String date = datePicker.getValue().toString();
     System.out.println("date is " + date);
     filterTaskTimesheet(date);
+  }
+
+  @FXML
+  public void viewYesterday() {
+    filterTaskTimesheet(LocalDate.now().minus(1, ChronoUnit.DAYS).toString());
+  }
+
+  @FXML
+  public void viewToday() {
+    filterTaskTimesheet(LocalDate.now().toString());
+  }
+
+  @FXML
+  public void viewAll() {
+    initTaskTimeSheet();
   }
 
   private void initTaskSheet() {

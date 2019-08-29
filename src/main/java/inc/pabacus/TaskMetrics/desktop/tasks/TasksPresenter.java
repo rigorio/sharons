@@ -186,6 +186,8 @@ public class TasksPresenter implements Initializable {
       return;
 
     XpmTaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
+
+/*  Commented out to be able to start completed tasks
     if (selectedItem.getStatus().get().equals(Status.DONE.getStatus())) {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
       alert.setTitle("Not Allowed");
@@ -194,6 +196,8 @@ public class TasksPresenter implements Initializable {
       alert.showAndWait();
       return;
     }
+*/
+
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
     ((Stage) startLink.getScene().getWindow()).setIconified(true);

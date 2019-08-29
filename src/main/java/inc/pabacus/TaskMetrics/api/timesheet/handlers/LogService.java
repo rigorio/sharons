@@ -9,5 +9,7 @@ public interface LogService {
 
   List<DailyLog> allConvertedDailyLogs();
 
+  List<DailyLog> getLogOfDate(String date);
+
   String getLatest();
 }

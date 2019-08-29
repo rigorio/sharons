@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.desktop.timesheet;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDatePicker;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
@@ -12,6 +13,7 @@ import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
+import inc.pabacus.TaskMetrics.desktop.timesheet.hris.HRISTimeLog;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -20,6 +22,7 @@ import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -40,6 +43,8 @@ import java.util.stream.Collectors;
 
 public class TimesheetPresenter implements Initializable {
 
+  @FXML
+  private JFXDatePicker datePicker;
   @FXML
   private AnchorPane mainPane;
   @FXML
@@ -83,6 +88,17 @@ public class TimesheetPresenter implements Initializable {
       initTimeSheet();
       populateCombobox();
     });
+  }
+
+  @FXML
+  public void viewDate() {
+    ObservableList<DailyLogFXAdapter> logs = FXCollections.observableArrayList(
+        logService.getLogOfDate(datePicker.getValue().toString())
+            .stream()
+            .map(DailyLogFXAdapter::new)
+            .collect(Collectors.toList())
+    );
+    timeSheet.setItems(logs);
   }
 
   @FXML

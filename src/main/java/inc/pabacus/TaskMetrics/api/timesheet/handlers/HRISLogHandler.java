@@ -25,6 +25,11 @@ public class HRISLogHandler implements LogService {
   }
 
   @Override
+  public List<DailyLog> getLogOfDate(String date) {
+    return hrisConnector.getLogOfDate(date);
+  }
+
+  @Override
   public String getLatest() {
     List<HRISTimeLog> logs = hrisConnector.hrisLogs();
     if (logs.isEmpty())

@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -36,6 +37,9 @@ public class HRISConnector {
   private CacheService<CacheKey, String> cacheService;
   private final String employeeId;
   private LocalDate logDate;
+  private int timeLogTypeId;
+  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
+
 
   public HRISConnector() {
     cacheService = new StringCacheService();
@@ -45,32 +49,8 @@ public class HRISConnector {
   }
 
   public List<HRISTimeLog> hrisLogs() {
-    try {
-      Call call = client.newCall(new Request.Builder()
-                                     .url(new StringCacheService().get(CacheKey.HUREY_HOST) + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + logDate.toString())
-                                     .addHeader("Authorization", LocalCacheHandler.getHureyToken())
-                                     .build());
-      String string = call.execute().body().string();
-      Map<String, Object> o = mapper.readValue(string, new TypeReference<Map<String, Object>>() {});
-      Object items = ((Map<String, Object>) o.get("result")).get("items");
-      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, FALSE);
-      List<HRISTimeLog> logs = mapper.readValue(mapper.writeValueAsString(items), new TypeReference<List<HRISTimeLog>>() {});
-      logs = logs.stream()
-          .peek(hrisTimeLog -> {
-            String time = hrisTimeLog.getTime();
-            hrisTimeLog.setDate(logDate.toString());
-            hrisTimeLog.setTime(time.split("T")[1].replace("Z", ""));
-          })
-          .collect(Collectors.toList());
-      return logs;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return new ArrayList<>();
-    }
+    return getHrisTimeLogs(logDate.toString());
   }
-
-  private int timeLogTypeId;
-  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.US);
 
   public void saveLog(String status) {
     switch (status) {
@@ -117,6 +97,11 @@ public class HRISConnector {
 
   public List<DailyLog> allConvertedDailyLogs() {
     List<HRISTimeLog> timeLogs = hrisLogs();
+    return getDailyLogs(timeLogs);
+  }
+
+  @NotNull
+  private List<DailyLog> getDailyLogs(List<HRISTimeLog> timeLogs) {
     List<DailyLog> dailyLogs = new ArrayList<>();
     for (HRISTimeLog timeLog : timeLogs) {
       Optional<DailyLog> anyLog = findDailyLog(dailyLogs, timeLog.getDate());
@@ -158,6 +143,44 @@ public class HRISConnector {
         break;
     }
     return dailyLog;
+  }
+
+  public List<DailyLog> getLogOfDate(String date) {
+    List<HRISTimeLog> hrisTimeLogs = getTimeLogs(date);
+    List<HRISTimeLog> timeLogs = hrisTimeLogs;
+    return getDailyLogs(timeLogs);
+  }
+
+  @NotNull
+  private List<HRISTimeLog> getTimeLogs(String date) {
+    return getHrisTimeLogs(date);
+  }
+
+  @NotNull
+  private List<HRISTimeLog> getHrisTimeLogs(String date) {
+    try {
+      Call call = client.newCall(new Request.Builder()
+                                     .url(new StringCacheService().get(CacheKey.HUREY_HOST) + "/api/services/app/EmployeeTimeLog/GetAllNotDeletedByEmployeeIdAndDate?employeeId=" + employeeId + "&logDate=" + date)
+                                     .addHeader("Authorization", LocalCacheHandler.getHureyToken())
+                                     .build());
+      String string = call.execute().body().string();
+      Map<String, Object> o = mapper.readValue(string, new TypeReference<Map<String, Object>>() {});
+      Object items = ((Map<String, Object>) o.get("result")).get("items");
+      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, FALSE);
+      List<HRISTimeLog> logs = mapper.readValue(mapper.writeValueAsString(items), new TypeReference<List<HRISTimeLog>>() {});
+      logs = logs.stream()
+          .peek(hrisTimeLog -> {
+            String time = hrisTimeLog.getTime();
+            hrisTimeLog.setDate(logDate.toString());
+            hrisTimeLog.setTime(time.split("T")[1].replace("Z", ""));
+          })
+          .collect(Collectors.toList());
+      return logs;
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      return new ArrayList<>();
+    }
   }
 
   @Data

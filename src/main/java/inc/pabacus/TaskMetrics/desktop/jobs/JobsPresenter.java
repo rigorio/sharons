@@ -5,8 +5,11 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.desktop.newTask.JobHolder;
+import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
+import inc.pabacus.TaskMetrics.utils.GuiManager;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -112,5 +115,10 @@ public class JobsPresenter implements Initializable {
 
     dynamicContentPane.getChildren().clear();
     dynamicContentPane.getChildren().add(parent);
+  }
+
+  @FXML
+  private void viewWorkSummary() {
+    GuiManager.getInstance().displayView(new TaskTimesheetView());
   }
 }

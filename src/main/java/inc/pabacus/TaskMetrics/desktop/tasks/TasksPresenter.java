@@ -6,7 +6,6 @@ import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
-import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
@@ -29,10 +28,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -42,6 +41,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -197,10 +197,21 @@ public class TasksPresenter implements Initializable {
       return;
     }
 */
-
+    String newDescription = updateDescription(selectedItem.getDescription().get());
+    selectedItem.setDescription(new SimpleStringProperty(newDescription));
     TrackHandler.setSelectedTask(selectedItem);
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
     ((Stage) startLink.getScene().getWindow()).setIconified(true);
+  }
+
+  private String updateDescription(String currentDescription) {
+    TextInputDialog dialog = new TextInputDialog(currentDescription);
+    dialog.setTitle("Update Description");
+    dialog.setHeaderText(null);
+    dialog.setGraphic(null);
+    dialog.setContentText("Update task description");
+    Optional<String> result = dialog.showAndWait();
+    return result.get();
   }
 
   @FXML

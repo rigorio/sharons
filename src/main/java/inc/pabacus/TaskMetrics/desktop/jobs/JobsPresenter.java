@@ -8,8 +8,8 @@ import inc.pabacus.TaskMetrics.desktop.newTask.JobHolder;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -59,11 +59,17 @@ public class JobsPresenter implements Initializable {
   }
 
   private void initialize() {
-    TableColumn<JobTaskAdapter, String> dateCreated = new TableColumn<>("Id");
-    dateCreated.setCellValueFactory(param -> param.getValue().getJobNumber());
 
     TableColumn<JobTaskAdapter, String> jobName = new TableColumn<>("Job");
-    jobName.setCellValueFactory(param -> param.getValue().getJobName());
+    jobName.setCellValueFactory(param -> {
+      JobTaskAdapter job = param.getValue();
+      String jobNumber = job.getJobNumber().get();
+      String jN = job.getJobName().get();
+      return new SimpleStringProperty(jobNumber + " " + jN);
+    });
+
+    TableColumn<JobTaskAdapter, String> dateCreated = new TableColumn<>("Description");
+    dateCreated.setCellValueFactory(param -> param.getValue().getDescription());
 
     TableColumn<JobTaskAdapter, String> status = new TableColumn<>("Status");
     status.setCellValueFactory(param -> param.getValue().getStatus());
@@ -71,8 +77,8 @@ public class JobsPresenter implements Initializable {
     TableColumn<JobTaskAdapter, String> percentage = new TableColumn<>("Percentage");
     percentage.setCellValueFactory(param -> param.getValue().getPercentage());
 
-    jobsTable.getColumns().addAll(dateCreated,
-                                  jobName,
+    jobsTable.getColumns().addAll(jobName,
+                                  dateCreated,
                                   status,
                                   percentage);
 

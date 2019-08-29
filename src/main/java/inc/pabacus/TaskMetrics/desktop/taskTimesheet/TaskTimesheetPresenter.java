@@ -1,5 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.taskTimesheet;
 
+import com.jfoenix.controls.JFXDatePicker;
+import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 
 public class TaskTimesheetPresenter implements Initializable {
 
+  @FXML
+  private JFXDatePicker datePicker;
   @FXML
   private AnchorPane mainPane;
   @FXML
@@ -47,6 +51,13 @@ public class TaskTimesheetPresenter implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     initTaskSheet();
+  }
+
+  @FXML
+  public void filterSummaries() {
+    String date = datePicker.getValue().toString();
+    System.out.println("date is " + date);
+    filterTaskTimesheet(date);
   }
 
   private void initTaskSheet() {
@@ -166,16 +177,30 @@ public class TaskTimesheetPresenter implements Initializable {
   }
 
   private void initTaskTimeSheet() {
-    taskTimesheet.setItems(getXpmTimesheet());
+    taskTimesheet.setItems(getXpmTimesheet(allTimesheets()));
   }
 
-  private ObservableList<XpmTaskAdapter> getXpmTimesheet() {
-    List<XpmTaskAdapter> tasks = xpmTaskWebHandler.findAll()
+  private void filterTaskTimesheet(String date) {
+    List<XpmTask> timesheets = allTimesheets()
+        .stream()
+        .filter(timesheet -> {
+          String dateFinished = timesheet.getDateFinished();
+          return timesheet.getDateCreated().equals(date) || (dateFinished != null && dateFinished.equals(date));
+        })
+        .collect(Collectors.toList());
+    taskTimesheet.setItems(getXpmTimesheet(timesheets));
+  }
+
+  private List<XpmTask> allTimesheets() {
+    return xpmTaskWebHandler.findAll();
+  }
+
+  private ObservableList<XpmTaskAdapter> getXpmTimesheet(List<XpmTask> timesheets) {
+    List<XpmTaskAdapter> tasks = timesheets
         .stream()
         .filter(xpmTask -> xpmTask.getStatus().equals(Status.IN_PROGRESS.getStatus()) || xpmTask.getStatus().equals(Status.DONE.getStatus()))
         .map(XpmTaskAdapter::new)
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(tasks);
   }
-
 }

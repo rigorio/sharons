@@ -8,6 +8,7 @@ import inc.pabacus.TaskMetrics.desktop.newTask.JobHolder;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tasks.TasksView;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import inc.pabacus.TaskMetrics.utils.logs.LogHelper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -17,6 +18,8 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import org.apache.log4j.Logger;
+import org.hibernate.cfg.JPAIndexHolder;
 
 import java.net.URL;
 import java.util.List;
@@ -24,6 +27,9 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class JobsPresenter implements Initializable {
+
+  private static final Logger logger = Logger.getLogger(JobsPresenter.class);
+  private LogHelper logHelper;
 
   @FXML
   private AnchorPane dynamicContentPane;
@@ -38,6 +44,9 @@ public class JobsPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    logHelper = new LogHelper(logger);
+    logHelper.setClass(JobsPresenter.class);
+    logHelper.logInfo("Initializing jobs page", null);
     getJobs().forEach(job -> jobComboBox.getItems().add(job.getJob()));
     initialize();
   }

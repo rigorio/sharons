@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
+import inc.pabacus.TaskMetrics.utils.logs.LogHelper;
 import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import okhttp3.*;
@@ -19,6 +20,7 @@ import static java.lang.Boolean.FALSE;
 public class JobTaskHandler {
 
   private static final Logger logger = Logger.getLogger(JobTaskHandler.class);
+  private LogHelper logHelper;
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private static String HOST;
@@ -28,6 +30,8 @@ public class JobTaskHandler {
 
   public JobTaskHandler() {
     HOST = new HostConfig().getHost();
+    logHelper = new LogHelper(logger);
+    logHelper.setClass(JobTaskHandler.class);
   }
 
   public List<JobTask> allJobTasks() {
@@ -77,6 +81,7 @@ public class JobTaskHandler {
   }
 
   public List<Job> allJobs(boolean byDepartment) {
+    logHelper.logInfo("Retrieving all jobs", null);
     List<Job> jobs = new ArrayList<>();
     try {
       Call call = client.newCall(new Request.Builder()
@@ -84,10 +89,11 @@ public class JobTaskHandler {
                                      .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody responseBody = call.execute().body();
-      jobs = mapper.readValue(responseBody.string(), new TypeReference<List<Job>>() {});
+      String jsonString = responseBody.string();
+      logHelper.logInfo("Retrieved all jobs", jsonString);
+      jobs = mapper.readValue(jsonString, new TypeReference<List<Job>>() {});
     } catch (IOException e) {
-      e.printStackTrace();
-      logger.warn(e.getMessage());
+      logHelper.logError("Exception encountered", e);
     }
     return jobs;
   }

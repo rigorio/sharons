@@ -19,6 +19,7 @@ import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.WindowChecker;
+import inc.pabacus.TaskMetrics.utils.logs.LogHelper;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,6 +37,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -51,6 +53,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class TasksPresenter implements Initializable {
+
+  private static final Logger logger = Logger.getLogger(TasksPresenter.class);
+  private LogHelper logHelper;
 
   @FXML
   private AnchorPane mainPane;
@@ -73,13 +78,15 @@ public class TasksPresenter implements Initializable {
   private XpmTaskWebHandler xpmTaskHandler;
 
   public TasksPresenter() {
+    logHelper = new LogHelper(logger);
+    logHelper.setClass(TasksPresenter.class);
     activityHandler = BeanManager.activityHandler();
     xpmTaskHandler = new XpmTaskWebHandler();
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-
+    logHelper.logInfo("Initializing tasks page", null);
 
     //Start button will be disable when you click it without choosing a task
     startLink.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()));
@@ -182,6 +189,7 @@ public class TasksPresenter implements Initializable {
 
   @FXML
   public void startTask() {
+    logHelper.logInfo("Start tracking a task", null);
 
     if (TrackHandler.getSelectedTask() != null)
       return;
@@ -225,9 +233,7 @@ public class TasksPresenter implements Initializable {
   public void newTask() {
     if (!WindowChecker.isNewTaskWindowOpen()) {
       WindowChecker.setNewTaskWindowOpen(true);
-      GuiManager.getInstance().displayViewWithOnCloseRequest(new NewTaskView(), () -> {
-        WindowChecker.setNewTaskWindowOpen(false);
-      });
+      GuiManager.getInstance().displayViewWithOnCloseRequest(new NewTaskView(), () -> WindowChecker.setNewTaskWindowOpen(false));
     }
   }
 
@@ -243,6 +249,7 @@ public class TasksPresenter implements Initializable {
   }
 
   private void initTasksTable() {
+    logHelper.logInfo("Initializing tasks table", null);
     tasksTable.setItems(FXCollections.observableArrayList(getAllTasks()));
   }
 

@@ -95,6 +95,7 @@ public class JobsPresenter implements Initializable {
 
     jobsTable.setOnMouseClicked(event -> {
       JobTaskAdapter selectedItem = jobsTable.getSelectionModel().getSelectedItem();
+      logHelper.logInfo("Selected a job", selectedItem);
       JobTaskIdHolder.setId(selectedItem.getId().get());
       JobHolder.setJob(selectedItem.getJobName().get());
       updateDynamicPaneContent(new TasksView().getView());

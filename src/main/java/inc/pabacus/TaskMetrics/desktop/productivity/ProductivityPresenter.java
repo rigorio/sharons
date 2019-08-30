@@ -71,7 +71,7 @@ public class ProductivityPresenter implements Initializable {
     dayCombobox.getItems().setAll(TODAY, L_7, L_30, L_90, ALL);
     dayCombobox.setValue(ALL);
     filterTasks();
-//    activityRecords = activityHandler.allRecords();
+    activityRecords = activityHandler.allRecords();
 //    setupPieChart();
 //    setupBarChart();
     newPieChart();

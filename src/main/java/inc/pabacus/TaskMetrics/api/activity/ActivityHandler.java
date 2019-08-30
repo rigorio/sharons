@@ -6,13 +6,17 @@ import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.web.SslUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import okhttp3.*;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.persistence.Entity;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -60,7 +64,7 @@ public class ActivityHandler {
     List<ActivityRecord> activityRecords = new ArrayList<>();
     try {
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/activity/records")
+                                     .url(HOST + "/api/activities/records")
                                      .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody body = call.execute().body();
@@ -75,13 +79,12 @@ public class ActivityHandler {
 
 
   public void saveRecord(Record record) {
-    ActivityRecord activityRecord = ActivityRecord.builder()
+    ActivityRecordDTO activityRecord = ActivityRecordDTO.builder()
         .date(LocalDate.now().toString())
         .time(timeFormatter.format(LocalTime.now()))
         .duration("" + record.getDuration())
         .type(record.getRecordType().getActivity())
         .activity(record.getActivity())
-        .userId(1L)
         .build();
 
     try {
@@ -90,7 +93,7 @@ public class ActivityHandler {
       RequestBody requestBody = RequestBody.create(JSON, jsonValue);
 
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/activity/record")
+                                     .url(HOST + "/api/activities/records")
                                      .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .post(requestBody)
                                      .build());
@@ -101,6 +104,19 @@ public class ActivityHandler {
       System.out.println("ha");
       logger.warn(e.getMessage());
     }
+  }
+
+  @Data
+  @Entity
+  @Builder
+  @AllArgsConstructor
+  @NoArgsConstructor
+  private static class ActivityRecordDTO {
+    private String date;
+    private String duration;
+    private String time;
+    private String type;
+    private String activity;
   }
 
   public void saveTimestamp(Activity activity) {
@@ -161,7 +177,7 @@ public class ActivityHandler {
     private String time;
     private String activity;
 
-    public ActivityCreate(String date, String time, String activity) {
+    ActivityCreate(String date, String time, String activity) {
       this.date = date;
       this.time = time;
       this.activity = activity;

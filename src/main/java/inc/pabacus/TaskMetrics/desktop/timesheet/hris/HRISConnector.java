@@ -51,7 +51,6 @@ public class HRISConnector {
 //    bearer = cacheService.get(CacheKey.SHRIS_TOKEN);
     logDate = LocalDate.now();
     logHelper = new LogHelper(logger);
-    logHelper.setClass(HRISConnector.class);
   }
 
   public List<HRISTimeLog> hrisLogs() {

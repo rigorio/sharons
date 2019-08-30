@@ -31,7 +31,6 @@ public class JobTaskHandler {
   public JobTaskHandler() {
     HOST = new HostConfig().getHost();
     logHelper = new LogHelper(logger);
-    logHelper.setClass(JobTaskHandler.class);
   }
 
   public List<JobTask> allJobTasks() {

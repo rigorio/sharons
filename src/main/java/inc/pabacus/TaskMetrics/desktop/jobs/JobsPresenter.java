@@ -45,7 +45,6 @@ public class JobsPresenter implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     logHelper = new LogHelper(logger);
-    logHelper.setClass(JobsPresenter.class);
     logHelper.logInfo("Initializing jobs page", null);
     getJobs().forEach(job -> jobComboBox.getItems().add(job.getJob()));
     initialize();

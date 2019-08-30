@@ -98,7 +98,6 @@ public class TrackerPresenter implements Initializable {
     dailyLogHandler = BeanManager.dailyLogService();
     process = this::tickTime;
     logHelper = new LogHelper(logger);
-    logHelper.setClass(TrackerPresenter.class);
   }
 
   @Override

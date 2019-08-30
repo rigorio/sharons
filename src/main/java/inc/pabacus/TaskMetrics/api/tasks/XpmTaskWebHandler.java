@@ -31,7 +31,6 @@ public class XpmTaskWebHandler {
   public XpmTaskWebHandler() {
     HOST = new HostConfig().getHost();
     logHelper = new LogHelper(logger);
-    logHelper.setClass(XpmTaskWebHandler.class);
   }
 
   @SuppressWarnings("all")

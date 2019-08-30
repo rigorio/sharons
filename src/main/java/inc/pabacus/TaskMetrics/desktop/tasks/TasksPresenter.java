@@ -79,7 +79,6 @@ public class TasksPresenter implements Initializable {
 
   public TasksPresenter() {
     logHelper = new LogHelper(logger);
-    logHelper.setClass(TasksPresenter.class);
     activityHandler = BeanManager.activityHandler();
     xpmTaskHandler = new XpmTaskWebHandler();
   }

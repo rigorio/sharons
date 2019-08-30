@@ -22,9 +22,9 @@ import inc.pabacus.TaskMetrics.utils.TimerService;
 import inc.pabacus.TaskMetrics.utils.XpmHelper;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
+import inc.pabacus.TaskMetrics.utils.logs.LogHelper;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -32,9 +32,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.apache.log4j.Logger;
 import org.controlsfx.control.Notifications;
 
 import java.net.URL;
@@ -68,6 +68,8 @@ public class TrackerPresenter implements Initializable {
   @FXML
   private ContextMenu contextMenu;
 
+  private static final Logger logger = Logger.getLogger(TrackerPresenter.class);
+  private LogHelper logHelper;
   private static final String STARTING_TIME = "00:00:00";
   private static final double ONE_HOUR = 3600.0;
 
@@ -95,12 +97,15 @@ public class TrackerPresenter implements Initializable {
     activityHandler = BeanManager.activityHandler();
     dailyLogHandler = BeanManager.dailyLogService();
     process = this::tickTime;
+    logHelper = new LogHelper(logger);
+    logHelper.setClass(TrackerPresenter.class);
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     timer.setText(STARTING_TIME);
     selectedTask = TrackHandler.getSelectedTask();
+    logHelper.logInfo("Tracking task", new XpmTask(selectedTask));
 
     if (CountdownTimerConfiguration.isCountdownTimer()) {
       String getEstimateTime = selectedTask.getEstimateTime().get();
@@ -137,6 +142,7 @@ public class TrackerPresenter implements Initializable {
     MenuItem meeting = new MenuItem("Meeting");
 
     breaks.setOnAction(event -> {
+      logHelper.logInfo("Went on break", new XpmTask(selectedTask));
       if (checkIfLoggedInToHurey())
         return;
       isPause = true;
@@ -150,6 +156,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     lunch.setOnAction(event -> {
+      logHelper.logInfo("Went on lunch", new XpmTask(selectedTask));
       if (checkIfLoggedInToHurey())
         return;
       isPause = true;
@@ -165,6 +172,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     willWorkOnDifferentTask.setOnAction(event -> {
+      logHelper.logInfo("Will work on different task", new XpmTask(selectedTask));
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
@@ -173,6 +181,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     testingAFeature.setOnAction(event -> {
+      logHelper.logInfo("Testing a feature", new XpmTask(selectedTask));
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
@@ -182,6 +191,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     developmentCauses.setOnAction(event -> {
+      logHelper.logInfo("Development causes", new XpmTask(selectedTask));
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
@@ -191,6 +201,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     meeting.setOnAction(event -> {
+      logHelper.logInfo("On a meeting", new XpmTask(selectedTask));
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
@@ -200,11 +211,9 @@ public class TrackerPresenter implements Initializable {
 
     contextMenu.getItems().addAll(breaks, lunch, willWorkOnDifferentTask, testingAFeature, developmentCauses, meeting);
 
-    pauseButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-      @Override
-      public void handle(MouseEvent event) {
-        contextMenu.show(pauseButton, event.getScreenX(), event.getScreenY());
-      }
+    pauseButton.setOnMouseClicked(event -> {
+      logHelper.logInfo("Opened pause menu", null);
+      contextMenu.show(pauseButton, event.getScreenX(), event.getScreenY());
     });
 
   }
@@ -288,27 +297,28 @@ public class TrackerPresenter implements Initializable {
       updateTask(Status.DONE.getStatus());
       selectedTask.setPercentCompleted(new SimpleStringProperty(onehundred.getText()));
       selectedTask.setDateFinished(new SimpleStringProperty(LocalDate.now().toString()));
+      logHelper.logInfo("Updated percentage", new XpmTask(selectedTask));
       saveAndClose();
     });
 
     contextMenu.getItems().addAll(ten, thirty, fifty, seventy, eighty, ninety, onehundred);
 
-    complete.setOnMouseClicked(new EventHandler<MouseEvent>() {
-      @Override
-      public void handle(MouseEvent event) {
-        contextMenu.show(complete, event.getScreenX(), event.getScreenY());
-      }
+    complete.setOnMouseClicked(event -> {
+      logHelper.logInfo("Opened complete menu", null);
+      contextMenu.show(complete, event.getScreenX(), event.getScreenY());
     });
 
   }
 
   @FXML
   public void cancel() {
+    logHelper.logInfo("Tracking cancelled", null);
     closeWindow();
   }
 
   private void saveAndClose() {
     XpmTask xpmTask = new XpmTask(selectedTask);
+    logHelper.logInfo("Tracker closed", xpmTask);
     if (xpmTask.getStartTime() == null)
       xpmTask.setStartTime(startTime);
     XpmTaskPostEntity helpMe = new XpmHelper().helpMe(xpmTask);
@@ -487,6 +497,7 @@ public class TrackerPresenter implements Initializable {
     StringCacheService cacheService = new StringCacheService();
     String s = cacheService.get(CacheKey.SHRIS_TOKEN);
     if (s == null) {
+      logHelper.logWarning("Tried to use hurey features", null);
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Not connected");
       alert.setContentText("Please connect your Hurey account in settings");

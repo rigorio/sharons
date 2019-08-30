@@ -7,34 +7,38 @@ import org.apache.log4j.Logger;
 public class LogHelper {
   private Logger logger;
   private ObjectMapper mapper = new ObjectMapper();
+  private Class<?> _class;
 
   public LogHelper(Logger logger) {
     this.logger = logger;
   }
 
 
-  private void logInfo(final String action, Object task) {
+  public void setClass(Class<?> _class) {
+    this._class = _class;
+  }
+
+  public void logInfo(final String action, Object task) {
     try {
-      logger.info(action + (task != null ? ": " + mapper.writeValueAsString(task) : null));
+      logger.info("[" + _class.toString() + "] " + action + (task != null ? ": " + mapper.writeValueAsString(task) : null));
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
   }
 
-  private void logWarning(final String action, Object task) {
+  public void logWarning(final String action, Object task) {
     try {
-      logger.warn(action + (task != null ? ": " + mapper.writeValueAsString(task) : null));
+      logger.warn("[" + _class.toString() + "] " + action + (task != null ? ": " + mapper.writeValueAsString(task) : null));
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
   }
 
-  private void logError(final String action, Object task) {
+  public void logError(final String action, Object task) {
     try {
-      logger.error(action + (task != null ? ": " + mapper.writeValueAsString(task) : null));
+      logger.error("[" + _class.toString() + "] " + action + (task != null ? ": " + mapper.writeValueAsString(task) : null));
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
   }
-
 }

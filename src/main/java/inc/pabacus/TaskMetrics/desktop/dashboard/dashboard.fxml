@@ -33,7 +33,7 @@
         </rowConstraints>
         <JFXButton id="tasks" fx:id="tasksButton" alignment="BASELINE_LEFT" focusTraversable="false"
                    graphicTextGap="3.0" mnemonicParsing="false" onAction="#viewTasks" prefHeight="58.0"
-                   prefWidth="300.0" text="Tasks" textFill="#eceff1" GridPane.rowIndex="2"
+                   prefWidth="300.0" text="Jobs" textFill="#eceff1" GridPane.rowIndex="2"
                    GridPane.valignment="BOTTOM">
           <font>
             <Font name="SansSerif Bold" size="15.5"/>

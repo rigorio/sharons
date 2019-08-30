@@ -54,7 +54,7 @@ public class HardwareServiceAPI {
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, "{\n\t\"timeStamp\":\"" + dateFormat.format(cal.getTime()) + "\", \n\t\"disks\":" + JsonDisks + ",\n\t\"displays\":" + JsonDisplays + ",\n\t\"usbDevices\":" + JsonUsbDevices + "}");
         Request request = new Request.Builder()
-            .url(HOST + "/api/userhardwaresAPI")
+            .url(HOST + "/api/hardwares")
             .addHeader("content-type", "application/json")
             .addHeader("Authorization", new StringCacheService().get(CacheKey.TRIBELY_TOKEN))
             .post(body)

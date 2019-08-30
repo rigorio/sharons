@@ -3,17 +3,19 @@ package inc.pabacus.TaskMetrics.desktop.timesheet.hris;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheService;
 import inc.pabacus.TaskMetrics.utils.cacheService.LocalCacheHandler;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
-import inc.pabacus.TaskMetrics.api.timesheet.logs.DailyLog;
+import inc.pabacus.TaskMetrics.utils.logs.LogHelper;
 import inc.pabacus.TaskMetrics.utils.web.SslUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import okhttp3.*;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -28,6 +30,8 @@ import static java.lang.Boolean.FALSE;
 
 public class HRISConnector {
 
+  private static final Logger logger = Logger.getLogger(HRISConnector.class);
+  private LogHelper logHelper;
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
   private String HOST = "https://hureyweb-staging.azurewebsites.net";
@@ -46,6 +50,8 @@ public class HRISConnector {
     employeeId = cacheService.get(CacheKey.EMPLOYEE_ID);
 //    bearer = cacheService.get(CacheKey.SHRIS_TOKEN);
     logDate = LocalDate.now();
+    logHelper = new LogHelper(logger);
+    logHelper.setClass(HRISConnector.class);
   }
 
   public List<HRISTimeLog> hrisLogs() {
@@ -53,6 +59,7 @@ public class HRISConnector {
   }
 
   public void saveLog(String status) {
+    logHelper.logInfo("Creating new time log", status);
     switch (status) {
       case "Time In":
         timeLogTypeId = 1;
@@ -79,6 +86,7 @@ public class HRISConnector {
           .shiftDate(logDate.toString() + "T00:00:00+00:00")
           .id(0)
           .build();
+      logHelper.logInfo("Created hurey log entity", crazyHrisEntity);
       String requestString = mapper.writeValueAsString(crazyHrisEntity);
       RequestBody requestBody = RequestBody.create(JSON, requestString);
 
@@ -88,10 +96,9 @@ public class HRISConnector {
                                      .post(requestBody)
                                      .build());
       String string = call.execute().body().string();
-      System.out.println("change logs response");
-      System.out.println(string);
+      logHelper.logInfo("Hurey log response", string);
     } catch (IOException e) {
-      e.printStackTrace();
+      logHelper.logError("Exception encountered", e);
     }
   }
 

@@ -9,10 +9,8 @@ import inc.pabacus.TaskMetrics.api.listener.ActivityListener;
 import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.handlers.LogService;
 import inc.pabacus.TaskMetrics.api.timesheet.logs.LogStatus;
-import inc.pabacus.TaskMetrics.desktop.idle.IdleView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
-import inc.pabacus.TaskMetrics.utils.GuiManager;
 import inc.pabacus.TaskMetrics.utils.TimerService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -97,14 +95,14 @@ public class BreakPresenter implements Initializable {
   @FXML
   private void backOnline() {
     String recordActivity = "Break";
-    logService.changeLog(LogStatus.BFB.getStatus());
     if (lastLog.equalsIgnoreCase("break")) {
       activityHandler.saveTimestamp(Activity.ONLINE);
       recordActivity = "Break";
       notification("Online");
-    } else if (lastLog.equalsIgnoreCase("lunch") || lastLog.equalsIgnoreCase("lunch break")) {
+    } else if (lastLog.toLowerCase().contains("lunch")) {
       activityHandler.saveTimestamp(Activity.BFB);
       recordActivity = "Lunch Break";
+      logService.changeLog(LogStatus.BFB.getStatus());
       notification("Back From Lunch");
     }
     double totalTimeSpent = timerService.getTime() / 3600.0;

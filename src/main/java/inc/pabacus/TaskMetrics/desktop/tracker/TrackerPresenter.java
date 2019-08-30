@@ -137,6 +137,8 @@ public class TrackerPresenter implements Initializable {
     MenuItem meeting = new MenuItem("Meeting");
 
     breaks.setOnAction(event -> {
+      if (checkIfLoggedInToHurey())
+        return;
       isPause = true;
       Activity activity;
       activity = Activity.BREAK;

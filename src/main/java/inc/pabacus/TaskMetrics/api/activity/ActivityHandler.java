@@ -147,7 +147,7 @@ public class ActivityHandler {
   }
 
   public String getLastLog() {
-    String activity = null;
+    String lastActivity = null;
     OkHttpClient client = SslUtil.getSslOkHttpClient();
     // code request code here
     Request request = new Request.Builder()
@@ -160,15 +160,14 @@ public class ActivityHandler {
     try {
       Response response = client.newCall(request).execute();
       String getChats = response.body().string();
-      JSONArray jsonarray = new JSONArray(getChats);
-      for (int i = 0; i < jsonarray.length(); ++i) {
-        JSONObject jsonobject = jsonarray.getJSONObject(i);
-        activity = jsonobject.getString("activity");
-      }
-    } catch (IOException | JSONException e) {
+      List<ActivityTimestamp> timestamps = mapper.readValue(getChats, new TypeReference<List<ActivityTimestamp>>() {});
+      int lastIndex = timestamps.size() - 1;
+      ActivityTimestamp activityTimestamp = timestamps.get(lastIndex);
+      lastActivity = activityTimestamp.getActivity();
+    } catch (IOException e) {
       e.printStackTrace();
     }
-    return activity != null ? activity : "";
+    return lastActivity != null ? lastActivity : "break";
   }
 
   @Data

@@ -2,6 +2,7 @@ package inc.pabacus.TaskMetrics.desktop.tasks;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
@@ -197,6 +198,7 @@ public class TasksPresenter implements Initializable {
       return;
     }
 */
+    activityHandler.saveTimestamp(Activity.BUSY);
     String newDescription = updateDescription(selectedItem.getDescription().get());
     selectedItem.setDescription(new SimpleStringProperty(newDescription));
     TrackHandler.setSelectedTask(selectedItem);

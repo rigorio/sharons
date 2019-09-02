@@ -18,6 +18,7 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.TaskTemplate;
 import inc.pabacus.TaskMetrics.desktop.newTask.DefaultTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
+import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
 import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
@@ -26,12 +27,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Pair;
 import lombok.Data;
 
@@ -300,6 +304,11 @@ public class SettingsPresenter implements Initializable {
 
   private boolean isEmpty() {
     return extendField.getText().isEmpty();
+  }
+
+  @FXML
+  public void refreshTracker() {
+    TrackHandler.setSelectedTask(null);
   }
 
   @Data

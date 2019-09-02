@@ -6,6 +6,8 @@ import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.TaskTemplate;
 import inc.pabacus.TaskMetrics.desktop.jobs.JobTaskIdHolder;
+import inc.pabacus.TaskMetrics.desktop.tasks.TasksPresenter;
+import inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter;
 
 import java.util.Optional;
 
@@ -39,7 +41,7 @@ public class TaskUtil {
         .billable(task.getBillable())
         .estimateTime(task.getEstimateTime())
         .percentCompleted(task.getPercentCompleted())
-        .jobTasksId(JobTaskIdHolder.getId())
+        .jobTasksId(TrackerPresenter.jobId)
 //        .businessValueId(task.getBusinessValueId())
 //        .invoiceTypeId(task.getInvoiceTypeId().getId())
 //        .assigneeId(task.getAssigneeId().getId())

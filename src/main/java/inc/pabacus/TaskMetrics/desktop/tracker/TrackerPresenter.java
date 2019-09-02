@@ -86,6 +86,7 @@ public class TrackerPresenter implements Initializable {
   private double timeCompensation = 0;
   public ScheduledFuture<?> scheduledFuture;
 
+  public static Long jobId;
   public static boolean isPause = false;
   public static boolean isContinue = false;
   public static boolean windowIsOpen = false;

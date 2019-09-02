@@ -15,6 +15,7 @@ import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
+import inc.pabacus.TaskMetrics.desktop.tracker.TrackerPresenter;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackerView;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
@@ -213,6 +214,7 @@ public class TasksPresenter implements Initializable {
     String newDescription = updateDescription(selectedItem.getDescription().get());
     selectedItem.setDescription(new SimpleStringProperty(newDescription));
     TrackHandler.setSelectedTask(selectedItem);
+    TrackerPresenter.jobId = JobTaskIdHolder.getId();
     GuiManager.getInstance().displayAlwaysOnTop(new TrackerView());
     ((Stage) startLink.getScene().getWindow()).setIconified(true);
   }

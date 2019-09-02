@@ -6,7 +6,7 @@ import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.tasks.Task;
 import inc.pabacus.TaskMetrics.api.tasks.TaskAdapter;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
@@ -75,12 +75,12 @@ public class TasksPresenter implements Initializable {
   private JFXComboBox<String> timeBox;
 
   private ActivityHandler activityHandler;
-  private XpmTaskWebHandler xpmTaskHandler;
+  private TaskConnector taskConnector;
 
   public TasksPresenter() {
     logHelper = new LogHelper(logger);
     activityHandler = BeanManager.activityHandler();
-    xpmTaskHandler = new XpmTaskWebHandler();
+    taskConnector = new TaskConnector();
   }
 
   @Override
@@ -355,7 +355,7 @@ public class TasksPresenter implements Initializable {
 
   private List<TaskAdapter> getAllTasks() {
     Long id = JobTaskIdHolder.getId();
-    List<Task> allTasks = xpmTaskHandler.findByJobTask(id);
+    List<Task> allTasks = taskConnector.findByJobTask(id);
     return FXCollections
         .observableArrayList(allTasks.stream()
                                  .map(TaskAdapter::new)

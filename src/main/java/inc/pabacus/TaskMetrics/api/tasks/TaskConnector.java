@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("all")
-public class XpmTaskWebHandler {
+public class TaskConnector {
 
-  private static final Logger logger = Logger.getLogger(XpmTaskWebHandler.class);
+  private static final Logger logger = Logger.getLogger(TaskConnector.class);
   private LogHelper logHelper;
   private OkHttpClient client = SslUtil.getSslOkHttpClient();
   private ObjectMapper mapper = new ObjectMapper();
@@ -29,7 +29,7 @@ public class XpmTaskWebHandler {
       = MediaType.parse("application/json; charset=utf-8");
   private StringCacheService stringCacheService = new StringCacheService();
 
-  public XpmTaskWebHandler() {
+  public TaskConnector() {
     HOST = new HostConfig().getHost();
     logHelper = new LogHelper(logger);
   }
@@ -79,7 +79,7 @@ public class XpmTaskWebHandler {
 //    }
 //  }
 
-  public void otherSave(TaskCreationDTO dto) {
+  public void save(TaskCreationDTO dto) {
     try {
       logHelper.logInfo("Other save for task", dto);
       String jsonString = mapper.writeValueAsString(dto);

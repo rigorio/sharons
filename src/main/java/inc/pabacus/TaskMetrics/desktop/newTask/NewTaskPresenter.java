@@ -2,8 +2,8 @@ package inc.pabacus.TaskMetrics.desktop.newTask;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.api.tasks.TaskCreationDTO;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
@@ -53,7 +53,7 @@ public class NewTaskPresenter implements Initializable {
   private JFXTextField estimateField;
 
   private BusinessValueHandler businessValueHandler = new BusinessValueHandler();
-  private XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
+  private TaskConnector taskConnector = new TaskConnector();
   private JobTaskHandler jobTaskHandler;
   private String job = JobHolder.getJob();
 
@@ -186,7 +186,7 @@ public class NewTaskPresenter implements Initializable {
         .description(description)
         .estimatedTime(Double.parseDouble(estimateFields))
         .build();
-    xpmTaskHandler.otherSave(dto);
+    taskConnector.save(dto);
 
 //    XpmTask xpmTask = XpmTask.builder()
 //        .id(0L)
@@ -204,9 +204,9 @@ public class NewTaskPresenter implements Initializable {
 //        .dateCreated(LocalDate.now().toString())
 //        .build();
 //    XpmTaskPostEntity xpmTaskPostEntity = new XpmHelper().helpMe(xpmTask);
-//    xpmTaskHandler.save(xpmTaskPostEntity);
+//    taskConnector.save(xpmTaskPostEntity);
 
-//    xpmTaskHandler.save(xpmTask);
+//    taskConnector.save(xpmTask);
 
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setContentText("Task saved!");

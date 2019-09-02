@@ -4,7 +4,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.ActivityRecord;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,7 +50,7 @@ public class ProductivityPresenter implements Initializable {
   private JFXComboBox<String> dayCombobox;
 
   private ActivityHandler activityHandler;
-  private XpmTaskWebHandler xpmTaskWebHandler;
+  private TaskConnector taskConnector;
   private static final String ALL = "All";
   private static final String L_7 = "Last 7 days";
   private static final String L_90 = "Last 90 days";
@@ -59,7 +59,7 @@ public class ProductivityPresenter implements Initializable {
   private List<ActivityRecord> activityRecords;
 
   public ProductivityPresenter() {
-    xpmTaskWebHandler = BeanManager.xpmTaskHandler();
+    taskConnector = BeanManager.xpmTaskHandler();
     activityHandler = BeanManager.activityHandler();
   }
 
@@ -288,7 +288,7 @@ Under - You have accumulated X Hrs of Meeting for this Week.  We encourage you t
   }
 
   private void setupPieChart() {
-    xpmTaskWebHandler.findAll()
+    taskConnector.findAll()
         .forEach(xpmTask -> {
           if (xpmTask.getDateCreated().equals(LocalDate.now().toString()))
             totalWorkedTime += Double.parseDouble(xpmTask.getTotalTimeSpent());

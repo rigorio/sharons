@@ -13,7 +13,7 @@ import inc.pabacus.TaskMetrics.api.listener.ActivityListenerService;
 import inc.pabacus.TaskMetrics.api.screenshot.ScreenshotServiceImpl;
 import inc.pabacus.TaskMetrics.api.software.SoftwareServiceAPI;
 import inc.pabacus.TaskMetrics.api.standuply.StandupService;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.status.StatusUpdateHandler;
 import inc.pabacus.TaskMetrics.api.timesheet.status.ValidationHandler;
@@ -30,7 +30,7 @@ public class BeanManager {
   private static ScreenshotServiceImpl screenshotService = new ScreenshotServiceImpl();
   private static UserHandler userHandler = new UserHandler();
   private static DailyLogHandler dailyLogService = new DailyLogHandler();
-  private static XpmTaskWebHandler xpmTaskHandler = new XpmTaskWebHandler();
+  private static TaskConnector xpmTaskHandler = new TaskConnector();
   private static ActivityHandler activityHandler = new ActivityHandler();
   private static AuthenticatorService authenticatorService = new AuthenticatorService();
   private static LeaveService leaveService = new LeaveService();
@@ -75,7 +75,7 @@ public class BeanManager {
     return dailyLogService;
   }
 
-  public static XpmTaskWebHandler xpmTaskHandler() {
+  public static TaskConnector xpmTaskHandler() {
     return xpmTaskHandler;
   }
 

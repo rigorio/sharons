@@ -3,7 +3,7 @@ package inc.pabacus.TaskMetrics.api.timesheet.status;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.ActivityTimestamp;
 import inc.pabacus.TaskMetrics.api.tasks.Task;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 
 import java.time.Duration;
@@ -16,12 +16,12 @@ public class ValidationService {
 
   private ActivityHandler activityHandler;
   private StatusUpdateHandler statusUpdateHandler;
-  private XpmTaskWebHandler xpmHandler;
+  private TaskConnector taskConnector;
 
   public ValidationService() {
     activityHandler = BeanManager.activityHandler();
     statusUpdateHandler = BeanManager.statusUpdateHandler();
-    xpmHandler = BeanManager.xpmTaskHandler();
+    taskConnector = BeanManager.xpmTaskHandler();
   }
 
 
@@ -34,7 +34,7 @@ public class ValidationService {
   }
 
   public List<Task> xpmTasks() {
-    return xpmHandler.findAll();
+    return taskConnector.findAll();
   }
 
 

@@ -7,7 +7,7 @@ import inc.pabacus.TaskMetrics.api.activity.Record;
 import inc.pabacus.TaskMetrics.api.activity.RecordType;
 import inc.pabacus.TaskMetrics.api.tasks.Task;
 import inc.pabacus.TaskMetrics.api.tasks.TaskAdapter;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.api.tasks.dto.TaskEditDTO;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
@@ -77,7 +77,7 @@ public class TrackerPresenter implements Initializable {
 
   private TimerService timerService;
   private TaskAdapter selectedTask;
-  private XpmTaskWebHandler xpmTaskWebHandler;
+  private TaskConnector taskConnector;
   private ActivityHandler activityHandler;
   private DailyLogService dailyLogHandler;
   private LogService logService;
@@ -92,7 +92,7 @@ public class TrackerPresenter implements Initializable {
 
   public TrackerPresenter() {
     timerService = new TimerService();
-    xpmTaskWebHandler = new XpmTaskWebHandler();
+    taskConnector = new TaskConnector();
     logService = new HRISLogHandler();
     activityHandler = BeanManager.activityHandler();
     dailyLogHandler = BeanManager.dailyLogService();
@@ -321,8 +321,8 @@ public class TrackerPresenter implements Initializable {
     if (task.getStartTime() == null)
       task.setStartTime(startTime);
     TaskEditDTO taskEditDTO = TaskUtil.convertTaskToEditDTO(task);
-    xpmTaskWebHandler.edit(taskEditDTO);
-//    xpmTaskWebHandler.save(task);
+    taskConnector.edit(taskEditDTO);
+//    taskConnector.save(task);
     activityHandler.saveRecord(Record.builder()
                                    .recordType(RecordType.TASK)
                                    .duration("" + roundOffDecimal(getRawComputedTime()))

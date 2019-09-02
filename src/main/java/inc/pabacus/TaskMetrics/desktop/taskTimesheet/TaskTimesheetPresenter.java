@@ -3,10 +3,8 @@ package inc.pabacus.TaskMetrics.desktop.taskTimesheet;
 import com.jfoenix.controls.JFXDatePicker;
 import inc.pabacus.TaskMetrics.api.tasks.Task;
 import inc.pabacus.TaskMetrics.api.tasks.TaskAdapter;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
-import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetHandler;
-import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,12 +40,10 @@ public class TaskTimesheetPresenter implements Initializable {
   private Label totalPercentBillable;
   @FXML
   private Label totalInvoice;
-  private XpmTimesheetService xpmTimesheetService;
-  private XpmTaskWebHandler xpmTaskWebHandler;
+  private TaskConnector taskConnector;
 
   public TaskTimesheetPresenter() {
-    xpmTimesheetService = new XpmTimesheetHandler();
-    xpmTaskWebHandler = new XpmTaskWebHandler();
+    taskConnector = new TaskConnector();
   }
 
   @Override
@@ -209,7 +205,7 @@ public class TaskTimesheetPresenter implements Initializable {
   }
 
   private List<Task> allTimesheets() {
-    return xpmTaskWebHandler.findAll();
+    return taskConnector.findAll();
   }
 
   private ObservableList<TaskAdapter> getXpmTimesheet(List<Task> timesheets) {

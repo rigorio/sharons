@@ -2,7 +2,7 @@ package inc.pabacus.TaskMetrics.desktop.home;
 
 import inc.pabacus.TaskMetrics.api.client.ClientHandler;
 import inc.pabacus.TaskMetrics.api.tasks.Task;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
@@ -36,12 +36,12 @@ public class HomePresenter implements Initializable {
   private Label information;
 
   private JobTaskHandler jobTaskHandler;
-  private XpmTaskWebHandler xpmTaskWebHandler;
+  private TaskConnector taskConnector;
   private ClientHandler clientHandler;
 
   public HomePresenter() {
     jobTaskHandler = new JobTaskHandler();
-    xpmTaskWebHandler = new XpmTaskWebHandler();
+    taskConnector = new TaskConnector();
     clientHandler = new ClientHandler();
   }
 
@@ -104,7 +104,7 @@ public class HomePresenter implements Initializable {
   }
 
   private List<Task> allTasks() {
-    return xpmTaskWebHandler.findAll();
+    return taskConnector.findAll();
   }
 
   private void gatherInfo() {

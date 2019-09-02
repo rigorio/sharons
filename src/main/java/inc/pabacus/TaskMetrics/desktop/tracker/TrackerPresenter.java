@@ -5,8 +5,8 @@ import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.Record;
 import inc.pabacus.TaskMetrics.api.activity.RecordType;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.Task;
+import inc.pabacus.TaskMetrics.api.tasks.TaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.dto.TaskEditDTO;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
@@ -76,7 +76,7 @@ public class TrackerPresenter implements Initializable {
   private final Runnable process;
 
   private TimerService timerService;
-  private XpmTaskAdapter selectedTask;
+  private TaskAdapter selectedTask;
   private XpmTaskWebHandler xpmTaskWebHandler;
   private ActivityHandler activityHandler;
   private DailyLogService dailyLogHandler;
@@ -104,7 +104,7 @@ public class TrackerPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     timer.setText(STARTING_TIME);
     selectedTask = TrackHandler.getSelectedTask();
-    logHelper.logInfo("Tracking task", new XpmTask(selectedTask));
+    logHelper.logInfo("Tracking task", new Task(selectedTask));
 
     if (CountdownTimerConfiguration.isCountdownTimer()) {
       String getEstimateTime = selectedTask.getEstimateTime().get();
@@ -141,7 +141,7 @@ public class TrackerPresenter implements Initializable {
     MenuItem meeting = new MenuItem("Meeting");
 
     breaks.setOnAction(event -> {
-      logHelper.logInfo("Went on break", new XpmTask(selectedTask));
+      logHelper.logInfo("Went on break", new Task(selectedTask));
       if (checkIfLoggedInToHurey())
         return;
       isPause = true;
@@ -155,7 +155,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     lunch.setOnAction(event -> {
-      logHelper.logInfo("Went on lunch", new XpmTask(selectedTask));
+      logHelper.logInfo("Went on lunch", new Task(selectedTask));
       if (checkIfLoggedInToHurey())
         return;
       isPause = true;
@@ -171,7 +171,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     willWorkOnDifferentTask.setOnAction(event -> {
-      logHelper.logInfo("Will work on different task", new XpmTask(selectedTask));
+      logHelper.logInfo("Will work on different task", new Task(selectedTask));
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
@@ -180,7 +180,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     testingAFeature.setOnAction(event -> {
-      logHelper.logInfo("Testing a feature", new XpmTask(selectedTask));
+      logHelper.logInfo("Testing a feature", new Task(selectedTask));
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
@@ -190,7 +190,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     developmentCauses.setOnAction(event -> {
-      logHelper.logInfo("Development causes", new XpmTask(selectedTask));
+      logHelper.logInfo("Development causes", new Task(selectedTask));
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
@@ -200,7 +200,7 @@ public class TrackerPresenter implements Initializable {
     });
 
     meeting.setOnAction(event -> {
-      logHelper.logInfo("On a meeting", new XpmTask(selectedTask));
+      logHelper.logInfo("On a meeting", new Task(selectedTask));
       Activity activity;
       activity = Activity.BUSY;
       activityHandler.saveTimestamp(activity);
@@ -296,7 +296,7 @@ public class TrackerPresenter implements Initializable {
       updateTask(Status.DONE.getStatus());
       selectedTask.setPercentCompleted(new SimpleStringProperty(onehundred.getText()));
       selectedTask.setDateFinished(new SimpleStringProperty(LocalDate.now().toString()));
-      logHelper.logInfo("Updated percentage", new XpmTask(selectedTask));
+      logHelper.logInfo("Updated percentage", new Task(selectedTask));
       saveAndClose();
     });
 
@@ -316,17 +316,17 @@ public class TrackerPresenter implements Initializable {
   }
 
   private void saveAndClose() {
-    XpmTask xpmTask = new XpmTask(selectedTask);
-    logHelper.logInfo("Tracker closed", xpmTask);
-    if (xpmTask.getStartTime() == null)
-      xpmTask.setStartTime(startTime);
-    TaskEditDTO taskEditDTO = TaskUtil.convertTaskToEditDTO(xpmTask);
+    Task task = new Task(selectedTask);
+    logHelper.logInfo("Tracker closed", task);
+    if (task.getStartTime() == null)
+      task.setStartTime(startTime);
+    TaskEditDTO taskEditDTO = TaskUtil.convertTaskToEditDTO(task);
     xpmTaskWebHandler.edit(taskEditDTO);
-//    xpmTaskWebHandler.save(xpmTask);
+//    xpmTaskWebHandler.save(task);
     activityHandler.saveRecord(Record.builder()
                                    .recordType(RecordType.TASK)
                                    .duration("" + roundOffDecimal(getRawComputedTime()))
-                                   .activity(xpmTask.getTask())
+                                   .activity(task.getTask())
                                    .build());
     closeWindow();
   }

@@ -4,8 +4,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import inc.pabacus.TaskMetrics.api.activity.Activity;
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.Task;
+import inc.pabacus.TaskMetrics.api.tasks.TaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakPresenter;
 import inc.pabacus.TaskMetrics.desktop.edit.EditView;
@@ -68,7 +68,7 @@ public class TasksPresenter implements Initializable {
   @FXML
   private Hyperlink startLink;
   @FXML
-  private TableView<XpmTaskAdapter> tasksTable;
+  private TableView<TaskAdapter> tasksTable;
   //  @FXML
 //  private JFXTextField sortTask;
   @FXML
@@ -93,22 +93,22 @@ public class TasksPresenter implements Initializable {
     statusBox.setValue("All");
     timeBox.setValue("Today");
 
-    TableColumn<XpmTaskAdapter, String> dateCreated = new TableColumn<>("Date Created");
+    TableColumn<TaskAdapter, String> dateCreated = new TableColumn<>("Date Created");
     dateCreated.setCellValueFactory(param -> param.getValue().getDateCreated());
 
-    TableColumn<XpmTaskAdapter, String> projectName = new TableColumn<>("Job");
+    TableColumn<TaskAdapter, String> projectName = new TableColumn<>("Job");
     projectName.setCellValueFactory(param -> param.getValue().getJob());
 
-    TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Time");
+    TableColumn<TaskAdapter, String> billableHours = new TableColumn<>("Time");
     billableHours.setCellValueFactory(param -> param.getValue().getTotalTimeSpent());
 
-    TableColumn<XpmTaskAdapter, String> task = new TableColumn<>("Task");
+    TableColumn<TaskAdapter, String> task = new TableColumn<>("Task");
     task.setCellValueFactory(param -> param.getValue().getTask());
 
-    TableColumn<XpmTaskAdapter, String> status = new TableColumn<>("State");
+    TableColumn<TaskAdapter, String> status = new TableColumn<>("State");
     status.setCellValueFactory(param -> param.getValue().getStatus());
 
-    TableColumn<XpmTaskAdapter, String> description = new TableColumn<>("Description");
+    TableColumn<TaskAdapter, String> description = new TableColumn<>("Description");
     description.setCellValueFactory(param -> param.getValue().getDescription());
 
 
@@ -141,8 +141,8 @@ public class TasksPresenter implements Initializable {
 //
 //    sortTask.setOnKeyReleased(e -> {
 //      sortTask.textProperty().addListener((observable, oldValue, newValue) -> {
-//        ObservableList<XpmTaskAdapter> masterData = FXCollections.observableArrayList(getAllTasks());
-//        FilteredList<XpmTaskAdapter> filteredList = new FilteredList<>(masterData, p -> true);
+//        ObservableList<TaskAdapter> masterData = FXCollections.observableArrayList(getAllTasks());
+//        FilteredList<TaskAdapter> filteredList = new FilteredList<>(masterData, p -> true);
 //        filteredList.setPredicate(sortTask -> {
 //          // If filter text is empty, display all persons.
 //
@@ -156,7 +156,7 @@ public class TasksPresenter implements Initializable {
 //          } else return sortTask.getTask().get().toLowerCase().contains(lowerCaseFilter); // Filter matches last name.
 //          // Does not match.
 //        });
-//        SortedList<XpmTaskAdapter> sortedData = new SortedList<>(filteredList);
+//        SortedList<TaskAdapter> sortedData = new SortedList<>(filteredList);
 //        sortedData.comparatorProperty().bind(tasksTable.comparatorProperty());
 //        tasksTable.setItems(sortedData);
 //      });
@@ -177,7 +177,7 @@ public class TasksPresenter implements Initializable {
   public void updateTable() {
     String value = statusBox.getValue();
     String time = timeBox.getValue();
-    ObservableList<XpmTaskAdapter> tasksByStatus = value.equalsIgnoreCase("All") && time.equalsIgnoreCase("All") ? FXCollections.observableArrayList(getAllTasks()) : getTasksByStatus();
+    ObservableList<TaskAdapter> tasksByStatus = value.equalsIgnoreCase("All") && time.equalsIgnoreCase("All") ? FXCollections.observableArrayList(getAllTasks()) : getTasksByStatus();
     tasksTable.setItems(tasksByStatus);
   }
 
@@ -193,7 +193,7 @@ public class TasksPresenter implements Initializable {
     if (TrackHandler.getSelectedTask() != null)
       return;
 
-    XpmTaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
+    TaskAdapter selectedItem = tasksTable.getSelectionModel().getSelectedItem();
 
 /*  Commented out to be able to start completed tasks
     if (selectedItem.getStatus().get().equals(Status.DONE.getStatus())) {
@@ -252,10 +252,10 @@ public class TasksPresenter implements Initializable {
     tasksTable.setItems(FXCollections.observableArrayList(getAllTasks()));
   }
 
-  private ObservableList<XpmTaskAdapter> getTasksByStatus() {
+  private ObservableList<TaskAdapter> getTasksByStatus() {
     String status = statusBox.getValue();
     String time = timeBox.getValue();
-    List<XpmTaskAdapter> backLogs;
+    List<TaskAdapter> backLogs;
 
     switch (time) {
       case "Last Week":
@@ -314,7 +314,7 @@ public class TasksPresenter implements Initializable {
     return FXCollections.observableArrayList(backLogs);
   }
 
-  private boolean lovelyDay(String status, XpmTaskAdapter backLog, int i) {
+  private boolean lovelyDay(String status, TaskAdapter backLog, int i) {
     StringProperty currentSTatus = backLog.getStatus();
     if (currentSTatus == null)
       currentSTatus = new SimpleStringProperty("");
@@ -326,7 +326,7 @@ public class TasksPresenter implements Initializable {
   }
 
   private void refreshTasks() {
-    List<TableColumn<XpmTaskAdapter, ?>> sortOrder = new ArrayList<>(tasksTable.getSortOrder());
+    List<TableColumn<TaskAdapter, ?>> sortOrder = new ArrayList<>(tasksTable.getSortOrder());
     int i = tasksTable.getSelectionModel().getSelectedIndex();
     Platform.runLater(() -> {
       initTasksTable();
@@ -353,12 +353,12 @@ public class TasksPresenter implements Initializable {
     ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(this::refreshTasks, 60L, 60L, TimeUnit.SECONDS);
   }
 
-  private List<XpmTaskAdapter> getAllTasks() {
+  private List<TaskAdapter> getAllTasks() {
     Long id = JobTaskIdHolder.getId();
-    List<XpmTask> allTasks = xpmTaskHandler.findByJobTask(id);
+    List<Task> allTasks = xpmTaskHandler.findByJobTask(id);
     return FXCollections
         .observableArrayList(allTasks.stream()
-                                 .map(XpmTaskAdapter::new)
+                                 .map(TaskAdapter::new)
                                  .collect(Collectors.toList()));
   }
 

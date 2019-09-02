@@ -1,6 +1,5 @@
 package inc.pabacus.TaskMetrics.api.tasks;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.StringProperty;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class
-XpmTask {
+Task {
 
   private Long id;
   private String client;
@@ -35,7 +34,7 @@ XpmTask {
 //  private Assignee assigneeId;
 //  private String assignee;
 
-  public XpmTask(XpmTaskAdapter xpmTask) {
+  public Task(TaskAdapter xpmTask) {
 
     LongProperty id = xpmTask.getId();
     this.id = id != null ? id.get() : null;

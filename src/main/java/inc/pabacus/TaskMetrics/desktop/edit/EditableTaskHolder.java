@@ -1,16 +1,16 @@
 package inc.pabacus.TaskMetrics.desktop.edit;
 
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.TaskAdapter;
 
 public class EditableTaskHolder {
 
-  private static XpmTaskAdapter task = null;
+  private static TaskAdapter task = null;
 
-  public static XpmTaskAdapter getTask() {
+  public static TaskAdapter getTask() {
     return task;
   }
 
-  public static void setTask(XpmTaskAdapter task) {
+  public static void setTask(TaskAdapter task) {
     EditableTaskHolder.task = task;
   }
 }

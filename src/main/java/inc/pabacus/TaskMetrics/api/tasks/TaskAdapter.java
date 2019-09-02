@@ -16,7 +16,7 @@ import javax.persistence.Id;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class XpmTaskAdapter {
+public class TaskAdapter {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,7 +40,7 @@ public class XpmTaskAdapter {
 //  private AssigneeAdapter assigneeAdapter;
 //  private StringProperty assignee;
 
-  public XpmTaskAdapter(XpmTask xpmTask) {
+  public TaskAdapter(Task xpmTask) {
 
     Long id = xpmTask.getId();
     this.id = id != null ? new SimpleLongProperty(id) : null;

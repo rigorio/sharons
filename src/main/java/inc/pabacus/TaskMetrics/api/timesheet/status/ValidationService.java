@@ -2,7 +2,7 @@ package inc.pabacus.TaskMetrics.api.timesheet.status;
 
 import inc.pabacus.TaskMetrics.api.activity.ActivityHandler;
 import inc.pabacus.TaskMetrics.api.activity.ActivityTimestamp;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
+import inc.pabacus.TaskMetrics.api.tasks.Task;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 
@@ -33,7 +33,7 @@ public class ValidationService {
     return statusUpdateHandler.all();
   }
 
-  public List<XpmTask> xpmTasks() {
+  public List<Task> xpmTasks() {
     return xpmHandler.findAll();
   }
 
@@ -72,12 +72,12 @@ public class ValidationService {
 
   public List<ActivityTimestamp> unrecognizedTasks() {
     List<ActivityTimestamp> activities = activities();
-    List<XpmTask> xpmTasks = xpmTasks();
+    List<Task> tasks = xpmTasks();
     LocalDate today = LocalDate.now();
     List<ActivityTimestamp> activitiesToday = activities.stream()
         .filter(activityTimestamp -> activityTimestamp.getDate().equals(today.toString()))
         .collect(Collectors.toList());
-    List<XpmTask> updatesToday = xpmTasks.stream()
+    List<Task> updatesToday = tasks.stream()
         .filter(statusUpdate -> statusUpdate.getStartTime().equals(today.toString()))
         .collect(Collectors.toList());
 

@@ -1,7 +1,7 @@
 package inc.pabacus.TaskMetrics.desktop.home;
 
 import inc.pabacus.TaskMetrics.api.client.ClientHandler;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
+import inc.pabacus.TaskMetrics.api.tasks.Task;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
@@ -82,13 +82,13 @@ public class HomePresenter implements Initializable {
   }
 
   private void getTaskStatistics() {
-    List<XpmTask> xpmTasks = allTasks();
-    int numberOfTasks = xpmTasks.size();
+    List<Task> tasks = allTasks();
+    int numberOfTasks = tasks.size();
     countTasks.setText("" + numberOfTasks);
 
     int p = 0, ip = 0, d = 0;
-    for (XpmTask xpmTask : xpmTasks) {
-      String status = xpmTask.getStatus();
+    for (Task task : tasks) {
+      String status = task.getStatus();
       if (status.equals(Status.PENDING.getStatus()))
         p++;
       else if (status.equals(Status.IN_PROGRESS.getStatus()))
@@ -103,7 +103,7 @@ public class HomePresenter implements Initializable {
 
   }
 
-  private List<XpmTask> allTasks() {
+  private List<Task> allTasks() {
     return xpmTaskWebHandler.findAll();
   }
 

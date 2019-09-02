@@ -35,7 +35,7 @@ public class XpmTaskWebHandler {
   }
 //
 //  @SuppressWarnings("all")
-//  public XpmTask save(XpmTask task) {
+//  public Task save(Task task) {
 //    try {
 //      XpmTaskPostEntity xpmDto = new XpmTaskPostEntity();
 //      logHelper.logInfo("Saving task", xpmDto);
@@ -49,8 +49,8 @@ public class XpmTaskWebHandler {
 //      ResponseBody responseBody = call.execute().body();
 //      String responseString = responseBody.string();
 //      logHelper.logInfo("Response of save", responseString);
-//      XpmTask xpmTask;
-//      xpmTask = mapper.readValue(responseString, new TypeReference<XpmTask>() {});
+//      Task xpmTask;
+//      xpmTask = mapper.readValue(responseString, new TypeReference<Task>() {});
 //      xpmTask.setId(xpmTask.getId());
 //    } catch (IOException e) {
 //      logHelper.logError("Exception caught", e.getMessage());
@@ -71,8 +71,8 @@ public class XpmTaskWebHandler {
 //      ResponseBody responseBody = call.execute().body();
 //      String responseString = responseBody.string();
 //      logHelper.logInfo("Response of saving xpmtaskpost entity", responseString);
-////      XpmTask xpmTask;
-////      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+////      Task xpmTask;
+////      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<Task>() {});
 ////      xpmTask.setId(xpmTask.getId());
 //    } catch (IOException e) {
 //      logHelper.logError("Exception caught", e.getMessage());
@@ -97,7 +97,7 @@ public class XpmTaskWebHandler {
     }
   }
 
-  public Optional<XpmTask> findById(Long id) {
+  public Optional<Task> findById(Long id) {
     return findAll().stream()
         .filter(task -> task.getId().equals(id))
         .findAny();
@@ -116,9 +116,9 @@ public class XpmTaskWebHandler {
     }
   }
 
-  public List<XpmTask> findAll() {
+  public List<Task> findAll() {
     logHelper.logInfo("Retrieving all tasks", null);
-    List<XpmTask> tasks = new ArrayList<>();
+    List<Task> tasks = new ArrayList<>();
     try {
 
       Call call = client.newCall(new Request.Builder()
@@ -128,16 +128,16 @@ public class XpmTaskWebHandler {
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
       logHelper.logInfo("Retrieved all tasks", jsonString);
-      tasks = mapper.readValue(jsonString, new TypeReference<List<XpmTask>>() {});
+      tasks = mapper.readValue(jsonString, new TypeReference<List<Task>>() {});
     } catch (IOException e) {
       logHelper.logError("Exception caught", e.getMessage());
     }
     return tasks;
   }
 
-  public List<XpmTask> findByJobTask(Long jobTaskId) {
+  public List<Task> findByJobTask(Long jobTaskId) {
     logHelper.logInfo("Find task by jobId", null);
-    List<XpmTask> tasks = new ArrayList<>();
+    List<Task> tasks = new ArrayList<>();
     try {
 //      System.out.println("token " + stringCacheService.get(CacheKey.TRIBELY_TOKEN));
       Call call = client.newCall(new Request.Builder()
@@ -146,7 +146,7 @@ public class XpmTaskWebHandler {
                                      .build());
       ResponseBody body = call.execute().body();
       String jsonString = body.string();
-      tasks = mapper.readValue(jsonString, new TypeReference<List<XpmTask>>() {});
+      tasks = mapper.readValue(jsonString, new TypeReference<List<Task>>() {});
       logHelper.logInfo("Response of tasks by jobId", tasks);
     } catch (IOException e) {
       logHelper.logError("Exception caught", e.getMessage());
@@ -188,11 +188,11 @@ public class XpmTaskWebHandler {
                                      .put(body)
                                      .build());
       ResponseBody responseBody = call.execute().body();
-      XpmTask xpmTask;
+      Task task;
       String respostring = responseBody.string();
       logHelper.logInfo("Response of editing a task", respostring);
-      xpmTask = mapper.readValue(respostring, new TypeReference<XpmTask>() {});
-      xpmTask.setId(xpmTask.getId());
+      task = mapper.readValue(respostring, new TypeReference<Task>() {});
+      task.setId(task.getId());
     } catch (IOException e) {
       logHelper.logError("Exception caught", e.getMessage());
     }

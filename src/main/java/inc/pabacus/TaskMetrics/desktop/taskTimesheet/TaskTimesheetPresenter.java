@@ -1,8 +1,8 @@
 package inc.pabacus.TaskMetrics.desktop.taskTimesheet;
 
 import com.jfoenix.controls.JFXDatePicker;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
+import inc.pabacus.TaskMetrics.api.tasks.Task;
+import inc.pabacus.TaskMetrics.api.tasks.TaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.xpmTimesheet.XpmTimesheetHandler;
@@ -31,7 +31,7 @@ public class TaskTimesheetPresenter implements Initializable {
   @FXML
   private AnchorPane mainPane;
   @FXML
-  private TableView<XpmTaskAdapter> taskTimesheet;
+  private TableView<TaskAdapter> taskTimesheet;
   @FXML
   private Label totalbillable;
   @FXML
@@ -79,7 +79,7 @@ public class TaskTimesheetPresenter implements Initializable {
 
   private void initTaskSheet() {
 
-    TableColumn<XpmTaskAdapter, String> project = new TableColumn<>("Job");
+    TableColumn<TaskAdapter, String> project = new TableColumn<>("Job");
     project.setCellValueFactory(param -> {
       // handle null value
       String getProject;
@@ -91,7 +91,7 @@ public class TaskTimesheetPresenter implements Initializable {
       return new SimpleStringProperty("" + getProject);
     });
 
-    TableColumn<XpmTaskAdapter, String> startTime = new TableColumn<>("Start Time");
+    TableColumn<TaskAdapter, String> startTime = new TableColumn<>("Start Time");
     startTime.setCellValueFactory(param -> {
       // handle null value
       String getStartTime;
@@ -103,7 +103,7 @@ public class TaskTimesheetPresenter implements Initializable {
       return new SimpleStringProperty("" + getStartTime);
     });
 
-    TableColumn<XpmTaskAdapter, String> endTime = new TableColumn<>("End Time");
+    TableColumn<TaskAdapter, String> endTime = new TableColumn<>("End Time");
     endTime.setCellValueFactory(param -> {
       // handle null value
       String getEndTime;
@@ -115,7 +115,7 @@ public class TaskTimesheetPresenter implements Initializable {
       return new SimpleStringProperty("" + getEndTime);
     });
 
-    TableColumn<XpmTaskAdapter, String> billable = new TableColumn<>("Billable?");
+    TableColumn<TaskAdapter, String> billable = new TableColumn<>("Billable?");
     billable.setCellValueFactory(param -> {
       // handle null value
       Boolean isBillable;
@@ -128,22 +128,22 @@ public class TaskTimesheetPresenter implements Initializable {
       return new SimpleStringProperty("" + (isBillable ? "Y" : "N"));
     });
 
-    TableColumn<XpmTaskAdapter, String> billableHours = new TableColumn<>("Hours Spent");
+    TableColumn<TaskAdapter, String> billableHours = new TableColumn<>("Hours Spent");
     billableHours.setCellValueFactory(param -> {
-      XpmTaskAdapter xpmTaskAdapter = param.getValue();
+      TaskAdapter taskAdapter = param.getValue();
       // handle null value
       String totalTimeSpent;
       try {
-        totalTimeSpent = xpmTaskAdapter.getTotalTimeSpent().get();
+        totalTimeSpent = taskAdapter.getTotalTimeSpent().get();
       } catch (Exception e) {
         totalTimeSpent = "";
       }
 
-//    Boolean isBillable = xpmTaskAdapter.getBillable().getValue();
+//    Boolean isBillable = taskAdapter.getBillable().getValue();
       return new SimpleStringProperty("" + totalTimeSpent);
     });
 
-    TableColumn<XpmTaskAdapter, String> percentCompleted = new TableColumn<>("Percentage Completed");
+    TableColumn<TaskAdapter, String> percentCompleted = new TableColumn<>("Percentage Completed");
     percentCompleted.setCellValueFactory(param -> {
       // handle null value
       String getPercentage;
@@ -155,7 +155,7 @@ public class TaskTimesheetPresenter implements Initializable {
       return new SimpleStringProperty("" + getPercentage);
     });
 
-    TableColumn<XpmTaskAdapter, String> task = new TableColumn<>("Task");
+    TableColumn<TaskAdapter, String> task = new TableColumn<>("Task");
     task.setCellValueFactory(param -> {
       // handle null value
       String getTask;
@@ -168,7 +168,7 @@ public class TaskTimesheetPresenter implements Initializable {
     });
 
 
-    TableColumn<XpmTaskAdapter, String> description = new TableColumn<>("Description");
+    TableColumn<TaskAdapter, String> description = new TableColumn<>("Description");
     description.setCellValueFactory(param -> {
       // handle null value
       String getDescription;
@@ -198,7 +198,7 @@ public class TaskTimesheetPresenter implements Initializable {
   }
 
   private void filterTaskTimesheet(String date) {
-    List<XpmTask> timesheets = allTimesheets()
+    List<Task> timesheets = allTimesheets()
         .stream()
         .filter(timesheet -> {
           String dateFinished = timesheet.getDateFinished();
@@ -208,15 +208,15 @@ public class TaskTimesheetPresenter implements Initializable {
     taskTimesheet.setItems(getXpmTimesheet(timesheets));
   }
 
-  private List<XpmTask> allTimesheets() {
+  private List<Task> allTimesheets() {
     return xpmTaskWebHandler.findAll();
   }
 
-  private ObservableList<XpmTaskAdapter> getXpmTimesheet(List<XpmTask> timesheets) {
-    List<XpmTaskAdapter> tasks = timesheets
+  private ObservableList<TaskAdapter> getXpmTimesheet(List<Task> timesheets) {
+    List<TaskAdapter> tasks = timesheets
         .stream()
         .filter(xpmTask -> xpmTask.getStatus().equals(Status.IN_PROGRESS.getStatus()) || xpmTask.getStatus().equals(Status.DONE.getStatus()))
-        .map(XpmTaskAdapter::new)
+        .map(TaskAdapter::new)
         .collect(Collectors.toList());
     return FXCollections.observableArrayList(tasks);
   }

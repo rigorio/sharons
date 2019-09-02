@@ -2,7 +2,7 @@ package inc.pabacus.TaskMetrics.api.tasks;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
+import inc.pabacus.TaskMetrics.api.tasks.dto.TaskCreationDTO;
 import inc.pabacus.TaskMetrics.api.tasks.dto.TaskEditDTO;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
@@ -154,6 +154,7 @@ public class TaskConnector {
     return tasks;
   }
 
+/*
   public Assignee getAssignee() {
     List<Assignee> assignees = new ArrayList<>();
     try {
@@ -176,6 +177,7 @@ public class TaskConnector {
     assignee = any.orElseGet(() -> new Assignee(1L, UsernameHolder.username));
     return assignee;
   }
+*/
 
   public void edit(TaskEditDTO taskEditDTO) {
     try {

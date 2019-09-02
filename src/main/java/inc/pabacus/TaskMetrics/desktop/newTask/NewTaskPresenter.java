@@ -3,7 +3,7 @@ package inc.pabacus.TaskMetrics.desktop.newTask;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
-import inc.pabacus.TaskMetrics.api.tasks.TaskCreationDTO;
+import inc.pabacus.TaskMetrics.api.tasks.dto.TaskCreationDTO;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;

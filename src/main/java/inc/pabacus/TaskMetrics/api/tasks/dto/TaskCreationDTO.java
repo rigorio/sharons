@@ -1,4 +1,4 @@
-package inc.pabacus.TaskMetrics.api.tasks;
+package inc.pabacus.TaskMetrics.api.tasks.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -4,7 +4,7 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.dto.TaskEditDTO;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
-import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.TaskTemplate;
 import inc.pabacus.TaskMetrics.desktop.jobs.JobTaskIdHolder;
 
 import java.util.Optional;
@@ -19,17 +19,17 @@ public class TaskUtil {
         .findAny();
 
     Job job = anyJob.get();
-    Optional<Task> anyTask = jobTaskHandler.allTasks().stream()
+    Optional<TaskTemplate> anyTask = jobTaskHandler.allTasks().stream()
         .filter(task -> task.getTask().equalsIgnoreCase(xpmTask.getTask()) &&
             task.getJobId().equals(job.getId()))
         .findAny();
-    Task task = anyTask.get();
+    TaskTemplate taskTemplate = anyTask.get();
     return TaskEditDTO.builder()
         .id(xpmTask.getId()) // entity framework works a bit differently with ids
         .clientId(job.getClientId())
         .jobId(job.getId())
         .description(xpmTask.getDescription())
-        .taskId(task.getId())
+        .taskId(taskTemplate.getId())
         .status(xpmTask.getStatus())
         .dateCreated(xpmTask.getDateCreated())
         .totalTimeSpent(xpmTask.getTotalTimeSpent())

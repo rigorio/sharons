@@ -7,7 +7,7 @@ import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
-import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.TaskTemplate;
 import inc.pabacus.TaskMetrics.utils.WindowChecker;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -104,16 +104,16 @@ public class NewTaskPresenter implements Initializable {
   @SuppressWarnings("all")
   private void changeTask(String project) {
     Job job = getSelectedJob(project);
-    List<Task> tasks = getTasks();
-    List<String> filteredTasks = tasks.stream()
+    List<TaskTemplate> taskTemplates = getTasks();
+    List<String> filteredTasks = taskTemplates.stream()
         .filter(task -> task.getJobId().equals(job.getId()))
-        .map(Task::getTask)
+        .map(TaskTemplate::getTask)
         .collect(Collectors.toList());
 //    taskCombobox.setItems(FXCollections.observableArrayList(filteredTasks));
-//    taskCombobox.getItems().add("Custom Task");
+//    taskCombobox.getItems().add("Custom TaskTemplate");
   }
 
-  private List<Task> getTasks() {
+  private List<TaskTemplate> getTasks() {
     return jobTaskHandler.allTasks();
   }
 

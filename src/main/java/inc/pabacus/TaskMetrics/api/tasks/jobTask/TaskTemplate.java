@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Task {
+public class TaskTemplate {
   private Long id;
   private String task;
   private Long jobId;

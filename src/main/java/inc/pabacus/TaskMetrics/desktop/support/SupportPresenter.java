@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.jfoenix.controls.JFXComboBox;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.TaskTemplate;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.api.leave.Leave;
@@ -13,7 +14,6 @@ import inc.pabacus.TaskMetrics.api.payslip.Payslip;
 import inc.pabacus.TaskMetrics.api.payslip.PayslipHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
-import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
 import inc.pabacus.TaskMetrics.api.user.UserHandler;
 import inc.pabacus.TaskMetrics.desktop.leaveViewer.LeaveHolder;
 import inc.pabacus.TaskMetrics.desktop.leaveViewer.LeaveViewerView;
@@ -78,12 +78,12 @@ public class SupportPresenter implements Initializable {
 
 //    Job action_center = getAction_center();
 
-//    List<Task> tasks = jobTaskHandler.allTasks().stream()
+//    List<TaskTemplate> tasks = jobTaskHandler.allTasks().stream()
 //        .filter(task -> task.getJobId().equals(action_center.getId()))
 //        .collect(Collectors.toList());
 //    tasks.forEach(task -> technicalBox.getItems().add(task.getTask()));
 
-    technicalBox.getItems().addAll(kwan().stream().map(Task::getTask).collect(Collectors.toList()));
+    technicalBox.getItems().addAll(getTechTaskTemplates().stream().map(TaskTemplate::getTask).collect(Collectors.toList()));
     Platform.runLater(() -> initTable());
     initTable();
 
@@ -91,32 +91,32 @@ public class SupportPresenter implements Initializable {
 
   }
 
-  private List<Task> kwan() {
+  private List<TaskTemplate> getTechTaskTemplates() {
     Job ts = jobTaskHandler.allJobs(false).stream()
         .filter(job -> job.getJob().equals("Action Center"))
         .findFirst()
         .get();
-    List<Task> techTasks = jobTaskHandler.allTasks()
+    List<TaskTemplate> techTaskTemplates = jobTaskHandler.allTasks()
         .stream()
         .filter(task -> task.getJobId().equals(ts.getId()))
         .collect(Collectors.toList());
-    return techTasks;
+    return techTaskTemplates;
   }
 
   @FXML
   public void sendReport() {
     String taskName = technicalBox.getValue();
 //    Job job = getAction_center();
-//    Task task = jobTaskHandler.allTasks().stream()
+//    TaskTemplate task = jobTaskHandler.allTasks().stream()
 //        .filter(t -> t.getJobId().equals(job.getId()) && t.getTask().equals("Technical Issue"))
 //        .findFirst()
 //        .get();
-    Task chosenTask = kwan()
+    TaskTemplate chosenTaskTemplate = getTechTaskTemplates()
         .stream()
         .filter(t -> t.getTask().equals(taskName))
         .findFirst()
         .get();
-    jobTaskHandler.createJobTask(chosenTask.getJobId(), chosenTask.getId(), taskName);
+    jobTaskHandler.createJobTask(chosenTaskTemplate.getJobId(), chosenTaskTemplate.getId(), taskName);
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     alert.setTitle("Success");
     alert.setHeaderText(null);

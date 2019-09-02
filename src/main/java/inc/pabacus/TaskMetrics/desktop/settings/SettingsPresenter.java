@@ -14,7 +14,7 @@ import inc.pabacus.TaskMetrics.api.software.SoftwareHandler;
 import inc.pabacus.TaskMetrics.api.software.SoftwareService;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
-import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
+import inc.pabacus.TaskMetrics.api.tasks.jobTask.TaskTemplate;
 import inc.pabacus.TaskMetrics.desktop.newTask.DefaultTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
@@ -116,10 +116,10 @@ public class SettingsPresenter implements Initializable {
     if (!any.isPresent())
       System.out.println("log this");
     Job job = any.get();
-    List<Task> tasks = jobTaskHandler.allTasks();
-    List<String> filteredTasks = tasks.stream()
+    List<TaskTemplate> taskTemplates = jobTaskHandler.allTasks();
+    List<String> filteredTasks = taskTemplates.stream()
         .filter(task -> task.getJobId().equals(job.getId()))
-        .map(Task::getTask)
+        .map(TaskTemplate::getTask)
         .collect(Collectors.toList());
     taskBox.setItems(FXCollections.observableArrayList(filteredTasks));
     taskBox.getItems().add("None");

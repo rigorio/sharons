@@ -97,20 +97,20 @@ public class JobTaskHandler {
     return jobs;
   }
 
-  public List<Task> allTasks() {
-    List<Task> tasks = new ArrayList<>();
+  public List<TaskTemplate> allTasks() {
+    List<TaskTemplate> taskTemplates = new ArrayList<>();
     try {
       Call call = client.newCall(new Request.Builder()
                                      .url(HOST + "/api/jobs/tasks")
                                      .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .build());
       ResponseBody responseBody = call.execute().body();
-      tasks = mapper.readValue(responseBody.string(), new TypeReference<List<Task>>() {});
+      taskTemplates = mapper.readValue(responseBody.string(), new TypeReference<List<TaskTemplate>>() {});
     } catch (
         IOException e) {
       logger.warn(e.getMessage());
     }
-    return tasks;
+    return taskTemplates;
   }
 
   private class JobTaskCreationEntity {

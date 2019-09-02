@@ -1,7 +1,7 @@
 package inc.pabacus.TaskMetrics.utils;
 
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
+import inc.pabacus.TaskMetrics.api.tasks.dto.TaskEditDTO;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
@@ -9,15 +9,10 @@ import inc.pabacus.TaskMetrics.desktop.jobs.JobTaskIdHolder;
 
 import java.util.Optional;
 
-public class XpmHelper {
+public class TaskUtil {
 
-  private JobTaskHandler jobTaskHandler;
-
-  public XpmHelper() {
-    jobTaskHandler = new JobTaskHandler();
-  }
-
-  public XpmTaskPostEntity helpMe(XpmTask xpmTask) {
+  public static TaskEditDTO convertTaskToEditDTO(XpmTask xpmTask) {
+    JobTaskHandler jobTaskHandler = new JobTaskHandler();
     String jobName = xpmTask.getJob();
     Optional<Job> anyJob = jobTaskHandler.allJobs(true).stream()
         .filter(job -> job.getJob().equals(jobName))
@@ -29,7 +24,7 @@ public class XpmHelper {
             task.getJobId().equals(job.getId()))
         .findAny();
     Task task = anyTask.get();
-    return XpmTaskPostEntity.builder()
+    return TaskEditDTO.builder()
         .id(xpmTask.getId()) // entity framework works a bit differently with ids
         .clientId(job.getClientId())
         .jobId(job.getId())

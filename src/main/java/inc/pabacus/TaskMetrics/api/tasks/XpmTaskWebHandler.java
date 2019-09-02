@@ -3,6 +3,7 @@ package inc.pabacus.TaskMetrics.api.tasks;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inc.pabacus.TaskMetrics.api.generateToken.UsernameHolder;
+import inc.pabacus.TaskMetrics.api.tasks.dto.TaskEditDTO;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.utils.logs.LogHelper;
@@ -32,51 +33,51 @@ public class XpmTaskWebHandler {
     HOST = new HostConfig().getHost();
     logHelper = new LogHelper(logger);
   }
-
-  @SuppressWarnings("all")
-  public XpmTask save(XpmTask task) {
-    try {
-      XpmTaskPostEntity xpmDto = new XpmTaskPostEntity();
-      logHelper.logInfo("Saving task", xpmDto);
-      String jsonString = mapper.writeValueAsString(xpmDto);
-      RequestBody body = RequestBody.create(JSON, jsonString);
-      Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/user/timesheet")
-                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
-                                     .post(body)
-                                     .build());
-      ResponseBody responseBody = call.execute().body();
-      String responseString = responseBody.string();
-      logHelper.logInfo("Response of save", responseString);
-      XpmTask xpmTask;
-      xpmTask = mapper.readValue(responseString, new TypeReference<XpmTask>() {});
-      xpmTask.setId(xpmTask.getId());
-    } catch (IOException e) {
-      logHelper.logError("Exception caught", e.getMessage());
-    }
-    return task;
-  }
-
-  public void save(XpmTaskPostEntity dto_save) {
-    try {
-      logHelper.logInfo("Saving xpmtaskpost entity", dto_save);
-      String jsonString = mapper.writeValueAsString(dto_save);
-      RequestBody body = RequestBody.create(JSON, jsonString);
-      Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/user/timesheet")
-                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
-                                     .post(body)
-                                     .build());
-      ResponseBody responseBody = call.execute().body();
-      String responseString = responseBody.string();
-      logHelper.logInfo("Response of saving xpmtaskpost entity", responseString);
+//
+//  @SuppressWarnings("all")
+//  public XpmTask save(XpmTask task) {
+//    try {
+//      XpmTaskPostEntity xpmDto = new XpmTaskPostEntity();
+//      logHelper.logInfo("Saving task", xpmDto);
+//      String jsonString = mapper.writeValueAsString(xpmDto);
+//      RequestBody body = RequestBody.create(JSON, jsonString);
+//      Call call = client.newCall(new Request.Builder()
+//                                     .url(HOST + "/api/user/timesheet")
+//                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
+//                                     .post(body)
+//                                     .build());
+//      ResponseBody responseBody = call.execute().body();
+//      String responseString = responseBody.string();
+//      logHelper.logInfo("Response of save", responseString);
 //      XpmTask xpmTask;
-//      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+//      xpmTask = mapper.readValue(responseString, new TypeReference<XpmTask>() {});
 //      xpmTask.setId(xpmTask.getId());
-    } catch (IOException e) {
-      logHelper.logError("Exception caught", e.getMessage());
-    }
-  }
+//    } catch (IOException e) {
+//      logHelper.logError("Exception caught", e.getMessage());
+//    }
+//    return task;
+//  }
+//
+//  public void save(XpmTaskPostEntity dto_save) {
+//    try {
+//      logHelper.logInfo("Saving xpmtaskpost entity", dto_save);
+//      String jsonString = mapper.writeValueAsString(dto_save);
+//      RequestBody body = RequestBody.create(JSON, jsonString);
+//      Call call = client.newCall(new Request.Builder()
+//                                     .url(HOST + "/api/user/timesheet")
+//                                     .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
+//                                     .post(body)
+//                                     .build());
+//      ResponseBody responseBody = call.execute().body();
+//      String responseString = responseBody.string();
+//      logHelper.logInfo("Response of saving xpmtaskpost entity", responseString);
+////      XpmTask xpmTask;
+////      xpmTask = mapper.readValue(responseBody.string(), new TypeReference<XpmTask>() {});
+////      xpmTask.setId(xpmTask.getId());
+//    } catch (IOException e) {
+//      logHelper.logError("Exception caught", e.getMessage());
+//    }
+//  }
 
   public void otherSave(TaskCreationDTO dto) {
     try {
@@ -176,13 +177,13 @@ public class XpmTaskWebHandler {
     return assignee;
   }
 
-  public void edit(XpmTaskPostEntity helpMe) {
+  public void edit(TaskEditDTO taskEditDTO) {
     try {
-      logHelper.logInfo("Editing a task", helpMe);
-      String jsonString = mapper.writeValueAsString(helpMe);
+      logHelper.logInfo("Editing a task", taskEditDTO);
+      String jsonString = mapper.writeValueAsString(taskEditDTO);
       RequestBody body = RequestBody.create(JSON, jsonString);
       Call call = client.newCall(new Request.Builder()
-                                     .url(HOST + "/api/user/timesheet/" + helpMe.getId())
+                                     .url(HOST + "/api/user/timesheet/" + taskEditDTO.getId())
                                      .addHeader("Authorization", stringCacheService.get(CacheKey.TRIBELY_TOKEN))
                                      .put(body)
                                      .build());

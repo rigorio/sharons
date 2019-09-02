@@ -7,8 +7,8 @@ import inc.pabacus.TaskMetrics.api.activity.Record;
 import inc.pabacus.TaskMetrics.api.activity.RecordType;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
 import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
+import inc.pabacus.TaskMetrics.api.tasks.dto.TaskEditDTO;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import inc.pabacus.TaskMetrics.api.timesheet.DailyLogService;
 import inc.pabacus.TaskMetrics.api.timesheet.handlers.HRISLogHandler;
@@ -18,8 +18,8 @@ import inc.pabacus.TaskMetrics.desktop.breakTimer.BreakView;
 import inc.pabacus.TaskMetrics.desktop.settings.ExtendConfiguration;
 import inc.pabacus.TaskMetrics.utils.BeanManager;
 import inc.pabacus.TaskMetrics.utils.GuiManager;
+import inc.pabacus.TaskMetrics.utils.TaskUtil;
 import inc.pabacus.TaskMetrics.utils.TimerService;
-import inc.pabacus.TaskMetrics.utils.XpmHelper;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
 import inc.pabacus.TaskMetrics.utils.logs.LogHelper;
@@ -320,8 +320,8 @@ public class TrackerPresenter implements Initializable {
     logHelper.logInfo("Tracker closed", xpmTask);
     if (xpmTask.getStartTime() == null)
       xpmTask.setStartTime(startTime);
-    XpmTaskPostEntity helpMe = new XpmHelper().helpMe(xpmTask);
-    xpmTaskWebHandler.edit(helpMe);
+    TaskEditDTO taskEditDTO = TaskUtil.convertTaskToEditDTO(xpmTask);
+    xpmTaskWebHandler.edit(taskEditDTO);
 //    xpmTaskWebHandler.save(xpmTask);
     activityHandler.saveRecord(Record.builder()
                                    .recordType(RecordType.TASK)

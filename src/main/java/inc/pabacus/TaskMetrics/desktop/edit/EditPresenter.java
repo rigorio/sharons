@@ -1,44 +1,9 @@
 package inc.pabacus.TaskMetrics.desktop.edit;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
-import inc.pabacus.TaskMetrics.api.project.ProjectHandler;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTask;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskAdapter;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskPostEntity;
-import inc.pabacus.TaskMetrics.api.tasks.XpmTaskWebHandler;
-import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValue;
-import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
-import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
-import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
-import inc.pabacus.TaskMetrics.api.tasks.jobTask.Task;
-import inc.pabacus.TaskMetrics.api.tasks.options.Status;
-import inc.pabacus.TaskMetrics.utils.XpmHelper;
-import javafx.application.Platform;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextFormatter;
-import javafx.stage.Stage;
-import okhttp3.MediaType;
-
-import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 @SuppressWarnings("All")
-public class EditPresenter implements Initializable {
+public class EditPresenter /*implements Initializable*/ {
 
+/*
   @FXML
   private JFXTextField dateCreatedField;
   @FXML
@@ -238,7 +203,7 @@ public class EditPresenter implements Initializable {
     if (id1 != null)
       xpmTask.setId(id1.get());
 
-    XpmTaskPostEntity xpmTaskPostEntity = new XpmHelper().helpMe(xpmTask);
+    XpmTaskPostEntity xpmTaskPostEntity = new TaskUtil().helpMe(xpmTask);
     xpmTaskHandler.edit(xpmTaskPostEntity);
 //    xpmTaskHandler.save(xpmTask);
 
@@ -282,5 +247,6 @@ public class EditPresenter implements Initializable {
 //      descriptionField.setLayoutY(246);
     }
   }
+*/
 
 }

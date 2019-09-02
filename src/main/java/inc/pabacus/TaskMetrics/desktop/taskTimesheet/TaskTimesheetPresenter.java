@@ -6,6 +6,7 @@ import inc.pabacus.TaskMetrics.api.tasks.TaskAdapter;
 import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
 import inc.pabacus.TaskMetrics.api.tasks.options.Status;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -86,6 +87,12 @@ public class TaskTimesheetPresenter implements Initializable {
       }
       return new SimpleStringProperty("" + getProject);
     });
+
+    TableColumn<TaskAdapter, String> dateCreated = new TableColumn<>("Date Created");
+    dateCreated.setCellValueFactory(param -> param.getValue().getDateCreated());
+
+    TableColumn<TaskAdapter, String> dateCompleted = new TableColumn<>("Date Finished");
+    dateCompleted.setCellValueFactory(param -> param.getValue().getDateFinished());
 
     TableColumn<TaskAdapter, String> startTime = new TableColumn<>("Start Time");
     startTime.setCellValueFactory(param -> {
@@ -177,7 +184,7 @@ public class TaskTimesheetPresenter implements Initializable {
     });
 
 
-    taskTimesheet.getColumns().addAll(project, startTime, endTime, billable,
+    taskTimesheet.getColumns().addAll(project, dateCreated, dateCompleted, startTime, endTime, billable,
                                       billableHours, percentCompleted, task, description);
     initTaskTimeSheet();
 

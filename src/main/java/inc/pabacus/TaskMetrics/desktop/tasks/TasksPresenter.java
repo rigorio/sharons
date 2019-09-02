@@ -90,8 +90,8 @@ public class TasksPresenter implements Initializable {
     //Start button will be disable when you click it without choosing a task
     startLink.disableProperty().bind(Bindings.isEmpty(tasksTable.getSelectionModel().getSelectedItems()));
 
-    statusBox.setValue("All");
-    timeBox.setValue("Today");
+    statusBox.setValue("Not Completed");
+    timeBox.setValue("All");
 
     TableColumn<TaskAdapter, String> dateCreated = new TableColumn<>("Date Created");
     dateCreated.setCellValueFactory(param -> param.getValue().getDateCreated());
@@ -115,7 +115,8 @@ public class TasksPresenter implements Initializable {
     tasksTable.getColumns().addAll(dateCreated, projectName, task,
                                    status, billableHours, description);
 
-    initTasksTable();
+//    initTasksTable();
+    updateTable();
 //    filtering(); Search Function
 //    initTaskSheet(); time sheet has been extracted
     refreshingService(); //deactivated for maintenance
@@ -124,6 +125,7 @@ public class TasksPresenter implements Initializable {
       add("In Progress");
       add("Pending");
       add("Done");
+      add("Not Completed");
       add("All");
     }});
 
@@ -177,7 +179,9 @@ public class TasksPresenter implements Initializable {
   public void updateTable() {
     String value = statusBox.getValue();
     String time = timeBox.getValue();
-    ObservableList<TaskAdapter> tasksByStatus = value.equalsIgnoreCase("All") && time.equalsIgnoreCase("All") ? FXCollections.observableArrayList(getAllTasks()) : getTasksByStatus();
+    ObservableList<TaskAdapter> tasksByStatus = value.equalsIgnoreCase("All") && time.equalsIgnoreCase("All")
+        ? FXCollections.observableArrayList(getAllTasks())
+        : getTasksByStatus();
     tasksTable.setItems(tasksByStatus);
   }
 
@@ -260,16 +264,12 @@ public class TasksPresenter implements Initializable {
     switch (time) {
       case "Last Week":
         backLogs = getAllTasks().stream()
-            .filter(backLog -> {
-              return lovelyDay(status, backLog, 7);
-            })
+            .filter(backLog -> lovelyDay(status, backLog, 7))
             .collect(Collectors.toList());
         break;
       case "Last Month":
         backLogs = getAllTasks().stream()
-            .filter(backLog -> {
-              return lovelyDay(status, backLog, 30);
-            })
+            .filter(backLog -> lovelyDay(status, backLog, 30))
             .collect(Collectors.toList());
         break;
       case "Current Month":
@@ -282,6 +282,8 @@ public class TasksPresenter implements Initializable {
               Month getDate = LocalDate.parse(backLog.getDateCreated().get()).getMonth();
               if (status.equalsIgnoreCase("all"))
                 return date.equals(getDate);
+              if (status.equalsIgnoreCase("Not Completed"))
+                return date.equals(getDate) && !currentSTatus.get().equalsIgnoreCase("Done");
               return date.equals(getDate) && currentSTatus.get().equalsIgnoreCase(status);
             })
             .collect(Collectors.toList());
@@ -294,6 +296,8 @@ public class TasksPresenter implements Initializable {
                 currentSTatus = new SimpleStringProperty("");
               if (status.equalsIgnoreCase("all"))
                 return backLog.getDateCreated().get().equals(LocalDate.now().toString());
+              if (status.equalsIgnoreCase("Not Completed"))
+                return backLog.getDateCreated().get().equals(LocalDate.now().toString()) && !currentSTatus.get().equalsIgnoreCase("Done");
               return backLog.getDateCreated().get().equals(LocalDate.now().toString()) && currentSTatus.get().equalsIgnoreCase(status);
 
             })
@@ -306,6 +310,8 @@ public class TasksPresenter implements Initializable {
               StringProperty currentSTatus = backlog.getStatus();
               if (currentSTatus == null)
                 currentSTatus = new SimpleStringProperty("");
+              if (status.equalsIgnoreCase("Not Completed"))
+                return !currentSTatus.get().equalsIgnoreCase("Done");
               return currentSTatus.get().equalsIgnoreCase(status);
             })
             .collect(Collectors.toList());
@@ -322,6 +328,8 @@ public class TasksPresenter implements Initializable {
     LocalDate getDate = LocalDate.parse(backLog.getDateCreated().get());
     if (status.equalsIgnoreCase("all"))
       return getDate.isAfter(date);
+    if (status.equalsIgnoreCase("Not Completed"))
+      return getDate.isAfter(date) && !currentSTatus.get().equalsIgnoreCase("Done");
     return getDate.isAfter(date) && currentSTatus.get().equalsIgnoreCase(status);
   }
 
@@ -329,7 +337,7 @@ public class TasksPresenter implements Initializable {
     List<TableColumn<TaskAdapter, ?>> sortOrder = new ArrayList<>(tasksTable.getSortOrder());
     int i = tasksTable.getSelectionModel().getSelectedIndex();
     Platform.runLater(() -> {
-      initTasksTable();
+      updateTable();
 //      refreshTables();
       tasksTable.getSortOrder().clear();
       tasksTable.getSortOrder().addAll(sortOrder);

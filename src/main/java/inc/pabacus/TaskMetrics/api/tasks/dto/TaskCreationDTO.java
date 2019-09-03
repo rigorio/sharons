@@ -15,4 +15,6 @@ public class TaskCreationDTO {
   private long jobId;
   private double estimatedTime;
   private long userId;
+  private boolean createTemplate;
+  private Long jobTaskId;
 }

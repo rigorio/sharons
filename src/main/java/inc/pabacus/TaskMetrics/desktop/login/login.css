@@ -1,8 +1,0 @@
-#login-background {
-    -fx-background-color: whitesmoke;
-    -fx-background-image: url("/img/laptop-one-side.jpg");
-    -fx-background-size: cover;
-}
-#signIn:hover {
-          -fx-cursor: hand;
-}

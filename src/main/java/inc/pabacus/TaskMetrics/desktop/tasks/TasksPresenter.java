@@ -12,6 +12,7 @@ import inc.pabacus.TaskMetrics.desktop.edit.EditView;
 import inc.pabacus.TaskMetrics.desktop.edit.EditableTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.jobs.JobTaskIdHolder;
 import inc.pabacus.TaskMetrics.desktop.jobs.JobsView;
+import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskPresenter;
 import inc.pabacus.TaskMetrics.desktop.newTask.NewTaskView;
 import inc.pabacus.TaskMetrics.desktop.taskTimesheet.TaskTimesheetView;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
@@ -238,6 +239,7 @@ public class TasksPresenter implements Initializable {
   public void newTask() {
     if (!WindowChecker.isNewTaskWindowOpen()) {
       WindowChecker.setNewTaskWindowOpen(true);
+      NewTaskPresenter.jobId = JobTaskIdHolder.getId();
       GuiManager.getInstance().displayViewWithOnCloseRequest(new NewTaskView(), () -> WindowChecker.setNewTaskWindowOpen(false));
     }
   }

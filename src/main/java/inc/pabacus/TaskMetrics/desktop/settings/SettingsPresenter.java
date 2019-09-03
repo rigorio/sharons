@@ -19,23 +19,20 @@ import inc.pabacus.TaskMetrics.desktop.newTask.DefaultTaskHolder;
 import inc.pabacus.TaskMetrics.desktop.tracker.AlwaysOnTopCheckerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.CountdownTimerConfiguration;
 import inc.pabacus.TaskMetrics.desktop.tracker.TrackHandler;
-import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import inc.pabacus.TaskMetrics.utils.cacheService.CacheKey;
 import inc.pabacus.TaskMetrics.utils.cacheService.StringCacheService;
+import inc.pabacus.TaskMetrics.utils.web.HostConfig;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Pair;
 import lombok.Data;
 
@@ -247,9 +244,16 @@ public class SettingsPresenter implements Initializable {
 
   @FXML
   public void connectHureyHost() {
+    String hureyHost = hureyHostTextBox.getText();
+    if (hureyHost == null || hureyHost.length() < 5) {
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setContentText("Enter the hurey host in the textbox");
+      alert.showAndWait();
+      return;
+    }
     StringCacheService cacheService = new StringCacheService();
-    hostConfig.updateHureyHost(hureyHostTextBox.getText());
-    cacheService.put(CacheKey.HUREY_HOST, hureyHostTextBox.getText());
+    hostConfig.updateHureyHost(hureyHost);
+    cacheService.put(CacheKey.HUREY_HOST, hureyHost);
     Pair<String, String> tribelyLogin = showTribelyLogin();
     String username = tribelyLogin.getKey();
     String password = tribelyLogin.getValue();

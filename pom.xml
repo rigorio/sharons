@@ -16,7 +16,7 @@
 
   <properties>
     <java.version>1.8</java.version>
-    <mainClass>inc.pabacus.TaskMetrics.SharonsApp</mainClass>
+    <mainClass>rigor.io.Sharons.SharonsApp</mainClass>
   </properties>
 
   <dependencies>
@@ -120,7 +120,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>inc.pabacus.TaskMetrics.SharonsApp</mainClass>
+          <mainClass>rigor.io.Sharons.SharonsApp</mainClass>
         </configuration>
       </plugin>
     </plugins>

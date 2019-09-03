@@ -1,6 +1,6 @@
-package inc.pabacus.TaskMetrics;
+package rigor.io.Sharons;
 
-import inc.pabacus.TaskMetrics.utils.GuiManager;
+import rigor.io.Sharons.utils.GuiManager;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -16,7 +16,7 @@ public class SharonsApp extends Application {
   @Override
   public void start(Stage stage) {
     stage.setResizable(true);
-    stage.getIcons().add(new Image("/img/PabacusLogo.png"));
+//    stage.getIcons().add(new Image("/img/.png"));
     MANAGER.setPrimaryStage(stage);
 //    MANAGER.changeView(new LoginView());
   }

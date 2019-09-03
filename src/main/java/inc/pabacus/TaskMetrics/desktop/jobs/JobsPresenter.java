@@ -14,12 +14,12 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.apache.log4j.Logger;
-import org.hibernate.cfg.JPAIndexHolder;
 
 import java.net.URL;
 import java.util.List;
@@ -64,6 +64,9 @@ public class JobsPresenter implements Initializable {
         .get();
     jobTaskHandler.createJobTask(job.getId(), null, null);
     init();
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setContentText("Job Created!");
+    alert.showAndWait();
   }
 
   private void initialize() {

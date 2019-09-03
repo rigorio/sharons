@@ -247,6 +247,9 @@ public class SettingsPresenter implements Initializable {
     String hureyHost = hureyHostTextBox.getText();
     if (hureyHost == null || hureyHost.length() < 5) {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("Host not set");
+      alert.setHeaderText(null);
+      alert.setGraphic(null);
       alert.setContentText("Enter the hurey host in the textbox");
       alert.showAndWait();
       return;

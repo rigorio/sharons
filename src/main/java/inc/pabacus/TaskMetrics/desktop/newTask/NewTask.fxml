@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="238.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+<AnchorPane prefHeight="280.0" prefWidth="377.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="inc.pabacus.TaskMetrics.desktop.newTask.NewTaskPresenter">
   <Label layoutX="7.0" layoutY="7.0" prefHeight="40.0" prefWidth="172.0" text="Insert a new Task">
@@ -13,18 +13,19 @@
       <Font size="14.0"/>
     </font>
   </Label>
-  <HBox layoutY="44.0" prefHeight="11.0" prefWidth="359.0" style="-fx-background-color: #E65100;"/>
+  <HBox layoutY="44.0" prefHeight="11.0" prefWidth="376.0" style="-fx-background-color: #E65100;"/>
   <!--  <Label layoutX="87.0" layoutY="72.0" prefHeight="25.0" prefWidth="98.0" text="Job"/>-->
   <Label fx:id="descriptionLabel" layoutX="26.0" layoutY="159.0" prefHeight="25.0" prefWidth="98.0"
          text="Description:"/>
   <Label layoutX="26.0" layoutY="71.0" prefHeight="25.0" prefWidth="98.0" text="Task"/>
-  <JFXTextField fx:id="descriptionField" layoutX="129.0" layoutY="157.0" prefHeight="25.0" prefWidth="202.0"/>
-  <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="157.0" layoutY="199.0" onAction="#save" prefHeight="32.0"
+  <JFXTextField fx:id="descriptionField" layoutX="129.0" layoutY="157.0" prefHeight="31.0" prefWidth="235.0"/>
+  <JFXButton fx:id="saveButton" buttonType="RAISED" layoutX="188.0" layoutY="234.0" onAction="#save" prefHeight="32.0"
              prefWidth="82.0" style="-fx-background-color: #E65100;" text="Save" textFill="WHITE"/>
-  <JFXButton fx:id="closeButton" layoutX="249.0" layoutY="199.0" onAction="#close" prefHeight="32.0" prefWidth="82.0"
+  <JFXButton fx:id="closeButton" layoutX="280.0" layoutY="234.0" onAction="#close" prefHeight="32.0" prefWidth="82.0"
              style="-fx-background-color: #D2D2D2;" text="Close" textFill="WHITE"/>
-  <JFXTextField fx:id="taskTextBox" layoutX="129.0" layoutY="70.0" prefHeight="25.0"
-               prefWidth="202.0"/>
+  <JFXTextField fx:id="taskTextBox" layoutX="129.0" layoutY="70.0" prefHeight="31.0" prefWidth="235.0"/>
   <Label fx:id="estimateLabel" layoutX="26.0" layoutY="118.0" prefHeight="17.0" prefWidth="82.0" text="Estimate Time:"/>
-  <JFXTextField fx:id="estimateField" layoutX="129.0" layoutY="114.0" prefHeight="25.0" prefWidth="202.0"/>
+  <JFXTextField fx:id="estimateField" layoutX="129.0" layoutY="114.0" prefHeight="31.0" prefWidth="235.0"/>
+  <JFXCheckBox fx:id="saveAsTemplateBox" layoutX="129.0" layoutY="198.0" mnemonicParsing="false"
+               text="Add to all similar jobs"/>
 </AnchorPane>

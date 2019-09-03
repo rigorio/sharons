@@ -41,7 +41,7 @@ public class SoftwareServiceAPI {
         softwareService = new SoftwareHandler();
         List<SoftwareData> allSoftware = softwareService.getSoftware();
         SoftwareDataEntity entity = new SoftwareDataEntity();
-        entity.setRunningSoftwares(allSoftware);
+        entity.setSoftwares(allSoftware);
         entity.setTimeStamp(LocalDateTime.now().toString());
         MediaType mediaType = MediaType.parse("application/json");
         ObjectMapper mapper = new ObjectMapper();
@@ -51,7 +51,7 @@ public class SoftwareServiceAPI {
         OkHttpClient client = SslUtil.getSslOkHttpClient();
 
         Request request = new Request.Builder()
-            .url(HOST + "/api/usersoftwaresapi")
+            .url(HOST + "/api/software")
             .addHeader("content-type", "application/json")
             .addHeader("Authorization", new StringCacheService().get(CacheKey.TRIBELY_TOKEN))
             .post(requestBody)

@@ -1,10 +1,11 @@
 package inc.pabacus.TaskMetrics.desktop.newTask;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
 import inc.pabacus.TaskMetrics.api.tasks.TaskConnector;
-import inc.pabacus.TaskMetrics.api.tasks.dto.TaskCreationDTO;
 import inc.pabacus.TaskMetrics.api.tasks.businessValue.BusinessValueHandler;
+import inc.pabacus.TaskMetrics.api.tasks.dto.TaskCreationDTO;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.Job;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.JobTaskHandler;
 import inc.pabacus.TaskMetrics.api.tasks.jobTask.TaskTemplate;
@@ -28,6 +29,10 @@ import java.util.stream.Collectors;
 
 public class NewTaskPresenter implements Initializable {
 
+  public static Long jobId;
+
+  @FXML
+  private JFXCheckBox saveAsTemplateBox;
   @FXML
   private JFXTextField taskTextBox;
   @FXML
@@ -38,7 +43,7 @@ public class NewTaskPresenter implements Initializable {
   private JFXTextField customTaskField;
   @FXML
   private JFXTextField descriptionField;
-//  @FXML
+  //  @FXML
 //  private JFXComboBox<String> taskCombobox;
   @FXML
   private JFXButton saveButton;
@@ -106,6 +111,7 @@ public class NewTaskPresenter implements Initializable {
     Job job = getSelectedJob(project);
     List<TaskTemplate> taskTemplates = getTasks();
     List<String> filteredTasks = taskTemplates.stream()
+        .filter(task -> task.getJobId() != null)
         .filter(task -> task.getJobId().equals(job.getId()))
         .map(TaskTemplate::getTask)
         .collect(Collectors.toList());
@@ -150,7 +156,7 @@ public class NewTaskPresenter implements Initializable {
 //      alert.showAndWait();
 //      return;
 //    }
-
+    boolean saveAsTemplate = saveAsTemplateBox.isSelected();
     String description = descriptionField.getText(); // actually task of task
 //    Boolean billable = Boolean.valueOf(taskCombobox.getValue());
     String estimateFields = estimateField.getText();
@@ -185,6 +191,8 @@ public class NewTaskPresenter implements Initializable {
         .jobId(job.getId())
         .description(description)
         .estimatedTime(Double.parseDouble(estimateFields))
+        .createTemplate(saveAsTemplate)
+        .jobTaskId(jobId)
         .build();
     taskConnector.save(dto);
 

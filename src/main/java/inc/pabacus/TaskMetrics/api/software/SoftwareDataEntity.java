@@ -11,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class SoftwareDataEntity {
   private String timeStamp;
-  private List<SoftwareData> runningSoftwares;
+  private List<SoftwareData> softwares;
 }

@@ -10,11 +10,7 @@ public interface GownRepository {
 
   Optional<Gown> findById(Long id);
 
-  List<Gown> costsMoreThan(Double price);
+  void delete(Long id);
 
-  List<Gown> costsLessThan(Double price);
-
-  List<Gown> dueOn(String date);
-
-  List<Gown> rentedOn(String date);
+  void delete(Gown gown);
 }

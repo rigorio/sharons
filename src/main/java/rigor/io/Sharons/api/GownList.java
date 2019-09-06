@@ -25,30 +25,12 @@ public class GownList implements GownRepository {
   }
 
   @Override
-  public List<Gown> costsMoreThan(Double price) {
-    return gowns.stream()
-        .filter(gown -> gown.getPrice() >= price)
-        .collect(Collectors.toList());
+  public void delete(Long id) {
+
   }
 
   @Override
-  public List<Gown> costsLessThan(Double price) {
-    return gowns.stream()
-        .filter(gown -> gown.getPrice() <= price)
-        .collect(Collectors.toList());
-  }
+  public void delete(Gown gown) {
 
-  @Override
-  public List<Gown> dueOn(String date) {
-    return gowns.stream()
-        .filter(gown -> gown.getDueDate().equals(date))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public List<Gown> rentedOn(String date) {
-    return gowns.stream()
-        .filter(gown -> gown.getDateRented().equals(date))
-        .collect(Collectors.toList());
   }
 }

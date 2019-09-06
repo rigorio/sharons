@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="rigor.io.Sharons.dashboard.DashboardPresenter"
-            prefHeight="400.0" prefWidth="600.0">
 
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="505.0" prefWidth="890.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="rigor.io.Sharons.dashboard.DashboardPresenter">
+  <TableView fx:id="gownsTable" layoutX="14.0" layoutY="119.0" prefHeight="376.0" prefWidth="864.0">
+  </TableView>
 </AnchorPane>

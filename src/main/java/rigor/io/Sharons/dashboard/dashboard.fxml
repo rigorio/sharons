@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane prefHeight="505.0" prefWidth="890.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="rigor.io.Sharons.dashboard.DashboardPresenter">
-  <TableView fx:id="gownsTable" layoutX="14.0" layoutY="119.0" prefHeight="376.0" prefWidth="864.0">
-  </TableView>
+  <BorderPane layoutY="73.0" prefHeight="647.0" prefWidth="925.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="73.0">
+    <center>
+      <TableView fx:id="gownsTable" prefHeight="695.0" prefWidth="799.0"
+                 style="-fx-background-color: transparent; -fx-border-color: lightgray;" BorderPane.alignment="CENTER">
+        <columnResizePolicy>
+          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <BorderPane.margin>
+          <Insets bottom="25.0" left="25.0" right="25.0"/>
+        </BorderPane.margin>
+      </TableView>
+    </center>
+  </BorderPane>
 </AnchorPane>

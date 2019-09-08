@@ -20,6 +20,21 @@ public class GownHandler implements GownService {
   }
 
   @Override
+  public Gown add(Gown gown) {
+    return null;
+  }
+
+  @Override
+  public Gown edit(Gown gown) {
+    return null;
+  }
+
+  @Override
+  public Gown delete(Gown gown) {
+    return null;
+  }
+
+  @Override
   public Optional<Gown> findById(Long id) {
     return gownRepository.findById(id);
   }

@@ -1,10 +1,12 @@
 package rigor.io.Sharons;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
+import rigor.io.Sharons.api.gown.repository.GownListRepository;
+import rigor.io.Sharons.api.gown.repository.GownRepository;
+import rigor.io.Sharons.api.gown.repository.MockGownDataProvider;
 import rigor.io.Sharons.dashboard.DashboardView;
 import rigor.io.Sharons.utils.GuiManager;
-import javafx.application.Application;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 
 public class SharonsApp extends Application {
 
@@ -16,6 +18,8 @@ public class SharonsApp extends Application {
 
   @Override
   public void start(Stage stage) {
+    GownRepository gownRepository = new GownListRepository();
+    gownRepository.setList(MockGownDataProvider.mockGowns());
     stage.setResizable(true);
 //    stage.getIcons().add(new Image("/img/.png"));
     MANAGER.setPrimaryStage(stage);

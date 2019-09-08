@@ -1,5 +1,6 @@
 package rigor.io.Sharons;
 
+import rigor.io.Sharons.dashboard.DashboardView;
 import rigor.io.Sharons.utils.GuiManager;
 import javafx.application.Application;
 import javafx.scene.image.Image;
@@ -18,6 +19,7 @@ public class SharonsApp extends Application {
     stage.setResizable(true);
 //    stage.getIcons().add(new Image("/img/.png"));
     MANAGER.setPrimaryStage(stage);
+    MANAGER.changeView(new DashboardView());
 //    MANAGER.changeView(new LoginView());
   }
 

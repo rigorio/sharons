@@ -23,7 +23,7 @@
   </BorderPane>
   <JFXTextField fx:id="filterText" layoutX="35.0" layoutY="29.0" onKeyReleased="#filter" prefHeight="31.0"
                 prefWidth="142.0" promptText="Search"/>
-  <JFXTextField fx:id="priceText" layoutX="344.0" layoutY="29.0" onKeyReleased="#filter"/>
-  <JFXComboBox fx:id="priceBox" layoutX="190.0" layoutY="29.0" onAction="#filter" prefHeight="31.0"
-               prefWidth="154.0"/>
+  <JFXTextField fx:id="priceText" layoutX="355.0" layoutY="29.0" onKeyReleased="#filter" prefHeight="31.0"
+                prefWidth="79.0"/>
+  <JFXComboBox fx:id="priceBox" layoutX="190.0" layoutY="29.0" onAction="#filter" prefHeight="31.0" prefWidth="154.0"/>
 </AnchorPane>

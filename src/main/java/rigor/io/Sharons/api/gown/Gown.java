@@ -1,5 +1,6 @@
 package rigor.io.Sharons.api.gown;
 
+import com.univocity.parsers.annotations.Parsed;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.StringProperty;
@@ -14,10 +15,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Gown {
   private Long id;
+  @Parsed(index = 0)
   private String name;
+  @Parsed(index = 1)
   private String description;
+  @Parsed(index = 2)
   private Double price;
+  @Parsed(index = 3)
   private String dateRented;
+  @Parsed(index = 4)
   private String dueDate;
 
   public Gown(Gown gown) {

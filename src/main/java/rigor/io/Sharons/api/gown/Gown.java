@@ -1,5 +1,8 @@
 package rigor.io.Sharons.api.gown;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.StringProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +27,25 @@ public class Gown {
     this.price = gown.price;
     this.dateRented = gown.dateRented;
     this.dueDate = gown.dueDate;
+  }
+
+  public Gown(GownFxAdapter gown) {
+    LongProperty id = gown.getId();
+    this.id = id != null ? id.get() : null;
+
+    StringProperty name = gown.getName();
+    this.name = name != null ? name.get() : null;
+
+    StringProperty description = gown.getDescription();
+    this.description = description != null ? description.get() : null;
+
+    DoubleProperty price = gown.getPrice();
+    this.price = price != null ? price.get() : null;
+
+    StringProperty dateRented = gown.getDateRented();
+    this.dateRented = dateRented != null ? dateRented.get() : null;
+
+    StringProperty dueDate = gown.getDueDate();
+    this.dueDate = dueDate != null ? dueDate.get() : null;
   }
 }

@@ -8,7 +8,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
@@ -19,7 +18,7 @@ import rigor.io.Sharons.api.GownHandler;
 import rigor.io.Sharons.api.GownService;
 import rigor.io.Sharons.api.gown.Gown;
 import rigor.io.Sharons.api.gown.GownFxAdapter;
-import rigor.io.Sharons.api.gown.repository.GownListRepository;
+import rigor.io.Sharons.api.gown.repository.GownCsvRepository;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -43,7 +42,7 @@ public class DashboardPresenter implements Initializable {
   private static final String MORE_THAN = "More than or equals";
 
   public DashboardPresenter() {
-    gownService = new GownHandler(new GownListRepository());
+    gownService = new GownHandler(new GownCsvRepository());
   }
 
   @Override

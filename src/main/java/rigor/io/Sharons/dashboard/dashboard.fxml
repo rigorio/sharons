@@ -20,5 +20,5 @@
       </TableView>
     </center>
   </BorderPane>
-  <JFXTextField fx:id="filterText" layoutX="35.0" layoutY="29.0" onKeyReleased="#filter"/>
+  <JFXTextField promptText="Search" fx:id="filterText" layoutX="35.0" layoutY="29.0" onKeyReleased="#filter"/>
 </AnchorPane>

@@ -9,7 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.jetbrains.annotations.NotNull;
 import rigor.io.Sharons.api.GownHandler;
-import rigor.io.Sharons.api.GownListRepository;
+import rigor.io.Sharons.api.gown.repository.GownListRepository;
 import rigor.io.Sharons.api.GownService;
 import rigor.io.Sharons.api.gown.Gown;
 import rigor.io.Sharons.api.gown.GownFxAdapter;

@@ -1,4 +1,4 @@
-package rigor.io.Sharons.api;
+package rigor.io.Sharons.api.gown.repository;
 
 import rigor.io.Sharons.api.gown.Gown;
 

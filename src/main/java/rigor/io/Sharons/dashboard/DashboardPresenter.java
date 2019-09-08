@@ -1,8 +1,11 @@
 package rigor.io.Sharons.dashboard;
 
+import com.jfoenix.controls.JFXTextField;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
@@ -21,6 +24,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class DashboardPresenter implements Initializable {
+  @FXML
+  private JFXTextField filterText;
   @FXML
   private TableView<GownFxAdapter> gownsTable;
 
@@ -52,7 +57,7 @@ public class DashboardPresenter implements Initializable {
 
     gownsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-    refreshItems();
+    refreshItems(getFXGowns());
 
   }
 
@@ -61,8 +66,24 @@ public class DashboardPresenter implements Initializable {
     System.out.println("Does something?");
   }
 
-  private void refreshItems() {
-    gownsTable.setItems(getFXGowns());
+  @FXML
+  public void filter() {
+    String text = filterText.getText() != null ? filterText.getText().toLowerCase() : "";
+    if (text.length() < 1)
+      refreshItems(getFXGowns());
+
+    FilteredList<GownFxAdapter> wowwhatisfilteredlist = getFXGowns()
+        .filtered(gown -> {
+          StringProperty name = gown.getName();
+          StringProperty description = gown.getDescription();
+          return (name != null && name.get().toLowerCase().contains(text)) || (description != null && description.get().toLowerCase().contains(text));
+        });
+    refreshItems(wowwhatisfilteredlist);
+
+  }
+
+  private void refreshItems(ObservableList<GownFxAdapter> gowns) {
+    gownsTable.setItems(gowns);
   }
 
   @NotNull

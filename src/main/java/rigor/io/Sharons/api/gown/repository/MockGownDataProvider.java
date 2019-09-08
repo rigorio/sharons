@@ -10,7 +10,7 @@ public class MockGownDataProvider {
 
   private static ArrayList<Gown> gowns;
 
-  public List<Gown> mockGowns() {
+  public static List<Gown> mockGowns() {
     Gown gown1 = Gown.builder()
         .id(1L)
         .name("Blue bridal")

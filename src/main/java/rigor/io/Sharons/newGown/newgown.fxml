@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="rigor.io.Sharons.newGown.NewGownPresenter"
-            prefHeight="400.0" prefWidth="600.0">
-
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<AnchorPane prefHeight="393.0" prefWidth="293.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="rigor.io.Sharons.newGown.NewGownPresenter">
+  <BorderPane prefHeight="399.0" prefWidth="424.0">
+    <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <JFXTextField fx:id="nameText" layoutX="68.0" layoutY="71.0"/>
+        <JFXTextField fx:id="descText" layoutX="68.0" layoutY="129.0"/>
+        <JFXTextField fx:id="priceText" layoutX="68.0" layoutY="184.0"/>
+        <JFXButton layoutX="68.0" layoutY="285.0" mnemonicParsing="false" onAction="#add" text="Add"/>
+        <JFXButton layoutX="173.0" layoutY="285.0" mnemonicParsing="false" onAction="#cancel" text="Cancel"/>
+      </AnchorPane>
+    </center>
+  </BorderPane>
 </AnchorPane>

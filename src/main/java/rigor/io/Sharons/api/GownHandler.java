@@ -21,7 +21,8 @@ public class GownHandler implements GownService {
 
   @Override
   public Gown add(Gown gown) {
-    return null;
+    gownRepository.add(gown);
+    return gown;
   }
 
   @Override

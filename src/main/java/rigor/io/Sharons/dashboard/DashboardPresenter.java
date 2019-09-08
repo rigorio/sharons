@@ -19,6 +19,8 @@ import rigor.io.Sharons.api.GownService;
 import rigor.io.Sharons.api.gown.Gown;
 import rigor.io.Sharons.api.gown.GownFxAdapter;
 import rigor.io.Sharons.api.gown.repository.GownCsvRepository;
+import rigor.io.Sharons.newGown.NewGownView;
+import rigor.io.Sharons.utils.GuiManager;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -117,6 +119,7 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void add() {
+    GuiManager.getInstance().displayView(new NewGownView());
   }
 
   @FXML

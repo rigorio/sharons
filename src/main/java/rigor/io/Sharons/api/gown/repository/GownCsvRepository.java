@@ -22,7 +22,7 @@ public class GownCsvRepository implements GownRepository {
   public List<Gown> getGowns() {
     try {
       BeanUtils beanUtils = new BeanUtils();
-      File file = new File("D:\\Projects\\sharons\\src\\main\\resources\\gowns.csv");
+      File file = new File("D:\\Projects\\sharons\\gowns.csv");
 //      InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("gowns.csv");
       InputStream inputStream = new FileInputStream(file);
       Reader reader = beanUtils.getReader(inputStream);
@@ -62,6 +62,7 @@ public class GownCsvRepository implements GownRepository {
 
   @Override
   public boolean add(Gown gown) {
+    System.out.println("nanda");
     try {
       String[] headers = {"id", "name", "description", "price", "date rented", "due date"};
       FileOutputStream outputStream = new FileOutputStream("gowns.csv");

@@ -18,8 +18,8 @@ public class SharonsApp extends Application {
 
   @Override
   public void start(Stage stage) {
-    GownRepository gownRepository = new GownListRepository();
-    gownRepository.setList(new GownCsvRepository().getGowns());
+//    GownRepository gownRepository = new GownListRepository();
+//    gownRepository.setList(new GownCsvRepository().getGowns());
     stage.setResizable(true);
 //    stage.getIcons().add(new Image("/img/.png"));
     MANAGER.setPrimaryStage(stage);

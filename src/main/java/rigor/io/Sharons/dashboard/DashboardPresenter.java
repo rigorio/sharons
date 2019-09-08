@@ -8,6 +8,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
@@ -80,11 +81,6 @@ public class DashboardPresenter implements Initializable {
   }
 
   @FXML
-  public void tableClicked() {
-    System.out.println("Does something?");
-  }
-
-  @FXML
   public void filter() {
     String text = filterText.getText() != null ? filterText.getText().toLowerCase() : "";
     if (text.length() < 1)
@@ -120,6 +116,17 @@ public class DashboardPresenter implements Initializable {
 
   }
 
+  @FXML
+  public void add() {
+  }
+
+  @FXML
+  public void edit() {
+  }
+
+  @FXML
+  public void delete() {
+  }
 
   private void refreshItems(ObservableList<GownFxAdapter> gowns) {
     gownsTable.setItems(gowns);
@@ -135,4 +142,5 @@ public class DashboardPresenter implements Initializable {
   private List<Gown> allGowns() {
     return gownService.all();
   }
+
 }

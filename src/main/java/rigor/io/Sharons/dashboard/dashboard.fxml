@@ -3,7 +3,7 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane fx:id="mainPane" prefHeight="720" prefWidth="925" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="rigor.io.Sharons.dashboard.DashboardPresenter">
@@ -26,4 +26,7 @@
   <JFXTextField fx:id="priceText" layoutX="355.0" layoutY="29.0" onKeyReleased="#filter" prefHeight="31.0"
                 prefWidth="79.0"/>
   <JFXComboBox fx:id="priceBox" layoutX="190.0" layoutY="29.0" onAction="#filter" prefHeight="31.0" prefWidth="154.0"/>
+  <Hyperlink layoutX="771.0" layoutY="30.0" onAction="#add" text="Add"/>
+  <Hyperlink layoutX="809.0" layoutY="30.0" onAction="#edit" text="Edit"/>
+  <Hyperlink layoutX="845.0" layoutY="30.0" onAction="#delete" text="Delete"/>
 </AnchorPane>

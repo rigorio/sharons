@@ -2,6 +2,7 @@ package rigor.io.Sharons.dashboard;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -29,7 +30,7 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXTextField priceText;
   @FXML
-  private JFXComboBox priceBox;
+  private JFXComboBox<String> priceBox;
   @FXML
   private JFXTextField filterText;
   @FXML
@@ -48,6 +49,11 @@ public class DashboardPresenter implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
 
     priceBox.setItems(FXCollections.observableArrayList(Arrays.asList(ALL, LESS_THAN, MORE_THAN)));
+    priceBox.setValue(ALL);
+    priceText.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (!newValue.matches("\\d*"))
+        priceText.setText(newValue.replaceAll("[^\\d]", ""));
+    });
 
     TableColumn<GownFxAdapter, String> name = new TableColumn<>("Name");
     name.setCellValueFactory(param -> param.getValue().getName());
@@ -84,19 +90,36 @@ public class DashboardPresenter implements Initializable {
     if (text.length() < 1)
       refreshItems(getFXGowns());
 
-    FilteredList<GownFxAdapter> wowwhatisfilteredlist = getFXGowns()
+    String priceBoxFilter = priceBox.getValue();
+    String givenPrice = priceText.getText();
+    FilteredList<GownFxAdapter> gownList = getFXGowns()
         .filtered(gown -> {
           StringProperty name = gown.getName();
           StringProperty description = gown.getDescription();
-          return (name != null && name.get().toLowerCase().contains(text)) || (description != null && description.get().toLowerCase().contains(text));
+          boolean searchFilter = (name != null && name.get().toLowerCase().contains(text)) || (description != null && description.get().toLowerCase().contains(text));
+          DoubleProperty price = gown.getPrice();
+          boolean priceFilter = true;
+          if (!priceBoxFilter.equalsIgnoreCase("all")) {
+            if (givenPrice != null && givenPrice.length() > 0)
+              switch (priceBoxFilter) {
+                case MORE_THAN:
+                  priceFilter = price.get() >= Double.parseDouble(givenPrice);
+                  break;
+                case LESS_THAN:
+                  priceFilter = price.get() <= Double.parseDouble(givenPrice);
+                  break;
+                default:
+                  priceFilter = true;
+                  break;
+              }
+          }
+          return searchFilter && priceFilter;
         });
-    refreshItems(wowwhatisfilteredlist);
+
+    refreshItems(gownList);
 
   }
 
-  @FXML
-  public void priceFilter() {
-  }
 
   private void refreshItems(ObservableList<GownFxAdapter> gowns) {
     gownsTable.setItems(gowns);

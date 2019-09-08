@@ -1,5 +1,6 @@
 package rigor.io.Sharons.dashboard;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -19,17 +20,25 @@ import rigor.io.Sharons.api.gown.GownFxAdapter;
 import rigor.io.Sharons.api.gown.repository.GownListRepository;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class DashboardPresenter implements Initializable {
   @FXML
+  private JFXTextField priceText;
+  @FXML
+  private JFXComboBox priceBox;
+  @FXML
   private JFXTextField filterText;
   @FXML
   private TableView<GownFxAdapter> gownsTable;
 
   private GownService gownService;
+  private static final String ALL = "All";
+  private static final String LESS_THAN = "Less than or equals";
+  private static final String MORE_THAN = "More than or equals";
 
   public DashboardPresenter() {
     gownService = new GownHandler(new GownListRepository());
@@ -37,6 +46,9 @@ public class DashboardPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+    priceBox.setItems(FXCollections.observableArrayList(Arrays.asList(ALL, LESS_THAN, MORE_THAN)));
+
     TableColumn<GownFxAdapter, String> name = new TableColumn<>("Name");
     name.setCellValueFactory(param -> param.getValue().getName());
 
@@ -80,6 +92,10 @@ public class DashboardPresenter implements Initializable {
         });
     refreshItems(wowwhatisfilteredlist);
 
+  }
+
+  @FXML
+  public void priceFilter() {
   }
 
   private void refreshItems(ObservableList<GownFxAdapter> gowns) {

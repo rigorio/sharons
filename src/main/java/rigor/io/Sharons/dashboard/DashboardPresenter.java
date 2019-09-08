@@ -9,10 +9,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.jetbrains.annotations.NotNull;
 import rigor.io.Sharons.api.GownHandler;
-import rigor.io.Sharons.api.gown.repository.GownListRepository;
 import rigor.io.Sharons.api.GownService;
 import rigor.io.Sharons.api.gown.Gown;
 import rigor.io.Sharons.api.gown.GownFxAdapter;
+import rigor.io.Sharons.api.gown.repository.GownListRepository;
 
 import java.net.URL;
 import java.util.List;
@@ -38,7 +38,7 @@ public class DashboardPresenter implements Initializable {
     description.setCellValueFactory(param -> param.getValue().getDescription());
 
     TableColumn<GownFxAdapter, String> price = new TableColumn<>("Price");
-    price.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPrice()));
+    price.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPrice().get()));
 
     TableColumn<GownFxAdapter, String> dateRented = new TableColumn<>("Date Rented");
     dateRented.setCellValueFactory(param -> param.getValue().getDateRented());
@@ -51,6 +51,11 @@ public class DashboardPresenter implements Initializable {
 
     refreshItems();
 
+  }
+
+  @FXML
+  public void tableClicked() {
+    System.out.println("Does something?");
   }
 
   private void refreshItems() {

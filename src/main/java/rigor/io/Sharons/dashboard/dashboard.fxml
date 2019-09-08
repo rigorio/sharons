@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableView?>
@@ -20,5 +21,9 @@
       </TableView>
     </center>
   </BorderPane>
-  <JFXTextField promptText="Search" fx:id="filterText" layoutX="35.0" layoutY="29.0" onKeyReleased="#filter"/>
+  <JFXTextField fx:id="filterText" layoutX="35.0" layoutY="29.0" onKeyReleased="#filter" prefHeight="31.0"
+                prefWidth="142.0" promptText="Search"/>
+  <JFXTextField fx:id="priceText" layoutX="344.0" layoutY="29.0" onKeyReleased="#priceFilter"/>
+  <JFXComboBox fx:id="priceBox" layoutX="190.0" layoutY="29.0" onAction="#priceFilter" prefHeight="31.0"
+               prefWidth="154.0"/>
 </AnchorPane>

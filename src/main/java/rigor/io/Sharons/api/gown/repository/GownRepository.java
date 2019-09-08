@@ -13,4 +13,10 @@ public interface GownRepository {
   void delete(Long id);
 
   void delete(Gown gown);
+
+  boolean add(Gown gown);
+
+  boolean addall(List<Gown> gowns);
+
+  List<Gown> setList(List<Gown> gowns);
 }

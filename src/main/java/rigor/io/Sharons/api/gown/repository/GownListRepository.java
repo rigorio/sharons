@@ -32,4 +32,20 @@ public class GownListRepository implements GownRepository {
   public void delete(Gown gown) {
 
   }
+
+  @Override
+  public boolean add(Gown gown) {
+    return gowns.add(gown);
+  }
+
+  @Override
+  public boolean addall(List<Gown> gowns) {
+    return gowns.addAll(gowns);
+  }
+
+  @Override
+  public List<Gown> setList(List<Gown> gowns) {
+    GownListRepository.gowns = new ArrayList<>(gowns);
+    return gowns;
+  }
 }

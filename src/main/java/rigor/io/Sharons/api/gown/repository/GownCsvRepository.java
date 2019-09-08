@@ -13,7 +13,8 @@ public class GownCsvRepository {
   public List<Gown> getGowns() {
     try {
       BeanUtils beanUtils = new BeanUtils();
-      File file = new File("");
+      File file = new File("D:\\Projects\\sharons\\src\\main\\resources\\gowns.csv");
+//      InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("gowns.csv");
       InputStream inputStream = new FileInputStream(file);
       Reader reader = beanUtils.getReader(inputStream);
 

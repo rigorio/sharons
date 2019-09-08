@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +49,8 @@ public class DashboardPresenter implements Initializable {
 
     gownsTable.getColumns().addAll(name, description, price,
                                    dateRented, dueDate);
+
+    gownsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
     refreshItems();
 

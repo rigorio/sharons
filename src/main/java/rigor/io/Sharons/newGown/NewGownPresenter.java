@@ -3,12 +3,16 @@ package rigor.io.Sharons.newGown;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
 import rigor.io.Sharons.api.GownHandler;
 import rigor.io.Sharons.api.GownService;
 import rigor.io.Sharons.api.gown.Gown;
 import rigor.io.Sharons.api.gown.repository.GownCsvRepository;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class NewGownPresenter implements Initializable {
@@ -40,7 +44,18 @@ public class NewGownPresenter implements Initializable {
         .dueDate("1")
         .dateRented("f")
         .build();
-    gownService.add(gown);
+    boolean success = gownService.add(gown);
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+    stage.setAlwaysOnTop(true);
+    alert.setTitle(success ? "Success" : "Failed");
+    alert.setHeaderText(success ? "Gown added" : "Error encountered. Gown was not added, try again.");
+    if (success)
+      alert.setContentText("Please refresh the table to see changes");
+    Optional<ButtonType> result = alert.showAndWait();
+    alert.close();
+    if (result.isPresent() && result.get() == ButtonType.OK)
+      ((Stage) priceText.getScene().getWindow()).close();
   }
 
   @FXML

@@ -29,7 +29,7 @@ public class GownCsvRepository implements GownRepository {
 
       BeanListProcessor<Gown> beanListProcessor = new BeanListProcessor<>(Gown.class);
       List<Gown> gowns = beanUtils.getBeans(reader, beanListProcessor);
-
+      System.out.println(gowns.toString());
       return gowns;
 
     } catch (IOException e) {
@@ -65,10 +65,9 @@ public class GownCsvRepository implements GownRepository {
     System.out.println("nanda");
     try {
       String[] headers = {"id", "name", "description", "price", "date rented", "due date"};
-      FileOutputStream outputStream = new FileOutputStream("gowns.csv");
       List<Gown> all = getGowns();
+      FileOutputStream outputStream = new FileOutputStream("D:\\Projects\\sharons\\gowns.csv");
       all.add(gown);
-      System.out.println(all.toString());
       BeanWriterProcessor<Gown> writerProcessor = new BeanWriterProcessor<>(Gown.class);
       BeanWriter beanWriter = BeanWriter.builder()
           .beanWriterProcessor(writerProcessor)

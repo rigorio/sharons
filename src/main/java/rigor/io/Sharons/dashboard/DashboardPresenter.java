@@ -118,6 +118,11 @@ public class DashboardPresenter implements Initializable {
   }
 
   @FXML
+  public void refresh() {
+    refreshItems(getFXGowns());
+  }
+
+  @FXML
   public void add() {
     GuiManager.getInstance().displayView(new NewGownView());
   }
@@ -144,5 +149,4 @@ public class DashboardPresenter implements Initializable {
   private List<Gown> allGowns() {
     return gownService.all();
   }
-
 }

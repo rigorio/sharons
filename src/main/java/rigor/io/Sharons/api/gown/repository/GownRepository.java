@@ -5,6 +5,10 @@ import rigor.io.Sharons.api.gown.Gown;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @see rigor.io.Sharons.api.gown.repository.GownListRepository
+ * @see rigor.io.Sharons.api.gown.repository.GownCsvRepository
+ */
 public interface GownRepository {
   List<Gown> all();
 

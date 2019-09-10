@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @see rigor.io.Sharons.api.gown.repository.GownListRepository
- * @see rigor.io.Sharons.api.gown.repository.GownCsvRepository
+ * @see GownHandler
  */
 public interface GownService {
   List<Gown> all();

@@ -20,9 +20,8 @@ public class GownHandler implements GownService {
   }
 
   @Override
-  public Gown add(Gown gown) {
-    gownRepository.add(gown);
-    return gown;
+  public boolean add(Gown gown) {
+    return gownRepository.add(gown);
   }
 
   @Override

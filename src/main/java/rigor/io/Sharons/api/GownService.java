@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface GownService {
   List<Gown> all();
 
-  Gown add(Gown gown);
+  boolean add(Gown gown);
 
   Gown edit(Gown gown);
 

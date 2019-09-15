@@ -14,16 +14,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Gown {
-  private Long id;
   @Parsed(index = 0)
+  private Long id;
+  @Parsed(index = 2)
   private String name;
   @Parsed(index = 1)
   private String description;
-  @Parsed(index = 2)
-  private Double price;
   @Parsed(index = 3)
-  private String dateRented;
+  private Double price;
   @Parsed(index = 4)
+  private String dateRented;
+  @Parsed(index = 5)
   private String dueDate;
 
   public Gown(Gown gown) {

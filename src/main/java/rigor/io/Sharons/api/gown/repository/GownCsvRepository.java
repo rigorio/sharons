@@ -56,6 +56,11 @@ public class GownCsvRepository implements GownRepository {
   public void delete(Long id) {
     List<Gown> gowns = getGowns();
     boolean removed = gowns.removeIf(gown -> gown.getId().equals(id));
+    try {
+      writeGowns(gowns);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -66,23 +71,27 @@ public class GownCsvRepository implements GownRepository {
   @Override
   public boolean add(Gown gown) {
     try {
-      String[] headers = {"id", "name", "description", "price", "date rented", "due date"};
       List<Gown> all = getGowns();
-      FileOutputStream outputStream = new FileOutputStream("gowns.csv");
       all.add(gown);
-      BeanWriterProcessor<Gown> writerProcessor = new BeanWriterProcessor<>(Gown.class);
-      BeanWriter beanWriter = BeanWriter.builder()
-          .beanWriterProcessor(writerProcessor)
-          .headers(headers)
-          .outputStream(outputStream)
-          .records(all)
-          .build();
-      beanUtils.writeBeans(beanWriter);
+      writeGowns(all);
       return true;
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return false;
     }
+  }
+
+  private void writeGowns(List<Gown> all) throws FileNotFoundException {
+    String[] headers = {"id", "name", "description", "price", "date rented", "due date"};
+    FileOutputStream outputStream = new FileOutputStream("gowns.csv");
+    BeanWriterProcessor<Gown> writerProcessor = new BeanWriterProcessor<>(Gown.class);
+    BeanWriter beanWriter = BeanWriter.builder()
+        .beanWriterProcessor(writerProcessor)
+        .headers(headers)
+        .outputStream(outputStream)
+        .records(all)
+        .build();
+    beanUtils.writeBeans(beanWriter);
   }
 
   @Override

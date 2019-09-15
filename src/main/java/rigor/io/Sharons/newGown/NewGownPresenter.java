@@ -6,9 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-import rigor.io.Sharons.api.GownHandler;
-import rigor.io.Sharons.api.GownService;
-import rigor.io.Sharons.api.gown.Gown;
+import rigor.io.Sharons.api.gown.GownHandler;
+import rigor.io.Sharons.api.gown.GownService;
+import rigor.io.Sharons.api.gown.entities.Gown;
 import rigor.io.Sharons.api.gown.repository.GownCsvRepository;
 
 import java.net.URL;

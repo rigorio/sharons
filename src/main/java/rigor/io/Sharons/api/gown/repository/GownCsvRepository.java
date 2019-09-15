@@ -4,13 +4,12 @@ import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.common.processor.BeanWriterProcessor;
 import rigor.io.Sharons.api.csv.BeanUtils;
 import rigor.io.Sharons.api.csv.BeanWriter;
-import rigor.io.Sharons.api.gown.Gown;
+import rigor.io.Sharons.api.gown.entities.Gown;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class GownCsvRepository implements GownRepository {
 

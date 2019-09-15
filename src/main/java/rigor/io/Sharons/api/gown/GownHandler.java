@@ -1,6 +1,6 @@
-package rigor.io.Sharons.api;
+package rigor.io.Sharons.api.gown;
 
-import rigor.io.Sharons.api.gown.Gown;
+import rigor.io.Sharons.api.gown.entities.Gown;
 import rigor.io.Sharons.api.gown.repository.GownRepository;
 import rigor.io.Sharons.utils.IdProvider;
 

@@ -1,7 +1,7 @@
 package rigor.io.Sharons.utils;
 
-import rigor.io.Sharons.api.GownHandler;
-import rigor.io.Sharons.api.gown.Gown;
+import rigor.io.Sharons.api.gown.GownHandler;
+import rigor.io.Sharons.api.gown.entities.Gown;
 import rigor.io.Sharons.api.gown.repository.GownCsvRepository;
 
 import java.util.List;

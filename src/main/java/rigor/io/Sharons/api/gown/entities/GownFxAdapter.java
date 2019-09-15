@@ -1,4 +1,4 @@
-package rigor.io.Sharons.api.gown;
+package rigor.io.Sharons.api.gown.entities;
 
 import javafx.beans.property.*;
 import lombok.AllArgsConstructor;

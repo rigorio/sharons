@@ -1,4 +1,4 @@
-package rigor.io.Sharons.api.gown;
+package rigor.io.Sharons.api.gown.entities;
 
 import com.univocity.parsers.annotations.Parsed;
 import javafx.beans.property.DoubleProperty;

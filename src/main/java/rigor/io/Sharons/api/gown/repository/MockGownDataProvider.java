@@ -1,6 +1,6 @@
 package rigor.io.Sharons.api.gown.repository;
 
-import rigor.io.Sharons.api.gown.Gown;
+import rigor.io.Sharons.api.gown.entities.Gown;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -145,6 +145,7 @@ public class DashboardPresenter implements Initializable {
         gownService.delete(id.get());
       }
     }
+    refresh();
   }
 
   private void refreshItems(ObservableList<GownFxAdapter> gowns) {

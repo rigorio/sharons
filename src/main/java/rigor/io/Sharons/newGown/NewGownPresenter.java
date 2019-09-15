@@ -37,7 +37,7 @@ public class NewGownPresenter implements Initializable {
   @FXML
   public void add() {
     Gown gown = Gown.builder()
-        .id(10L)
+//        .id(10L)
         .name(nameText.getText())
         .description(descText.getText())
         .price(Double.valueOf(priceText.getText()))

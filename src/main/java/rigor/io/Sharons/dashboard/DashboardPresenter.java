@@ -3,6 +3,7 @@ package rigor.io.Sharons.dashboard;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -56,6 +57,10 @@ public class DashboardPresenter implements Initializable {
       if (!newValue.matches("\\d*"))
         priceText.setText(newValue.replaceAll("[^\\d]", ""));
     });
+
+    gownsTable.getSelectionModel().setSelectionMode(
+        SelectionMode.MULTIPLE
+    );
 
     TableColumn<GownFxAdapter, String> name = new TableColumn<>("Name");
     name.setCellValueFactory(param -> param.getValue().getName());
@@ -133,6 +138,13 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void delete() {
+    ObservableList<GownFxAdapter> selectedItems = gownsTable.getSelectionModel().getSelectedItems();
+    for (GownFxAdapter gownAdapter : selectedItems) {
+      LongProperty id = gownAdapter.getId();
+      if (id!= null) {
+        gownService.delete(id.get());
+      }
+    }
   }
 
   private void refreshItems(ObservableList<GownFxAdapter> gowns) {

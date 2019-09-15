@@ -69,4 +69,9 @@ public class GownHandler implements GownService {
         .filter(gown -> gown.getDateRented().equals(date))
         .collect(Collectors.toList());
   }
+
+  @Override
+  public void delete(Long id) {
+    gownRepository.delete(id);
+  }
 }

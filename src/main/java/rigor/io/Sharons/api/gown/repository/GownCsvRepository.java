@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class GownCsvRepository implements GownRepository {
 
@@ -53,7 +54,8 @@ public class GownCsvRepository implements GownRepository {
 
   @Override
   public void delete(Long id) {
-
+    List<Gown> gowns = getGowns();
+    boolean removed = gowns.removeIf(gown -> gown.getId().equals(id));
   }
 
   @Override

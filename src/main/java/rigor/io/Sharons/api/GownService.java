@@ -27,4 +27,5 @@ public interface GownService {
 
   List<Gown> rentedOn(String date);
 
+  void delete(Long id);
 }

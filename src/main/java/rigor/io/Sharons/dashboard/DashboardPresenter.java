@@ -72,14 +72,19 @@ public class DashboardPresenter implements Initializable {
     TableColumn<GownFxAdapter, String> price = new TableColumn<>("Price");
     price.setCellValueFactory(param -> new SimpleStringProperty("" + param.getValue().getPrice().get()));
 
+    TableColumn<GownFxAdapter, String> status = new TableColumn<>("Status");
+    status.setCellValueFactory(param -> param.getValue().getStatus());
+
+/*
     TableColumn<GownFxAdapter, String> dateRented = new TableColumn<>("Date Rented");
     dateRented.setCellValueFactory(param -> param.getValue().getDateRented());
 
     TableColumn<GownFxAdapter, String> dueDate = new TableColumn<>("Due Date");
-    dueDate.setCellValueFactory(param -> param.getValue().getDueDate());
+    dueDate.setCellValueFactory(param -> param.getValue().getDueDate());*/
 
-    gownsTable.getColumns().addAll(name, description, price,
-                                   dateRented, dueDate);
+    gownsTable.getColumns().addAll(name, description, price, status
+//                                   dateRented, dueDate
+    );
 
     gownsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 

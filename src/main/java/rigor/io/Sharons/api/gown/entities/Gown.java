@@ -23,8 +23,10 @@ public class Gown {
   @Parsed(index = 3)
   private Double price;
   @Parsed(index = 4)
-  private String dateRented;
+  private String status;
   @Parsed(index = 5)
+  private String dateRented;
+  @Parsed(index = 6)
   private String dueDate;
 
   public Gown(Gown gown) {
@@ -54,5 +56,8 @@ public class Gown {
 
     StringProperty dueDate = gown.getDueDate();
     this.dueDate = dueDate != null ? dueDate.get() : null;
+
+    StringProperty status = gown.getStatus();
+    this.status = status != null ? status.get() : null;
   }
 }

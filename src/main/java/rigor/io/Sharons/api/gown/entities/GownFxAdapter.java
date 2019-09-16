@@ -17,6 +17,7 @@ public class GownFxAdapter {
   private DoubleProperty price;
   private StringProperty dateRented;
   private StringProperty dueDate;
+  private StringProperty status;
 
   public GownFxAdapter(Gown gown) {
     Long id = gown.getId();
@@ -36,5 +37,8 @@ public class GownFxAdapter {
 
     String dueDate = gown.getDueDate();
     this.dueDate = dueDate != null ? new SimpleStringProperty(dueDate) : null;
+
+    String status = gown.getStatus();
+    this.status = status != null ? new SimpleStringProperty(status) : null;
   }
 }

@@ -20,6 +20,7 @@ import rigor.io.Sharons.api.gown.GownService;
 import rigor.io.Sharons.api.gown.entities.Gown;
 import rigor.io.Sharons.api.gown.entities.GownFxAdapter;
 import rigor.io.Sharons.api.gown.repository.GownCsvRepository;
+import rigor.io.Sharons.edit.EditPresenter;
 import rigor.io.Sharons.edit.EditView;
 import rigor.io.Sharons.newGown.NewGownView;
 import rigor.io.Sharons.utils.GuiManager;
@@ -140,7 +141,8 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void edit() {
-    GuiManager.getInstance().displayAlwaysOnTop(new EditView());
+    EditPresenter.selectedGown = gownsTable.getSelectionModel().getSelectedItem();
+    GuiManager.getInstance().displayView(new EditView());
   }
 
   @FXML

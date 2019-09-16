@@ -10,11 +10,13 @@ public interface StandardRepository<T> {
 
   void delete(Long id);
 
-  void delete(T gown);
+  void delete(T t);
 
-  boolean add(T gown);
+  boolean add(T t);
+  
+  boolean update(T t);
 
-  boolean addall(List<T> gowns);
+  boolean addall(List<T> ts);
 
-  List<T> setList(List<T> gowns);
+  List<T> setList(List<T> ts);
 }

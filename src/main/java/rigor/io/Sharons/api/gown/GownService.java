@@ -13,7 +13,7 @@ public interface GownService {
 
   boolean add(Gown gown);
 
-  Gown edit(Gown gown);
+  boolean edit(Gown gown);
 
   Gown delete(Gown gown);
 

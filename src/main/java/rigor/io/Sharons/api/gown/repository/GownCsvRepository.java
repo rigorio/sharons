@@ -55,6 +55,8 @@ public class GownCsvRepository implements GownRepository {
   public void delete(Long id) {
     List<Gown> gowns = getGowns();
     boolean removed = gowns.removeIf(gown -> gown.getId().equals(id));
+    System.out.println("Was it removed?");
+    System.out.println(removed);
     try {
       writeGowns(gowns);
     } catch (FileNotFoundException e) {
@@ -78,6 +80,12 @@ public class GownCsvRepository implements GownRepository {
       System.out.println(e.getMessage());
       return false;
     }
+  }
+
+  @Override
+  public boolean update(Gown gown) {
+    delete(gown.getId());
+    return add(gown);
   }
 
   private void writeGowns(List<Gown> all) throws FileNotFoundException {

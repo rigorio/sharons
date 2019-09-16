@@ -32,6 +32,11 @@ public class InvoiceCsvRepository implements InvoiceRepository {
   }
 
   @Override
+  public boolean update(Invoice invoice) {
+    return false;
+  }
+
+  @Override
   public boolean addall(List<Invoice> gowns) {
     return false;
   }

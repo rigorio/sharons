@@ -39,6 +39,11 @@ public class GownListRepository implements GownRepository {
   }
 
   @Override
+  public boolean update(Gown gown) {
+    return false;
+  }
+
+  @Override
   public boolean addall(List<Gown> gowns) {
     return gowns.addAll(gowns);
   }

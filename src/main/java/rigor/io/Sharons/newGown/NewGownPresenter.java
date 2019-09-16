@@ -1,21 +1,28 @@
 package rigor.io.Sharons.newGown;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import rigor.io.Sharons.api.gown.GownHandler;
 import rigor.io.Sharons.api.gown.GownService;
+import rigor.io.Sharons.api.gown.GownStatus;
 import rigor.io.Sharons.api.gown.entities.Gown;
 import rigor.io.Sharons.api.gown.repository.GownCsvRepository;
 
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class NewGownPresenter implements Initializable {
+  @FXML
+  private JFXComboBox<String> statusBox;
   @FXML
   private JFXTextField priceText;
   @FXML
@@ -31,18 +38,31 @@ public class NewGownPresenter implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    GownStatus[] values = GownStatus.values();
+    List<String> status = new ArrayList<>(Arrays.asList(values))
+        .stream()
+        .map(GownStatus::getStatus)
+        .collect(Collectors.toList());
+    statusBox.getItems().addAll(status);
+    Pattern pattern = Pattern.compile("\\d*|\\d+\\,\\d*");
+    TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change ->
+        pattern.matcher(change.getControlNewText())
+            .matches()
+            ? change
+            : null);
 
+    priceText.setTextFormatter(formatter);
   }
 
   @FXML
   public void add() {
     Gown gown = Gown.builder()
-//        .id(10L)
         .name(nameText.getText())
         .description(descText.getText())
-        .price(Double.valueOf(priceText.getText()))
+        .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
         .dueDate("1")
         .dateRented("f")
+        .status(statusBox.getValue() != null ? statusBox.getValue() : GownStatus.AVAILABLE.getStatus())
         .build();
     boolean success = gownService.add(gown);
     Alert alert = new Alert(Alert.AlertType.INFORMATION);

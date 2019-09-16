@@ -44,7 +44,7 @@ public class NewGownPresenter implements Initializable {
         .map(GownStatus::getStatus)
         .collect(Collectors.toList());
     statusBox.getItems().addAll(status);
-    Pattern pattern = Pattern.compile("\\d*|\\d+\\,\\d*");
+    Pattern pattern = Pattern.compile("\\d*|\\d+\\.\\d*");
     TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change ->
         pattern.matcher(change.getControlNewText())
             .matches()

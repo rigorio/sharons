@@ -125,12 +125,18 @@ public class DashboardPresenter implements Initializable {
     gownsTable.onMouseClickedProperty().addListener((ob, ol, ne) -> {
 
     });
-
     gownsTable.setOnMouseClicked(e -> {
+    String buttonText = updateButton.getText();
       ObservableList<GownFxAdapter> selectedItems = gownsTable.getSelectionModel().getSelectedItems();
-      if (selectedItems.size() > 0) {
+      if (selectedItems.size() == 1) {
         System.out.println("ahehe" + selectedItems.size());
+        buttonText = "Edit Item";
       }
+      else if (selectedItems.size() > 1) {
+        System.out.println("daga" + selectedItems.size());
+        buttonText = "Add Item";
+      }
+      updateButton.setText(buttonText);
     });
 
     refreshItems(getFXGowns());

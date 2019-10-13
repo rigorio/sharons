@@ -3,7 +3,8 @@ package rigor.io.Sharons.api.gown;
 public enum GownStatus {
   RENTED("Rented"),
   AVAILABLE("Available"),
-  BOUGHT("Bought")
+  BOUGHT("Bought"),
+  OVERDUE("Overdue")
   ;
 
   private String status;

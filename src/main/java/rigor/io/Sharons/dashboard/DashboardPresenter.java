@@ -2,6 +2,7 @@ package rigor.io.Sharons.dashboard;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
@@ -34,6 +35,10 @@ import java.util.stream.Collectors;
 
 public class DashboardPresenter implements Initializable {
   @FXML
+  private JFXTextField clientText;
+  @FXML
+  private JFXTextField contactText;
+  @FXML
   private JFXDatePicker dateRentedText;
   @FXML
   private JFXDatePicker dueDateText;
@@ -52,7 +57,7 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXTextField priceText;
   @FXML
-  private JFXTextField descText;
+  private JFXTextArea descText;
   @FXML
   private JFXTextField nameText;
 
@@ -102,9 +107,15 @@ public class DashboardPresenter implements Initializable {
     TableColumn<GownFxAdapter, String> dueDate = new TableColumn<>("Due Date");
     dueDate.setCellValueFactory(param -> param.getValue().getDueDate());
 
+    TableColumn<GownFxAdapter, String> client = new TableColumn<>("Client");
+    client.setCellValueFactory(param -> param.getValue().getClient());
+
+    TableColumn<GownFxAdapter, String> contact = new TableColumn<>("Contact");
+    contact.setCellValueFactory(param -> param.getValue().getContact());
+
 
     gownsTable.getColumns().addAll(name, description, price, status,
-                                   dateRented, dueDate
+                                   dateRented, dueDate, client, contact
                                   );
 
     gownsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -116,7 +127,7 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void filter() {
     String text = filterText.getText() != null ? filterText.getText().toLowerCase() : "";
-    String statusText = statusSearchText.getValue().toString() != null ? statusSearchText.getValue().toString().toLowerCase() : "";
+    String statusText = statusSearchText.getValue() != null ? statusSearchText.getValue().toString().toLowerCase() : "";
     if (text.length() < 1)
       refreshItems(getFXGowns());
 
@@ -167,6 +178,8 @@ public class DashboardPresenter implements Initializable {
         .dueDate(dateRentedText.getValue().toString())
         .dateRented(dueDateText.getValue().toString())
         .status(statusBox.getValue() != null ? statusBox.getValue().toString() : GownStatus.AVAILABLE.getStatus())
+        .client(clientText.getText())
+        .contact(contactText.getText())
         .build();
     boolean success = gownService.add(gown);
     Alert alert = new Alert(Alert.AlertType.INFORMATION);

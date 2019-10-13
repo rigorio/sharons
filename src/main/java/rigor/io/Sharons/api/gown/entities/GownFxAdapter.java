@@ -18,6 +18,8 @@ public class GownFxAdapter {
   private StringProperty dateRented;
   private StringProperty dueDate;
   private StringProperty status;
+  private StringProperty client;
+  private StringProperty contact;
 
   public GownFxAdapter(Gown gown) {
     Long id = gown.getId();
@@ -40,5 +42,11 @@ public class GownFxAdapter {
 
     String status = gown.getStatus();
     this.status = status != null ? new SimpleStringProperty(status) : null;
+
+    String client = gown.getClient();
+    this.client = client != null ? new SimpleStringProperty(client) : null;
+
+    String contact = gown.getContact();
+    this.contact = contact!= null ? new SimpleStringProperty(contact) : null;
   }
 }

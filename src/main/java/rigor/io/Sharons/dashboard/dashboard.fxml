@@ -41,7 +41,8 @@
             <JFXDatePicker fx:id="dueDateText" layoutX="31.0" layoutY="295.0" prefHeight="25.0" prefWidth="220.0"/>
             <JFXTextField fx:id="clientText" layoutX="31.0" layoutY="342.0" prefWidth="220.0" promptText="Client"/>
             <JFXTextField fx:id="contactText" layoutX="31.0" layoutY="393.0" prefWidth="220.0" promptText="Contact"/>
-            <JFXButton layoutX="51.0" layoutY="443.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0"
+            <JFXButton fx:id="updateButton" layoutX="51.0" layoutY="443.0" mnemonicParsing="false" onAction="#add"
+                       prefHeight="25.0"
                        prefWidth="181.0" text="Add Item"/>
             <Label layoutX="31.0" layoutY="216.0" text="Date Rented"/>
             <Label layoutX="31.0" layoutY="278.0" text="Due Date"/>

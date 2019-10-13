@@ -1,19 +1,20 @@
 package rigor.io.Sharons.dashboard;
 
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import rigor.io.Sharons.api.gown.GownHandler;
@@ -34,6 +35,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class DashboardPresenter implements Initializable {
+  @FXML
+  private JFXButton updateButton;
   @FXML
   private JFXTextField clientText;
   @FXML
@@ -85,10 +88,6 @@ public class DashboardPresenter implements Initializable {
     statusSearchText.getItems().add("All");
     statusBox.setItems(es);
 
-    gownsTable.getSelectionModel().setSelectionMode(
-        SelectionMode.MULTIPLE
-                                                   );
-
     TableColumn<GownFxAdapter, String> name = new TableColumn<>("Name");
     name.setCellValueFactory(param -> param.getValue().getName());
 
@@ -119,6 +118,20 @@ public class DashboardPresenter implements Initializable {
                                   );
 
     gownsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+    gownsTable.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
+    });
+
+    gownsTable.onMouseClickedProperty().addListener((ob, ol, ne) -> {
+
+    });
+
+    gownsTable.setOnMouseClicked(e -> {
+      ObservableList<GownFxAdapter> selectedItems = gownsTable.getSelectionModel().getSelectedItems();
+      if (selectedItems.size() > 0) {
+        System.out.println("ahehe" + selectedItems.size());
+      }
+    });
 
     refreshItems(getFXGowns());
 

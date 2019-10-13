@@ -144,6 +144,15 @@ public class DashboardPresenter implements Initializable {
           contactText.setText(gown.getContact().get());
         buttonText = "Edit Item";
       } else if (selectedItems.size() > 1) {
+        nameText.clear();
+        descText.clear();
+        priceText.clear();
+        statusBox.getSelectionModel().clearSelection();
+        statusBox.setPromptText("Select status");
+        dateRentedText.getEditor().clear();
+        dueDateText.getEditor().clear();
+        clientText.clear();
+        contactText.clear();
         buttonText = "Add Item";
       }
       updateButton.setText(buttonText);

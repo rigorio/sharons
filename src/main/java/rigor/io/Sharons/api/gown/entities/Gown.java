@@ -28,6 +28,10 @@ public class Gown {
   private String dateRented;
   @Parsed(index = 6)
   private String dueDate;
+  @Parsed(index = 7)
+  private String client;
+  @Parsed(index = 8)
+  private String contact;
 
   public Gown(Gown gown) {
     this.id = gown.id;

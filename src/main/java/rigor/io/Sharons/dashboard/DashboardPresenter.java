@@ -190,6 +190,10 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void add() {
+    String text = updateButton.getText();
+    if (text.toLowerCase().contains("edit")){
+      GownFxAdapter selectedItem = gownsTable.getSelectionModel().getSelectedItem();
+    }
     Gown gown = Gown.builder()
         .name(nameText.getText())
         .description(descText.getText())

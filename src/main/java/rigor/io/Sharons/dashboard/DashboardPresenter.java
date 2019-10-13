@@ -5,16 +5,12 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import rigor.io.Sharons.api.gown.GownHandler;
@@ -28,6 +24,7 @@ import rigor.io.Sharons.edit.EditView;
 import rigor.io.Sharons.utils.GuiManager;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -126,16 +123,27 @@ public class DashboardPresenter implements Initializable {
 
     });
     gownsTable.setOnMouseClicked(e -> {
-    String buttonText = updateButton.getText();
+      String buttonText = updateButton.getText();
       ObservableList<GownFxAdapter> selectedItems = gownsTable.getSelectionModel().getSelectedItems();
       if (selectedItems.size() == 1) {
         GownFxAdapter gown = selectedItems.get(0);
         nameText.setText(gown.getName().get());
-        descText.setText(gown.getDescription().get());
+        if (gown.getDescription() != null)
+          descText.setText(gown.getDescription().get());
+        priceText.setText("" + gown.getPrice().get());
+        statusBox.setValue(gown.getStatus().get());
+        StringProperty dr = gown.getDateRented();
+        if (dr != null)
+          dateRentedText.setValue(LocalDate.parse(dr.get()));
+        StringProperty dd = gown.getDueDate();
+        if (dd != null)
+          dueDateText.setValue(LocalDate.parse(dd.get()));
+        if (gown.getClient() != null)
+          clientText.setText(gown.getClient().get());
+        if (gown.getContact() != null)
+          contactText.setText(gown.getContact().get());
         buttonText = "Edit Item";
-      }
-      else if (selectedItems.size() > 1) {
-        System.out.println("daga" + selectedItems.size());
+      } else if (selectedItems.size() > 1) {
         buttonText = "Add Item";
       }
       updateButton.setText(buttonText);
@@ -193,9 +201,10 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void add() {
     String text = updateButton.getText();
-    if (text.toLowerCase().contains("edit")){
+    if (text.toLowerCase().contains("edit")) {
       GownFxAdapter selectedItem = gownsTable.getSelectionModel().getSelectedItem();
       System.out.println("kyakya " + selectedItem.getId().get());
+      return;
     }
     Gown gown = Gown.builder()
         .name(nameText.getText())

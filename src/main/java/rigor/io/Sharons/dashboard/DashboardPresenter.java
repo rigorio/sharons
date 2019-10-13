@@ -129,7 +129,9 @@ public class DashboardPresenter implements Initializable {
     String buttonText = updateButton.getText();
       ObservableList<GownFxAdapter> selectedItems = gownsTable.getSelectionModel().getSelectedItems();
       if (selectedItems.size() == 1) {
-        System.out.println("ahehe" + selectedItems.size());
+        GownFxAdapter gown = selectedItems.get(0);
+        nameText.setText(gown.getName().get());
+        descText.setText(gown.getDescription().get());
         buttonText = "Edit Item";
       }
       else if (selectedItems.size() > 1) {
@@ -193,6 +195,7 @@ public class DashboardPresenter implements Initializable {
     String text = updateButton.getText();
     if (text.toLowerCase().contains("edit")){
       GownFxAdapter selectedItem = gownsTable.getSelectionModel().getSelectedItem();
+      System.out.println("kyakya " + selectedItem.getId().get());
     }
     Gown gown = Gown.builder()
         .name(nameText.getText())

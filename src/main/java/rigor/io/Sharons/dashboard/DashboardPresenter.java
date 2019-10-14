@@ -8,10 +8,13 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.jetbrains.annotations.NotNull;
 import rigor.io.Sharons.api.gown.GownHandler;
 import rigor.io.Sharons.api.gown.GownService;
@@ -131,17 +134,8 @@ public class DashboardPresenter implements Initializable {
     gownsTable.onMouseClickedProperty().addListener((ob, ol, ne) -> {
 
     });
-    gownsTable.setOnMouseClicked(e -> {
-      String buttonText = updateButton.getText();
-      ObservableList<GownFxAdapter> selectedItems = gownsTable.getSelectionModel().getSelectedItems();
-      if (selectedItems.size() == 1) {
-        GownFxAdapter gown = selectedItems.get(0);
-        clearDetails();
-        fillDetails(gown);
-      } else if (selectedItems.size() > 1) {
-        clearDetails();
-      }
-    });
+    gownsTable.setOnMouseClicked(tableSelectionEvent());
+    gownsTable.setRowFactory(deselectCells());
 
     refreshItems(getFXGowns());
 
@@ -295,5 +289,36 @@ public class DashboardPresenter implements Initializable {
     clientText.clear();
     contactText.clear();
     updateButton.setText("Add Item");
+  }
+
+  @NotNull
+  private Callback<TableView<GownFxAdapter>, TableRow<GownFxAdapter>> deselectCells() {
+    return c -> {
+      final TableRow<GownFxAdapter> row = new TableRow<>();
+      row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+        final int index = row.getIndex();
+        if (index >= 0 && index < gownsTable.getItems().size() && gownsTable.getSelectionModel().isSelected(index)) {
+          gownsTable.getSelectionModel().clearSelection();
+          event.consume();
+        }
+      });
+      return row;
+    };
+  }
+
+  @NotNull
+  private EventHandler<MouseEvent> tableSelectionEvent() {
+    return e -> {
+      ObservableList<GownFxAdapter> selectedItems = gownsTable.getSelectionModel().getSelectedItems();
+      if (selectedItems.size() == 1) {
+        GownFxAdapter gown = selectedItems.get(0);
+        clearDetails();
+        fillDetails(gown);
+      } else if (selectedItems.size() > 1) {
+        clearDetails();
+      } else {
+        clearDetails();
+      }
+    };
   }
 }

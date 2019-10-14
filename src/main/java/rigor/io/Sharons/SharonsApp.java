@@ -21,7 +21,7 @@ public class SharonsApp extends Application {
 //    GownRepository gownRepository = new GownListRepository();
 //    gownRepository.setList(new GownCsvRepository().getGowns());
     stage.setResizable(false);
-//    stage.getIcons().add(new Image("/img/.png"));
+//    stage.getIcons().add(ngew Image("/img/.png"));
     MANAGER.setPrimaryStage(stage);
     MANAGER.changeView(new DashboardView());
 //    MANAGER.changeView(new LoginView());

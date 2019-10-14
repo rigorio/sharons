@@ -147,8 +147,8 @@ public class DashboardPresenter implements Initializable {
         .name(nameText.getText())
         .description(descText.getText())
         .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
-        .dueDate(dateRentedText.getValue().toString())
-        .dateRented(dueDateText.getValue().toString())
+        .dueDate(dueDateText.getValue()!= null ? dueDateText.getValue().toString() : "")
+        .dateRented(dateRentedText.getValue()!= null ? dateRentedText.getValue().toString() : "")
         .status(statusBox.getValue() != null ? statusBox.getValue().toString() : GownStatus.AVAILABLE.getStatus())
         .client(clientText.getText())
         .contact(contactText.getText())
@@ -279,7 +279,9 @@ public class DashboardPresenter implements Initializable {
     statusBox.getSelectionModel().clearSelection();
     statusBox.setPromptText("Select status");
     dateRentedText.getEditor().clear();
+    dateRentedText.setValue(null);
     dueDateText.getEditor().clear();
+    dueDateText.setValue(null);
     clientText.clear();
     contactText.clear();
     updateButton.setText("Add Item");

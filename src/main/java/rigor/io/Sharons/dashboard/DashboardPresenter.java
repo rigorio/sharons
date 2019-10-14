@@ -128,12 +128,6 @@ public class DashboardPresenter implements Initializable {
 
     gownsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-    gownsTable.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
-    });
-
-    gownsTable.onMouseClickedProperty().addListener((ob, ol, ne) -> {
-
-    });
     gownsTable.setOnMouseClicked(tableSelectionEvent());
     gownsTable.setRowFactory(deselectCells());
 

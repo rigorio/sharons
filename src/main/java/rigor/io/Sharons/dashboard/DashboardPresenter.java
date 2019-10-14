@@ -127,39 +127,51 @@ public class DashboardPresenter implements Initializable {
       ObservableList<GownFxAdapter> selectedItems = gownsTable.getSelectionModel().getSelectedItems();
       if (selectedItems.size() == 1) {
         GownFxAdapter gown = selectedItems.get(0);
-        nameText.setText(gown.getName().get());
-        if (gown.getDescription() != null)
-          descText.setText(gown.getDescription().get());
-        priceText.setText("" + gown.getPrice().get());
-        statusBox.setValue(gown.getStatus().get());
-        StringProperty dr = gown.getDateRented();
-        if (dr != null)
-          dateRentedText.setValue(LocalDate.parse(dr.get()));
-        StringProperty dd = gown.getDueDate();
-        if (dd != null)
-          dueDateText.setValue(LocalDate.parse(dd.get()));
-        if (gown.getClient() != null)
-          clientText.setText(gown.getClient().get());
-        if (gown.getContact() != null)
-          contactText.setText(gown.getContact().get());
-        buttonText = "Edit Item";
+        clearDetails();
+        fillDetails(gown);
       } else if (selectedItems.size() > 1) {
-        nameText.clear();
-        descText.clear();
-        priceText.clear();
-        statusBox.getSelectionModel().clearSelection();
-        statusBox.setPromptText("Select status");
-        dateRentedText.getEditor().clear();
-        dueDateText.getEditor().clear();
-        clientText.clear();
-        contactText.clear();
-        buttonText = "Add Item";
+        clearDetails();
       }
-      updateButton.setText(buttonText);
     });
 
     refreshItems(getFXGowns());
 
+  }
+
+  @FXML
+  public void refresh() {
+    refreshItems(getFXGowns());
+  }
+
+  @FXML
+  public void add() {
+    String text = updateButton.getText();
+    Gown gown = Gown.builder()
+        .name(nameText.getText())
+        .description(descText.getText())
+        .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
+        .dueDate(dateRentedText.getValue().toString())
+        .dateRented(dueDateText.getValue().toString())
+        .status(statusBox.getValue() != null ? statusBox.getValue().toString() : GownStatus.AVAILABLE.getStatus())
+        .client(clientText.getText())
+        .contact(contactText.getText())
+        .build();
+    if (text.toLowerCase().contains("edit")) {
+      GownFxAdapter selectedItem = gownsTable.getSelectionModel().getSelectedItem();
+      System.out.println("kyakya " + selectedItem.getId().get());
+      gown.setId(selectedItem.getId().get());
+      gownService.edit(gown);
+      refresh();
+      return;
+    }
+    boolean success = gownService.add(gown);
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+    stage.setAlwaysOnTop(true);
+    alert.setTitle(success ? "Success" : "Failed");
+    alert.setHeaderText(success ? "Gown added" : "Error encountered. Gown was not added, try again.");
+    alert.showAndWait();
+    refresh();
   }
 
   @FXML
@@ -203,39 +215,6 @@ public class DashboardPresenter implements Initializable {
   }
 
   @FXML
-  public void refresh() {
-    refreshItems(getFXGowns());
-  }
-
-  @FXML
-  public void add() {
-    String text = updateButton.getText();
-    if (text.toLowerCase().contains("edit")) {
-      GownFxAdapter selectedItem = gownsTable.getSelectionModel().getSelectedItem();
-      System.out.println("kyakya " + selectedItem.getId().get());
-      return;
-    }
-    Gown gown = Gown.builder()
-        .name(nameText.getText())
-        .description(descText.getText())
-        .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
-        .dueDate(dateRentedText.getValue().toString())
-        .dateRented(dueDateText.getValue().toString())
-        .status(statusBox.getValue() != null ? statusBox.getValue().toString() : GownStatus.AVAILABLE.getStatus())
-        .client(clientText.getText())
-        .contact(contactText.getText())
-        .build();
-    boolean success = gownService.add(gown);
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-    stage.setAlwaysOnTop(true);
-    alert.setTitle(success ? "Success" : "Failed");
-    alert.setHeaderText(success ? "Gown added" : "Error encountered. Gown was not added, try again.");
-    alert.showAndWait();
-    refresh();
-  }
-
-  @FXML
   public void edit() {
     EditPresenter.selectedGown = gownsTable.getSelectionModel().getSelectedItem();
     GuiManager.getInstance().displayView(new EditView());
@@ -275,5 +254,37 @@ public class DashboardPresenter implements Initializable {
 
   private List<Gown> allGowns() {
     return gownService.all();
+  }
+
+  private void fillDetails(GownFxAdapter gown) {
+    nameText.setText(gown.getName().get());
+    if (gown.getDescription() != null)
+      descText.setText(gown.getDescription().get());
+    priceText.setText("" + gown.getPrice().get());
+    statusBox.setValue(gown.getStatus().get());
+    StringProperty dr = gown.getDateRented();
+    if (dr != null)
+      dateRentedText.setValue(LocalDate.parse(dr.get()));
+    StringProperty dd = gown.getDueDate();
+    if (dd != null)
+      dueDateText.setValue(LocalDate.parse(dd.get()));
+    if (gown.getClient() != null)
+      clientText.setText(gown.getClient().get());
+    if (gown.getContact() != null)
+      contactText.setText(gown.getContact().get());
+    updateButton.setText("Edit Item");
+  }
+
+  private void clearDetails() {
+    nameText.clear();
+    descText.clear();
+    priceText.clear();
+    statusBox.getSelectionModel().clearSelection();
+    statusBox.setPromptText("Select status");
+    dateRentedText.getEditor().clear();
+    dueDateText.getEditor().clear();
+    clientText.clear();
+    contactText.clear();
+    updateButton.setText("Add Item");
   }
 }

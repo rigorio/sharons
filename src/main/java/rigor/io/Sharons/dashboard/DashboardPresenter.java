@@ -29,6 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class DashboardPresenter implements Initializable {
@@ -75,10 +77,17 @@ public class DashboardPresenter implements Initializable {
 
     priceOptionsText.setItems(FXCollections.observableArrayList(Arrays.asList(ALL, LESS_THAN, MORE_THAN)));
     priceOptionsText.setValue(ALL);
-    priceSearchText.textProperty().addListener((observable, oldValue, newValue) -> {
-      if (!newValue.matches("\\d*"))
-        priceSearchText.setText(newValue.replaceAll("[^\\d]", ""));
-    });
+    Pattern pattern = Pattern.compile("\\d*|\\d+\\.\\d*");
+    priceText.setTextFormatter(new TextFormatter((UnaryOperator<TextFormatter.Change>) change1 ->
+        pattern.matcher(change1.getControlNewText())
+            .matches()
+            ? change1
+            : null));
+    priceSearchText.setTextFormatter(new TextFormatter((UnaryOperator<TextFormatter.Change>) change ->
+        pattern.matcher(change.getControlNewText())
+            .matches()
+            ? change
+            : null));
 
     ObservableList es = FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList()));
     statusSearchText.setItems(es);

@@ -61,5 +61,8 @@ public class GownFxAdapter {
 
     String pickupDate = gown.getPickupDate();
     this.pickupDate = pickupDate != null ? new SimpleStringProperty(pickupDate) : null;
+
+    String deposit = gown.getDeposit();
+    this.deposit = deposit != null ? new SimpleStringProperty(deposit) : null;
   }
 }

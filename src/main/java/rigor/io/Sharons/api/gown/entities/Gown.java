@@ -29,9 +29,18 @@ public class Gown {
   @Parsed(index = 6)
   private String dueDate;
   @Parsed(index = 7)
-  private String client;
+  private String dateReturned;
   @Parsed(index = 8)
   private String contact;
+  @Parsed(index = 9)
+  private String orNumber;
+  @Parsed(index = 10)
+  private String address;
+  @Parsed(index = 11)
+  private String pickupDate;
+  @Parsed(index = 12)
+  private String deposit;
+
 
   public Gown(Gown gown) {
     this.id = gown.id;
@@ -58,10 +67,25 @@ public class Gown {
     StringProperty dateRented = gown.getDateRented();
     this.dateRented = dateRented != null ? dateRented.get() : null;
 
+    StringProperty dateReturned = gown.getDateReturned();
+    this.dateReturned = dateReturned != null ? dateReturned.get() : null;
+
     StringProperty dueDate = gown.getDueDate();
     this.dueDate = dueDate != null ? dueDate.get() : null;
 
     StringProperty status = gown.getStatus();
     this.status = status != null ? status.get() : null;
+
+    StringProperty orNumber = gown.getOrNumber();
+    this.orNumber = orNumber != null ? orNumber.get() : null;
+
+    StringProperty address = gown.getAddress();
+    this.address = address != null ? address.get() : null;
+
+    StringProperty pickupDate = gown.getPickupDate();
+    this.pickupDate = pickupDate != null ? pickupDate.get() : null;
+
+    StringProperty deposit = gown.getDeposit();
+    this.deposit = deposit != null ? deposit.get() : null;
   }
 }

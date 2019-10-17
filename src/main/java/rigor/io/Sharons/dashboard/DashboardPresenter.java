@@ -116,7 +116,7 @@ public class DashboardPresenter implements Initializable {
     dueDate.setCellValueFactory(param -> param.getValue().getDueDate());
 
     TableColumn<GownFxAdapter, String> client = new TableColumn<>("Client");
-    client.setCellValueFactory(param -> param.getValue().getClient());
+    client.setCellValueFactory(param -> param.getValue().getDateReturned());
 
     TableColumn<GownFxAdapter, String> contact = new TableColumn<>("Contact");
     contact.setCellValueFactory(param -> param.getValue().getContact());
@@ -150,7 +150,7 @@ public class DashboardPresenter implements Initializable {
         .dueDate(dueDateText.getValue()!= null ? dueDateText.getValue().toString() : "")
         .dateRented(dateRentedText.getValue()!= null ? dateRentedText.getValue().toString() : "")
         .status(statusBox.getValue() != null ? statusBox.getValue().toString() : GownStatus.AVAILABLE.getStatus())
-        .client(clientText.getText())
+        .dateReturned(clientText.getText())
         .contact(contactText.getText())
         .build();
     if (text.toLowerCase().contains("edit")) {
@@ -265,8 +265,8 @@ public class DashboardPresenter implements Initializable {
     StringProperty dd = gown.getDueDate();
     if (dd != null)
       dueDateText.setValue(LocalDate.parse(dd.get()));
-    if (gown.getClient() != null)
-      clientText.setText(gown.getClient().get());
+    if (gown.getDateReturned() != null)
+      clientText.setText(gown.getDateReturned().get());
     if (gown.getContact() != null)
       contactText.setText(gown.getContact().get());
     updateButton.setText("Edit Item");

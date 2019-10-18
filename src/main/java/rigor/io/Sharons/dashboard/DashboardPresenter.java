@@ -128,7 +128,14 @@ public class DashboardPresenter implements Initializable {
     address.setCellValueFactory(param -> param.getValue().getAddress());
 
     TableColumn<GownFxAdapter, String> deposit = new TableColumn<>("Deposit");
-    deposit.setCellValueFactory(param -> param.getValue().getDeposit());
+    deposit.setCellValueFactory(param -> param.getValue().getPartialPayment());
+
+    TableColumn<GownFxAdapter, String> balance = new TableColumn<>("Balance");
+    balance.setCellValueFactory(param -> param.getValue().getBalance());
+
+    TableColumn<GownFxAdapter, String> pickupDate = new TableColumn<>("Pickup date");
+    pickupDate.setCellValueFactory(param -> param.getValue().getPickupDate());
+
 
 
     gownsTable.getColumns().addAll(
@@ -139,8 +146,10 @@ public class DashboardPresenter implements Initializable {
         price,
         status,
         dateRented,
+        pickupDate,
         dueDate,
         deposit,
+        balance,
         dateReturned,
         address);
 

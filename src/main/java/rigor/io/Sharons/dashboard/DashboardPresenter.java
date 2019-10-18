@@ -50,10 +50,6 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXComboBox statusSearchText;
   @FXML
-  private JFXTextField priceSearchText;
-  @FXML
-  private JFXComboBox<String> priceOptionsText;
-  @FXML
   private JFXTextField filterText;
   @FXML
   private TableView<GownFxAdapter> gownsTable;
@@ -78,18 +74,11 @@ public class DashboardPresenter implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 
-    priceOptionsText.setItems(FXCollections.observableArrayList(Arrays.asList(ALL, LESS_THAN, MORE_THAN)));
-    priceOptionsText.setValue(ALL);
     Pattern pattern = Pattern.compile("\\d*|\\d+\\.\\d*");
     priceText.setTextFormatter(new TextFormatter((UnaryOperator<TextFormatter.Change>) change1 ->
         pattern.matcher(change1.getControlNewText())
             .matches()
             ? change1
-            : null));
-    priceSearchText.setTextFormatter(new TextFormatter((UnaryOperator<TextFormatter.Change>) change ->
-        pattern.matcher(change.getControlNewText())
-            .matches()
-            ? change
             : null));
 
     ObservableList es = FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList()));
@@ -135,7 +124,6 @@ public class DashboardPresenter implements Initializable {
 
     TableColumn<GownFxAdapter, String> pickupDate = new TableColumn<>("Pickup date");
     pickupDate.setCellValueFactory(param -> param.getValue().getPickupDate());
-
 
 
     gownsTable.getColumns().addAll(
@@ -205,34 +193,17 @@ public class DashboardPresenter implements Initializable {
     if (text.length() < 1)
       refreshItems(getFXGowns());
 
-    String priceBoxFilter = priceOptionsText.getValue();
-    String givenPrice = priceSearchText.getText();
     FilteredList<GownFxAdapter> gownList = getFXGowns()
         .filtered(gown -> {
           StringProperty name = gown.getName();
           StringProperty description = gown.getDescription();
           boolean searchFilter = (name != null && name.get().toLowerCase().contains(text)) || (description != null && description.get().toLowerCase().contains(text));
-          DoubleProperty price = gown.getPrice();
+
           StringProperty status = gown.getStatus();
-          boolean priceFilter = true;
-          if (!priceBoxFilter.equalsIgnoreCase("all")) {
-            if (givenPrice != null && givenPrice.length() > 0)
-              switch (priceBoxFilter) {
-                case MORE_THAN:
-                  priceFilter = price.get() >= Double.parseDouble(givenPrice);
-                  break;
-                case LESS_THAN:
-                  priceFilter = price.get() <= Double.parseDouble(givenPrice);
-                  break;
-                default:
-                  priceFilter = true;
-                  break;
-              }
-          }
           boolean statusFilter = (status != null && status.get().toLowerCase().contains(statusText.toLowerCase()));
           if (statusText.equalsIgnoreCase("all"))
             statusFilter = true;
-          return searchFilter && priceFilter && statusFilter;
+          return searchFilter && statusFilter;
         });
     refreshItems(gownList);
 

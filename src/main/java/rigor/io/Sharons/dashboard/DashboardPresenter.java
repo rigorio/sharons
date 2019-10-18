@@ -115,16 +115,34 @@ public class DashboardPresenter implements Initializable {
     TableColumn<GownFxAdapter, String> dueDate = new TableColumn<>("Due Date");
     dueDate.setCellValueFactory(param -> param.getValue().getDueDate());
 
-    TableColumn<GownFxAdapter, String> client = new TableColumn<>("Client");
-    client.setCellValueFactory(param -> param.getValue().getDateReturned());
+    TableColumn<GownFxAdapter, String> dateReturned = new TableColumn<>("DateReturned");
+    dateReturned.setCellValueFactory(param -> param.getValue().getDateReturned());
 
     TableColumn<GownFxAdapter, String> contact = new TableColumn<>("Contact");
     contact.setCellValueFactory(param -> param.getValue().getContact());
 
+    TableColumn<GownFxAdapter, String> orNumber = new TableColumn<>("OR #");
+    orNumber.setCellValueFactory(param -> param.getValue().getOrNumber());
 
-    gownsTable.getColumns().addAll(name, description, price, status,
-                                   dateRented, dueDate, client, contact
-                                  );
+    TableColumn<GownFxAdapter, String> address = new TableColumn<>("Address");
+    address.setCellValueFactory(param -> param.getValue().getAddress());
+
+    TableColumn<GownFxAdapter, String> deposit = new TableColumn<>("Deposit");
+    deposit.setCellValueFactory(param -> param.getValue().getDeposit());
+
+
+    gownsTable.getColumns().addAll(
+        orNumber,
+        name,
+        contact,
+        description,
+        price,
+        status,
+        dateRented,
+        dueDate,
+        deposit,
+        dateReturned,
+        address);
 
     gownsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -147,8 +165,8 @@ public class DashboardPresenter implements Initializable {
         .name(nameText.getText())
         .description(descText.getText())
         .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
-        .dueDate(dueDateText.getValue()!= null ? dueDateText.getValue().toString() : "")
-        .dateRented(dateRentedText.getValue()!= null ? dateRentedText.getValue().toString() : "")
+        .dueDate(dueDateText.getValue() != null ? dueDateText.getValue().toString() : "")
+        .dateRented(dateRentedText.getValue() != null ? dateRentedText.getValue().toString() : "")
         .status(statusBox.getValue() != null ? statusBox.getValue().toString() : GownStatus.AVAILABLE.getStatus())
         .dateReturned(clientText.getText())
         .contact(contactText.getText())

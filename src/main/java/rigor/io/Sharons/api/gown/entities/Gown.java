@@ -39,7 +39,9 @@ public class Gown {
   @Parsed(index = 11)
   private String pickupDate;
   @Parsed(index = 12)
-  private String deposit;
+  private String partialPayment;
+  @Parsed(index = 13)
+  private String balance;
 
 
   public Gown(Gown gown) {
@@ -85,7 +87,10 @@ public class Gown {
     StringProperty pickupDate = gown.getPickupDate();
     this.pickupDate = pickupDate != null ? pickupDate.get() : null;
 
-    StringProperty deposit = gown.getDeposit();
-    this.deposit = deposit != null ? deposit.get() : null;
+    StringProperty deposit = gown.getPartialPayment();
+    this.partialPayment = deposit != null ? deposit.get() : null;
+
+    StringProperty balance = gown.getBalance();
+    this.balance = balance != null ? balance.get() : null;
   }
 }

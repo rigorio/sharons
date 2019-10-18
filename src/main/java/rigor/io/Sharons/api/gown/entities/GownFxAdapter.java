@@ -23,7 +23,8 @@ public class GownFxAdapter {
   private StringProperty orNumber;
   private StringProperty address;
   private StringProperty pickupDate;
-  private StringProperty deposit;
+  private StringProperty partialPayment;
+  private StringProperty balance;
 
   public GownFxAdapter(Gown gown) {
     Long id = gown.getId();
@@ -62,7 +63,10 @@ public class GownFxAdapter {
     String pickupDate = gown.getPickupDate();
     this.pickupDate = pickupDate != null ? new SimpleStringProperty(pickupDate) : null;
 
-    String deposit = gown.getDeposit();
-    this.deposit = deposit != null ? new SimpleStringProperty(deposit) : null;
+    String deposit = gown.getPartialPayment();
+    this.partialPayment = deposit != null ? new SimpleStringProperty(deposit) : null;
+
+    String balance = gown.getBalance();
+    this.balance = balance != null ? new SimpleStringProperty(balance) : null;
   }
 }

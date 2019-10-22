@@ -1,7 +1,6 @@
 package rigor.io.Sharons.dashboard;
 
 import com.jfoenix.controls.*;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -19,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import rigor.io.Sharons.api.gown.GownHandler;
 import rigor.io.Sharons.api.gown.GownService;
 import rigor.io.Sharons.api.gown.GownStatus;
+import rigor.io.Sharons.api.gown.StatusOptions;
 import rigor.io.Sharons.api.gown.entities.Gown;
 import rigor.io.Sharons.api.gown.entities.GownFxAdapter;
 import rigor.io.Sharons.api.gown.repository.GownCsvRepository;
@@ -32,11 +32,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.*;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class DashboardPresenter implements Initializable {
+  @FXML
+  private JFXDatePicker datePicker;
+  @FXML
+  private JFXTextArea addressText;
+  @FXML
+  private JFXTextField orNumber;
+  @FXML
+  private JFXTextField balanceText;
+  @FXML
+  private JFXTextField depositText;
+  @FXML
+  private JFXDatePicker dateReturnedText;
+  @FXML
+  private JFXDatePicker pickupDateText;
   @FXML
   private JFXButton updateButton;
   @FXML
@@ -82,9 +97,9 @@ public class DashboardPresenter implements Initializable {
             : null));
 
     ObservableList es = FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList()));
-    statusSearchText.setItems(es);
+    statusSearchText.setItems(FXCollections.observableArrayList(Arrays.stream(StatusOptions.values()).collect(Collectors.toList())));
     statusSearchText.getItems().add("All");
-    statusBox.setItems(es);
+    statusBox.setItems(FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList())));
 
     TableColumn<GownFxAdapter, String> name = new TableColumn<>("Name");
     name.setCellValueFactory(param -> param.getValue().getName());
@@ -97,9 +112,9 @@ public class DashboardPresenter implements Initializable {
 
     TableColumn<GownFxAdapter, String> status = new TableColumn<>("Status");
     status.setCellValueFactory(param -> param.getValue().getStatus());
-
-    TableColumn<GownFxAdapter, String> dateRented = new TableColumn<>("Date Rented");
-    dateRented.setCellValueFactory(param -> param.getValue().getDateRented());
+//
+//    TableColumn<GownFxAdapter, String> dateRented = new TableColumn<>("Date Rented");
+//    dateRented.setCellValueFactory(param -> param.getValue().getDateRented());
 
     TableColumn<GownFxAdapter, String> dueDate = new TableColumn<>("Due Date");
     dueDate.setCellValueFactory(param -> param.getValue().getDueDate());
@@ -129,17 +144,18 @@ public class DashboardPresenter implements Initializable {
     gownsTable.getColumns().addAll(
         orNumber,
         name,
-        contact,
         description,
         price,
-        status,
-        dateRented,
+//        dateRented,
         pickupDate,
         dueDate,
+        dateReturned,
         deposit,
         balance,
-        dateReturned,
-        address);
+        address,
+        contact,
+        status
+                                  );
 
     gownsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -159,13 +175,18 @@ public class DashboardPresenter implements Initializable {
   public void add() {
     String text = updateButton.getText();
     Gown gown = Gown.builder()
+        .orNumber(orNumber.getText())
         .name(nameText.getText())
+        .address(addressText.getText())
         .description(descText.getText())
         .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
         .dueDate(dueDateText.getValue() != null ? dueDateText.getValue().toString() : "")
-        .dateRented(dateRentedText.getValue() != null ? dateRentedText.getValue().toString() : "")
+//        .dateRented(dateRentedText.getValue() != null ? dateRentedText.getValue().toString() : "")
         .status(statusBox.getValue() != null ? statusBox.getValue().toString() : GownStatus.AVAILABLE.getStatus())
-        .dateReturned(clientText.getText())
+        .dateReturned(dateReturnedText.getValue() != null ? dateReturnedText.getValue().toString() : "")
+        .pickupDate(pickupDateText.getValue() != null ? pickupDateText.getValue().toString() : "")
+        .partialPayment(depositText.getText())
+        .balance(balanceText.getText())
         .contact(contactText.getText())
         .build();
     if (text.toLowerCase().contains("edit")) {
@@ -197,12 +218,18 @@ public class DashboardPresenter implements Initializable {
         .filtered(gown -> {
           StringProperty name = gown.getName();
           StringProperty description = gown.getDescription();
-          boolean searchFilter = (name != null && name.get().toLowerCase().contains(text)) || (description != null && description.get().toLowerCase().contains(text));
+          StringProperty orNumber = gown.getOrNumber();
+          boolean searchFilter = (name != null && name.get().toLowerCase().contains(text))
+              || (description != null && description.get().toLowerCase().contains(text))
+              || (orNumber != null && orNumber.get().toLowerCase().contains(text));
 
           StringProperty status = gown.getStatus();
           boolean statusFilter = (status != null && status.get().toLowerCase().contains(statusText.toLowerCase()));
           if (statusText.equalsIgnoreCase("all"))
             statusFilter = true;
+
+          LocalDate value = datePicker.getValue();
+
           return searchFilter && statusFilter;
         });
     refreshItems(gownList);
@@ -252,36 +279,59 @@ public class DashboardPresenter implements Initializable {
   }
 
   private void fillDetails(GownFxAdapter gown) {
+    orNumber.setText(gown.getOrNumber() != null ? gown.getOrNumber().get() : "");
     nameText.setText(gown.getName().get());
+    if (gown.getContact() != null)
+      contactText.setText(gown.getContact().get());
     if (gown.getDescription() != null)
       descText.setText(gown.getDescription().get());
     priceText.setText("" + gown.getPrice().get());
     statusBox.setValue(gown.getStatus().get());
-    StringProperty dr = gown.getDateRented();
-    if (dr != null)
-      dateRentedText.setValue(LocalDate.parse(dr.get()));
+//    StringProperty dr = gown.getDateRented();
+//    if (dr != null)
+//      dateRentedText.setValue(LocalDate.parse(dr.get()));
+    StringProperty pd = gown.getPickupDate();
+    if (pd != null)
+      pickupDateText.setValue(LocalDate.parse(pd.get()));
     StringProperty dd = gown.getDueDate();
     if (dd != null)
       dueDateText.setValue(LocalDate.parse(dd.get()));
-    if (gown.getDateReturned() != null)
-      clientText.setText(gown.getDateReturned().get());
-    if (gown.getContact() != null)
-      contactText.setText(gown.getContact().get());
+    StringProperty dep = gown.getPartialPayment();
+    if (dep != null)
+      depositText.setText(dep.get());
+    StringProperty balance = gown.getBalance();
+    if (balance != null)
+      balanceText.setText(balance.get());
+    StringProperty dr = gown.getDateReturned();
+    if (dr != null)
+      dateReturnedText.setValue(LocalDate.parse(dr.get()));
+    StringProperty address = gown.getAddress();
+
+//    if (gown.getDateReturned() != null)
+//      clientText.setText(gown.getDateReturned().get());
+
     updateButton.setText("Edit Item");
   }
 
   private void clearDetails() {
+    orNumber.clear();
     nameText.clear();
+    contactText.clear();
     descText.clear();
     priceText.clear();
     statusBox.getSelectionModel().clearSelection();
     statusBox.setPromptText("Select status");
-    dateRentedText.getEditor().clear();
-    dateRentedText.setValue(null);
+//    dateRentedText.getEditor().clear();
+    pickupDateText.getEditor().clear();
+    pickupDateText.setValue(null);
     dueDateText.getEditor().clear();
     dueDateText.setValue(null);
-    clientText.clear();
-    contactText.clear();
+//    dateRentedText.setValue(null);
+    dateReturnedText.getEditor().clear();
+    dateReturnedText.setValue(null);
+    depositText.clear();
+    balanceText.clear();
+//    clientText.clear();
     updateButton.setText("Add Item");
   }
 
@@ -314,5 +364,30 @@ public class DashboardPresenter implements Initializable {
         clearDetails();
       }
     };
+  }
+
+  public void statusCheckingService() {
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+    Runnable runnable = () -> {
+      List<Gown> gowns = allGowns();
+      gowns.forEach(gown -> {
+        String dueDate = gown.getDueDate();
+        if (dueDate != null) {
+          LocalDate date = LocalDate.parse(dueDate);
+          if (date.isEqual(LocalDate.now())) {
+            gown.setStatus("Due Today");
+          } else if (date.isBefore(LocalDate.now())) {
+            gown.setStatus(GownStatus.OVERDUE.getStatus());
+          }
+        }
+        String pickupDate = gown.getPickupDate();
+        if (pickupDate != null) {
+
+        }
+      });
+    };
+    ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(runnable, 1l, 1l, TimeUnit.SECONDS);
+
   }
 }

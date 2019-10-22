@@ -90,7 +90,24 @@ public class GownCsvRepository implements GownRepository {
   }
 
   private void writeGowns(List<Gown> all) throws FileNotFoundException {
-    String[] headers = {"id", "name", "description", "price", "status", "date rented", "due date", "dateReturned", "contact"};
+    String[] headers = {
+        "id",
+        "name",
+        "description",
+        "price",
+        "status",
+        "date rented",
+        "due date",
+        "dateReturned",
+        "contact",
+        "or number",
+        "address",
+        "pickup date",
+        "partial payment",
+        "balance",
+
+
+    };
     FileOutputStream outputStream = new FileOutputStream(DesktopWriter.path() + "gowns.csv");
     BeanWriterProcessor<Gown> writerProcessor = new BeanWriterProcessor<>(Gown.class);
     BeanWriter beanWriter = BeanWriter.builder()

@@ -230,14 +230,18 @@ public class DashboardPresenter implements Initializable {
           LocalDate customDate = datePicker.getValue();
           if (custom != null && customDate != null) {
             boolean customFilter;
-            if (custom.equals(StatusOptions.DUE.getStatus())) {
+            if (custom.equals(StatusOptions.DUE_ON.getStatus())) {
               StringProperty dueDate = gown.getDueDate();
               if (dueDate != null) {
                 LocalDate actualDueDate = LocalDate.parse(dueDate.get());
                 customFilter = actualDueDate.isEqual(customDate);
               }
             } else if (custom.equals(StatusOptions.OVERDUE.getStatus())) {
-              
+              StringProperty dueDate = gown.getDueDate();
+              if (dueDate != null) {
+                LocalDate actualDueDate = LocalDate.parse(dueDate.get());
+                customFilter = actualDueDate.isEqual(customDate);
+              }
             }
           }
 

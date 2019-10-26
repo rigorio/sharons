@@ -171,6 +171,13 @@ public class DashboardPresenter implements Initializable {
 
   @FXML
   public void refresh() {
+    statusSearchText.setValue(null);
+    statusSearchText.setPromptText("Search by status");
+    filterText.setText(null);
+    customSelect.setValue(null);
+    customSelect.setPromptText("Custom select");
+    datePicker.getEditor().clear();
+    datePicker.setValue(null);
     refreshItems(getFXGowns());
   }
 
@@ -246,7 +253,7 @@ public class DashboardPresenter implements Initializable {
           }
 
           StringProperty status = gown.getStatus();
-          boolean statusFilter = (status != null && status.get().toLowerCase().contains(statusText.toLowerCase()));
+          boolean statusFilter = (status != null && status.get().equalsIgnoreCase(statusText));
           if (statusText.equalsIgnoreCase("all"))
             statusFilter = true;
 

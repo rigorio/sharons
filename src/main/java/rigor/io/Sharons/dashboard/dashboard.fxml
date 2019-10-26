@@ -22,59 +22,70 @@
         <Label text="OR Number" />
         <JFXTextField fx:id="orNumber" prefHeight="31.0" prefWidth="220.0" />
         <Label text="Name">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXTextField fx:id="nameText" prefHeight="31.0" prefWidth="220.0" />
         <Label text="Address">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXTextArea fx:id="addressText" prefHeight="35.0" prefWidth="220.0" />
         <Label text="Description">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXTextArea fx:id="descText" prefHeight="66.0" prefWidth="220.0" />
         <Label text="Price">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXTextField fx:id="priceText" prefHeight="31.0" prefWidth="220.0" />
         <Label text="Status">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXComboBox fx:id="statusBox" prefHeight="31.0" prefWidth="220.0" promptText="Select status" />
         <Label text="Due Date">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXDatePicker fx:id="dueDateText" prefHeight="25.0" prefWidth="220.0" />
         <Label text="Pickup Date">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXDatePicker fx:id="pickupDateText" prefHeight="25.0" prefWidth="220.0" />
         <Label text="Date returned">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXDatePicker fx:id="dateReturnedText" prefHeight="25.0" prefWidth="220.0" />
         <Label text="Deposit">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXTextField fx:id="depositText" prefWidth="220.0" />
         <Label text="Balance">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXTextField fx:id="balanceText" />
         <Label text="Contact">
-               <VBox.margin>
-                  <Insets top="2.0" />
-               </VBox.margin></Label>
+          <VBox.margin>
+            <Insets top="2.0" />
+          </VBox.margin>
+        </Label>
         <JFXTextField fx:id="contactText" prefWidth="220.0" />
         <JFXButton fx:id="updateButton" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="181.0" text="Add Item" textFill="TEAL">
           <VBox.margin>
@@ -109,8 +120,9 @@
         <Hyperlink layoutX="685.0" layoutY="15.0" onAction="#delete" text="Delete" />
         <Hyperlink layoutX="738.0" layoutY="15.0" onAction="#refresh" text="Refresh" />
         <JFXTextField fx:id="filterText" layoutX="14.0" layoutY="11.0" onKeyReleased="#filter" prefHeight="31.0" prefWidth="142.0" promptText="Search" />
-        <JFXComboBox fx:id="statusSearchText" layoutX="168.0" layoutY="11.0" onAction="#filter" prefHeight="31.0" prefWidth="154.0" promptText="Status" />
-            <JFXDatePicker fx:id="datePicker" layoutX="336.0" layoutY="14.0" />
+        <JFXComboBox fx:id="statusSearchText" layoutX="168.0" layoutY="11.0" onAction="#filter" prefHeight="31.0" prefWidth="154.0" promptText="Search by status" />
+        <JFXComboBox fx:id="customSelect" layoutX="336.0" layoutY="11.0" prefHeight="31.0" prefWidth="150.0" promptText="Custom select" onAction="#filter"/>
+        <JFXDatePicker fx:id="datePicker" layoutX="497.0" layoutY="16.0" prefWidth="171.0" onAction="#filter"/>
       </AnchorPane>
     </top>
   </BorderPane>

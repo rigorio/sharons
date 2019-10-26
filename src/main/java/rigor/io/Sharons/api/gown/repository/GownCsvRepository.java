@@ -31,7 +31,6 @@ public class GownCsvRepository implements GownRepository {
 
       BeanListProcessor<Gown> beanListProcessor = new BeanListProcessor<>(Gown.class);
       List<Gown> gowns = beanUtils.getBeans(reader, beanListProcessor);
-      System.out.println(gowns.toString());
       return gowns;
 
     } catch (IOException e) {
@@ -56,8 +55,6 @@ public class GownCsvRepository implements GownRepository {
   public void delete(Long id) {
     List<Gown> gowns = getGowns();
     boolean removed = gowns.removeIf(gown -> gown.getId().equals(id));
-    System.out.println("Was it removed?");
-    System.out.println(removed);
     try {
       writeGowns(gowns);
     } catch (FileNotFoundException e) {

@@ -228,8 +228,8 @@ public class DashboardPresenter implements Initializable {
 
           String custom = customSelect.getValue();
           LocalDate customDate = datePicker.getValue();
+          boolean customFilter = true;
           if (custom != null && customDate != null) {
-            boolean customFilter;
             if (custom.equals(StatusOptions.DUE_ON.getStatus())) {
               StringProperty dueDate = gown.getDueDate();
               if (dueDate != null) {
@@ -252,7 +252,7 @@ public class DashboardPresenter implements Initializable {
 
           LocalDate value = datePicker.getValue();
 
-          return searchFilter && statusFilter;
+          return searchFilter && statusFilter && customFilter;
         });
     refreshItems(gownList);
 

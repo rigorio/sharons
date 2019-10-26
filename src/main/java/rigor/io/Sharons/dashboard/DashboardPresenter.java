@@ -237,10 +237,10 @@ public class DashboardPresenter implements Initializable {
                 customFilter = actualDueDate.isEqual(customDate);
               }
             } else if (custom.equals(StatusOptions.PICKUP.getStatus())) {
-              StringProperty dueDate = gown.getDueDate();
-              if (dueDate != null) {
-                LocalDate actualDueDate = LocalDate.parse(dueDate.get());
-                customFilter = actualDueDate.isEqual(customDate);
+              StringProperty pickup = gown.getPickupDate();
+              if (pickup != null) {
+                LocalDate pickupDate = LocalDate.parse(pickup.get());
+                customFilter = pickupDate.isEqual(customDate);
               }
             }
           }

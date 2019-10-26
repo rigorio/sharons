@@ -65,7 +65,7 @@ public class DashboardPresenter implements Initializable {
   @FXML
   private JFXDatePicker dueDateText;
   @FXML
-  private JFXComboBox statusSearchText;
+  private JFXComboBox<String> statusSearchText;
   @FXML
   private JFXTextField filterText;
   @FXML
@@ -220,9 +220,12 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void filter() {
     String text = filterText.getText() != null ? filterText.getText().toLowerCase() : "";
-    String statusText = statusSearchText.getValue() != null ? statusSearchText.getValue().toString().toLowerCase() : "";
-    if (text.length() < 1)
+    String statusText = statusSearchText.getValue();
+    if (text.length() < 1) {
+      System.out.println("ara ara");
       refreshItems(getFXGowns());
+      return;
+    }
 
     FilteredList<GownFxAdapter> gownList = getFXGowns()
         .filtered(gown -> {
@@ -253,9 +256,10 @@ public class DashboardPresenter implements Initializable {
           }
 
           StringProperty status = gown.getStatus();
-          boolean statusFilter = (status != null && status.get().equalsIgnoreCase(statusText));
-          if (statusText.equalsIgnoreCase("all"))
-            statusFilter = true;
+          boolean statusFilter = true;
+          if (statusText != null) {
+            statusFilter = statusText.equalsIgnoreCase("all") || (status != null && status.get().equalsIgnoreCase(statusText));
+          }
 
           LocalDate value = datePicker.getValue();
 

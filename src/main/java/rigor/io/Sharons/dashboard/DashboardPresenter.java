@@ -39,6 +39,8 @@ import java.util.stream.Collectors;
 
 public class DashboardPresenter implements Initializable {
   @FXML
+  private JFXComboBox<String> customSelect;
+  @FXML
   private JFXDatePicker datePicker;
   @FXML
   private JFXTextArea addressText;
@@ -97,9 +99,10 @@ public class DashboardPresenter implements Initializable {
             : null));
 
     ObservableList es = FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList()));
-    statusSearchText.setItems(FXCollections.observableArrayList(Arrays.stream(StatusOptions.values()).collect(Collectors.toList())));
+    statusSearchText.setItems(FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList())));
     statusSearchText.getItems().add("All");
     statusBox.setItems(FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList())));
+    customSelect.setItems(FXCollections.observableArrayList(Arrays.stream(StatusOptions.values()).map(StatusOptions::getStatus).collect(Collectors.toList())));
 
     TableColumn<GownFxAdapter, String> name = new TableColumn<>("Name");
     name.setCellValueFactory(param -> param.getValue().getName());
@@ -182,7 +185,7 @@ public class DashboardPresenter implements Initializable {
         .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
         .dueDate(dueDateText.getValue() != null ? dueDateText.getValue().toString() : "")
 //        .dateRented(dateRentedText.getValue() != null ? dateRentedText.getValue().toString() : "")
-        .status(statusBox.getValue() != null ? statusBox.getValue().toString() : GownStatus.AVAILABLE.getStatus())
+        .status(statusBox.getValue().toString())
         .dateReturned(dateReturnedText.getValue() != null ? dateReturnedText.getValue().toString() : "")
         .pickupDate(pickupDateText.getValue() != null ? pickupDateText.getValue().toString() : "")
         .partialPayment(depositText.getText())
@@ -222,6 +225,8 @@ public class DashboardPresenter implements Initializable {
           boolean searchFilter = (name != null && name.get().toLowerCase().contains(text))
               || (description != null && description.get().toLowerCase().contains(text))
               || (orNumber != null && orNumber.get().toLowerCase().contains(text));
+
+          String custom = customSelect.getValue();
 
           StringProperty status = gown.getStatus();
           boolean statusFilter = (status != null && status.get().toLowerCase().contains(statusText.toLowerCase()));
@@ -383,7 +388,12 @@ public class DashboardPresenter implements Initializable {
         }
         String pickupDate = gown.getPickupDate();
         if (pickupDate != null) {
-
+          LocalDate date = LocalDate.parse(dueDate);
+          if (date.isEqual(LocalDate.now())) {
+            gown.setStatus("Due Today");
+          } else if (date.isBefore(LocalDate.now())) {
+            gown.setStatus(GownStatus.OVERDUE.getStatus());
+          }
         }
       });
     };

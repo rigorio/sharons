@@ -230,6 +230,9 @@ public class DashboardPresenter implements Initializable {
           if (custom != null) {
             boolean customFilter;
             LocalDate customDate = datePicker.getValue();
+            if(custom.equals(StatusOptions.DUE.getStatus())) {
+              
+            }
           }
 
           StringProperty status = gown.getStatus();

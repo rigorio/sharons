@@ -227,6 +227,10 @@ public class DashboardPresenter implements Initializable {
               || (orNumber != null && orNumber.get().toLowerCase().contains(text));
 
           String custom = customSelect.getValue();
+          if (custom != null) {
+            boolean customFilter;
+            LocalDate customDate = datePicker.getValue();
+          }
 
           StringProperty status = gown.getStatus();
           boolean statusFilter = (status != null && status.get().toLowerCase().contains(statusText.toLowerCase()));

@@ -221,20 +221,22 @@ public class DashboardPresenter implements Initializable {
   public void filter() {
     String text = filterText.getText() != null ? filterText.getText().toLowerCase() : "";
     String statusText = statusSearchText.getValue();
-    if (text.length() < 1) {
-      System.out.println("ara ara");
-      refreshItems(getFXGowns());
-      return;
-    }
+//    if (text.length() < 1) {
+//      refreshItems(getFXGowns());
+//      return;
+//    }
 
     FilteredList<GownFxAdapter> gownList = getFXGowns()
         .filtered(gown -> {
           StringProperty name = gown.getName();
           StringProperty description = gown.getDescription();
           StringProperty orNumber = gown.getOrNumber();
-          boolean searchFilter = (name != null && name.get().toLowerCase().contains(text))
-              || (description != null && description.get().toLowerCase().contains(text))
-              || (orNumber != null && orNumber.get().toLowerCase().contains(text));
+          boolean searchFilter = true;
+          if (text.length() > 1) {
+            searchFilter = (name != null && name.get().toLowerCase().contains(text))
+                || (description != null && description.get().toLowerCase().contains(text))
+                || (orNumber != null && orNumber.get().toLowerCase().contains(text));
+          }
 
           String custom = customSelect.getValue();
           LocalDate customDate = datePicker.getValue();
@@ -257,8 +259,14 @@ public class DashboardPresenter implements Initializable {
 
           StringProperty status = gown.getStatus();
           boolean statusFilter = true;
+          System.out.println(statusText);
+          System.out.println(status);
           if (statusText != null) {
-            statusFilter = statusText.equalsIgnoreCase("all") || (status != null && status.get().equalsIgnoreCase(statusText));
+            statusFilter = statusText.equalsIgnoreCase("all")
+                ? true
+                : status != null && status.get().equalsIgnoreCase(statusText)
+                ? true
+                : false;
           }
 
           LocalDate value = datePicker.getValue();

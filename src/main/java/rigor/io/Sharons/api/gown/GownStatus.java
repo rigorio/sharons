@@ -2,8 +2,10 @@ package rigor.io.Sharons.api.gown;
 
 public enum GownStatus {
   RENTED("Rented"),
-  AVAILABLE("Available"),
   BOUGHT("Bought"),
+  FOR_PICKUP("For Pickup"),
+  DUE_TODAY("Due Today"),
+  RETURNED("Returned"),
   OVERDUE("Overdue")
   ;
 

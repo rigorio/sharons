@@ -101,6 +101,8 @@ public class DashboardPresenter implements Initializable {
     ObservableList es = FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList()));
     statusSearchText.setItems(FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList())));
     statusSearchText.getItems().add("All");
+    statusSearchText.getItems().add("Not Returned");
+    statusSearchText.setValue("Not Returned");
     statusBox.setItems(FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList())));
     customSelect.setItems(FXCollections.observableArrayList(Arrays.stream(StatusOptions.values()).map(StatusOptions::getStatus).collect(Collectors.toList())));
 
@@ -166,6 +168,7 @@ public class DashboardPresenter implements Initializable {
     gownsTable.setRowFactory(deselectCells());
 
     refreshItems(getFXGowns());
+    filter();
 
   }
 
@@ -199,9 +202,9 @@ public class DashboardPresenter implements Initializable {
         .balance(balanceText.getText())
         .contact(contactText.getText())
         .build();
+    clearDetails();
     if (text.toLowerCase().contains("edit")) {
       GownFxAdapter selectedItem = gownsTable.getSelectionModel().getSelectedItem();
-      System.out.println("kyakya " + selectedItem.getId().get());
       gown.setId(selectedItem.getId().get());
       gownService.edit(gown);
       refresh();
@@ -264,6 +267,8 @@ public class DashboardPresenter implements Initializable {
           if (statusText != null) {
             statusFilter = statusText.equalsIgnoreCase("all")
                 ? true
+                : statusText.equalsIgnoreCase("not returned")
+                ? status != null && !status.get().equalsIgnoreCase(GownStatus.RETURNED.getStatus())
                 : status != null && status.get().equalsIgnoreCase(statusText)
                 ? true
                 : false;
@@ -359,6 +364,7 @@ public class DashboardPresenter implements Initializable {
     nameText.clear();
     contactText.clear();
     descText.clear();
+    addressText.clear();
     priceText.clear();
     statusBox.getSelectionModel().clearSelection();
     statusBox.setPromptText("Select status");
@@ -408,32 +414,6 @@ public class DashboardPresenter implements Initializable {
   }
 
   public void statusCheckingService() {
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
-    Runnable runnable = () -> {
-      List<Gown> gowns = allGowns();
-      gowns.forEach(gown -> {
-        String dueDate = gown.getDueDate();
-        if (dueDate != null) {
-          LocalDate date = LocalDate.parse(dueDate);
-          if (date.isEqual(LocalDate.now())) {
-            gown.setStatus("Due Today");
-          } else if (date.isBefore(LocalDate.now())) {
-            gown.setStatus(GownStatus.OVERDUE.getStatus());
-          }
-        }
-        String pickupDate = gown.getPickupDate();
-        if (pickupDate != null) {
-          LocalDate date = LocalDate.parse(dueDate);
-          if (date.isEqual(LocalDate.now())) {
-            gown.setStatus("Due Today");
-          } else if (date.isBefore(LocalDate.now())) {
-            gown.setStatus(GownStatus.OVERDUE.getStatus());
-          }
-        }
-      });
-    };
-    ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(runnable, 1l, 1l, TimeUnit.SECONDS);
 
   }
 }

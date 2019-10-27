@@ -76,7 +76,7 @@ public class EditPresenter implements Initializable {
         .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
         .dueDate("1")
         .dateRented("f")
-        .status(statusBox.getValue() != null ? statusBox.getValue() : GownStatus.AVAILABLE.getStatus())
+//        .status(statusBox.getValue() != null ? statusBox.getValue() : GownStatus.AVAILABLE.getStatus())
         .build();
     boolean success = gownService.edit(gown);
     Alert alert = new Alert(Alert.AlertType.INFORMATION);

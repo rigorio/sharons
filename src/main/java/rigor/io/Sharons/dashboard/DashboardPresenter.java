@@ -423,6 +423,8 @@ public class DashboardPresenter implements Initializable {
               String dueDate = gown.getDueDate();
               if (dueDate!= null && LocalDate.parse(dueDate).isEqual(LocalDate.now())) {
                 gown.setStatus(GownStatus.DUE_TODAY.getStatus());
+              } else if (dueDate!= null && LocalDate.parse(dueDate).isBefore(LocalDate.now()) ) {
+                gown.setStatus(GownStatus.OVERDUE.getStatus());
               }
             }
           }

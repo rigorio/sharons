@@ -414,6 +414,14 @@ public class DashboardPresenter implements Initializable {
   }
 
   public void statusCheckingService() {
+    allGowns()
+        .stream()
+        .forEach(gown -> {
+          String status = gown.getStatus();
+          if (status!=null){
 
+          }
+
+        })
   }
 }

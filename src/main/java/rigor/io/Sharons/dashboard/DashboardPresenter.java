@@ -420,7 +420,10 @@ public class DashboardPresenter implements Initializable {
           String status = gown.getStatus();
           if (status!=null){
             if (status.equalsIgnoreCase(GownStatus.RENTED.getStatus())){
-              
+              String dueDate = gown.getDueDate();
+              if (dueDate!= null) {
+
+              }
             }
           }
 

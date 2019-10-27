@@ -192,8 +192,8 @@ public class DashboardPresenter implements Initializable {
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
       Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
       stage.setAlwaysOnTop(true);
-      alert.setTitle("");
-      alert.setHeaderText("");
+      alert.setTitle("Not saved");
+      alert.setHeaderText("Please select a status");
       alert.showAndWait();
       return;
     }

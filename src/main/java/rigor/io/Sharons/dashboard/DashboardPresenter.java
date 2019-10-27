@@ -349,9 +349,10 @@ public class DashboardPresenter implements Initializable {
       contactText.setText(gown.getContact().get());
     if (gown.getDescription() != null)
       descText.setText(gown.getDescription().get());
-    if (gown.getPrice()!=null)
-    priceText.setText("" + gown.getPrice().get());
-    statusBox.setValue(gown.getStatus().get());
+    if (gown.getPrice() != null)
+      priceText.setText("" + gown.getPrice().get());
+    if (gown.getStatus() != null)
+      statusBox.setValue(gown.getStatus().get());
 //    StringProperty dr = gown.getDateRented();
 //    if (dr != null)
 //      dateRentedText.setValue(LocalDate.parse(dr.get()));

@@ -323,6 +323,7 @@ public class DashboardPresenter implements Initializable {
         }
       }
       refresh();
+      clearDetails();
     }
   }
 

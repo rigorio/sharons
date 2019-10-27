@@ -421,7 +421,7 @@ public class DashboardPresenter implements Initializable {
           if (status!=null){
             if (status.equalsIgnoreCase(GownStatus.RENTED.getStatus())){
               String dueDate = gown.getDueDate();
-              if (dueDate!= null) {
+              if (dueDate!= null && LocalDate.parse(dueDate).isEqual(LocalDate.now())) {
 
               }
             }

@@ -432,6 +432,10 @@ public class DashboardPresenter implements Initializable {
             gown.setStatus(GownStatus.FOR_PICKUP.getStatus());
           }
         }
+        String dateReturned = gown.getDateReturned();
+        if (dateReturned != null) {
+          gown.setStatus(GownStatus.RETURNED.getStatus());
+        }
       }
       gownService.edit(gown);
     });

@@ -181,6 +181,7 @@ public class DashboardPresenter implements Initializable {
     customSelect.setPromptText("Custom select");
     datePicker.getEditor().clear();
     datePicker.setValue(null);
+    statusCheckingService();
     refreshItems(getFXGowns());
   }
 

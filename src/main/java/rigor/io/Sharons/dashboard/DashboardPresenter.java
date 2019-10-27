@@ -414,25 +414,24 @@ public class DashboardPresenter implements Initializable {
   }
 
   public void statusCheckingService() {
-    allGowns()
-        .stream()
-        .forEach(gown -> {
-          String status = gown.getStatus();
-          if (status!=null){
-            if (status.equalsIgnoreCase(GownStatus.RENTED.getStatus())){
-              String dueDate = gown.getDueDate();
-              String pickupDate = gown.getPickupDate();
-              if (dueDate!= null && LocalDate.parse(dueDate).isEqual(LocalDate.now())) {
-                gown.setStatus(GownStatus.DUE_TODAY.getStatus());
-              } else if (dueDate!= null && LocalDate.parse(dueDate).isBefore(LocalDate.now()) ) {
-                gown.setStatus(GownStatus.OVERDUE.getStatus());
-              }
-              if (pickupDate != null && LocalDate.parse(pickupDate).isEqual(LocalDate.now())){
-                gown.setStatus(GownStatus.FOR_PICKUP.getStatus());
-              }
-            }
+    List<Gown> gowns = allGowns();
+    gowns.forEach(gown -> {
+      String status = gown.getStatus();
+      if (status != null) {
+        if (status.equalsIgnoreCase(GownStatus.RENTED.getStatus())) {
+          String dueDate = gown.getDueDate();
+          String pickupDate = gown.getPickupDate();
+          if (dueDate != null && LocalDate.parse(dueDate).isEqual(LocalDate.now())) {
+            gown.setStatus(GownStatus.DUE_TODAY.getStatus());
+          } else if (dueDate != null && LocalDate.parse(dueDate).isBefore(LocalDate.now())) {
+            gown.setStatus(GownStatus.OVERDUE.getStatus());
           }
-
-        });
+          if (pickupDate != null && LocalDate.parse(pickupDate).isEqual(LocalDate.now())) {
+            gown.setStatus(GownStatus.FOR_PICKUP.getStatus());
+          }
+        }
+      }
+      gownService.edit(gown);
+    });
   }
 }

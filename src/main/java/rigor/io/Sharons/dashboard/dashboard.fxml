@@ -123,5 +123,11 @@
                        prefWidth="171.0"/>
       </AnchorPane>
     </top>
+    <right>
+      <AnchorPane prefHeight="616.0" prefWidth="10.0" BorderPane.alignment="CENTER"/>
+    </right>
+    <bottom>
+      <AnchorPane prefHeight="10.0" prefWidth="805.0" BorderPane.alignment="CENTER"/>
+    </bottom>
   </BorderPane>
 </HBox>

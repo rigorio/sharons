@@ -188,7 +188,13 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void add() {
     String text = updateButton.getText();
-    if (validDetails()){
+    if (!validDetails()) {
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+      stage.setAlwaysOnTop(true);
+      alert.setTitle("");
+      alert.setHeaderText("");
+      alert.showAndWait();
       return;
     }
     Gown gown = Gown.builder()
@@ -225,8 +231,10 @@ public class DashboardPresenter implements Initializable {
   }
 
   private boolean validDetails() {
+    if (statusBox.getValue() == null)
+      return false;
     
-    return false;
+    return true;
   }
 
   @FXML

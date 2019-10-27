@@ -419,9 +419,11 @@ public class DashboardPresenter implements Initializable {
         .forEach(gown -> {
           String status = gown.getStatus();
           if (status!=null){
-
+            if (status.equalsIgnoreCase(GownStatus.RENTED.getStatus())){
+              
+            }
           }
 
-        })
+        });
   }
 }

@@ -167,6 +167,7 @@ public class DashboardPresenter implements Initializable {
     gownsTable.setOnMouseClicked(tableSelectionEvent());
     gownsTable.setRowFactory(deselectCells());
 
+    statusCheckingService();
     refreshItems(getFXGowns());
     filter();
 
@@ -419,7 +420,7 @@ public class DashboardPresenter implements Initializable {
     gowns.forEach(gown -> {
       String status = gown.getStatus();
       if (status != null) {
-        if (status.equalsIgnoreCase(GownStatus.RENTED.getStatus())) {
+        if (status.equalsIgnoreCase(GownStatus.RENTED.getStatus()) || status.equalsIgnoreCase(GownStatus.DUE_TODAY.getStatus())) {
           String dueDate = gown.getDueDate();
           String pickupDate = gown.getPickupDate();
           if (dueDate != null && LocalDate.parse(dueDate).isEqual(LocalDate.now())) {

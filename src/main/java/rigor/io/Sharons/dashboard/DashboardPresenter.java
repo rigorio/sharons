@@ -428,7 +428,7 @@ public class DashboardPresenter implements Initializable {
                 gown.setStatus(GownStatus.OVERDUE.getStatus());
               }
               if (pickupDate != null && LocalDate.parse(pickupDate).isEqual(LocalDate.now())){
-                
+                gown.setStatus(GownStatus.FOR_PICKUP.getStatus());
               }
             }
           }

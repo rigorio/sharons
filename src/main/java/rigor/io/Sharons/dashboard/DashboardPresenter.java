@@ -188,6 +188,9 @@ public class DashboardPresenter implements Initializable {
   @FXML
   public void add() {
     String text = updateButton.getText();
+    if (validDetails()){
+      return;
+    }
     Gown gown = Gown.builder()
         .orNumber(orNumber.getText())
         .name(nameText.getText())
@@ -219,6 +222,11 @@ public class DashboardPresenter implements Initializable {
     alert.setHeaderText(success ? "Gown added" : "Error encountered. Gown was not added, try again.");
     alert.showAndWait();
     refresh();
+  }
+
+  private boolean validDetails() {
+    
+    return false;
   }
 
   @FXML

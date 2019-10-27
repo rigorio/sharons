@@ -102,7 +102,6 @@ public class DashboardPresenter implements Initializable {
     statusSearchText.setItems(FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList())));
     statusSearchText.getItems().add("All");
     statusSearchText.getItems().add("Not Returned");
-    statusSearchText.setValue("Not Returned");
     statusBox.setItems(FXCollections.observableArrayList(Arrays.stream(GownStatus.values()).map(GownStatus::getStatus).collect(Collectors.toList())));
     customSelect.setItems(FXCollections.observableArrayList(Arrays.stream(StatusOptions.values()).map(StatusOptions::getStatus).collect(Collectors.toList())));
 
@@ -167,9 +166,8 @@ public class DashboardPresenter implements Initializable {
     gownsTable.setOnMouseClicked(tableSelectionEvent());
     gownsTable.setRowFactory(deselectCells());
 
-    statusCheckingService();
-    refreshItems(getFXGowns());
-    filter();
+
+    refresh();
 
   }
 
@@ -182,8 +180,9 @@ public class DashboardPresenter implements Initializable {
     customSelect.setPromptText("Custom select");
     datePicker.getEditor().clear();
     datePicker.setValue(null);
+    statusSearchText.setValue("Not Returned");
     statusCheckingService();
-    refreshItems(getFXGowns());
+    filter();
   }
 
   @FXML

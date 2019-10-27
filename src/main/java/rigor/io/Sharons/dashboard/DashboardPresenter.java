@@ -233,7 +233,7 @@ public class DashboardPresenter implements Initializable {
   private boolean validDetails() {
     if (statusBox.getValue() == null)
       return false;
-    
+
     return true;
   }
 
@@ -343,11 +343,13 @@ public class DashboardPresenter implements Initializable {
 
   private void fillDetails(GownFxAdapter gown) {
     orNumber.setText(gown.getOrNumber() != null ? gown.getOrNumber().get() : "");
-    nameText.setText(gown.getName().get());
+    if (gown.getName() != null)
+      nameText.setText(gown.getName().get());
     if (gown.getContact() != null)
       contactText.setText(gown.getContact().get());
     if (gown.getDescription() != null)
       descText.setText(gown.getDescription().get());
+    if (gown.getPrice()!=null)
     priceText.setText("" + gown.getPrice().get());
     statusBox.setValue(gown.getStatus().get());
 //    StringProperty dr = gown.getDateRented();

@@ -276,13 +276,13 @@ public class DashboardPresenter implements Initializable {
               if (dueDate != null) {
                 LocalDate actualDueDate = LocalDate.parse(dueDate.get(), dtf);
                 customFilter = actualDueDate.isEqual(customDate);
-              }
+              } else customFilter = false;
             } else if (custom.equals(StatusOptions.PICKUP.getStatus())) {
               StringProperty pickup = gown.getPickupDate();
               if (pickup != null) {
                 LocalDate pickupDate = LocalDate.parse(pickup.get(), dtf);
                 customFilter = pickupDate.isEqual(customDate);
-              }
+              } else customFilter = false;
             }
           }
 

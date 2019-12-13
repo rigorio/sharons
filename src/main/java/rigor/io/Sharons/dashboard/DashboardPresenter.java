@@ -28,16 +28,17 @@ import rigor.io.Sharons.utils.GuiManager;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.*;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class DashboardPresenter implements Initializable {
+  private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("[yyyy-MM-dd][yyyy-M-d][M/d/yyyy]");
   @FXML
   private JFXComboBox<String> customSelect;
   @FXML
@@ -83,6 +84,7 @@ public class DashboardPresenter implements Initializable {
   private static final String ALL = "All";
   private static final String LESS_THAN = "Less than or equals";
   private static final String MORE_THAN = "More than or equals";
+
 
   public DashboardPresenter() {
     gownService = new GownHandler(new GownCsvRepository());
@@ -265,13 +267,13 @@ public class DashboardPresenter implements Initializable {
             if (custom.equals(StatusOptions.DUE_ON.getStatus())) {
               StringProperty dueDate = gown.getDueDate();
               if (dueDate != null) {
-                LocalDate actualDueDate = LocalDate.parse(dueDate.get());
+                LocalDate actualDueDate = LocalDate.parse(dueDate.get(), dtf);
                 customFilter = actualDueDate.isEqual(customDate);
               }
             } else if (custom.equals(StatusOptions.PICKUP.getStatus())) {
               StringProperty pickup = gown.getPickupDate();
               if (pickup != null) {
-                LocalDate pickupDate = LocalDate.parse(pickup.get());
+                LocalDate pickupDate = LocalDate.parse(pickup.get(), dtf);
                 customFilter = pickupDate.isEqual(customDate);
               }
             }
@@ -279,8 +281,8 @@ public class DashboardPresenter implements Initializable {
 
           StringProperty status = gown.getStatus();
           boolean statusFilter = true;
-          System.out.println(statusText);
-          System.out.println(status);
+//          System.out.println(statusText);
+//          System.out.println(status);
           if (statusText != null) {
             statusFilter = statusText.equalsIgnoreCase("all")
                 ? true
@@ -359,10 +361,10 @@ public class DashboardPresenter implements Initializable {
 //      dateRentedText.setValue(LocalDate.parse(dr.get()));
     StringProperty pd = gown.getPickupDate();
     if (pd != null)
-      pickupDateText.setValue(LocalDate.parse(pd.get()));
+      pickupDateText.setValue(LocalDate.parse(pd.get(), dtf));
     StringProperty dd = gown.getDueDate();
     if (dd != null)
-      dueDateText.setValue(LocalDate.parse(dd.get()));
+      dueDateText.setValue(LocalDate.parse(dd.get(), dtf));
     StringProperty dep = gown.getPartialPayment();
     if (dep != null)
       depositText.setText(dep.get());
@@ -371,7 +373,7 @@ public class DashboardPresenter implements Initializable {
       balanceText.setText(balance.get());
     StringProperty dr = gown.getDateReturned();
     if (dr != null)
-      dateReturnedText.setValue(LocalDate.parse(dr.get()));
+      dateReturnedText.setValue(LocalDate.parse(dr.get(), dtf));
     StringProperty address = gown.getAddress();
 
 //    if (gown.getDateReturned() != null)
@@ -442,12 +444,12 @@ public class DashboardPresenter implements Initializable {
         if (status.equalsIgnoreCase(GownStatus.RENTED.getStatus()) || status.equalsIgnoreCase(GownStatus.DUE_TODAY.getStatus())) {
           String dueDate = gown.getDueDate();
           String pickupDate = gown.getPickupDate();
-          if (dueDate != null && LocalDate.parse(dueDate).isEqual(LocalDate.now())) {
+          if (dueDate != null && LocalDate.parse(dueDate, dtf).isEqual(LocalDate.now())) {
             gown.setStatus(GownStatus.DUE_TODAY.getStatus());
-          } else if (dueDate != null && LocalDate.parse(dueDate).isBefore(LocalDate.now())) {
+          } else if (dueDate != null && LocalDate.parse(dueDate, dtf).isBefore(LocalDate.now())) {
             gown.setStatus(GownStatus.OVERDUE.getStatus());
           }
-          if (pickupDate != null && LocalDate.parse(pickupDate).isEqual(LocalDate.now())) {
+          if (pickupDate != null && LocalDate.parse(pickupDate, dtf).isEqual(LocalDate.now())) {
             gown.setStatus(GownStatus.FOR_PICKUP.getStatus());
           }
         }

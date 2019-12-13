@@ -40,6 +40,8 @@ import java.util.stream.Collectors;
 public class DashboardPresenter implements Initializable {
   private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("[yyyy-MM-dd][yyyy-M-d][M/d/yyyy]");
   @FXML
+  private JFXTextField secDepositText;
+  @FXML
   private JFXComboBox<String> customSelect;
   @FXML
   private JFXDatePicker datePicker;
@@ -146,12 +148,16 @@ public class DashboardPresenter implements Initializable {
     TableColumn<GownFxAdapter, String> pickupDate = new TableColumn<>("Pickup date");
     pickupDate.setCellValueFactory(param -> param.getValue().getPickupDate());
 
+    TableColumn<GownFxAdapter, String> securityDeposit = new TableColumn<>("Security Deposit");
+    securityDeposit.setCellValueFactory(param -> param.getValue().getSecurityDeposit());
+
 
     gownsTable.getColumns().addAll(
         orNumber,
         name,
         description,
         price,
+        securityDeposit,
 //        dateRented,
         pickupDate,
         dueDate,
@@ -205,6 +211,7 @@ public class DashboardPresenter implements Initializable {
         .address(addressText.getText())
         .description(descText.getText())
         .price(!priceText.getText().equals("") ? Double.valueOf(priceText.getText()) : 0.0)
+        .securityDeposit(secDepositText.getText())
         .dueDate(dueDateText.getValue() != null ? dueDateText.getValue().toString() : "")
 //        .dateRented(dateRentedText.getValue() != null ? dateRentedText.getValue().toString() : "")
         .status(statusBox.getValue().toString())
@@ -356,6 +363,8 @@ public class DashboardPresenter implements Initializable {
       priceText.setText("" + gown.getPrice().get());
     if (gown.getStatus() != null)
       statusBox.setValue(gown.getStatus().get());
+    if (gown.getSecurityDeposit() != null)
+      secDepositText.setText(gown.getSecurityDeposit().get());
 //    StringProperty dr = gown.getDateRented();
 //    if (dr != null)
 //      dateRentedText.setValue(LocalDate.parse(dr.get()));
@@ -389,6 +398,7 @@ public class DashboardPresenter implements Initializable {
     descText.clear();
     addressText.clear();
     priceText.clear();
+    secDepositText.clear();
     statusBox.getSelectionModel().clearSelection();
     statusBox.setPromptText("Select status");
 //    dateRentedText.getEditor().clear();

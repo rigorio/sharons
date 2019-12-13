@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<HBox fx:id="mainPane" prefHeight="669.0" prefWidth="1019.0" xmlns="http://javafx.com/javafx/8.0.999-ea"
+<HBox fx:id="mainPane" prefHeight="746.0" prefWidth="1019.0" xmlns="http://javafx.com/javafx/8.0.999-ea"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="rigor.io.Sharons.dashboard.DashboardPresenter">
   <BorderPane prefHeight="636.0" prefWidth="240.0">
     <center>
@@ -36,6 +36,13 @@
           </VBox.margin>
         </Label>
         <JFXTextField fx:id="priceText" focusColor="#4db6ac" prefHeight="31.0" prefWidth="220.0" unFocusColor="TEAL"/>
+        <Label text="Security Deposit">
+          <VBox.margin>
+            <Insets top="2.0"/>
+          </VBox.margin>
+        </Label>
+        <JFXTextField fx:id="secDepositText" focusColor="#4db6ac" prefHeight="31.0" prefWidth="220.0"
+                      unFocusColor="TEAL"/>
         <Label text="Status">
           <VBox.margin>
             <Insets top="2.0"/>
@@ -43,18 +50,18 @@
         </Label>
         <JFXComboBox fx:id="statusBox" focusColor="#4db6ac" prefHeight="31.0" prefWidth="220.0"
                      promptText="Select status" unFocusColor="TEAL"/>
-        <Label text="Due Date">
-          <VBox.margin>
-            <Insets top="2.0"/>
-          </VBox.margin>
-        </Label>
-        <JFXDatePicker fx:id="dueDateText" defaultColor="TEAL" prefHeight="25.0" prefWidth="220.0"/>
         <Label text="Pickup Date">
           <VBox.margin>
             <Insets top="2.0"/>
           </VBox.margin>
         </Label>
         <JFXDatePicker fx:id="pickupDateText" defaultColor="TEAL" prefHeight="25.0" prefWidth="220.0"/>
+        <Label text="Due Date">
+          <VBox.margin>
+            <Insets top="2.0"/>
+          </VBox.margin>
+        </Label>
+        <JFXDatePicker fx:id="dueDateText" defaultColor="TEAL" prefHeight="25.0" prefWidth="220.0"/>
         <Label text="Date returned">
           <VBox.margin>
             <Insets top="2.0"/>

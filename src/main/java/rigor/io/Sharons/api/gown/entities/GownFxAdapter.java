@@ -25,6 +25,7 @@ public class GownFxAdapter {
   private StringProperty pickupDate;
   private StringProperty partialPayment;
   private StringProperty balance;
+  private StringProperty securityDeposit;
 
   public GownFxAdapter(Gown gown) {
     Long id = gown.getId();
@@ -68,5 +69,8 @@ public class GownFxAdapter {
 
     String balance = gown.getBalance();
     this.balance = balance != null ? new SimpleStringProperty(balance) : null;
+
+    String securityDeposit = gown.getSecurityDeposit();
+    this.securityDeposit = securityDeposit != null ? new SimpleStringProperty(securityDeposit) : null;
   }
 }

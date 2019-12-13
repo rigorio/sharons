@@ -42,6 +42,8 @@ public class Gown {
   private String partialPayment;
   @Parsed(index = 13)
   private String balance;
+  @Parsed(index = 14)
+  private String securityDeposit;
 
 
   public Gown(Gown gown) {
@@ -92,5 +94,8 @@ public class Gown {
 
     StringProperty balance = gown.getBalance();
     this.balance = balance != null ? balance.get() : null;
+
+    StringProperty securityDeposit = gown.getSecurityDeposit();
+    this.securityDeposit = securityDeposit != null ? securityDeposit.get() : null;
   }
 }
